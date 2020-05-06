@@ -1,0 +1,99 @@
+﻿<Page x:Class="SBTP.View.CSSJ.YH"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.CSSJ"
+      mc:Ignorable="d" 
+      d:DesignHeight="520" d:DesignWidth="1000" Background="#eee"
+      Title="调剖用量优化">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <StackPanel Style="{StaticResource sp_left}">
+                <TextBlock Text="井号：" VerticalAlignment="Center" />
+                <ComboBox x:Name="comboBox" Width="120"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <StackPanel Style="{StaticResource sp_left}">
+                <TextBlock Text="机器学习算法选择：" VerticalAlignment="Center"/>
+                <RadioButton Content="增油量预测" VerticalAlignment="Center" />
+                <RadioButton Content="调剖半径预测" VerticalAlignment="Center" />
+                <Button Content="选择" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <StackPanel Style="{StaticResource sp_left}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="过水倍数：" VerticalAlignment="Center" />
+                    <TextBox />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="含有饱和度：" VerticalAlignment="Center" />
+                    <TextBox />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="过聚倍数：" VerticalAlignment="Center" />
+                    <TextBox />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="渗透率级差：" VerticalAlignment="Center" />
+                    <TextBox />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="吸液强度：" VerticalAlignment="Center" />
+                    <TextBox />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="3">
+            <StackPanel Style="{StaticResource sp_left}" HorizontalAlignment="Center">
+                <Button Content="计算" />
+            </StackPanel>
+        </Grid>
+
+        <GroupBox Header="机器学习算法优化结果表" Grid.Row="4">
+            <DataGrid>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="井号"/>
+                    <DataGridTextColumn Header="方案号"/>
+                    <DataGridTextColumn Header="过水倍数"/>
+                    <DataGridTextColumn Header="含油饱和度"/>
+                    <DataGridTextColumn Header="过聚倍数"/>
+                    <DataGridTextColumn Header="渗透率级差"/>
+                    <DataGridTextColumn Header="吸液强度"/>
+                    <DataGridTextColumn Header="半径"/>
+                    <DataGridTextColumn Header="增油量"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <Grid Grid.Row="6">
+            <StackPanel Style="{StaticResource sp_bottom}">
+                <Button Content="保存" />
+            </StackPanel>
+        </Grid>
+        
+    </Grid>
+</Page>

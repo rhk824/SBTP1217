@@ -1,0 +1,121 @@
+﻿<Window x:Class="SBTP.View.JCXZ.TPC_XSPM_IMG"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SBTP.View.JCXZ"
+        mc:Ignorable="d"
+        Title="吸水剖面图" Height="650" Width="1000" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="目录选择" Grid.ColumnSpan="3">
+            <StackPanel Orientation="Horizontal">
+                <TextBox Name="tb_path" Width="200" />
+                <Button Name="btn_browse" Content="浏览" Click="Btn_browse_Click" />
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="调剖层（井号）" Grid.Row="1" Grid.RowSpan="2">
+            <ListBox Name="lb_tpc" DisplayMemberPath="jh" ItemsSource="{Binding oc_tpc}" SelectionChanged="Lb_tpc_SelectionChanged"/>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Grid.Column="1">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ElementName=lb_tpc, Path=SelectedItem.jh}"/>
+                    <TextBlock Text="井 吸水剖面图"/>
+                </StackPanel>
+            </GroupBox.Header>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <Grid Name="grid_img" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Image Name="img_source" 
+                           MouseDown="Img_source_MouseDown"
+                           MouseMove="Img_source_MouseMove"
+                           MouseUp="Img_source_MouseUp" Stretch="None" />
+                    <Rectangle x:Name="rectangle" StrokeThickness="1" Stroke="Black" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden" MouseMove="Img_source_MouseMove">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="Black" Opacity="0.3"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Grid>
+            </ScrollViewer>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ElementName=lb_tpc, Path=SelectedItem.jh}"/>
+                    <TextBlock Text="井 吸水剖面数据"/>
+                </StackPanel>
+            </GroupBox.Header>
+            <DataGrid ItemsSource="{Binding oc_xspm}">
+                <DataGrid.Columns>
+                    <!--<DataGridTextColumn Binding="{Binding YCZ}" Header="油层组" />
+                    <DataGridTextColumn Binding="{Binding XCH}" Header="小层号" />
+                    <DataGridTextColumn Binding="{Binding JSXH}" Header="解释序号" />
+                    <DataGridTextColumn Binding="{Binding JDDS1, StringFormat={}{0:F2}}" Header="井段顶深" />
+                    <DataGridTextColumn Binding="{Binding hd}" Header="厚度" />
+                    <DataGridTextColumn Binding="{Binding YXHD}" Header="有效厚度" />
+                    <DataGridTextColumn Binding="{Binding ZRBFS, StringFormat={}{0:F1}}" Header="注入百分数" />-->
+                    <DataGridTextColumn Binding="{Binding depth}" Header="对应深度" />
+                    <DataGridTextColumn Binding="{Binding area}" Header="波峰面积" />
+                    <DataGridTextColumn Binding="{Binding ntc}" Header="拟调层" />
+                    <DataGridTextColumn Binding="{Binding ndd}" Header="拟堵段" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        <GroupBox Header="矩形截取设置" Grid.Row="1" Grid.Column="2">
+            <Grid>
+                <StackPanel VerticalAlignment="Top">
+                    <StackPanel>
+                        <TextBlock Text="top" />
+                        <TextBox Name="tb_top" Text="" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="bottom" />
+                        <TextBox Name="tb_bottom" Text="" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="color" />
+                        <TextBox Name="tb_color" Text="" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Mouse Down" />
+                        <TextBlock Name="tb_md" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Mouse Move" />
+                        <TextBlock Name="tb_mm" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Bottom">
+                    <Button Name="btn_identify" Content="吸水分数识别" Click="Btn_identify_Click" />
+                </StackPanel>
+            </Grid>
+
+        </GroupBox>
+
+        <Grid Grid.Row="3" Grid.ColumnSpan="3">
+            <StackPanel Style="{StaticResource sp_bottom}">
+                <Button Name="btn_add" Content="添加" Click="Btn_add_Click" />
+                <Button Name="btn_quit" Content="退出" Click="Btn_quit_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

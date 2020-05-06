@@ -1,0 +1,15 @@
+﻿<Window x:Class="SBTP.View.Graphic.LSM"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wfc="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
+        xmlns:local="clr-namespace:SBTP.View.Graphic"
+        mc:Ignorable="d"
+        Title="小层数据拟合曲线" Height="450" Width="800">
+    <Grid>
+        <WindowsFormsHost Name="wfh">
+            <wfc:Chart />
+        </WindowsFormsHost>
+    </Grid>
+</Window>

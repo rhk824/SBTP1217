@@ -1,0 +1,35 @@
+﻿<Window x:Class="SBTP.View.File.SelectColumnCondition"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="" Height="300" Width="400" WindowStartupLocation="CenterScreen">
+    
+    <Grid Grid.IsSharedSizeScope="True">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" BorderThickness="2" Margin="2" Header="选择字段" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+
+                <ListBox Name="ListBox1" Grid.Column="0" SelectionMode="Single" />
+                <Button Name="BtnSelect" Content="--&gt;" Grid.Column="1" Width="50" Height="25" Margin="16,56,10,107" HorizontalAlignment="Center" VerticalAlignment="Center" Click="BtnSelect_Click"/>
+                <Button Name="BtnDelete" Content="&lt;--" Grid.Column="1" Width="50" Height="25" Margin="16,91,10,72" HorizontalAlignment="Center" VerticalAlignment="Center" Click="BtnDelete_Click"/>
+                <ListBox Name="ListBox2" Grid.Column="2" />
+
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="1" BorderThickness="2" Margin="2" Header="操作" >
+            <Grid>
+                <Button Name="btnConfirm" Content="确定" HorizontalAlignment="Right" Margin="0,0,95,0" VerticalAlignment="Center" Width="75" Click="btnConfirm_Click"/>
+                <Button Name="btnCancel" Content="取消" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Width="75" Click="BtnCancel_Click"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>

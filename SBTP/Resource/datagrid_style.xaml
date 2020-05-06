@@ -1,0 +1,604 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!--二维表头相关样式（Datagrid -->
+    
+    <!--Datagrid 二维表头：边框样式（第 1 行）-->
+    <Style x:Key="border_header_1_style" TargetType="Border">
+        <Setter Property="BorderBrush" Value="#FFE4E5E7" />
+        <Setter Property="BorderThickness" Value="1,0,1,1" />
+    </Style>
+
+    <!--Datagrid 二维表头：边框样式（第 2 行，第 1 个单元格）-->
+    <Style x:Key="border_header_2_1_style" TargetType="Border">
+        <Setter Property="BorderBrush" Value="#FFE4E5E7" />
+        <Setter Property="BorderThickness" Value="1,0,1,0" />
+    </Style>
+
+    <!--Datagrid 二维表头：边框样式（第 2 行，第 1+ 个单元格）-->
+    <Style x:Key="border_header_2_2_style" TargetType="Border">
+        <Setter Property="BorderBrush" Value="#FFE4E5E7" />
+        <Setter Property="BorderThickness" Value="0,0,1,0" />
+    </Style>
+
+    <!--Datagrid 二维表头：名称样式（第 1 行）-->
+    <Style x:Key="txt_header_1_style" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="Padding" Value="5" />
+    </Style>
+
+    <!--Datagrid 二维表头：名称样式（第 2 行）-->
+    <Style x:Key="txt_header_2_style" TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="Width" Value="100" />
+    </Style>
+
+    <!--单元格样式-->
+    <Style x:Key="txt_cell_style" TargetType="TextBlock">
+        <Setter Property="Width" Value="100" />
+        <Setter Property="Padding" Value="2,0,0,0" />
+    </Style>
+
+    <!--单元格间隔线-->
+    <Style x:Key="line_cell_style" TargetType="Rectangle">
+        <Setter Property="Width" Value="1" />
+        <Setter Property="Fill" Value="#000" />
+    </Style>
+
+
+    <!--渗透率的二维表头-->
+    <Style x:Key="header_k_style" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                        <!--名称设置-->
+                        <TextBlock Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2">
+                            <Run Text="渗透率（μm" /><Run Text="2" BaselineAlignment="TextTop" FontSize="8" /><Run Text="）" />
+                        </TextBlock>
+                        <TextBlock Text="封堵段" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="增注段" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--孔吼半径的二维表头-->
+    <Style x:Key="header_r_style" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="孔吼半径" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Text="封堵段" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="增注段" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--孔隙度的二维表头-->
+    <Style x:Key="header_kxd_style" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="孔隙度" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Text="封堵段" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="增注段" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--液体调剖剂-->
+    <Style x:Key="header_yttpj_style" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="液体调剖剂" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Text="名称" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="浓度（mg/L）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--颗粒调剖剂-->
+    <Style x:Key="header_kltpj_style" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="3" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="2" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="颗粒调剖剂" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
+                        <TextBlock Text="名称" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="粒径（mm）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1" />
+                        <TextBlock Text="浓度（mg/L）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="YJXGPJ_CSQ" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="4" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="2" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="3" />
+                        
+                        <TextBlock Text="措施前" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
+                        <TextBlock Text="月产液" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="月产油" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1"/>
+                        <TextBlock Text="化学剂浓度" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
+                        <TextBlock Text="综合含水" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="3" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="YJXGPJ_CSH" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="4" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="2" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="3" />
+
+                        <TextBlock Text="措施后" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
+                        <TextBlock Text="月产液" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="月产油" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1"/>
+                        <TextBlock Text="化学剂浓度" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
+                        <TextBlock Text="综合含水" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="3" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+	<!--调剖井效果预测-措施前-->
+    <Style x:Key="header_xgyccsq_style" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource border_header_2_1_style}" />
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border_header_2_2_style}" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="措施前" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Style="{StaticResource txt_header_2_style}" Grid.Row="1">
+                                <Run Text="视吸水指数（m" /><Run Text="3" BaselineAlignment="TextTop" FontSize="8" /><Run Text="/Mpa.d）"/>
+                        </TextBlock>
+                        <TextBlock Text="等效压力（Mpa）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--调剖井效果预测-措施后-->
+    <Style x:Key="header_xgyccsh_style" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource border_header_2_1_style}" />
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border_header_2_2_style}" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="措施后" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="压力（Mpa）" Style="{StaticResource txt_header_2_style}" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
+                                <Run Text="视吸水指数（m" /><Run Text="3" BaselineAlignment="TextTop" FontSize="8" /><Run Text="/Mpa.d）"/>
+                        </TextBlock>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--调剖井效果预测-差值-->
+    <Style x:Key="header_xgyccz_style" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource border_header_2_1_style}" />
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border_header_2_2_style}" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="差值" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="压力（Mpa）" Style="{StaticResource txt_header_2_style}" />
+                        <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
+                                <Run Text="视吸水指数（m" /><Run Text="3" BaselineAlignment="TextTop" FontSize="8" /><Run Text="/Mpa.d）"/>
+                        </TextBlock>
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate x:Key="SelectedColumn">
+        <CheckBox IsChecked="{Binding Selected, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" />
+    </DataTemplate>
+
+
+    <!-- 施工设计_吸水剖面测试结果数据表_调剖层 -->
+    <Style x:Key="dgHeader_sgsj_tpc_tpc" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="3" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="2" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="调剖层" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
+                        <TextBlock Text="厚度（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="吸水量（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
+                            <Run Text="吸水量（" />
+                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
+                            <Run Text="/d）"/>
+                        </TextBlock>
+                        <TextBlock Text="吸水分数（%）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 施工设计_吸水剖面测试结果数据表_封堵段 -->
+    <Style x:Key="dgHeader_sgsj_tpc_fdd" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="3" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="2" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="封堵段" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
+                        <TextBlock Text="厚度（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="吸水量（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
+                            <Run Text="吸水量（" />
+                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
+                            <Run Text="/d）"/>
+                        </TextBlock>
+                        <TextBlock Text="吸水分数（%）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- 施工设计_吸水剖面测试结果数据表_增注段 -->
+    <Style x:Key="dgHeader_sgsj_tpc_zzd" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="3" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="2" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="增注段" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
+                        <TextBlock Text="厚度（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Text="吸水量（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
+                            <Run Text="吸水量（" />
+                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
+                            <Run Text="/d）"/>
+                        </TextBlock>
+                        <TextBlock Text="吸水分数（%）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--施工设计_调剖井调后效果预测_调剖前-->
+    <Style x:Key="dgHeader_sgsj_yc_tpq" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="调剖前" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Text="注入压力" Style="{StaticResource txt_header_2_style}" Grid.Row="1" />
+                        <TextBlock Text="视吸水指数" Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}" />
+                        <!--<TextBlock Text="注入压力（MPa）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
+                            <Run Text="视吸水指数（m" />
+                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
+                            <Run Text="/d.MPa）"/>
+                        </TextBlock>-->
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--施工设计_调剖井调后效果预测_调剖后-->
+    <Style x:Key="dgHeader_sgsj_yc_tph" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="调剖后" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Text="注入压力" Style="{StaticResource txt_header_2_style}" Grid.Row="1" />
+                        <TextBlock Text="视吸水指数" Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}" />
+                        <!--<TextBlock Text="注入压力（MPa）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
+                            <Run Text="视吸水指数（m" />
+                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
+                            <Run Text="/d.MPa）"/>
+                        </TextBlock>-->
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--施工设计_调剖井调后效果预测_增幅-->
+    <Style x:Key="dgHeader_sgsj_yc_zf" TargetType="DataGridColumnHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- 边框设置 -->
+                        <Border Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_1_style}" Grid.Row="1" />
+                        <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
+
+                        <!--名称设置-->
+                        <TextBlock Text="增幅" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Text="注入压力" Style="{StaticResource txt_header_2_style}" Grid.Row="1" />
+                        <TextBlock Text="视吸水指数" Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}" />
+                        <!--<TextBlock Text="注入压力（MPa）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
+                            <Run Text="视吸水指数（m" />
+                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
+                            <Run Text="/d.MPa）"/>
+                        </TextBlock>-->
+
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+</ResourceDictionary>

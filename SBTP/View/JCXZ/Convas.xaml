@@ -1,0 +1,21 @@
+﻿<Window x:Class="SBTP.View.JCXZ.Convas"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Convas" Height="2000" Width="2000">
+
+    <Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="2">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Canvas Background="LightBlue" Height="2000" Width="2000">
+            <Button Background="red" Name="W" Width="20">W</Button>
+            <Button Background="Yellow" Name="O1" Width="20">O1</Button>
+            <Button Background="Green" Name="O2" Width="20">O2</Button>
+            <Button Background="White" Name="O3" Width="20">O3</Button>
+            <Button Background="DarkGray" Name="O4" Width="20">O4</Button>
+            <Button Background="HotPink" Name="O5" Width="20">O5</Button>
+            <Button Background="Orange" Name="O6" Width="20">O6</Button>
+        </Canvas>
+        </ScrollViewer>
+
+    </Border>
+
+</Window>

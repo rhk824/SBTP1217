@@ -1,0 +1,42 @@
+﻿<Page x:Class="SBTP.View.SGSJ.FZJBJ"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.SGSJ"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="FZJBJ">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <TreeView x:Name="tvChatpers" SelectedItemChanged="tvTree_SelectedItemChanged" />
+        <GridSplitter Width="3" Background="#fff" />
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <DocumentViewer x:Name="dvShow" />
+
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="1">
+                <Button Name="btnSave" Content="保存"/>
+                <Button Name="btnUpdate" Content="更新" Click="btnUpdate_Click"/>
+                <Button Name="btnPreview" Content="本章预览"/>
+                <Button Name="btnFullPreview" Content="全文预览"/>
+                <Button Name="btnNext" Content="下一章" Click="btnNext_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Page>

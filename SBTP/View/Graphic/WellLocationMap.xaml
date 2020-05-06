@@ -1,0 +1,23 @@
+﻿<Window x:Class="SBTP.View.Graphic.WellLocationMap"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SBTP.View.Graphic"
+        mc:Ignorable="d"
+        Title="WellLocationMap" Height="800" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+            <Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="2">
+                <Canvas Background="LightBlue" Width="3000" Height="3000" Name="myConvas" MouseLeftButtonDown="MyConvas_MouseLeftButtonDown" MouseLeftButtonUp="MyConvas_MouseLeftButtonUp" MouseMove="MyConvas_MouseMove" MouseWheel="MyConvas_MouseWheel" />
+            </Border>
+        </ScrollViewer>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Name="btn_ok" Margin="5" Padding="8,2" Click="btn_ok_Click" Content="确定"/>
+        </StackPanel>
+    </Grid>
+</Window>

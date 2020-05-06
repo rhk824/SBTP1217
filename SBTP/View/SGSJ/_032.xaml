@@ -1,0 +1,99 @@
+﻿<Page x:Class="SBTP.View.SGSJ._032"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.SGSJ"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="_032" Background="#eee">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/sgsj_style.xaml" />
+                <ResourceDictionary Source="/SBTP;component/Resource/datagrid_style.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer>
+            <StackPanel>
+                <GroupBox Header="调剖井概况 - 调剖层状况">
+                    <StackPanel>
+                        <TextBox
+                        x:Name="tb"
+                        TextWrapping="Wrap"
+                        AcceptsReturn="True"
+                        VerticalScrollBarVisibility="Visible">
+
+                        </TextBox>
+                        <TextBlock Text="吸水剖面测试结果数据表" />
+                        <DataGrid x:Name="dg" ColumnWidth="*"  ItemsSource="{Binding}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
+                                <DataGridTextColumn Header="调剖层" Binding="{Binding tpc}"/>
+
+                                <DataGridTemplateColumn HeaderStyle="{StaticResource dgHeader_sgsj_tpc_tpc}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding tpc_hd}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding tpc_xsl}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding tpc_xsfs}" Style="{StaticResource txt_cell_style}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn HeaderStyle="{StaticResource dgHeader_sgsj_tpc_fdd}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding fdd_hd}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding fdd_xsl}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding fdd_xsfs}" Style="{StaticResource txt_cell_style}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn HeaderStyle="{StaticResource dgHeader_sgsj_tpc_zzd}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding zzd_hd}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding zzd_xsl}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding zzd_xsfs}" Style="{StaticResource txt_cell_style}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    
+                    
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Style="{StaticResource StackPanelStyle}">
+            <!--<Button>预览</Button>-->
+            <Button Click="btnUpdate_Click">更新</Button>
+            <Button Click="btnSave_Click">保存</Button>
+        </StackPanel>
+    </Grid>
+</Page>

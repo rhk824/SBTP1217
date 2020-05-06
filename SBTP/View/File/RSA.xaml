@@ -1,0 +1,18 @@
+﻿<Window x:Class="SBTP.View.File.RSA"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SBTP.View.File"
+        mc:Ignorable="d"
+        Title="RSA" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Button Grid.Row="0" Name="key" Height="50" Width="100"  Content="生成秘钥" Click="Key_Click"/>
+        <TextBox Name="private_key" Grid.Row="1" Height="100" Width="200" Margin="511,80,81,80"></TextBox>
+        <TextBox Name="public_key" Grid.Row="1" Height="100" Width="200" Margin="78,80,514,80"></TextBox>
+    </Grid>
+</Window>

@@ -1,0 +1,138 @@
+﻿<Page x:Class="SBTP.View.XGPJ.TPJ_XSPM"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.XGPJ"
+      xmlns:tk="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+      xmlns:wfc="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
+      mc:Ignorable="d" Background="#eee"
+      Title="TPJ_XSPM">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="井号："/>
+                <ComboBox Name="Wells" Width="100"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="50,0,50,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock VerticalAlignment="Center" Text="措施前："/>
+                        <RadioButton GroupName="csq" Name="csq_date">
+                            <RadioButton.Content>
+                                <DatePicker Name="csq_Date" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </RadioButton.Content>
+                        </RadioButton>
+                        <RadioButton GroupName="csq" Name="csq_img">
+                            <RadioButton.Content>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBox Name="csq_Path" Width="100" IsEnabled="False" VerticalAlignment="Center">
+                                        <TextBox.Resources>
+                                            <VisualBrush x:Key="HintText" TileMode="None" Opacity="0.5" Stretch="None" AlignmentX="Left">
+                                                <VisualBrush.Visual>
+                                                    <TextBlock FontStyle="Italic" Text="措施前吸水剖面图"/>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </TextBox.Resources>
+                                        <TextBox.Style>
+                                            <Style TargetType="TextBox">
+                                                <Style.Triggers>
+                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                        <Setter Property="Background" Value="{StaticResource HintText}"/>
+                                                    </Trigger>
+                                                    <Trigger Property="Text" Value="">
+                                                        <Setter Property="Background" Value="{StaticResource HintText}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                    </TextBox>
+                                    <Button Name="csq_Scan" VerticalAlignment="Center" Content="..." IsEnabled="False" Click="Scan_Click"/>
+                                </StackPanel>
+                            </RadioButton.Content>
+                        </RadioButton>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock VerticalAlignment="Center" Text="措施后："/>
+                        <RadioButton GroupName="csh" Name="csh_date">
+                            <RadioButton.Content>
+                                <DatePicker Name="csh_Date" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            </RadioButton.Content>
+                        </RadioButton>
+                        <RadioButton GroupName="csh" Name="csh_img">
+                            <RadioButton.Content>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBox Width="100" Name="csh_Path" IsEnabled="False" VerticalAlignment="Center">
+                                        <TextBox.Resources>
+                                            <VisualBrush x:Key="HintText" TileMode="None" Opacity="0.5" Stretch="None" AlignmentX="Left">
+                                                <VisualBrush.Visual>
+                                                    <TextBlock FontStyle="Italic" Text="措施后吸水剖面图"/>
+                                                </VisualBrush.Visual>
+                                            </VisualBrush>
+                                        </TextBox.Resources>
+                                        <TextBox.Style>
+                                            <Style TargetType="TextBox">
+                                                <Style.Triggers>
+                                                    <Trigger Property="Text" Value="{x:Null}">
+                                                        <Setter Property="Background" Value="{StaticResource HintText}"/>
+                                                    </Trigger>
+                                                    <Trigger Property="Text" Value="">
+                                                        <Setter Property="Background" Value="{StaticResource HintText}"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                    </TextBox>
+                                    <Button Name="csh_Scan" VerticalAlignment="Center" Content="..." IsEnabled="False" Click="Scan_Click"/>
+                                </StackPanel>
+                            </RadioButton.Content>
+                        </RadioButton>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="绘制" Name="DrawLines" Click="DrawLines_Click"/>
+            </StackPanel>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Viewbox Stretch="Fill">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="措施前吸水剖面" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Grid x:Name="CSQ_Img">
+                        <WindowsFormsHost Name="MyToolKit1" />
+                    </Grid>
+                </StackPanel>
+            </Viewbox>
+            <Viewbox Stretch="Fill"  Grid.Column="1">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="措施后吸水剖面" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Grid Name="CSH_Img">
+                        <WindowsFormsHost Name="MyToolKit2" />
+                    </Grid>
+                </StackPanel>
+            </Viewbox>
+        </Grid>
+    </Grid>
+</Page>

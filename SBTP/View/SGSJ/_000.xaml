@@ -1,0 +1,55 @@
+﻿<Page x:Class="SBTP.View.SGSJ._000"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.SGSJ"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="_000" Background="#eee">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/sgsj_style.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer>
+            <StackPanel>
+                <GroupBox Header="封面">
+                    <StackPanel>
+                        <TextBlock>所属油田：</TextBlock>
+                        <TextBox x:Name="tb1"/>
+                        <TextBlock>所属区块：</TextBlock>
+                        <TextBox x:Name="tb2"/>
+                        <TextBlock>所属油层：</TextBlock>
+                        <TextBox x:Name="tb3"/>
+                        <TextBlock>调剖方案名称：</TextBlock>
+                        <TextBox x:Name="tb4"/>
+                        <TextBlock>工作单位（全称）：</TextBlock>
+                        <TextBox x:Name="tb5"/>
+                        <TextBlock>施工设计方案创建日期：</TextBlock>
+                        <TextBox x:Name="tb6"/>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="前言">
+                    <TextBox
+                        x:Name="tb_foreword"
+                        TextWrapping="Wrap"
+                        AcceptsReturn="True"
+                        VerticalScrollBarVisibility="Visible"></TextBox>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+        <StackPanel Grid.Row="1" Style="{StaticResource StackPanelStyle}">
+            <Button Name="btnSave" Click="btnSave_Click">保存</Button>
+        </StackPanel>
+    </Grid>
+</Page>

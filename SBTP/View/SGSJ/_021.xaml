@@ -1,0 +1,75 @@
+﻿<Page x:Class="SBTP.View.SGSJ._021"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.SGSJ"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="_021" Background="#eee">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/sgsj_style.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer>
+            <StackPanel>
+                <!--<GroupBox Header="沉积概况">
+                    <StackPanel>
+                        <TextBlock>油层埋藏深度：</TextBlock>
+                        <TextBox/>
+                        <TextBlock>砂岩厚度：</TextBlock>
+                        <TextBox/>
+                        <TextBlock>有效厚度：</TextBlock>
+                        <TextBox/>
+                        <TextBlock>渗透率：</TextBlock>
+                        <TextBox/>
+                        <TextBlock>孔隙度：</TextBlock>
+                        <TextBox/>
+                        <TextBlock>油层温度：</TextBlock>
+                        <TextBox/>
+                        <TextBlock>地层水矿化度：</TextBlock>
+                        <TextBox/>
+                        <TextBlock>油层水PH值：</TextBlock>
+                        <TextBox/>
+                    </StackPanel>
+                </GroupBox>-->
+                <GroupBox Header="目标设计区域概况 - 沉积概况">
+                    <TextBox
+                        x:Name="tb1"
+                        TextWrapping="Wrap"
+                        AcceptsReturn="True"
+                        VerticalScrollBarVisibility="Visible">
+
+                    </TextBox>
+                </GroupBox>
+                <GroupBox Header="目标设计区域油层状况">
+                    <DataGrid Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
+                            <DataGridTextColumn Header="砂岩厚度" Binding="{Binding syhd}"/>
+                            <DataGridTextColumn Header="有效厚度" Binding="{Binding yxhd}"/>
+                            <DataGridTextColumn Header="渗透率" Binding="{Binding stl}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Style="{StaticResource StackPanelStyle}">
+            <!--<Button>预览</Button>-->
+            <Button Click="btnUpdate_Click">更新</Button>
+            <Button Click="btnSave_Click">保存</Button>
+        </StackPanel>
+    </Grid>
+</Page>

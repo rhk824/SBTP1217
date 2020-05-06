@@ -1,0 +1,158 @@
+﻿<Page x:Class="SBTP.View.CSSJ.TPYLYH"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.CSSJ"
+      xmlns:core="clr-namespace:System;assembly=mscorlib"
+      xmlns:calender="clr-namespace:SBTP.View.JCXZ"
+      xmlns:tk="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+      mc:Ignorable="d" 
+      xmlns:Loading="clr-namespace:SBTP.BLL"
+      d:DesignHeight="520" d:DesignWidth="1000" Background="#eee"
+      Title="TPYLYH">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+                <ResourceDictionary Source="/SBTP;component/Resource/datagrid_style.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Header="调剖井" Grid.Column="0" Grid.RowSpan="2">
+            <ListBox Name="tpj_list" SelectionMode="Extended"/>
+        </GroupBox>
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.RowSpan="2">
+            <Button Name="btn_right" Content="→" Click="btn_right_Click"  />
+            <Button Name="btn_left" Content="←" Click="btn_left_Click" />
+        </StackPanel>
+
+        <Grid Grid.Row="0" Grid.Column="2" Margin="0,2,2,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="1" Margin="0,0,0,5">
+                <Grid.Resources>
+                    <DataTemplate x:Key="jh">
+                        <TextBlock Text="{Binding JH}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </DataTemplate>
+                    <DataTemplate x:Key="tpbj">
+                        <TextBlock Text="{Binding TPBJ}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </DataTemplate>
+                    <DataTemplate x:Key="zy">
+                        <TextBlock Text="{Binding ZY}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </DataTemplate>
+                    <DataTemplate x:Key="tcb">
+                        <TextBlock Text="{Binding TCB}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </DataTemplate>
+                    <DataTemplate x:Key="yhbj">
+                        <TextBlock Text="{Binding YHBJ}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </DataTemplate>
+                    <DataTemplate x:Key="yhzy">
+                        <TextBlock Text="{Binding YHZY}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </DataTemplate>
+                    <DataTemplate x:Key="tpjyl">
+                        <TextBlock Text="{Binding TPJYL}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+                    </DataTemplate>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Border  BorderBrush="Black" BorderThickness="1" Grid.Column="0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0">
+                            <TextBlock Text="机器学习算法优化结果表" FontSize="18" FontFamily="黑体"/>
+                        </StackPanel>
+                        
+                        <DataGrid Name="jqxx_grid" Grid.Row="1" ItemsSource="{Binding}" LoadingRow="jqxx_grid_LoadingRow" SelectionChanged="jqxx_grid_SelectionChanged"  HeadersVisibility="Column" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn  Width="55" Header="序号"  >
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGridRow}}, Path=Header}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="井号" CellTemplate="{StaticResource jh}" />
+                                <DataGridTemplateColumn Header="调剖半径" CellTemplate="{StaticResource tpbj}"/>
+                                <DataGridTemplateColumn Header="增油" CellTemplate="{StaticResource zy}"/>
+                                <DataGridComboBoxColumn Header="优化半径" SelectedItemBinding="{Binding YHBJ,UpdateSourceTrigger=PropertyChanged}">
+                                    <DataGridComboBoxColumn.EditingElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource" Value="{Binding Path=BJS}" />
+                                            <Setter Property="SelectedValue" Value="{Binding Path=Value}" />
+                                        </Style>
+                                    </DataGridComboBoxColumn.EditingElementStyle>
+                                    <DataGridComboBoxColumn.ElementStyle>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource" Value="{Binding Path=BJS}" />
+                                            <Setter Property="SelectedValue" Value="{Binding Path=Value}" />
+                                        </Style>
+                                    </DataGridComboBoxColumn.ElementStyle>
+                                </DataGridComboBoxColumn>
+                                <DataGridTemplateColumn Header="投产比" CellTemplate="{StaticResource tcb}"/>
+                                <DataGridTemplateColumn Header="优化增油" CellTemplate="{StaticResource yhzy}"/>
+                                <DataGridTemplateColumn Header="调剖剂用量" CellTemplate="{StaticResource tpjyl}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Grid Grid.Row="1" Name="loading" Visibility="Collapsed"  Background="LightGray" Opacity="0.5">
+                            <Loading:Loading />
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <GroupBox Header="图像" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <tk:Chart Name="MyToolKit" Height="auto" Visibility="Collapsed"/>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+            <Grid Grid.Row="0" Margin="10,0,0,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,10,0">
+                        <TextBlock VerticalAlignment="Center" Text="优化半径范围："/>
+                        <TextBox Name="radius_start" Text="44" Width="50"/>
+                        <TextBlock VerticalAlignment="Center" Text="-"/>
+                        <TextBox Name="radius_end" Text="55" Width="50"/>
+                        <TextBlock VerticalAlignment="Center" Text="m"/>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,10,0">
+                        <TextBlock VerticalAlignment="Center" Text="步长:"/>
+                        <TextBox Name="step" Text="3" Width="50"/>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                        <!--<TextBlock Text="机器学习算法:"/>
+                        <ComboBox Name="Machine" Height="25"/>-->
+                        <Button Content="优化计算" Name="YHCalculation" Click="YHCalculation_Click"/>
+                        <Button Content="保存" Name="save" Click="save_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+
+    </Grid>
+</Page>

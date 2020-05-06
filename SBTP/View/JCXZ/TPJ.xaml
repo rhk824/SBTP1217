@@ -1,0 +1,88 @@
+﻿<Page x:Class="SBTP.View.JCXZ.TPJ"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:core="clr-namespace:System;assembly=mscorlib"
+      xmlns:local="clr-namespace:SBTP.View.JCXZ"
+      mc:Ignorable="d" 
+      MinWidth="1000" MinHeight="520" Background="#eee"
+      Title="tpj">
+    <Page.Resources>
+        <ObjectDataProvider x:Key="PZGZEnumKey" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type Type="local:PZGZEnum"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Page.Resources>
+
+    <Grid Grid.IsSharedSizeScope="True" Name="Tpj_Grid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+        
+        <GroupBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1" BorderThickness="2" Margin="2" Header="评价时间">
+            <Grid>
+                <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="15,14,0,0" TextWrapping="Wrap" Text="起始时间：" VerticalAlignment="Top"/>
+                <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="15,43,0,0" TextWrapping="Wrap" Text="终止时间：" VerticalAlignment="Top"/>
+                <DatePicker Name="StartTime" HorizontalAlignment="Left" Margin="75,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.251,0.362" Width="150" local:DatePickerCalendar.IsMonthYear="true" local:DatePickerDateFormat.DateFormat="yyyy/MM" />
+                <DatePicker Name="EndTime" HorizontalAlignment="Left" Margin="75,39,0,0" VerticalAlignment="Top" Width="150" local:DatePickerCalendar.IsMonthYear="true" local:DatePickerDateFormat.DateFormat="yyyy/MM"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="1" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="参考值">
+            <Grid>
+                <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="15,14,0,0" TextWrapping="Wrap" Text="综合含水：" VerticalAlignment="Top"/>
+                <TextBlock x:Name="textBlock3" HorizontalAlignment="Left" Margin="15,43,0,0" TextWrapping="Wrap" Text="比视吸水指数：" VerticalAlignment="Top"/>
+                <TextBlock x:Name="textBlock4" HorizontalAlignment="Left" Margin="325,17,0,0" TextWrapping="Wrap" Text="超标率：" VerticalAlignment="Top"/>
+                <TextBlock x:Name="textBlock5" HorizontalAlignment="Left" Margin="325,43,0,0" TextWrapping="Wrap" Text="视吸水指数均值：" VerticalAlignment="Top"/>
+                <TextBox x:Name="ZHHS" HorizontalAlignment="Left" Height="23" Margin="81,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                <TextBox x:Name="Floating_Value" HorizontalAlignment="Left" Height="23" Margin="229,10,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="40"></TextBox>
+                <TextBox x:Name="BAWI" HorizontalAlignment="Left" Height="23" Margin="103,39,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                <TextBox x:Name="CBL" HorizontalAlignment="Left" Height="23" Margin="452,10,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="120"/>
+                <TextBox x:Name="SXSZS" HorizontalAlignment="Left" Height="23" Margin="452,39,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                <Button x:Name="E_CalculationBtn" Content="均值计算" HorizontalAlignment="Left" Margin="626,12,0,0" VerticalAlignment="Top" Width="75" Click="E_CalculationBtn_Click"/>
+                <Button x:Name="S_CalculationBtn" Content="统计计算" HorizontalAlignment="Left" Margin="626,42,0,0" VerticalAlignment="Top" Width="75" Click="S_CalculationBtn_Click"/>
+                <TextBlock x:Name="textBlock2_Copy" HorizontalAlignment="Left" Margin="212,12,0,0" TextWrapping="Wrap" Text="+" VerticalAlignment="Top"/>
+                <TextBox x:Name="Floating_Value1" HorizontalAlignment="Left" Height="23" Margin="247,39,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="40"/>
+                <TextBlock x:Name="textBlock21" HorizontalAlignment="Left" Margin="231,41,0,0" TextWrapping="Wrap" Text="+" VerticalAlignment="Top"/>
+
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="数据">
+            <DataGrid x:Name="dataGrid" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" VirtualizingStackPanel.IsVirtualizing="False" CellEditEnding="DataGrid_CellEditEnding">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="水井" Width="80" Binding="{Binding JH}"/>
+                    <DataGridComboBoxColumn Header="配注管柱"  Width="80"  SelectedItemBinding="{Binding PZGZ,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource PZGZEnumKey}}"/>
+                    <DataGridTextColumn Header="视吸水指数" Width="100" Binding="{Binding AWI, StringFormat={}{0:F2}}"/>
+                    <DataGridTextColumn Header="比视吸水指数" Width="100" Binding="{Binding BAWI, StringFormat={}{0:F2}}"/>
+                    <DataGridTextColumn Header="综合含水" Width="100" Binding="{Binding ZHHS, StringFormat={}{0:F2}}"/>
+                    <DataGridTextColumn Header="超标井率" Width="80" Binding="{Binding CBL, StringFormat={}{0:F2}}"/>
+                    <DataGridTextColumn Header="结果" Width="80" Binding="{Binding JG}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="1" BorderThickness="2" Margin="2" Header="等值图">
+            <Grid>
+                <!--<Mask:Loading x:Name="_loading"  Visibility="Collapsed"/>-->
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <StackPanel Name="iso" Orientation="Horizontal"   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                </ScrollViewer>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="3" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="3" BorderThickness="2" Margin="2" Header="操作">
+            <Grid>
+                <Button x:Name="HSL" Content="综合含水"  Width="75" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left" Click="HSL_Click"/>
+                <Button x:Name="XSZS" Content="视吸水指数"  Width="75" VerticalAlignment="Center" Margin="95,0,0,0" HorizontalAlignment="Left" Click="XSZS_Click"/>
+                <Button x:Name="Save" Content="保存"  Width="75" VerticalAlignment="Center" Margin="0,0,10,0" HorizontalAlignment="Right" Click="Save_Click"/>
+            </Grid>           
+        </GroupBox>
+    </Grid>
+</Page>

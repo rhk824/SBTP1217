@@ -1,0 +1,78 @@
+﻿<Page x:Class="SBTP.View.TPJ.CCWX_GSF"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.TPJ"
+      xmlns:wfc="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
+      mc:Ignorable="d" Background="#eee"
+      Title="CCWX_GSF">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Name="gb_left">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="tb_left_jh" Text="**"/>
+                    <TextBlock Text="井 小层数据"/>
+                </StackPanel>
+            </GroupBox.Header>
+            <DataGrid Name="dg_gsf" ItemsSource="{Binding oc_xcsj}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="油层组" Binding="{Binding YCZ}"/>
+                    <DataGridTextColumn Header="小层号" Binding="{Binding XCH}"/>
+                    <DataGridTextColumn Header="砂岩厚度" Binding="{Binding SYHD}"/>
+                    <DataGridTextColumn Header="有效厚度" Binding="{Binding YXHD}"/>
+                    <DataGridTextColumn Header="渗透率" Binding="{Binding STL}"/>
+                    <DataGridTextColumn Header="注入分数" Binding="{Binding zrfs}"/>
+                    <DataGridTemplateColumn Header="参考层">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <RadioButton IsChecked="{Binding Selected, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" GroupName="rb_gn_gsf"
+                                                 HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                 Margin="0"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <GroupBox Grid.Column="1">
+            <GroupBox.Header>
+                <TextBlock Text="测试日期"/>
+            </GroupBox.Header>
+            <ListBox Name="lb_csrq" ItemsSource="{Binding oc_csrq}" DisplayMemberPath="CSRQ" SelectionMode="Single" SelectionChanged="Lb_csrq_SelectionChanged">
+                
+            </ListBox>
+        </GroupBox>
+
+        <GroupBox Name="gb_right" Grid.Column="2">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Name="tb_right_jh" Text="**"/>
+                    <TextBlock Text="井"/>
+                    <TextBlock Name="tb_right_csrq" Text="**"/>
+                    <TextBlock Text="时间 吸水剖面图" />
+                </StackPanel>
+            </GroupBox.Header>
+            <WindowsFormsHost Name="wfh">
+                <wfc:Chart />
+            </WindowsFormsHost>
+        </GroupBox>
+        
+    </Grid>
+</Page>

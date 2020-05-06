@@ -1,0 +1,91 @@
+﻿<Page x:Class="SBTP.View.JCXZ.ZCJZ"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.JCXZ"
+      xmlns:cvt="clr-namespace:SBTP.Common.Converter"
+      mc:Ignorable="d" 
+     d:DesignHeight="520" d:DesignWidth="1000" Background="#eee"
+      Title="井组划分">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <cvt:zcjz_color_converter x:Key="zcjz_color_converter" />
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Header="水井">
+            <ListBox Name="lb_water_well" SelectionMode="Extended" ItemsSource="{Binding oc_water_well}" DisplayMemberPath="JH" />
+        </GroupBox>
+
+        <GroupBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" Header="油井">
+            <ListBox Name="lb_oil_well" SelectionMode="Extended" ItemsSource="{Binding oc_oil_well}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding JH}" Background="{Binding Path=Selected, Converter={StaticResource zcjz_color_converter}}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
+
+        <Grid Grid.Row="0" Grid.Column="2">
+            <StackPanel VerticalAlignment="Center">
+                <Button Name="btn_right" Content="→" Click="Btn_right_Click" />
+                <Button Name="btn_left" Content="←" Click="Btn_left_Click" />
+            </StackPanel>
+        </Grid>
+
+        <GroupBox Grid.Row="0" Grid.Column="3" Header="井组">
+            <DataGrid Name="dg_well_group" ItemsSource="{Binding oc_well_group}" RowHeaderWidth="0" SelectedCellsChanged="Dg_well_group_SelectedCellsChanged">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Binding="{Binding Selected, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Binding="{Binding JH}" Header="水井" />
+                    <!--<DataGridTextColumn Binding="{Binding ZB_X}" Header="ZB__X" />
+                    <DataGridTextColumn Binding="{Binding ZB_Y}" Header="ZB__Y" />
+                    <DataGridTextColumn Binding="{Binding near_water_well}" Header="near-water-well" />
+                    <DataGridTextColumn Binding="{Binding near_distance}" Header="near-distance" />-->
+                    <DataGridTextColumn Binding="{Binding AverageDistance}" Header="平均井距" />
+                    <DataGridTextColumn Binding="{Binding oil_well_count}" Header="油井数" />
+                    <DataGridTextColumn Binding="{Binding oil_wells}" Header="油井" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <Grid Grid.Row="1" Grid.Column="3" Margin="8,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Name="btn_all" Content="全选" Click="Btn_all_Click"/>
+                <Button Name="btn_cancel" Content="取消" Click="Btn_cancel_Click"/>
+                <Button Name="btn_delete" Content="删除" Click="Btn_delete_Click"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Name="btn_huafen" Content="井组划分" Click="Btn_huafen_Click"/>
+                <Button Name="btn_zhuizong" Content="井组追踪" Click="Btn_zhuizong_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="3">
+            <StackPanel Style="{StaticResource sp_bottom}">
+                <Button Name="btn_save" Content="保存" Click="Btn_save_Click"/>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+</Page>

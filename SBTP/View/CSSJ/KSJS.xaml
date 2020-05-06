@@ -1,0 +1,75 @@
+﻿<Page x:Class="SBTP.View.CSSJ.KSJS"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.CSSJ"
+      mc:Ignorable="d" 
+      d:DesignHeight="520" d:DesignWidth="1000" Background="#eee"
+      Title="KSJS">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <GroupBox Header="快速计算表">
+            <DataGrid Name="DataGrid1" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="井号" Binding="{Binding JH}" />
+                    <DataGridTextColumn Header="调剖半径（m）" Binding="{Binding BJ}" />
+                    <DataGridTextColumn Header="封堵段厚度（m）" />
+                    <DataGridTextColumn>
+                        <DataGridTextColumn.Header>
+                            <TextBlock>
+                                <Run Text="封堵段渗透率（μm" /><Run Text="2" BaselineAlignment="TextTop" FontSize="8" /><Run Text="）"/>
+                            </TextBlock>
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="连通方向" />
+                    <DataGridTextColumn Header="孔隙度" />
+                    <DataGridTextColumn Header="调剖面积" Binding="{Binding TPMJ}" />
+                    <DataGridTextColumn Header="调剖用量" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <GroupBox Header="合计" Grid.Row="1">
+            <DataGrid Name="DataGrid2">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="调剖半径（m）" Binding="{Binding BJ}" />
+                    <DataGridTextColumn Header="封堵段厚度（m）" />
+                    <DataGridTextColumn>
+                        <DataGridTextColumn.Header>
+                            <TextBlock>
+                                <Run Text="封堵段渗透率（μm" /><Run Text="2" BaselineAlignment="TextTop" FontSize="8" /><Run Text="）"/>
+                            </TextBlock>
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="连通方向" />
+                    <DataGridTextColumn Header="孔隙度" />
+                    <DataGridTextColumn Header="调剖面积" Binding="{Binding TPMJ}" />
+                    <DataGridTextColumn Header="调剖用量" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <GroupBox Header="操作" Grid.Row="2">
+            <Grid>
+                <Button Name="Btn_Import" Content="批量导入" Width="75" HorizontalAlignment="Right" Margin="0,0,185,0" VerticalAlignment="Center" Click="Btn_Import_Click" />
+                <Button Name="Btn_Save" Content="保存" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Width="75" Click="Btn_Save_Click"/>
+                <Button Name="Btn_Compute" Content="计算" HorizontalAlignment="Right" Margin="0,0,95,0" VerticalAlignment="Center" Width="75" Click="Btn_Compute_Click" />
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Page>

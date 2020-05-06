@@ -1,0 +1,67 @@
+﻿<Window x:Class="SBTP.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SBTP"
+        xmlns:model="clr-namespace:SBTP.Model"
+        mc:Ignorable="d"
+ Title="{Binding PROJECT_NAME}" WindowStartupLocation="CenterScreen" WindowState="Maximized" WindowStyle="ThreeDBorderWindow" ResizeMode="CanResizeWithGrip" Closing="Window_Closing" Background="LightGray">
+    <DockPanel>
+        <!--<DockPanel.Resources>
+            <HierarchicalDataTemplate x:Key="itemTemplate" DataType="{x:Type model:ProjectModel}">
+                <TextBlock Text="{Binding Path=PROJECT_NAME}" Uid="{Binding Path=PROJECT_LOCATION}" MouseLeftButtonDown="TextBlock_MouseLeftButtonDown"/>
+            </HierarchicalDataTemplate>
+            -->
+        <!--<HierarchicalDataTemplate x:Key="parent"  DataType="{x:Type local:MainWindow}" ItemsSource="{Binding Path=ProjectItems}" ItemTemplate="{StaticResource ResourceKey=itemTemplate}"/>-->
+        <!--
+        </DockPanel.Resources>-->
+        <Menu x:Name="menu" DockPanel.Dock="Top">
+            <MenuItem Header="文件">
+                <MenuItem Name="miNewProject" Header="创建工程" Click="MiNewProject_Click"/>
+                <MenuItem Name="miOpenProject" Header="打开工程" Click="OpenProject_Click" />
+                <MenuItem Name="miCloseProject" Header="关闭工程" Click="miCloseProject_Click"/>
+                <Separator />
+                <MenuItem Header="数据管理" Name="File_DataManagement" Click="Menu_Click"/>
+                <Separator />
+                <MenuItem Header="退出" Name="Quit" Click="Quit_Click"/>
+            </MenuItem>
+            <MenuItem Header="区块数据" MenuItem.Click="Menu_Click">
+                <MenuItem Header="区块参数" Name="QKSJ_QKCS"/>
+            </MenuItem>
+            <MenuItem Header="选井选层" MenuItem.Click="Menu_Click">
+                <MenuItem Header="注采井组" Name="JCXZ_ZCJZ" />
+                <MenuItem Header="井组完善度" Name="JCXZ_JZWSD" />
+                <MenuItem Header="调剖井选择" Name="JCXZ_TPJ" />
+                <MenuItem Header="调剖层选择" Name="JCXZ_TPC" />
+                <MenuItem Header="优势方向评价" Name="Well_YSFX" />
+            </MenuItem>
+            <MenuItem Header="调剖剂选择" MenuItem.Click="Menu_Click">
+                <MenuItem Header="储层物性动态计算" Name="TPJ_CCWX" />
+                <MenuItem Header="调剖剂类型选择" Name="TPJ_LXXZ" />
+                <MenuItem Header="调剖剂浓度选择" Name="TPJ_NDXZ" />
+            </MenuItem>
+            <MenuItem Header="参数设计" MenuItem.Click="Menu_Click">
+                <MenuItem Header="基础信息" Name="CSSJ_JCXX" />
+                <MenuItem Header="调剖用量优化" Name="CSSJ_TPYLYH" />
+                <MenuItem Header="调剖用量快速计算" Name="CSSJ_KSJS" />
+                <MenuItem Header="调剖段塞设计" Name="CSSJ_DSSJ" />
+            </MenuItem>
+            <MenuItem Header="效果预测" MenuItem.Click="Menu_Click">
+                <MenuItem Header="生产井深部调剖效果预测" Name="XGYC_SC" />
+                <MenuItem Header="注入井深部调剖效果预测" Name="XGYC_ZR" />
+            </MenuItem>
+            <MenuItem Header="施工设计" MenuItem.Click="Menu_Click">
+                <MenuItem Header="生成" Name="SGSJ_MainPage" />
+            </MenuItem>
+            <MenuItem Header="效果评价" MenuItem.Click="Menu_Click">
+                <MenuItem Header="调剖井效果评价" Name="XGPJ_TPJXGPJ"/>
+                <MenuItem Header="油井效果评价" Name="XGPJ_YJXGPJ"/>
+            </MenuItem>
+            <MenuItem Name="HelpBtn" Header="帮助" Click="Help_Click"/>
+        </Menu>
+        <Grid Grid.IsSharedSizeScope="True">
+            <Frame x:Name="pageContainer" ScrollViewer.CanContentScroll="True" NavigationUIVisibility="Hidden" />
+        </Grid>
+    </DockPanel>
+</Window>

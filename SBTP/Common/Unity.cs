@@ -1,0 +1,112 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web.Script.Serialization;
+
+namespace Common
+{
+    public class Unity
+    {
+        /// <summary>
+        /// 提示信息（操作成功、操作失败）
+        /// </summary>
+        /// <param name="func"></param>
+        /// <returns></returns>
+        public static string hint(bool func)
+        {
+            return func ? "操作成功" : "操作失败";
+        }
+
+        /// <summary>
+        /// 将 object 转换指定 model 类型（采用 json 方式）
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static T ToModel<T>(object obj)
+        {
+            return JsonConvert.DeserializeObject<T>(new JavaScriptSerializer().Serialize(obj));
+        }
+
+        /// <summary>
+        /// 将 object 转换 string 类型
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>字符串</returns>
+        public static string ToString(object obj)
+        {
+            string str = obj.ToString();
+            return string.IsNullOrEmpty(str) ? string.Empty : str;
+        }
+
+        /// <summary>
+        /// 将 object 转换 double 类型
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>双精度数值</returns>
+        public static double ToDouble(object obj)
+        {
+            double num = 0;
+            return double.TryParse(obj.ToString(), out num) ? num : 0;
+        }
+
+        /// <summary>
+        /// 将 object 转换 int 类型
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>整数</returns>
+        public static int ToInt(object obj)
+        {
+            int num = 0;
+            return int.TryParse(obj.ToString(), out num) ? num : 0;
+        }
+
+        /// <summary>
+        /// 将 object 转换 DateTime 类型，并返回时间（yyyy-MM-dd）格式的字符串
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>时间（yyyy-MM-dd）格式的字符串</returns>
+        public static string ToDateTime(object obj)
+        {
+            if (obj == null)
+                return string.Empty;
+            DateTime result = (DateTime)obj;
+            return result.ToString("yyyy-MM-dd");
+        }
+
+        /// <summary>
+        /// 将 object 转换 DateTime 类型，并返回时间（yyyy-MM-dd）格式的字符串
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="format"></param>
+        /// <returns></returns>
+        public static string ToDateTime(object obj, string format = "yyyy-MM-dd")
+        {
+            if (obj == null)
+                return null;
+            DateTime result = (DateTime)obj;
+            return result.ToString(format);
+        }
+
+        public static string DateMathed(string dateString)
+        {
+            if (Regex.IsMatch(dateString, @"^((?:19|20)\\d\\d)/(0[1-9]|1[012])/(0[1-9]|[12][0-9]|3[01])$"))
+                return "yyyy/MM/dd";
+            else if (Regex.IsMatch(dateString, @"\d{4}((0[1-9])|(1[0-2]))"))
+                return "yyyyMM";
+            else if (Regex.IsMatch(dateString, @"^(((20[0-3][0-9]-(0[13578]|1[02])/(0[1-9]|[12][0-9]|3[01]))|(20[0-3][0-9]-(0[2469]|11)/(0[1-9]|[12][0-9]|30))) (20|21|22|23|[0-1][0-9]):[0-5][0-9]:[0-5][0-9])$"))
+                return "yyyy/MM/dd hh:mm:ss";
+            else
+                return "yyyy/MM";
+        }
+
+
+
+    }
+}

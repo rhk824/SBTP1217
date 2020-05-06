@@ -1,0 +1,64 @@
+﻿<Page x:Class="SBTP.View.SGSJ._052"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:SBTP.View.SGSJ"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="_052" Background="#eee">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/sgsj_style.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer>
+            <StackPanel>
+                <GroupBox Header="参数设计 - 段塞设计">
+                    <StackPanel>
+                        <TextBox x:Name="tb" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
+                        <StackPanel Orientation="Vertical" Name="grid_area" />
+                        <!--<DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="序号" Binding="{Binding xh}"/>
+                                <DataGridTextColumn Header="段数名称" Binding="{Binding dsmc}"/>
+                                <DataGridTextColumn Header="比例（%）" Binding="{Binding bl}"/>
+                                <DataGridTextColumn Header="体积（m）" Binding="{Binding tj}"/>
+                                <DataGridTextColumn Header="凝胶浓度（mg/L）" Binding="{Binding njnd}"/>
+                                <DataGridTextColumn Header="颗粒浓度" Binding="{Binding klnd}"/>
+                                <DataGridTextColumn Header="目数" Binding="{Binding ms}"/>
+                                <DataGridTextColumn Binding="{Binding rz}">
+                                    <DataGridTextColumn.Header>
+                                        <TextBlock>
+                                            <Run Text="日注（m" />
+                                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
+                                            <Run Text="/d）"/>
+                                        </TextBlock>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="天数" Binding="{Binding ts}"/>
+                                <DataGridTextColumn Header="预计压力" Binding="{Binding yjyl}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>-->
+                    </StackPanel>
+                    
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="1" Style="{StaticResource StackPanelStyle}">
+            <!--<Button>预览</Button>-->
+            <Button Click="btnUpdate_Click">更新</Button>
+            <Button Click="btnSave_Click">保存</Button>
+        </StackPanel>
+    </Grid>
+</Page>

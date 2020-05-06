@@ -1,0 +1,77 @@
+﻿<Window x:Class="SBTP.View.JCXZ.TPC_XCSJ"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SBTP.View.JCXZ"
+        xmlns:wfc="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
+        mc:Ignorable="d"
+        Title="小层柱状图" Height="650" Width="1000" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Header="调剖层（井号）" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
+            <ListBox Name="lb_tpc" ItemsSource="{Binding oc_tpc}" DisplayMemberPath="jh" SelectionChanged="Lb_tpc_SelectionChanged"/>
+        </GroupBox>
+
+        <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Center">
+            <Button Name="btn_right" Content="→" Click="Btn_right_Click"/>
+        </StackPanel>
+
+        <GroupBox Grid.Column="2" Grid.Row="0">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ElementName=lb_tpc, Path=SelectedItem.jh}" />
+                    <TextBlock Text="井 沉积柱状图" />
+                </StackPanel>
+            </GroupBox.Header>
+            <WindowsFormsHost Name="wfh" Margin="0,0,0,0">
+                <wfc:Chart />
+            </WindowsFormsHost>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ElementName=lb_tpc, Path=SelectedItem.jh}" />
+                    <TextBlock Text="井 小层数据" />
+                </StackPanel>
+            </GroupBox.Header>
+            <DataGrid ItemsSource="{Binding oc_xcsj}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding YCZ}" Header="油层组"/>
+                    <DataGridTextColumn Binding="{Binding XCH}" Header="小层号"/>
+                    <DataGridTextColumn Binding="{Binding XCXH}" Header="小层序号"/>
+                    <DataGridTextColumn Binding="{Binding SYDS}" Header="砂岩顶深"/>
+                    <DataGridTextColumn Binding="{Binding YXHD}" Header="有效厚度"/>
+                    <DataGridTextColumn Binding="{Binding STL}" Header="渗透率"/>
+                    <DataGridTextColumn Binding="{Binding dcxs}" Header="地层系数"/>
+                    <DataGridTextColumn Binding="{Binding ntc}" Header="拟调层"/>
+                    <DataGridTextColumn Binding="{Binding ndd}" Header="拟堵段"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <Grid Grid.Row="2" Grid.ColumnSpan="3">
+            <StackPanel Style="{StaticResource sp_bottom}">
+                <Button Name="btn_add" Content="添加" Click="Btn_add_Click" />
+                <Button Name="btn_quit" Content="退出" Click="Btn_quit_Click" />
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
