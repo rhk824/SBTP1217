@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Folder = System.Windows.Forms;
 
 namespace SBTP.View.File
 {
@@ -69,8 +71,102 @@ namespace SBTP.View.File
             RightClickMenuGruop.Items.Add(Batch_Export);
             RightClickMenuGruop.Items.Add(Batch_Delete);
             Batch_Delete.Click += BatchDelete;
+            Batch_Export.Click += Batch_Export_Click;
             csq.ContextMenu = RightClickMenuGruop;
             csh.ContextMenu = RightClickMenuGruop;
+        }
+
+        /// <summary>
+        /// 批量导出
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Batch_Export_Click(object sender, RoutedEventArgs e)
+        {
+            var parent = ContextMenuService.GetPlacementTarget(LogicalTreeHelper.GetParent(sender as MenuItem));
+            //措施状态
+            string cszt = (parent as TreeViewItem).Name;
+            Folder.FolderBrowserDialog choose_folder = new Folder.FolderBrowserDialog();
+            choose_folder.Description = "请选择文件存储位置";
+            choose_folder.ShowNewFolderButton = true;
+
+            if (choose_folder.ShowDialog() == Folder.DialogResult.OK)
+            {
+                string path = choose_folder.SelectedPath;
+                
+                if (string.IsNullOrEmpty(path))
+                {
+                    MessageBox.Show("路径不能为空");
+                    return;
+                }
+                else
+                {
+                    try
+                    {
+                        ExportTables(path, cszt);
+                        MessageBox.Show("导出成功！");
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("导出失败！原因：" + ex.Message);
+                        return;
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// 多表导出txt
+        /// </summary>
+        /// <param name="path"></param>
+        private void ExportTables(string path,string zt)
+        {
+            foreach (DataRow item in GetTableNames().Rows)
+            {
+                string sqlStr = "select * from " + item[0].ToString();
+                if (!item[0].ToString().Equals("WELL_STATUS"))
+                {
+                    if (zt.Equals("csq"))
+                        sqlStr += " where ZT=0";
+                    if (zt.Equals("csh"))
+                        sqlStr += " where ZT=1";
+                }
+                DataTable datas = DbHelperOleDb.Query(sqlStr).Tables[0];
+                StringBuilder tableStr = new StringBuilder();
+                for (int i = 0; i < datas.Columns.Count; i++)
+                {
+                    tableStr.Append(datas.Columns[i].ColumnName);
+                    if (i == datas.Columns.Count - 1)
+                        tableStr.Append("\r\n");
+                    else
+                        tableStr.Append("\t");
+                }
+                foreach (DataRow j in datas.Rows)
+                {
+                    for (int i = 0; i < j.ItemArray.Length; i++)
+                    {
+                        tableStr.Append(j.ItemArray[i]);
+                        if (i == j.ItemArray.Length - 1)
+                            tableStr.Append("\r\n");
+                        else
+                            tableStr.Append("\t");
+                    }
+                }
+                tableStr.Append("");
+                using FileStream fileStream = new FileStream(path + @"\" + item[0] + ".txt", FileMode.Create, FileAccess.Write);
+                using StreamWriter writer = new StreamWriter(fileStream, Encoding.UTF8);
+                writer.Write(tableStr.ToString());
+            }
+        }
+        /// <summary>
+        /// 获取表名
+        /// </summary>
+        /// <returns></returns>
+        private DataTable GetTableNames()
+        {
+            StringBuilder sqlstr = new StringBuilder("select distinct table_name from FIELD_DICTIONARY");
+            return DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
         }
 
         /// <summary>
@@ -95,7 +191,7 @@ namespace SBTP.View.File
 
         }
         /// <summary>
-        /// 菜单条目选择事件
+        /// 菜单条目双击选择事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -103,12 +199,14 @@ namespace SBTP.View.File
         {
             var item_node = treeView.SelectedItem as TreeViewItem;
             var parent_node = (treeView.SelectedItem as TreeViewItem).Parent;
-            string item_node_name = item_node.Name.Substring(2);
+            //string item_node_name = item_node.Name.Substring(2);
             string parent_node_name = parent_node.GetValue(NameProperty).ToString();
+            if (parent_node_name.Equals("treeView")) return;
             loading.Visibility = Visibility.Visible;
             
             if (parent_node_name == "xt")
             {
+                string item_node_name = item_node.Name;
                 UIElement temp = new UIElement();
                 tPJ_Table = new TPJ_table(TableName = item_node_name);
                 ContextMenu menu = new ContextMenu();
@@ -127,6 +225,7 @@ namespace SBTP.View.File
             }
             else
             {
+                string item_node_name = item_node.Name.Substring(2);
                 if (parent_node_name.Equals("csq"))
                     App.Mycache.Set("csdq", 0, App.policy);
                 else
