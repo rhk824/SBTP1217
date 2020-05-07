@@ -386,10 +386,17 @@ namespace SBTP.View.File
                 return;
             }
             string node_name = node.Name.Substring(2);
-            if (node.Name.Contains("Q"))
+            if (node.Name.Substring(0,2).Contains("Q"))
+            {
                 App.Mycache.Set("cszt", 0, App.policy);
-            if (node.Name.Contains("H"))
+                App.Mycache.Set("csdq", 0, App.policy);
+            }               
+            if (node.Name.Substring(0,2).Contains("H"))
+            {
                 App.Mycache.Set("cszt", 1, App.policy);
+                App.Mycache.Set("csdq", 1, App.policy);
+            }
+                
             Import_Local_FileUpload fu = new Import_Local_FileUpload(node_name, node.Header.ToString());
             bool? result = fu.ShowDialog();
             if (result == true)
@@ -398,7 +405,8 @@ namespace SBTP.View.File
                 var bindGrid = doAsyncTask(node_name);
                 Task closeLoaing = bindGrid.ContinueWith(t => { this.Dispatcher.Invoke(() => { loading.Visibility = Visibility.Collapsed; }); });
                 await closeLoaing;
-                (sp.Children[0] as CSSJtables.csq_table).DataSource = bindGrid.Result;
+                if (sp.Children.Count != 0)
+                    (sp.Children[0] as CSSJtables.csq_table).DataSource = bindGrid.Result;
             }
 
         }
@@ -415,6 +423,16 @@ namespace SBTP.View.File
                 MessageBox.Show("请选择类别");
                 return;
             }
+            if (node.Name.Substring(0, 2).Contains("Q"))
+            {
+                App.Mycache.Set("cszt", 0, App.policy);
+                App.Mycache.Set("csdq", 0, App.policy);
+            }
+            if (node.Name.Substring(0, 2).Contains("H"))
+            {
+                App.Mycache.Set("cszt", 1, App.policy);
+                App.Mycache.Set("csdq", 1, App.policy);
+            }
             string node_name = node.Name.Substring(2);
             //MessageBox.Show(node.Name);
             DataManagement_SourceToLoad w = new DataManagement_SourceToLoad(node_name);
@@ -430,6 +448,16 @@ namespace SBTP.View.File
             var node = treeView.SelectedItem as TreeViewItem;
             if (node.Name == null) { MessageBox.Show("请选择类别"); return; }
             string node_name = node.Name.Substring(2);
+            if (node.Name.Substring(0, 2).Contains("Q"))
+            {
+                App.Mycache.Set("cszt", 0, App.policy);
+                App.Mycache.Set("csdq", 0, App.policy);
+            }
+            if (node.Name.Substring(0, 2).Contains("H"))
+            {
+                App.Mycache.Set("cszt", 1, App.policy);
+                App.Mycache.Set("csdq", 1, App.policy);
+            }
             MessageBoxResult result = MessageBox.Show("确定要删除数据？", "提示", MessageBoxButton.YesNo);
             //弹出删除对话框
             if (result == MessageBoxResult.No) return;
@@ -441,7 +469,8 @@ namespace SBTP.View.File
             var bindGrid = doAsyncTask(node_name);
             Task closeLoaing = bindGrid.ContinueWith(t => { this.Dispatcher.Invoke(() => { loading.Visibility = Visibility.Collapsed; }); });
             await closeLoaing;
-            (sp.Children[0] as CSSJtables.csq_table).DataSource = bindGrid.Result;
+            if (sp.Children.Count != 0)
+                (sp.Children[0] as CSSJtables.csq_table).DataSource = bindGrid.Result;
         }
 
         private int Delete(string table_name)
