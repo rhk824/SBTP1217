@@ -33,7 +33,7 @@ namespace SBTP.View.File
             foreach (TreeViewItem item in this.csq.Items)
             {
                 if (this.TableCheck(item.Name.Substring(2)) == 0)
-                    item.Header = item.Header + " *";
+                    item.Header += " *";
             }
         }
         /// <summary>
@@ -72,8 +72,14 @@ namespace SBTP.View.File
             RightClickMenuGruop.Items.Add(Batch_Delete);
             Batch_Delete.Click += BatchDelete;
             Batch_Export.Click += Batch_Export_Click;
+            Batch_Import.Click += Batch_Import_Click;
             csq.ContextMenu = RightClickMenuGruop;
             csh.ContextMenu = RightClickMenuGruop;
+        }
+
+        private void Batch_Import_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

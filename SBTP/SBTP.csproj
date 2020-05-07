@@ -154,7 +154,9 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationCore">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\PresentationCore.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="xom, Version=1.2.10.0, Culture=neutral, processorArchitecture=MSIL">
@@ -257,6 +259,9 @@
     </Compile>
     <Compile Include="View\CSSJ\YH.xaml.cs">
       <DependentUpon>YH.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\File\BatchImport.xaml.cs">
+      <DependentUpon>BatchImport.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\File\DataManagement.xaml.cs">
       <DependentUpon>DataManagement.xaml</DependentUpon>
@@ -490,6 +495,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CSSJ\YH.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\File\BatchImport.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
