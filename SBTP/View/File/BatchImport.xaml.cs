@@ -65,12 +65,13 @@ namespace SBTP.View.File
                     Type type = model.GetType();
                     foreach (DataRow dr in data.Rows)
                     {
+                        var instance = type.Assembly.CreateInstance(type.FullName);
                         for (int i = 0; i < dr.Table.Columns.Count; i++)
                         {
                             if (dr.Table.Columns[i].ColumnName.Equals("ID")) continue;                           
-                            type.GetProperty(dr.Table.Columns[i].ColumnName).SetValue(model, dr[i]);
+                            type.GetProperty(dr.Table.Columns[i].ColumnName).SetValue(instance, dr[i]);
                         }
-                        modellist.Add(model);
+                        modellist.Add(instance);
                     }
                     switch (table_name)
                     {
@@ -83,6 +84,7 @@ namespace SBTP.View.File
                     }
                 }
                 MessageBox.Show("导入成功！");
+                this.Close();
             }
             catch (Exception ex)
             {

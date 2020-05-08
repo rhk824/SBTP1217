@@ -76,9 +76,20 @@ namespace SBTP.View.File
             csq.ContextMenu = RightClickMenuGruop;
             csh.ContextMenu = RightClickMenuGruop;
         }
-
+        /// <summary>
+        /// 多表导入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Batch_Import_Click(object sender, RoutedEventArgs e)
         {
+            var parent = ContextMenuService.GetPlacementTarget(LogicalTreeHelper.GetParent(sender as MenuItem));
+            //措施状态
+            string cszt = (parent as TreeViewItem).Name;
+            if(cszt.Equals("csq"))
+                App.Mycache.Set("cszt", 0, App.policy);
+            else
+                App.Mycache.Set("cszt", 1, App.policy);
             new BatchImport().Show();
         }
 
@@ -154,13 +165,11 @@ namespace SBTP.View.File
                     {
                         string data = j.ItemArray[i].ToString();
 
-                        if (j.Table.Columns[i].ColumnName.Equals("NY"))
+                        if (j.Table.Columns[i].ColumnName.Equals("NY") || j.Table.Columns[i].ColumnName.Equals("CSRQ"))
                         {
-                            data = DateTime.Parse(data).ToShortDateString();                                                       
+                            data = Convert.ToDateTime(DateTime.Parse(data).ToShortDateString()).ToString("yyyy/MM/dd");
                             if (!item[0].ToString().Equals("XSPM_MONTH"))
-                            {
                                 data = data.Substring(0, data.LastIndexOf('/'));
-                            }
                         }
                         tableStr.Append(data);
                         if (i == j.ItemArray.Length - 1)

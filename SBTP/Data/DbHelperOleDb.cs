@@ -46,7 +46,7 @@ namespace Maticsoft.DBUtility
                 return true;
             }
         }
-        
+
         #endregion
 
         #region  执行简单SQL语句
@@ -232,7 +232,7 @@ namespace Maticsoft.DBUtility
         /// <param name="SQLString">查询语句</param>
         /// <returns>DataSet</returns>
         public static DataSet Query(string SQLString)
-        {           
+        {
             using (OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path)))
             {
                 DataSet ds = new DataSet();
@@ -322,7 +322,7 @@ namespace Maticsoft.DBUtility
         /// </summary>
         /// <param name="SQLStringList">SQL语句字典（key为sql语句，value是该语句的OleDbParameter[]）</param>
         /// <param name="TableName">表名</param>
-        public static int ExecuteSqlTran(List<DictionaryEntry> SQLStringList,string TableName)
+        public static int ExecuteSqlTran(List<DictionaryEntry> SQLStringList, string TableName)
         {
             int val = 0;
             using (OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path)))
@@ -336,20 +336,33 @@ namespace Maticsoft.DBUtility
                         foreach (DictionaryEntry myDE in SQLStringList)
                         {
                             string cmdText = myDE.Key.ToString();
-                            StringBuilder sqlStr = new StringBuilder("select * from " + TableName + " where JH=@JH");
+                            StringBuilder sqlStr = new StringBuilder("select * from " + TableName + " where JH='@JH'");
                             OleDbParameter[] cmdParms = (OleDbParameter[])myDE.Value;
                             List<OleDbParameter> parameters = new List<OleDbParameter>();
                             parameters.Add(new OleDbParameter("@JH", cmdParms[0].Value));
-                          
+
                             if (!TableName.Equals("WELL_STATUS") && !TableName.Equals("OIL_WELL_C"))
                             {
+                                if (TableName.Equals("XSPM_MONTH"))
+                                {
+                                    //sqlStr.Append(" and DateDiff('d',CSRQ,'@CSRQ')=0 ");
+                                    sqlStr.Append(" and CSRQ=@CSRQ");
+                                    parameters.Add(new OleDbParameter("@CSRQ",Convert.ToDateTime(cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@CSRQ"))].Value.ToString()).ToString("yyyy/MM/dd")));
+                                }
+                                else
+                                {
+                                    sqlStr.Append(" and NY=@NY");
+                                    parameters.Add(new OleDbParameter("@NY", Convert.ToDateTime(cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@NY"))].Value.ToString()).ToString("yyyy/MM")));
+                                }
                                 sqlStr.Append(" and ZT=@ZT");
                                 parameters.Add(new OleDbParameter("@ZT", cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@ZT"))].Value));
+
+
                             }
                             if (!Exists(sqlStr.ToString(), parameters.ToArray()))
                             {
                                 PrepareCommand(cmd, conn, trans, cmdText, cmdParms);
-                                val+= cmd.ExecuteNonQuery();
+                                val += cmd.ExecuteNonQuery();
                                 cmd.Parameters.Clear();
                             }
                         }
@@ -469,7 +482,7 @@ namespace Maticsoft.DBUtility
 
         #endregion
 
-    
+
 
     }
 }
