@@ -79,7 +79,7 @@ namespace SBTP.View.File
 
         private void Batch_Import_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            new BatchImport().Show();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace SBTP.View.File
             foreach (DataRow item in GetTableNames().Rows)
             {
                 string sqlStr = "select * from " + item[0].ToString();
-                if (!item[0].ToString().Equals("WELL_STATUS"))
+                if (!item[0].ToString().Equals("WELL_STATUS")&& !item[0].ToString().Equals("OIL_WELL_C"))
                 {
                     if (zt.Equals("csq"))
                         sqlStr += " where ZT=0";
@@ -152,7 +152,17 @@ namespace SBTP.View.File
                 {
                     for (int i = 0; i < j.ItemArray.Length; i++)
                     {
-                        tableStr.Append(j.ItemArray[i]);
+                        string data = j.ItemArray[i].ToString();
+
+                        if (j.Table.Columns[i].ColumnName.Equals("NY"))
+                        {
+                            data = DateTime.Parse(data).ToShortDateString();                                                       
+                            if (!item[0].ToString().Equals("XSPM_MONTH"))
+                            {
+                                data = data.Substring(0, data.LastIndexOf('/'));
+                            }
+                        }
+                        tableStr.Append(data);
                         if (i == j.ItemArray.Length - 1)
                             tableStr.Append("\r\n");
                         else
@@ -259,7 +269,7 @@ namespace SBTP.View.File
             {
                 StringBuilder sqlStr = new StringBuilder();
                 sqlStr.Append("select * from " + table_name);
-                if (!table_name.Equals("WELL_STATUS"))
+                if (!table_name.Equals("WELL_STATUS")&& !table_name.Equals("OIL_WELL_C"))
                     sqlStr.Append(" where ZT = " + App.Mycache.Get("csdq"));
                 return DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             });

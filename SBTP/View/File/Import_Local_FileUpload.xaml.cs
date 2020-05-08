@@ -121,7 +121,6 @@ namespace SBTP.View.File
         /// <param name="e"></param>
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
-
             //文件绝对路径
             string filePath = filename.Text.ToString();
             if (string.IsNullOrEmpty(filePath))

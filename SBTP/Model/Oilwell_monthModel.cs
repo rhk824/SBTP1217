@@ -6,7 +6,7 @@ namespace SBTP.Model
     /// 油井井史（月）实体
     /// </summary>
     [Serializable]
-   public class Oilwell_monthModel
+    public class Oilwell_monthModel
     {
         public string JH { get; set; } = "";
 
@@ -29,6 +29,7 @@ namespace SBTP.Model
         public string LJCYL { get; set; } = "";
         public string LJCSL { get; set; } = "";
         public string HS { get; set; } = "";
+        public string ZT { set; get; } = "0";
 
     }
 }

@@ -5,11 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SBTP.View.File"
         mc:Ignorable="d"
-        Title="批量导入" Height="450" Width="800">
+        Title="批量导入" Height="300" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
+        <GroupBox Header="表名" Grid.Row="0">
+            <StackPanel Name="data_group" Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <TextBlock Name="WELL_STATUS" Text="井位数据："/>
+                    <TextBox Name="well_location" Width="200" Margin="0,0,2,0"/>
+                    <Button Name="well_location_imp" Content="..." Width="20" Click="Table_Import_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <TextBlock Name="OIL_WELL_C" Text="小层数据："/>
+                    <TextBox Name="well_c" Width="200" Margin="0,0,2,0"/>
+                    <Button Name="well_c_imp" Content="..." Width="20" Click="Table_Import_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <TextBlock Name="OIL_WELL_MONTH" Text="油井井史："/>
+                    <TextBox Name="oil_well" Width="200" Margin="0,0,2,0"/>
+                    <Button Name="oil_well_imp" Content="..." Width="20" Click="Table_Import_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <TextBlock Name="WATER_WELL_MONTH" Text="水井井史："/>
+                    <TextBox Name="water_well" Width="200" Margin="0,0,2,0"/>
+                    <Button Name="water_well_imp" Content="..." Width="20" Click="Table_Import_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <TextBlock Name="FZJ_MONTH" Text="分注井史："/>
+                    <TextBox Name="fz_well" Width="200" Margin="0,0,2,0"/>
+                    <Button Name="fz_well_imp" Content="..." Width="20" Click="Table_Import_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                    <TextBlock Name="XSPM_MONTH" Text="吸水剖面："/>
+                    <TextBox Name="xspm" Width="200" Margin="0,0,2,0"/>
+                    <Button Name="xspm_imp" Content="..." Width="20" Click="Table_Import_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="操作">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Name="import" Content="导入" Width="60" Margin="0,0,5,0" Click="import_Click"/>
+                <Button Name="cancel" Content="取消" Width="60" Click="cancel_Click"/>
+            </StackPanel>
+        </GroupBox>
     </Grid>
 </Window>

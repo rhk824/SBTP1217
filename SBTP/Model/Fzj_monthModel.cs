@@ -23,6 +23,7 @@ namespace SBTP.Model
         public string CDLJZSL { get; set; } = "";
 
         public string CDLJZMYL { get; set; } = "";
+        public string ZT { set; get; } = "0";
 
     }
 }

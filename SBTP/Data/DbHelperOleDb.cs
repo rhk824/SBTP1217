@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Text;
+using System.Linq;
 
 namespace Maticsoft.DBUtility
 {
@@ -331,15 +333,20 @@ namespace Maticsoft.DBUtility
                     OleDbCommand cmd = new OleDbCommand();
                     try
                     {
-                        //循环
                         foreach (DictionaryEntry myDE in SQLStringList)
                         {
-
                             string cmdText = myDE.Key.ToString();
+                            StringBuilder sqlStr = new StringBuilder("select * from " + TableName + " where JH=@JH");
                             OleDbParameter[] cmdParms = (OleDbParameter[])myDE.Value;
-                            OleDbParameter[] parameters = { new OleDbParameter("@JH", OleDbType.VarChar, 255) };
-                            parameters[0].Value = cmdParms[0].Value;
-                            if (!Exists("select * from " + TableName + " where JH=@JH", parameters))
+                            List<OleDbParameter> parameters = new List<OleDbParameter>();
+                            parameters.Add(new OleDbParameter("@JH", cmdParms[0].Value));
+                          
+                            if (!TableName.Equals("WELL_STATUS") && !TableName.Equals("OIL_WELL_C"))
+                            {
+                                sqlStr.Append(" and ZT=@ZT");
+                                parameters.Add(new OleDbParameter("@ZT", cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@ZT"))].Value));
+                            }
+                            if (!Exists(sqlStr.ToString(), parameters.ToArray()))
                             {
                                 PrepareCommand(cmd, conn, trans, cmdText, cmdParms);
                                 val+= cmd.ExecuteNonQuery();

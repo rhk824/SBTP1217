@@ -38,5 +38,6 @@ namespace SBTP.Model
 
         public string LZMYL { get; set; } = "";
         public string ZRYND { get; set; } = "";
+        public string ZT { set; get; } = "0";
     }
 }

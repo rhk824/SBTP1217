@@ -24,9 +24,9 @@ namespace SBTP.BLL
             List<DictionaryEntry> SQLStringList = new List<DictionaryEntry>();
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into OIL_WELL_C (");
-            strSql.Append("JH,YCZ,XCXH,XCH,SYDS,YXHD,STL,SKQK,HYBHD,KXD,SYHD,ZT)");
+            strSql.Append("JH,YCZ,XCXH,XCH,SYDS,YXHD,STL,SKQK,HYBHD,KXD,SYHD)");
             strSql.Append(" values(");
-            strSql.Append("@JH,@YCZ,@XCXH,@XCH,@SYDS,@YXHD,@STL,@SKQK,@HYBHD,@KXD,@SYHD,@ZT)");
+            strSql.Append("@JH,@YCZ,@XCXH,@XCH,@SYDS,@YXHD,@STL,@SKQK,@HYBHD,@KXD,@SYHD)");
 
             foreach (Oil_well_cModel owc in modellist)
             {
@@ -41,8 +41,7 @@ namespace SBTP.BLL
                    new OleDbParameter("@SKQK",OleDbType.VarChar,255),
                    new OleDbParameter("@HYBHD",OleDbType.Double,255),
                    new OleDbParameter("@KXD",OleDbType.VarChar,255),
-                   new OleDbParameter("@SYHD",OleDbType.VarChar,255),
-                   new OleDbParameter("@ZT",OleDbType.Integer,255)
+                   new OleDbParameter("@SYHD",OleDbType.VarChar,255)
                                          };
                 parameters[0].Value = owc.JH;
                 parameters[1].Value = owc.YCZ;
@@ -55,7 +54,6 @@ namespace SBTP.BLL
                 parameters[8].Value = string.IsNullOrEmpty(owc.HYBHD) ? 0 : double.Parse(owc.HYBHD);
                 parameters[9].Value = owc.KXD;
                 parameters[10].Value = owc.SYHD;
-                parameters[11].Value =(int)App.Mycache.Get("cszt");
 
                 DictionaryEntry de = new DictionaryEntry();
                 de.Key = strSql.ToString();
