@@ -310,7 +310,7 @@ namespace SBTP.View.CSSJ
         /// <returns></returns>
         private DataTable getWaterWellMonth()
         {
-            StringBuilder sqlStr = new StringBuilder("select * from WATER_WELL_MONTH");
+            StringBuilder sqlStr = new StringBuilder("select * from WATER_WELL_MONTH where zt=0");
             return DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
         }
 

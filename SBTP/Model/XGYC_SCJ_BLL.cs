@@ -95,7 +95,7 @@ namespace SBTP.BLL
             //string endYearMonth = "";
 
             //累注母液量：对应时间段内累注母液量的均值
-            sql = string.Format("Select * from water_well_month where JH = \"{0}\" and NY between #{1}# and #{2}# Order by NY",jz,startDT.ToString("yyyy/MM"),endDT.ToString("yyyy/MM") );
+            sql = string.Format("Select * from water_well_month where zt=0 and JH = \"{0}\" and NY between #{1}# and #{2}# Order by NY",jz,startDT.ToString("yyyy/MM"),endDT.ToString("yyyy/MM") );
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
             ob = dt.Compute("avg(LZMYL)", "LZMYL<>0");
             double lzmyl = double.Parse(ob.ToString());

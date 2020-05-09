@@ -33,7 +33,7 @@ namespace SBTP.View.JCXZ
             StringBuilder sql = new StringBuilder();
             sql.Append(" select a.jh, zb_x, zb_y ");
             sql.Append(" from " + table_name + " a, well_status b ");
-            sql.Append(" where a.jh = b.jh ");
+            sql.Append(" where a.zt=0 and a.jh = b.jh ");
             sql.Append(" group by a.jh, zb_x, zb_y ");
             sql.Append(" order by a.jh ");
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];

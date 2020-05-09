@@ -234,7 +234,7 @@ namespace SBTP.BLL
         /// <returns></returns>
         private List<DB_WATER_WELL_MONTH> get_water_month(string jh, DateTime t1, DateTime t2)
         {
-            string sql = $"select * from water_well_month where jh=\"{jh}\" and ny between #{t1.ToString("yyyy/MM")}# and #{t2.ToString("yyyy/MM")}# order by ny";
+            string sql = $"select * from water_well_month where ZT=0 and jh=\"{jh}\" and ny between #{t1.ToString("yyyy/MM")}# and #{t2.ToString("yyyy/MM")}# order by ny";
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
             List<DB_WATER_WELL_MONTH> list_water = new List<DB_WATER_WELL_MONTH>();
             for (int i = 0; i < dt.Rows.Count; i++)

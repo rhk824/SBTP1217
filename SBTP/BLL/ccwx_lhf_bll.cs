@@ -133,7 +133,7 @@ namespace SBTP.BLL
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * ");
             sql.Append(" from water_well_month ");
-            sql.Append(string.Format(" where jh='{0}' and ny=#{1}# ", tpjing.jh, string.Format("{0:yyyy/MM}", time)));
+            sql.Append(string.Format(" where ZT=0 and jh='{0}' and ny=#{1}# ", tpjing.jh, string.Format("{0:yyyy/MM}", time)));
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
 
             double yzsl = Unity.ToDouble(dt.Rows[0]["yzsl"]);

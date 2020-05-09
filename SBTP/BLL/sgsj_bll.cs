@@ -452,8 +452,8 @@ namespace SBTP.BLL
             this.dt0222.Clear();
 
             #region 数据源
-            DataTable dt_ow = DbHelperOleDb.Query("select * from oil_well_month a, (select jh, max(ny) as max_ny from oil_well_month group by jh) b where a.jh = b.jh and a.ny = b.max_ny").Tables[0];
-            DataTable dt_ww = DbHelperOleDb.Query("select * from water_well_month a, (select jh, max(ny) as max_ny from water_well_month group by jh) b where a.jh = b.jh and a.ny = b.max_ny").Tables[0];
+            DataTable dt_ow = DbHelperOleDb.Query("select * from oil_well_month a, (select jh, max(ny) as max_ny from oil_well_month group by jh) b where a.ZT=0 and a.jh = b.jh and a.ny = b.max_ny").Tables[0];
+            DataTable dt_ww = DbHelperOleDb.Query("select * from water_well_month a, (select jh, max(ny) as max_ny from water_well_month group by jh) b where a.ZT=0 and a.jh = b.jh and a.ny = b.max_ny").Tables[0];
             #endregion
 
             #region 更新表格 0221
@@ -558,8 +558,8 @@ namespace SBTP.BLL
             DataTable tpj_data = Data.DatHelper.TPJDataRead();
             DataTable wsd_data = Data.DatHelper.WsdRead();
             string[] tpj_para_read = Data.DatHelper.TPJParaRead();
-            DataTable dt_ww = DbHelperOleDb.Query($"select jh, (sum(yzsl+yzmyl)/30) as rzyl, avg(yy) as avg_yy from water_well_month where ny between #{tpj_para_read[1]}# and #{tpj_para_read[2]}# group by jh").Tables[0];
-            DataTable dt_ow = DbHelperOleDb.Query($"select sum(ycsl)/sum(ycyl) from oil_well_month where ny between #{tpj_para_read[1]}# and #{tpj_para_read[2]}#").Tables[0];
+            DataTable dt_ww = DbHelperOleDb.Query($"select jh, (sum(yzsl+yzmyl)/30) as rzyl, avg(yy) as avg_yy from water_well_month where ny between #{tpj_para_read[1]}# and #{tpj_para_read[2]}#  and ZT=0 group by jh").Tables[0];
+            DataTable dt_ow = DbHelperOleDb.Query($"select sum(ycsl)/sum(ycyl) from oil_well_month where ny between #{tpj_para_read[1]}# and #{tpj_para_read[2]}# and ZT=0").Tables[0];
             #endregion
 
             #region 更新表格

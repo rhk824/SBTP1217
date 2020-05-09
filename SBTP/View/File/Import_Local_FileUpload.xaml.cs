@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Common;
+using Microsoft.Win32;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
@@ -56,7 +57,7 @@ namespace SBTP.View.File
         {
             InitializeComponent();
             this.table_name = node_table;
-            this.Title = node_name + "数据导入";
+            this.Title = Unity.KeepChinese(node_name) + "数据导入";
             field_dictionary = SelectColumnNameByTable(node_table);
         }
 

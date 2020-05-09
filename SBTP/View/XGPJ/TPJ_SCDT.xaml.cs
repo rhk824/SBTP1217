@@ -38,7 +38,7 @@ namespace SBTP.View.XGPJ
         private void CreateChart(string jh, string start, string end)
         {
             MyToolKit.Series.Clear();            
-            StringBuilder sqlStr = new StringBuilder("select * from WATER_WELL_MONTH where JH='" + jh + "' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 order by NY");
+            StringBuilder sqlStr = new StringBuilder("select * from WATER_WELL_MONTH where zt=0 and JH='" + jh + "' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 order by NY");
             DataTable line_data = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             Dictionary<string, double> points_1 = new Dictionary<string, double>();
             Dictionary<string, double> points_2 = new Dictionary<string, double>();

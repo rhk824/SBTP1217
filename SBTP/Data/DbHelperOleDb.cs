@@ -336,7 +336,7 @@ namespace Maticsoft.DBUtility
                         foreach (DictionaryEntry myDE in SQLStringList)
                         {
                             string cmdText = myDE.Key.ToString();
-                            StringBuilder sqlStr = new StringBuilder("select * from " + TableName + " where JH='@JH'");
+                            StringBuilder sqlStr = new StringBuilder("select * from " + TableName + " where JH=@JH");
                             OleDbParameter[] cmdParms = (OleDbParameter[])myDE.Value;
                             List<OleDbParameter> parameters = new List<OleDbParameter>();
                             parameters.Add(new OleDbParameter("@JH", cmdParms[0].Value));

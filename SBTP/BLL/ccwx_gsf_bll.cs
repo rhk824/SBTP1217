@@ -134,7 +134,7 @@ namespace SBTP.BLL
 
             StringBuilder sql = new StringBuilder();
             sql.AppendFormat("select csrq from xspm_month where jh = \"{0}\" ", tpjing.jh);
-            sql.Append("group by csrq ");
+            sql.Append(" and ZT=0 group by csrq ");
             sql.Append("order by csrq asc ");
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -151,7 +151,7 @@ namespace SBTP.BLL
             oc_xspm.Clear();
 
             StringBuilder sql = new StringBuilder();
-            sql.AppendFormat("select * from xspm_month where jh = \"{0}\"", tpjing.jh);
+            sql.AppendFormat("select * from xspm_month where ZT=0 and jh = \"{0}\"", tpjing.jh);
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
             for (int i = 0; i < dt.Rows.Count; i++)
             {

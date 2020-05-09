@@ -9,56 +9,62 @@
       d:DesignHeight="660" d:DesignWidth="1262"
       Title="Data Management">
 
-    <DockPanel Background="#eee">
-        <Grid Grid.IsSharedSizeScope="True" Name="grid">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="80"/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition Height="80"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
+    <Grid>
+        <DockPanel Background="#eee">
+            <Grid Grid.IsSharedSizeScope="True" Name="grid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition Height="80"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-            <GroupBox Grid.Column="0" Grid.RowSpan="5" BorderThickness="2" Margin="2" Header="数据管理">
-                <StackPanel Orientation="Vertical">
-                    <Expander Header="基础数据管理">
-                        <TreeView x:Name="treeView" MouseDown="TreeView_MouseDown">
-                            <TreeViewItem Header="调剖剂数据" Name="xt" TreeViewItem.MouseDoubleClick="sj_Selected" FontSize="14">
-                                <TreeViewItem Name="PC_XTPL_STATUS" Header="流体调剖剂"/>
-                                <TreeViewItem Name="PC_XTPK_STATUS" Header="体膨调剖剂"/>
-                                <TreeViewItem Name="PC_XTPY_STATUS" Header="应用调剖剂"/>
-                            </TreeViewItem>
-                            <TreeViewItem Header="措施前数据" Name="csq" TreeViewItem.MouseDoubleClick="sj_Selected" FontSize="14">
-                                <TreeViewItem Name="Q_WELL_STATUS" Header="井位数据"/>
-                                <TreeViewItem Name="Q_OIL_WELL_C" Header="小层数据"/>
-                                <TreeViewItem Name="Q_OIL_WELL_MONTH" Header="油井井史"/>
-                                <TreeViewItem Name="Q_WATER_WELL_MONTH" Header="水井井史"/>
-                                <TreeViewItem Name="Q_FZJ_MONTH" Header="分注井史"/>
-                                <TreeViewItem Name="Q_XSPM_MONTH" Header="吸水剖面"/>
-                            </TreeViewItem>
-                            <TreeViewItem Header="措施后数据" Name="csh" TreeViewItem.MouseDoubleClick="sj_Selected" FontSize="14">
-                                <TreeViewItem Name="H_WELL_STATUS" Header="井位数据"/>
-                                <TreeViewItem Name="H_OIL_WELL_C" Header="小层数据"/>
-                                <TreeViewItem Name="H_OIL_WELL_MONTH" Header="油井井史"/>
-                                <TreeViewItem Name="H_WATER_WELL_MONTH" Header="水井井史"/>
-                                <TreeViewItem Name="H_FZJ_MONTH" Header="分注井史"/>
-                                <TreeViewItem Name="H_XSPM_MONTH" Header="吸水剖面"/>
-                            </TreeViewItem>
-                        </TreeView>
-                    </Expander>
-                </StackPanel>
-            </GroupBox>
+                <GroupBox Grid.Column="0" Grid.RowSpan="5" BorderThickness="2" Margin="2" Header="数据管理">
+                    <StackPanel Orientation="Vertical">
+                        <Expander Header="基础数据管理">
+                            <TreeView x:Name="treeView" MouseDown="TreeView_MouseDown">
+                                <TreeViewItem Header="调剖剂数据" Name="xt" TreeViewItem.MouseDoubleClick="sj_Selected" FontSize="14">
+                                    <TreeViewItem Name="PC_XTPL_STATUS" Header="流体调剖剂"/>
+                                    <TreeViewItem Name="PC_XTPK_STATUS" Header="体膨调剖剂"/>
+                                    <TreeViewItem Name="PC_XTPY_STATUS" Header="应用调剖剂"/>
+                                </TreeViewItem>
+                                <TreeViewItem Header="措施前数据" Name="csq" TreeViewItem.MouseDoubleClick="sj_Selected" FontSize="14">
+                                    <TreeViewItem Name="Q_WELL_STATUS" Header="井位数据"/>
+                                    <TreeViewItem Name="Q_OIL_WELL_C" Header="小层数据"/>
+                                    <TreeViewItem Name="Q_OIL_WELL_MONTH" Header="油井井史"/>
+                                    <TreeViewItem Name="Q_WATER_WELL_MONTH" Header="水井井史"/>
+                                    <TreeViewItem Name="Q_FZJ_MONTH" Header="分注井史"/>
+                                    <TreeViewItem Name="Q_XSPM_MONTH" Header="吸水剖面"/>
+                                </TreeViewItem>
+                                <TreeViewItem Header="措施后数据" Name="csh" TreeViewItem.MouseDoubleClick="sj_Selected" FontSize="14">
+                                    <TreeViewItem Name="H_WELL_STATUS" Header="井位数据"/>
+                                    <TreeViewItem Name="H_OIL_WELL_C" Header="小层数据"/>
+                                    <TreeViewItem Name="H_OIL_WELL_MONTH" Header="油井井史"/>
+                                    <TreeViewItem Name="H_WATER_WELL_MONTH" Header="水井井史"/>
+                                    <TreeViewItem Name="H_FZJ_MONTH" Header="分注井史"/>
+                                    <TreeViewItem Name="H_XSPM_MONTH" Header="吸水剖面"/>
+                                </TreeViewItem>
+                            </TreeView>
+                        </Expander>
+                    </StackPanel>
+                </GroupBox>
 
-            <GroupBox Name="show_window" Grid.Column="1" Grid.Row="0" Grid.RowSpan="5" BorderThickness="2" Margin="2" Header="数据展示" PreviewKeyDown="Window_KeyDown">
-                <DockPanel Name="sp"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
-            </GroupBox>
-            <Grid  Name="loading" Visibility="Collapsed"  Background="LightGray" Opacity="0.5" Grid.Column="1" Grid.Row="0" Grid.RowSpan="5">
-                <Loading:Loading />
+                <GroupBox Name="show_window" Grid.Column="1" Grid.Row="0" Grid.RowSpan="5" BorderThickness="2" Margin="2" Header="数据展示" PreviewKeyDown="Window_KeyDown">
+                    <DockPanel Name="sp"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                </GroupBox>
+                <!--<Grid  Name="loading" Visibility="Collapsed"  Background="LightGray" Opacity="0.5" Grid.Column="1" Grid.Row="0" Grid.RowSpan="5">
+                    <Loading:Loading />
+                </Grid>-->
             </Grid>
+        </DockPanel>
+        <Grid  Name="loading" Visibility="Collapsed"  Background="LightGray" Opacity="0.5" Grid.Row="0">
+            <Loading:Loading />
         </Grid>
-    </DockPanel>
+    </Grid>
+    
 </Page>

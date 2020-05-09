@@ -53,7 +53,7 @@ namespace SBTP.BLL
         public void get_tpc_csrq()
         {
             oc_csrq.Clear();
-            DataTable dt = DbHelperOleDb.Query(string.Format("select distinct jh, csrq from xspm_month where jh=\"{0}\" order by csrq", tpc.jh)).Tables[0];
+            DataTable dt = DbHelperOleDb.Query(string.Format("select distinct jh, csrq from xspm_month where ZT=0 and jh=\"{0}\" order by csrq", tpc.jh)).Tables[0];
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 oc_csrq.Add(new tpc_xspm_model()
@@ -74,7 +74,7 @@ namespace SBTP.BLL
             if (csrq == null) return;
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * from xspm_month ");
-            sql.AppendFormat(" where jh=\"{0}\" and csrq = format(\"{1}\", \"yyyy-MM-dd\") ", csrq.JH, csrq.CSRQ);
+            sql.AppendFormat(" where zt=0 and jh=\"{0}\" and csrq = format(\"{1}\", \"yyyy-MM-dd\") ", csrq.JH, csrq.CSRQ);
             sql.Append(" and jdds1 <> 0 ");
             sql.Append(" order by jdds1 ");
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];

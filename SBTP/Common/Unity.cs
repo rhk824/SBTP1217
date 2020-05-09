@@ -105,7 +105,24 @@ namespace Common
             else
                 return "yyyy/MM";
         }
-
+        /// <summary>
+        /// 保留中文字符
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string KeepChinese(string str)
+        {
+            string chineseString = "";
+            //将传入参数中的中文字符添加到结果字符串中
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] >= 0x4E00 && str[i] <= 0x9FA5) //汉字
+                {
+                    chineseString += str[i];
+                }
+            }
+            return chineseString;
+        }
 
 
     }

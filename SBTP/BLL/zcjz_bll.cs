@@ -266,7 +266,7 @@ namespace SBTP.BLL
             StringBuilder sql = new StringBuilder();
             sql.Append(" select distinct ww.jh, w.zb_x, w.zb_y ");
             sql.AppendFormat(" from {0} as ww, well_status as w ", table_name);
-            sql.Append(" where ww.jh = w.jh ");
+            sql.Append(" where ww.zt=0 and ww.jh = w.jh ");
             sql.Append(" order by ww.jh ");
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
 

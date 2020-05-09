@@ -75,7 +75,7 @@ namespace SBTP.View.XGPJ
             Random random = new Random();
             //将日期yyyy/MM转化为yyyy/MM/dd格式
             cssj += "/1";
-            StringBuilder sqlStr = new StringBuilder("select * from XSPM_MONTH where JH='" + jh + "'");
+            StringBuilder sqlStr = new StringBuilder("select * from XSPM_MONTH where zt=0 and JH='" + jh + "'");
             if (cs_name.Equals("csq_date"))
                 sqlStr.Append(" AND DateDiff('d',CSRQ,'" + cssj + "')>=0 AND DateDiff('d','" + time + "',CSRQ)>=0 order by CSRQ");
             else

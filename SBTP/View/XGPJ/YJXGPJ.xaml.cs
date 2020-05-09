@@ -308,7 +308,7 @@ namespace SBTP.View.XGPJ
 
         private double QuryZY(DateTime cssj, string jh)
         {
-            StringBuilder sqlstr = new StringBuilder("select * from OIL_WELL_MONTH where DateDiff('m','" + cssj.ToString("yyyy/MM", CultureInfo.CurrentCulture) + "',NY)>=0 AND JH='" + jh + "' order by NY");
+            StringBuilder sqlstr = new StringBuilder("select * from OIL_WELL_MONTH where zt=0 and DateDiff('m','" + cssj.ToString("yyyy/MM", CultureInfo.CurrentCulture) + "',NY)>=0 AND JH='" + jh + "' order by NY");
             DataTable dataTable = DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
             double zy = 0;
             for (int i = 1; i < dataTable.Rows.Count; i++)
@@ -323,14 +323,14 @@ namespace SBTP.View.XGPJ
             string endTimeStr = endTime.ToString("yyyy/MM", CultureInfo.CurrentCulture);
             string startTimeStr = startTime.ToString("yyyy/MM", CultureInfo.CurrentCulture);
             if (start.Equals(endTimeStr)) return null;
-            StringBuilder sqlstr = new StringBuilder("select * from OIL_WELL_MONTH where DateDiff('m',NY,'" + endTimeStr + "')>=0 AND DateDiff('m','" + startTimeStr + "',NY)>=0 AND JH='" + jh + "' order by NY");
+            StringBuilder sqlstr = new StringBuilder("select * from OIL_WELL_MONTH where zt=0 and DateDiff('m',NY,'" + endTimeStr + "')>=0 AND DateDiff('m','" + startTimeStr + "',NY)>=0 AND JH='" + jh + "' order by NY");
             DataTable dataTable = DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
             return dataTable;
         }
 
         private DataTable QuryAll(string jh)
         {
-            StringBuilder sqlstr = new StringBuilder("select * from OIL_WELL_MONTH where JH='" + jh + "' order by NY");
+            StringBuilder sqlstr = new StringBuilder("select * from OIL_WELL_MONTH where zt=0 and JH='" + jh + "' order by NY");
             DataTable dataTable = DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
             return dataTable;
         }
@@ -344,7 +344,7 @@ namespace SBTP.View.XGPJ
         private void CreateChart(string jh,string start, string end)
         {
             MyToolKit.Series.Clear();
-            StringBuilder sqlStr = new StringBuilder("select * from OIL_WELL_MONTH where JH='" + jh + "' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 order by NY");
+            StringBuilder sqlStr = new StringBuilder("select * from OIL_WELL_MONTH where zt=0 and JH='" + jh + "' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 order by NY");
             DataTable line_data = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             Dictionary<string, double> points = new Dictionary<string, double>();
             double interval = 10;

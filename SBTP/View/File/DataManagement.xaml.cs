@@ -1,4 +1,5 @@
-﻿using Maticsoft.DBUtility;
+﻿using Common;
+using Maticsoft.DBUtility;
 using SBTP.TPJtables;
 using System;
 using System.Collections;
@@ -28,16 +29,32 @@ namespace SBTP.View.File
         {
             InitializeComponent();
             this.Loaded += Menu_Loaded;
+            this.Loaded += List_Loaded;
             App.Mycache.Add("cszt", string.Empty, App.policy);
             App.Mycache.Add("csdq", string.Empty, App.policy);
+
+        }
+
+        /// <summary>
+        /// 列表初始化,数据完整性检查
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void List_Loaded(object sender, RoutedEventArgs e)
+        {
             foreach (TreeViewItem item in this.csq.Items)
             {
-                if (this.TableCheck(item.Name.Substring(2)) == 0)
+                if (this.TableCheck(item.Name) == 0)
+                    item.Header += " *";
+            }
+            foreach (TreeViewItem item in this.csh.Items)
+            {
+                if (this.TableCheck(item.Name) == 0)
                     item.Header += " *";
             }
         }
         /// <summary>
-        /// 菜单初始化
+        /// 右键菜单初始化
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -86,7 +103,7 @@ namespace SBTP.View.File
             var parent = ContextMenuService.GetPlacementTarget(LogicalTreeHelper.GetParent(sender as MenuItem));
             //措施状态
             string cszt = (parent as TreeViewItem).Name;
-            if(cszt.Equals("csq"))
+            if (cszt.Equals("csq"))
                 App.Mycache.Set("cszt", 0, App.policy);
             else
                 App.Mycache.Set("cszt", 1, App.policy);
@@ -110,7 +127,7 @@ namespace SBTP.View.File
             if (choose_folder.ShowDialog() == Folder.DialogResult.OK)
             {
                 string path = choose_folder.SelectedPath;
-                
+
                 if (string.IsNullOrEmpty(path))
                 {
                     MessageBox.Show("路径不能为空");
@@ -137,12 +154,22 @@ namespace SBTP.View.File
         /// 多表导出txt
         /// </summary>
         /// <param name="path"></param>
-        private void ExportTables(string path,string zt)
+        private void ExportTables(string path, string zt)
         {
             foreach (DataRow item in GetTableNames().Rows)
             {
+                string file_name = string.Empty;
+                switch (item[0])
+                {
+                    case "WELL_STATUS":file_name = "DAA02";break;
+                    case "OIL_WELL_C": file_name = "DAA05"; break;
+                    case "OIL_WELL_MONTH": file_name = "DBA04"; break;
+                    case "WATER_WELL_MONTH": file_name = "DBA05"; break;
+                    case "FZJ_MONTH": file_name = "DBA051"; break;
+                    case "XSPM_MONTH": file_name = "DCB02"; break;
+                }
                 string sqlStr = "select * from " + item[0].ToString();
-                if (!item[0].ToString().Equals("WELL_STATUS")&& !item[0].ToString().Equals("OIL_WELL_C"))
+                if (!item[0].ToString().Equals("WELL_STATUS") && !item[0].ToString().Equals("OIL_WELL_C"))
                 {
                     if (zt.Equals("csq"))
                         sqlStr += " where ZT=0";
@@ -179,7 +206,7 @@ namespace SBTP.View.File
                     }
                 }
                 tableStr.Append("");
-                using FileStream fileStream = new FileStream(path + @"\" + item[0] + ".txt", FileMode.Create, FileAccess.Write);
+                using FileStream fileStream = new FileStream(path + @"\" + file_name + ".txt", FileMode.Create, FileAccess.Write);
                 using StreamWriter writer = new StreamWriter(fileStream, Encoding.UTF8);
                 writer.Write(tableStr.ToString());
             }
@@ -201,19 +228,25 @@ namespace SBTP.View.File
         private int TableCheck(string table_name)
         {
             StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("SELECT COUNT(1) FROM " + table_name);
+
+            sqlStr.Append("SELECT * FROM " + table_name.Substring(2));
+            if (!table_name.Contains("WELL_STATUS") && !table_name.Contains("OIL_WELL_C"))
+            {
+                if (table_name.Substring(0, 1).Equals("Q"))
+                    sqlStr.Append(" where zt=0");
+                else
+                    sqlStr.Append(" where zt=1");
+            }
             try
             {
-                DataSet ds = new DataSet();
-                ds = DbHelperOleDb.Query(sqlStr.ToString());
-                int rowCount = Convert.ToInt32(ds.Tables[0].Rows[0][0].ToString());
+                int rowCount = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0].Rows.Count;
                 return rowCount;
             }
-            catch
+            catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 return 0;
-            }
-
+            }                
         }
         /// <summary>
         /// 菜单条目双击选择事件
@@ -223,30 +256,35 @@ namespace SBTP.View.File
         private async void sj_Selected(object sender, RoutedEventArgs e)
         {
             var item_node = treeView.SelectedItem as TreeViewItem;
-            var parent_node = (treeView.SelectedItem as TreeViewItem).Parent;
+            string node_display_name = item_node.Header.ToString();
+            var parent_node = item_node.Parent;
+            string parent_node_display_name = (parent_node as TreeViewItem).Header.ToString();
             //string item_node_name = item_node.Name.Substring(2);
             string parent_node_name = parent_node.GetValue(NameProperty).ToString();
             if (parent_node_name.Equals("treeView")) return;
             loading.Visibility = Visibility.Visible;
-            
+
             if (parent_node_name == "xt")
             {
                 string item_node_name = item_node.Name;
-                UIElement temp = new UIElement();
                 tPJ_Table = new TPJ_table(TableName = item_node_name);
                 ContextMenu menu = new ContextMenu();
-                MenuItem save_menuItem = new MenuItem();
-                save_menuItem.Header = "保存数据";
+                MenuItem save_menuItem = new MenuItem
+                {
+                    Header = "保存数据"
+                };
+                
+                MenuItem delete_menuItem = new MenuItem
+                {
+                    Header = "删除数据"
+                };
                 save_menuItem.Click += SaveClick;
-                MenuItem delete_menuItem = new MenuItem();
-                delete_menuItem.Header = "删除数据";
                 delete_menuItem.Click += DeleteClick;
                 menu.Items.Add(save_menuItem);
                 menu.Items.Add(delete_menuItem);
                 tPJ_Table.ContextMenu = menu;
-                temp = tPJ_Table;
                 sp.Children.Clear();
-                sp.Children.Add(temp);
+                sp.Children.Add(tPJ_Table);
             }
             else
             {
@@ -260,9 +298,10 @@ namespace SBTP.View.File
                 sp.Children.Add(table);
 
                 var bindGrid = doAsyncTask(item_node_name);
-                Task closeLoaing = bindGrid.ContinueWith(t => { this.Dispatcher.Invoke(()=> { loading.Visibility = Visibility.Collapsed; }); });
+                Task closeLoaing = bindGrid.ContinueWith(t => { this.Dispatcher.Invoke(() => { loading.Visibility = Visibility.Collapsed; }); });
                 await closeLoaing;
                 table.DataSource = bindGrid.Result;
+                show_window.Header = parent_node_display_name + "-" + node_display_name;
             }
             loading.Visibility = Visibility.Collapsed;
         }
@@ -278,10 +317,76 @@ namespace SBTP.View.File
             {
                 StringBuilder sqlStr = new StringBuilder();
                 sqlStr.Append("select * from " + table_name);
-                if (!table_name.Equals("WELL_STATUS")&& !table_name.Equals("OIL_WELL_C"))
+                if (!table_name.Equals("WELL_STATUS") && !table_name.Equals("OIL_WELL_C"))
                     sqlStr.Append(" where ZT = " + App.Mycache.Get("csdq"));
-                return DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
+                DataTable result = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
+                ChangeStatus(table_name, (int)App.Mycache.Get("csdq"), result);
+                return result;
             });
+        }
+
+        /// <summary>
+        /// 改变数据完整度状态
+        /// </summary>
+        /// <param name="table_name"></param>
+        /// <param name="zt"></param>
+        /// <param name="result"></param>
+        private void ChangeStatus(string table_name, int zt, DataTable result)
+        {
+            if (table_name.Equals("WELL_STATUS") || table_name.Equals("OIL_WELL_C"))
+            {
+                this.Dispatcher.Invoke(() =>
+                {
+                    TreeViewItem csqitem = csq.Items.OfType<TreeViewItem>().ToList().Find(x => x.Name.Contains(table_name));
+                    TreeViewItem cshitem = csh.Items.OfType<TreeViewItem>().ToList().Find(x => x.Name.Contains(table_name));
+                    if (result.Rows.Count == 0)
+                    {
+                        csqitem.Header = Unity.KeepChinese(csqitem.Header.ToString()) + " *";
+                        cshitem.Header = Unity.KeepChinese(cshitem.Header.ToString()) + " *";
+                    }
+                    else
+                    {
+                        csqitem.Header = Unity.KeepChinese(csqitem.Header.ToString());
+                        cshitem.Header = Unity.KeepChinese(cshitem.Header.ToString());
+                    }
+                });
+            }
+            else
+            {
+                if (result.Rows.Count == 0)
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (zt == 0)
+                        {
+                            TreeViewItem item = csq.Items.OfType<TreeViewItem>().ToList().Find(x => x.Name.Contains(table_name));
+                            item.Header = Unity.KeepChinese(item.Header.ToString()) + " *";
+                        }
+                        if (zt == 1)
+                        {
+                            TreeViewItem item = csh.Items.OfType<TreeViewItem>().ToList().Find(x => x.Name.Contains(table_name));
+                            item.Header = Unity.KeepChinese(item.Header.ToString()) + " *";
+                        }
+                    });
+                }
+                else
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        if (zt == 0)
+                        {
+                            TreeViewItem item = csq.Items.OfType<TreeViewItem>().ToList().Find(x => x.Name.Contains(table_name));
+                            item.Header = Unity.KeepChinese(item.Header.ToString());
+
+                        }
+                        if (zt == 1)
+                        {
+                            TreeViewItem item = csh.Items.OfType<TreeViewItem>().ToList().Find(x => x.Name.Contains(table_name));
+                            item.Header = Unity.KeepChinese(item.Header.ToString());
+                        }
+                    });
+                }
+            }
         }
 
         /// <summary>
@@ -291,7 +396,6 @@ namespace SBTP.View.File
         /// <param name="e"></param>
         private void SaveClick(object sender, RoutedEventArgs e)
         {
-            //TPJ_table tPJ_Table = ContextMenuService.GetPlacementTarget(LogicalTreeHelper.GetParent(sender as MenuItem)) as TPJ_table;
             StringBuilder sqlStr = new StringBuilder();
             string Key;
             sqlStr.Append("select * from " + TableName);
@@ -332,7 +436,7 @@ namespace SBTP.View.File
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DeleteClick(object sender,RoutedEventArgs e)
+        private void DeleteClick(object sender, RoutedEventArgs e)
         {
             tPJ_Table.DeleteEvent();
         }
@@ -344,7 +448,8 @@ namespace SBTP.View.File
         private void SaveData(object[] itemArray)
         {
             List<object> newArray = new List<object>();
-            itemArray.ToList().ForEach(x => {
+            itemArray.ToList().ForEach(x =>
+            {
                 if (x == DBNull.Value)
                     x = 0;
                 newArray.Add(x);
@@ -372,13 +477,13 @@ namespace SBTP.View.File
             sqlStr.Append("select * from " + TableName + " where " + key + "='" + newArray[0] + "'");
             bool isExist = DbHelperOleDb.ExecuteReader(sqlStr.ToString()).HasRows;
             if (isExist)
-            {  
+            {
                 sqlStr.Clear();
                 sqlStr.Append("delete from " + TableName + " where " + key + "='" + newArray[0] + "'");
-                sqlList.Add(sqlStr.ToString());                        
+                sqlList.Add(sqlStr.ToString());
             }
             sqlStr.Clear();
-            sqlStr.Append("insert into " + TableName + " " + field + " values (" + string.Join(",", newArray )+ ")");
+            sqlStr.Append("insert into " + TableName + " " + field + " values (" + string.Join(",", newArray) + ")");
             sqlList.Add(sqlStr.ToString());
             try
             {
@@ -386,7 +491,7 @@ namespace SBTP.View.File
             }
             catch
             {
-                throw;                
+                throw;
             }
         }
 
@@ -397,7 +502,7 @@ namespace SBTP.View.File
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private async void MiImportLocal_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             var node = treeView.SelectedItem as TreeViewItem;
             if (node.Name == null)
             {
@@ -405,17 +510,17 @@ namespace SBTP.View.File
                 return;
             }
             string node_name = node.Name.Substring(2);
-            if (node.Name.Substring(0,2).Contains("Q"))
+            if (node.Name.Substring(0, 2).Contains("Q"))
             {
                 App.Mycache.Set("cszt", 0, App.policy);
                 App.Mycache.Set("csdq", 0, App.policy);
-            }               
-            if (node.Name.Substring(0,2).Contains("H"))
+            }
+            if (node.Name.Substring(0, 2).Contains("H"))
             {
                 App.Mycache.Set("cszt", 1, App.policy);
                 App.Mycache.Set("csdq", 1, App.policy);
             }
-                
+
             Import_Local_FileUpload fu = new Import_Local_FileUpload(node_name, node.Header.ToString());
             bool? result = fu.ShowDialog();
             if (result == true)
@@ -495,6 +600,8 @@ namespace SBTP.View.File
         private int Delete(string table_name)
         {
             string sql = "Delete From " + table_name;
+            if (!table_name.Equals("WELL_STATUS") && !table_name.Equals("OIL_WELL_C"))
+                sql += " where zt=" + App.Mycache.Get("cszt");
             return DbHelperOleDb.ExecuteSql(sql);
         }
         /// <summary>
@@ -516,17 +623,17 @@ namespace SBTP.View.File
                     }
                     MessageBox.Show("删除成功！");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show("删除失败！原因：" + ex);
-                }                
+                }
             }
         }
         #endregion
 
         private void TreeView_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+
             if (e.RightButton.ToString() == "Pressed")
             {
                 var item = GetParentObjectEx<TreeViewItem>(e.OriginalSource as DependencyObject) as TreeViewItem;

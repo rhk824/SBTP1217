@@ -169,11 +169,11 @@ namespace SBTP.View.XGPJ
             if (start.Equals(endTimeStr)) return;
             StringBuilder sqlStr = new StringBuilder();
             //水井井史查询
-            sqlStr.Append("select JH,NY,iif( IsNull(YY), 0, YY ) as YY_,TS,YZSL,PZCDS from WATER_WELL_MONTH where PZCDS='1' AND DateDiff('m',NY,'" + endTimeStr + "')>=0 AND DateDiff('m','" + start + "',NY)>=0");
+            sqlStr.Append("select JH,NY,iif( IsNull(YY), 0, YY ) as YY_,TS,YZSL,PZCDS from WATER_WELL_MONTH where zt=0 and PZCDS='1' AND DateDiff('m',NY,'" + endTimeStr + "')>=0 AND DateDiff('m','" + start + "',NY)>=0");
             ltzrj = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             sqlStr.Clear();
             //分注井水井井史联查
-            sqlStr.Append("select a.JH,a.NY,b.TS,a.CDXH,a.CDYZMYL,a.CDYZSL,a.CDSZ,b.YY,1 as SZLX from FZJ_MONTH a left join WATER_WELL_MONTH b ON a.JH=b.JH AND a.NY=b.NY where b.PZCDS<>'1' AND DateDiff('m',a.NY,'" + endTimeStr + "')>=0 AND DateDiff('m','" + start + "',a.NY)>=0 ");
+            sqlStr.Append("select a.JH,a.NY,b.TS,a.CDXH,a.CDYZMYL,a.CDYZSL,a.CDSZ,b.YY,1 as SZLX from FZJ_MONTH a left join WATER_WELL_MONTH b ON a.JH=b.JH AND a.NY=b.NY where a.zt=0 and b.PZCDS<>'1' AND DateDiff('m',a.NY,'" + endTimeStr + "')>=0 AND DateDiff('m','" + start + "',a.NY)>=0 ");
             fzj = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
 
             result = new DataTable("result");
@@ -380,7 +380,7 @@ namespace SBTP.View.XGPJ
             dateTime = dateTime.AddMonths(MonthCount);
             string endTimeStr = dateTime.ToString("yyyy/MM", CultureInfo.CurrentCulture);
             if (start.Equals(endTimeStr)) return null;
-            StringBuilder sqlstr = new StringBuilder("select * from WATER_WELL_MONTH where DateDiff('m',NY,'" + endTimeStr + "')>=0 AND DateDiff('m','" + start + "',NY)>0 ");
+            StringBuilder sqlstr = new StringBuilder("select * from WATER_WELL_MONTH where zt=0 and DateDiff('m',NY,'" + endTimeStr + "')>=0 AND DateDiff('m','" + start + "',NY)>0 ");
             DataTable dataTable = DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
             return dataTable;
         }

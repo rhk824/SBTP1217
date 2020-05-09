@@ -124,7 +124,7 @@ namespace SBTP.View.JCXZ
         private double QK_MoistureContent_E(string start, string end)
         {
             StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("select JH,NY,YCYL,YCSL from OIL_WELL_MONTH where DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 ");
+            sqlStr.Append("select JH,NY,YCYL,YCSL from OIL_WELL_MONTH where DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 and ZT=0");
             DataTable dt = new DataTable();
             dt.Columns.Add("JH", Type.GetType("System.String"));
             dt.Columns.Add("NY", Type.GetType("System.String"));
@@ -259,13 +259,13 @@ namespace SBTP.View.JCXZ
         {
             StringBuilder sqlStr = new StringBuilder();
             //水井井史查询
-            sqlStr.Append("select JH,NY,iif( IsNull(YY), 0, YY ) as YY_,TS,YZSL,PZCDS from WATER_WELL_MONTH where PZCDS='1' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0");
+            sqlStr.Append("select JH,NY,iif( IsNull(YY), 0, YY ) as YY_,TS,YZSL,PZCDS from WATER_WELL_MONTH where ZT=0 and PZCDS='1' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0");
             DataTable pzcds_eq1 = new DataTable("PZCDS1");
             pzcds_eq1 = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             ltzrj = pzcds_eq1;
             sqlStr.Clear();
             //分注井水井井史联查
-            sqlStr.Append("select a.JH,a.NY,b.TS,a.CDXH,a.CDYZMYL,a.CDYZSL,a.CDSZ,b.YY,1 as SZLX from FZJ_MONTH a left join WATER_WELL_MONTH b ON a.JH=b.JH AND a.NY=b.NY where b.PZCDS<>'1' AND DateDiff('m',a.NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',a.NY)>=0 ");
+            sqlStr.Append("select a.JH,a.NY,b.TS,a.CDXH,a.CDYZMYL,a.CDYZSL,a.CDSZ,b.YY,1 as SZLX from FZJ_MONTH a left join WATER_WELL_MONTH b ON a.JH=b.JH AND a.NY=b.NY where a.ZT=0 and b.PZCDS<>'1' AND DateDiff('m',a.NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',a.NY)>=0 ");
             DataTable pzcds_gt1 = new DataTable("PZCDS2");
             pzcds_gt1 = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             fzj = pzcds_gt1;
@@ -380,7 +380,7 @@ namespace SBTP.View.JCXZ
             this.SXSZS.Text = Math.Round(sum / length_, 4).ToString();
 
             StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C GROUP BY JH");
+            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C where ZT=0 GROUP BY JH");
             DataTable yxhd = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
 
             DataTable grid_data = new DataTable("grid_data");
@@ -439,7 +439,7 @@ namespace SBTP.View.JCXZ
             datacollection = new ObservableCollection<TPJData>();
 
             StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C GROUP BY JH");
+            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C where ZT=0 GROUP BY JH");
             DataTable yxhd = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             MC();
 
