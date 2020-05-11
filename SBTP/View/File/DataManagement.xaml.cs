@@ -257,11 +257,11 @@ namespace SBTP.View.File
         {
             var item_node = treeView.SelectedItem as TreeViewItem;
             string node_display_name = item_node.Header.ToString();
-            var parent_node = item_node.Parent;
-            string parent_node_display_name = (parent_node as TreeViewItem).Header.ToString();
-            //string item_node_name = item_node.Name.Substring(2);
+            TreeViewItem parent_node = item_node.Parent as TreeViewItem;
+            if (parent_node == null) return;
+            string parent_node_display_name = parent_node.Header.ToString();
             string parent_node_name = parent_node.GetValue(NameProperty).ToString();
-            if (parent_node_name.Equals("treeView")) return;
+
             loading.Visibility = Visibility.Visible;
 
             if (parent_node_name == "xt")
@@ -300,9 +300,9 @@ namespace SBTP.View.File
                 var bindGrid = doAsyncTask(item_node_name);
                 Task closeLoaing = bindGrid.ContinueWith(t => { this.Dispatcher.Invoke(() => { loading.Visibility = Visibility.Collapsed; }); });
                 await closeLoaing;
-                table.DataSource = bindGrid.Result;
-                show_window.Header = parent_node_display_name + "-" + node_display_name;
+                table.DataSource = bindGrid.Result;                
             }
+            show_window.Header = parent_node_display_name + "-" + node_display_name;
             loading.Visibility = Visibility.Collapsed;
         }
 

@@ -339,7 +339,12 @@ namespace SBTP.View.JCXZ
                                 case 3:
                                     coefficient = 3.474024; break;
                             }
-                            double cdsz = drr[i]["CDSZ"].ToString().Contains("Φ") ? double.Parse(drr[i]["CDSZ"].ToString().Replace("Φ", "").Trim()) : double.Parse(drr[i]["CDSZ"].ToString());
+                            var cdsz_ = drr[i]["CDSZ"];
+                            if (cdsz_ == null)
+                                cdsz_ = 0;
+                            else
+                                cdsz_ = cdsz_.ToString().Contains("Φ") ? double.Parse(drr[i]["CDSZ"].ToString().Replace("Φ", "").Trim()) : double.Parse(drr[i]["CDSZ"].ToString());
+                            double cdsz = double.Parse(cdsz_.ToString());
                             if (!string.IsNullOrEmpty(drr[i]["YY"].ToString())) { yy = double.Parse(drr[i]["YY"].ToString()); }
                             double awi = Q / (yy - Math.Pow((Q / (coefficient * Math.Pow(cdsz, 2))), 2));
                             awi_sum += double.IsNaN(awi) ? 0 : awi;
