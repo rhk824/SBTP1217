@@ -61,6 +61,15 @@
     <WarningLevel>4</WarningLevel>
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
@@ -70,12 +79,6 @@
     </Reference>
     <Reference Include="ejml-0.23, Version=0.23.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Stanford.NLP.CoreNLP.3.9.2.0\lib\ejml-0.23.dll</HintPath>
-    </Reference>
-    <Reference Include="Exceptionless, Version=4.3.2027.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Exceptionless.4.3.2027\lib\net45\Exceptionless.dll</HintPath>
-    </Reference>
-    <Reference Include="Exceptionless.Wpf, Version=4.3.2027.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Exceptionless.Wpf.4.3.2027\lib\net45\Exceptionless.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="IronPython, Version=2.7.9.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <HintPath>..\packages\IronPython.2.7.9\lib\net45\IronPython.dll</HintPath>
@@ -177,7 +180,6 @@
     <Compile Include="BLL\FenXi_BLL.cs" />
     <Compile Include="BLL\FunctionType.cs" />
     <Compile Include="BLL\FzjMonth.cs" />
-    <Compile Include="BLL\import_local_bll.cs" />
     <Compile Include="BLL\jcxx_bll.cs" />
     <Compile Include="BLL\Loading.cs" />
     <Compile Include="BLL\NewDataPoint.cs" />
@@ -214,7 +216,6 @@
     <Compile Include="BLL\WellGroupBaseData.cs" />
     <Compile Include="Data\OracleHelper_Test.cs" />
     <Compile Include="Data\RsaHelper.cs" />
-    <Compile Include="Data\WordHelper.cs" />
     <Compile Include="Model\Base.cs" />
     <Compile Include="Model\ccwx_line_model.cs" />
     <Compile Include="Model\ccwx_tpjing_model.cs" />
@@ -298,9 +299,6 @@
     </Compile>
     <Compile Include="View\Graphic\LSM.xaml.cs">
       <DependentUpon>LSM.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\Graphic\ShowReport.xaml.cs">
-      <DependentUpon>ShowReport.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Graphic\WellLocationMap.xaml.cs">
       <DependentUpon>WellLocationMap.xaml</DependentUpon>
@@ -550,10 +548,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Graphic\ShowReport.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\Graphic\WellLocationMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -754,6 +748,7 @@
     </None>
     <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -1,13 +1,16 @@
-﻿using Maticsoft.DBUtility;
+﻿using Common;
+using Maticsoft.DBUtility;
 using Microsoft.Win32;
 using System;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using MSWord = Microsoft.Office.Interop.Word;
 
 namespace SBTP.TPJtables
 {
@@ -19,28 +22,37 @@ namespace SBTP.TPJtables
         public string tableName { get; set; }
         private delegate void StatusDelegate(Button button);
         private bool hasChanged = false;
+        private MSWord.Application m_word;
+        private MSWord.Document m_doc;
         public TPJ_table(string name)
         {
             tableName = name;
             InitializeComponent();
             bindDataGrid();
+            //this.Loaded += TPJ_table_Loaded;            
             this.DataGrid1.Loaded += new RoutedEventHandler(CheckStatus);
             this.DataGrid1.LayoutUpdated += new EventHandler(DataGrid1_LayoutUpdated);
         }
-        private void bindDataGrid()
+
+        private void TPJ_table_Loaded(object sender, RoutedEventArgs e)
         {
-            DataSet ds = new DataSet();
-            StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("select * from " + tableName);
-            DataTable dt =DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
-            if (dt.Rows.Count == 0) return;
-            dt.Columns.RemoveAt(0);
-            dt.Columns.RemoveAt(dt.Columns.Count-1);
-            this.DataGrid1.DataContext = dt;
+            bindDataGrid();
         }
 
         /// <summary>
-        /// 隐藏ID列和标识列
+        /// 绑定并隐藏ID列
+        /// </summary>
+        private void bindDataGrid()
+        {
+            StringBuilder sqlStr = new StringBuilder();
+            sqlStr.Append("select * from " + tableName);
+            DataTable dt = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
+            if (dt.Rows.Count == 0) return;
+            dt.Columns.RemoveAt(0);
+            this.DataGrid1.DataContext = Unity.ChangeColumnName(tableName, dt);
+        }
+        /// <summary>
+        /// 表格更新加载
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -92,7 +104,7 @@ namespace SBTP.TPJtables
             };
             var templateColumn = new DataGridTemplateColumn
             {
-                Header = "FILE",
+                Header = "性能文档",
                 CellTemplate = dataTemplate
             };
             DataGrid1.Columns.Add(templateColumn);
@@ -115,13 +127,56 @@ namespace SBTP.TPJtables
                 sqlStr.Append("select * from PC_XTPJ_REPORT where MC='" + name + "'");
                 DataTable dt = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
                 byte[] word_data = dt.Rows[0][2] as byte[];
-                //string filepath = ConvertXPS(word_data);
-                string filepath = ConvertWord(word_data);
-                //Data.WordHelper.PrintWord(filepath);
-                View.Graphic.ShowReport showReport = new View.Graphic.ShowReport(filepath);
-                showReport.ShowDialog();
+                string filepath = ConvertWord(word_data, name);
+                OpenWord(name);
             }
 
+        }
+
+        private void OpenWord(string name)
+        {
+            m_word = new MSWord.Application();
+            Object filefullname = System.Windows.Forms.Application.StartupPath + @"\_Temp\" + name + "性能文档.doc";
+            Object confirmConversions = Type.Missing;
+            Object readOnly = Type.Missing;
+            Object addToRecentFiles = Type.Missing;
+            Object passwordDocument = Type.Missing;
+            Object passwordTemplate = Type.Missing;
+            Object revert = Type.Missing;
+            Object writePasswordDocument = Type.Missing;
+            Object writePasswordTemplate = Type.Missing;
+            Object format = Type.Missing;
+            Object encoding = Type.Missing;
+            Object visible = Type.Missing;
+            Object openConflictDocument = Type.Missing;
+            Object openAndRepair = Type.Missing;
+            Object documentDirection = Type.Missing;
+            Object noEncodingDialog = Type.Missing;
+
+            for (int i = 1; i <= m_word.Documents.Count; i++)
+            {
+                String str = m_word.Documents[i].FullName.ToString();
+                if (str == filefullname.ToString())
+                {
+                    MessageBox.Show("请勿重复打开该文档");
+                    return;
+                }
+            }
+            try
+            {
+                m_word.Documents.Open(ref filefullname,
+                    ref confirmConversions, ref readOnly, ref addToRecentFiles,
+                    ref passwordDocument, ref passwordTemplate, ref revert,
+                    ref writePasswordDocument, ref writePasswordTemplate,
+                    ref format, ref encoding, ref visible, ref openConflictDocument,
+                    ref openAndRepair, ref documentDirection, ref noEncodingDialog
+                    );
+                m_word.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("打开Word文档出错!" + ex.Message);
+            }
         }
 
         /// <summary>
@@ -198,11 +253,11 @@ namespace SBTP.TPJtables
         /// </summary>
         /// <param name="data"></param>
         /// <param name="filepath"></param>
-        protected string ConvertWord(byte[] data)
+        protected string ConvertWord(byte[] data, string filename)
         {
             string workpath = Environment.CurrentDirectory;
             string tempfolder = workpath + @"\_Temp";
-            string filepath = workpath + @"\_Temp\temp.doc";
+            string filepath = workpath + @"\_Temp\" + filename + "性能文档.doc";
             if (!Directory.Exists(tempfolder))
                 Directory.CreateDirectory(tempfolder);
             if (File.Exists(filepath))
@@ -215,24 +270,6 @@ namespace SBTP.TPJtables
 
             return filepath;
         }
-
-        protected string ConvertXPS(byte[] data)
-        {
-            string workpath = Environment.CurrentDirectory;
-            string tempfolder = workpath + @"\_Temp";
-            string filepath = workpath + @"\_Temp\temp.xps";
-            if (!Directory.Exists(tempfolder))
-                Directory.CreateDirectory(tempfolder);
-            if (File.Exists(filepath))
-                File.Delete(filepath);
-            using (BinaryWriter writer = new BinaryWriter(File.OpenWrite(filepath)))
-            {
-                writer.Write(data);
-                writer.Flush();
-            }
-            return filepath;
-        }
-
 
         /// <summary>
         /// delete键删除事件

@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Input;
 using System.Threading.Tasks;
 using System.Linq;
+using Common;
 
 namespace SBTP.CSSJtables
 {
@@ -16,31 +17,12 @@ namespace SBTP.CSSJtables
     public partial class csq_table : UserControl
     {
         private string tableName;
-        public DataTable DataSource { set => DataGrid1.DataContext = value == null ? null : ChangeColumnName(tableName, value); }
+        public DataTable DataSource { set => DataGrid1.DataContext = value == null ? null : Unity.ChangeColumnName(tableName, value); }
 
         public csq_table(string name)
         {
             tableName = name;
             InitializeComponent();
-        }
-
-        /// <summary>
-        /// 改列名为中文
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <param name="originalSource"></param>
-        /// <returns></returns>
-        private DataTable ChangeColumnName(string tableName, DataTable originalSource)
-        {
-            StringBuilder sqlStr = new StringBuilder("select * from FIELD_DICTIONARY where TABLE_NAME = '" + tableName + "'");
-            var field_name_table = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0].AsEnumerable().ToList();
-            for (int i = 0; i < originalSource.Columns.Count; i++)
-            {
-                DataRow row = field_name_table.Find(x => x["FIELD_NAME"].ToString().Equals(originalSource.Columns[i].ColumnName));
-                if (row != null)
-                    originalSource.Columns[i].ColumnName = row["FIELD_CHINESE_NAME"].ToString();
-            }
-            return originalSource;
         }
 
         public DataTable bindDataGrid()
@@ -70,7 +52,7 @@ namespace SBTP.CSSJtables
                     string sql = string.Format("Delete From {0} Where JH='{1}'",tableName, jh);
                     DbHelperOleDb.ExecuteSql(sql);
                 }
-                DataGrid1.DataContext = ChangeColumnName(tableName, bindDataGrid());
+                DataGrid1.DataContext = Unity.ChangeColumnName(tableName, bindDataGrid());
             }
         }
     }

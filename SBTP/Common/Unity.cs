@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Maticsoft.DBUtility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -122,6 +124,25 @@ namespace Common
                 }
             }
             return chineseString;
+        }
+
+        /// <summary>
+        /// 中文列名
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="originalSource"></param>
+        /// <returns></returns>
+        public static DataTable ChangeColumnName(string tableName, DataTable originalSource)
+        {
+            StringBuilder sqlStr = new StringBuilder("select * from FIELD_DICTIONARY where TABLE_NAME = '" + tableName + "'");
+            var field_name_table = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0].AsEnumerable().ToList();
+            for (int i = 0; i < originalSource.Columns.Count; i++)
+            {
+                DataRow row = field_name_table.Find(x => x["FIELD_NAME"].ToString().Equals(originalSource.Columns[i].ColumnName));
+                if (row != null)
+                    originalSource.Columns[i].ColumnName = row["FIELD_CHINESE_NAME"].ToString();
+            }
+            return originalSource;
         }
 
 

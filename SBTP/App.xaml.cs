@@ -1,4 +1,4 @@
-﻿using Exceptionless;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,15 +31,15 @@ namespace SBTP
 
         public static bool is_debug = false; // 调试模式（正式版发布时，删掉此变量及相关调试代码，全项目搜 --->  #region 调试模式  <---）
 
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            ExceptionlessClient.Default.Register();
-            base.OnStartup(e);
-        }
+        //protected override void OnStartup(StartupEventArgs e)
+        //{
+        //    ExceptionlessClient.Default.Register();
+        //    base.OnStartup(e);
+        //}
         public App()
         {
             this.Startup += new StartupEventHandler(App_Startup);
-
+            this.Startup += App_Startup1;
             var project_info = readProjectStartup();
             Project = new ObservableCollection<Model.ProjectModel>();
             if (project_info != null)
@@ -50,6 +50,22 @@ namespace SBTP
             else
                 Project.Add(new Model.ProjectModel());
             //this.Exit += new ExitEventHandler(App_Exit);
+        }
+
+        private void App_Startup1(object sender, StartupEventArgs e)
+        {
+            ModifyExcelReadMod();
+        }
+
+        private void ModifyExcelReadMod()
+        {
+            RegistryKey hklm = Registry.LocalMachine;
+            RegistryKey excelKey;
+            if (Environment.Is64BitOperatingSystem)
+                excelKey = hklm.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Jet\4.0\Engines\Excel",true);
+            else
+                excelKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Jet\4.0\Engines\Excel",true);
+            excelKey.SetValue("TypeGuessRows",0);
         }
 
         private void App_Startup(object sender, StartupEventArgs e)
