@@ -58,10 +58,6 @@
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Binding="{Binding Selected, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGridTextColumn Binding="{Binding JH}" Header="水井" />
-                    <!--<DataGridTextColumn Binding="{Binding ZB_X}" Header="ZB__X" />
-                    <DataGridTextColumn Binding="{Binding ZB_Y}" Header="ZB__Y" />
-                    <DataGridTextColumn Binding="{Binding near_water_well}" Header="near-water-well" />
-                    <DataGridTextColumn Binding="{Binding near_distance}" Header="near-distance" />-->
                     <DataGridTextColumn Binding="{Binding AverageDistance}" Header="平均井距" />
                     <DataGridTextColumn Binding="{Binding oil_well_count}" Header="油井数" />
                     <DataGridTextColumn Binding="{Binding oil_wells}" Header="油井" />

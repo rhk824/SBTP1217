@@ -130,10 +130,10 @@ namespace SBTP.BLL
             List<zcjz_well_model> list = oc_well_group.Where(p => p.Selected == true).ToList();
             foreach (zcjz_well_model well in list)
             {
-                oc_well_group.Remove(well);
                 well.Selected = false;
                 well.oil_wells = null;
                 well.oil_well_count = 0;
+                oc_well_group.Remove(well);
                 oc_water_well.Add(well);
             }
         }
@@ -169,7 +169,7 @@ namespace SBTP.BLL
                     continue;
                 }
 
-                ww.AverageDistance = temp_distance.Count == 0 ? 0 : temp_distance.Average();
+                ww.AverageDistance = temp_distance.Count == 0 ? 0 : Math.Round(temp_distance.Average(), 1);
                 ww.oil_well_count = oil_wells.Count;
                 ww.oil_wells = oil_wells_sort(ww, oil_wells); // 每个油井以水井为中心，逆时针排序
             }
@@ -188,21 +188,12 @@ namespace SBTP.BLL
         /// </summary>
         public void auxiliary_datagrid_oil_wells(zcjz_well_model well)
         {
-            try
+            foreach (zcjz_well_model ow in oc_oil_well)
             {
-                foreach (zcjz_well_model ow in oc_oil_well)
-                {
-                    if (well.oil_wells.Contains(ow.JH))
-                        ow.Selected = true;
-                    else
-                        ow.Selected = false;
-                }
-            }
-            catch
-            {
-                // 抛出异常：well == null 的情况
-                // 抛出异常：well.oil_wells == null 的情况
-                foreach (zcjz_well_model ow in oc_oil_well) ow.Selected = false;
+                if (well.oil_wells != null && well.oil_wells.Contains(ow.JH))
+                    ow.Selected = true;
+                else
+                    ow.Selected = false;
             }
         }
 

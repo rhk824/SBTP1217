@@ -58,11 +58,13 @@ namespace SBTP.View.TPJ
             List<ccwx_xcsj_model> list = bll.oc_xcsj.ToList();
             for (int i = 0; i < list.Count(); i++)
             {
-                DataPoint point = new DataPoint();
-                point.XValue = i;
-                point.YValues = new double[] { list[i].STL };
-                point.AxisLabel = string.Format("{0}{1}{2}({3})", list[i].YCZ, list[i].XCH, list[i].XCXH, list[i].YXHD);
-                point.Label = list[i].STL.ToString();
+                DataPoint point = new DataPoint
+                {
+                    XValue = i,
+                    YValues = new double[] { list[i].STL },
+                    AxisLabel = string.Format("{0}{1}{2}({3})", list[i].YCZ, list[i].XCH, list[i].XCXH, list[i].YXHD),
+                    Label = list[i].STL.ToString()
+                };
                 series.Points.Add(point);
             }
             chart.Series.Add(series);
@@ -74,25 +76,25 @@ namespace SBTP.View.TPJ
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void CheckedEvent(object sender, RoutedEventArgs e)
-        {
-            CheckBox cb = e.Source as CheckBox;
+        //private void CheckedEvent(object sender, RoutedEventArgs e)
+        //{
+        //    CheckBox cb = e.Source as CheckBox;
 
-            DataGridRow dataGridRow = FindParent<DataGridRow>(cb);
-            DataGridCell dataGridCell = cb.Parent as DataGridCell;
-            int index = dataGridCell.Column.DisplayIndex;
-            int target_index;
-            if (dataGridCell.Column.Header.Equals("封堵段"))
-                target_index = index + 1;
-            else
-                target_index = index - 1;
-            CheckBox target = xc_grid.Columns[target_index].GetCellContent(dataGridRow) as CheckBox;
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                if (cb.IsChecked == true)
-                    target.IsChecked = false;
-            }));
-        }
+        //    DataGridRow dataGridRow = FindParent<DataGridRow>(cb);
+        //    DataGridCell dataGridCell = cb.Parent as DataGridCell;
+        //    int index = dataGridCell.Column.DisplayIndex;
+        //    int target_index;
+        //    if (dataGridCell.Column.Header.Equals("封堵段"))
+        //        target_index = index + 1;
+        //    else
+        //        target_index = index - 1;
+        //    CheckBox target = xc_grid.Columns[target_index].GetCellContent(dataGridRow) as CheckBox;
+        //    Dispatcher.BeginInvoke(new Action(() =>
+        //    {
+        //        if (cb.IsChecked == true)
+        //            target.IsChecked = false;
+        //    }));
+        //}
 
         /// <summary>
         /// WPF中查找元素的父元素
@@ -128,7 +130,7 @@ namespace SBTP.View.TPJ
                     foreach (CheckBox item in CheckBoxes)
                     {
                         item.Uid = Guid.NewGuid().ToString();
-                        item.Checked += CheckedEvent;
+                        //item.Checked += CheckedEvent;
                     }
                     flag = false;
                 }

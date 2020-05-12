@@ -28,11 +28,11 @@
             <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,0,20">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="油藏温度："/>
+                        <TextBlock Text="油藏温度(℃)："/>
                         <TextBox Name="oil_temp" Text="{Binding Ycwd}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="油藏矿化度："/>
+                        <TextBlock Text="油藏矿化度(mg/L)："/>
                         <TextBox Name="oil_kh" Text="{Binding Yckhd}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
@@ -46,15 +46,15 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="水粘度："/>
+                        <TextBlock Text="水粘度(mPa.s)："/>
                         <TextBox Name="water_n" Text="{Binding Sn}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="油粘度："/>
+                        <TextBlock Text="油粘度(mPa.s)："/>
                         <TextBox Name="oil_n" Text="{Binding Yn}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="油密度："/>
+                        <TextBlock Text="油密度(g/cm3)："/>
                         <TextBox Name="oil_m" Text="{Binding Ym}"/>
                     </StackPanel>
                 </StackPanel>
@@ -68,11 +68,11 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="驱替液浓度："/>
+                        <TextBlock Text="驱替液浓度(mg/L)："/>
                         <TextBox Name="qt_n" Text="{Binding Qtn}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="驱替液工作粘度："/>
+                        <TextBlock Text="驱替液工作粘度(mPa.s)："/>
                         <TextBox Name="qt_gn" Text="{Binding Qtgn}"/>
                     </StackPanel>
                 </StackPanel>
@@ -82,11 +82,11 @@
             <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="最小剪切流速："/>
+                        <TextBlock Text="最小剪切流速(m/d)："/>
                         <TextBox Name="jl_min" Text="{Binding Jlmin}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="最大剪切流速："/>
+                        <TextBlock Text="最大剪切流速(m/d)："/>
                         <TextBox Name="jl_max" Text="{Binding Jlmax}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">

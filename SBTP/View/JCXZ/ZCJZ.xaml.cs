@@ -83,8 +83,13 @@ namespace SBTP.View.JCXZ
 
         private void Dg_well_group_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
-            zcjz_well_model well = Unity.ToModel<zcjz_well_model>(dg_well_group.SelectedItem);
-            bll.auxiliary_datagrid_oil_wells(well);
+            foreach (var item in dg_well_group.SelectedItems)
+            {
+                zcjz_well_model well = Unity.ToModel<zcjz_well_model>(item);
+                bll.auxiliary_datagrid_oil_wells(well);
+            }       
+            //zcjz_well_model well = Unity.ToModel<zcjz_well_model>(dg_well_group.SelectedItem);
+            //bll.auxiliary_datagrid_oil_wells(well);
         }
 
         private void Btn_save_Click(object sender, RoutedEventArgs e)
