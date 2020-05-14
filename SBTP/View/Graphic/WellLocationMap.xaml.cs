@@ -62,9 +62,13 @@ namespace SBTP.View.Graphic
         bool isMoving = false;
         //鼠标按下去的位置
         Point startMovePosition;
+        //平移总量
         TranslateTransform totalTranslate = new TranslateTransform();
+        //平移量
         TranslateTransform tempTranslate = new TranslateTransform();
+        //缩放量
         ScaleTransform totalScale = new ScaleTransform();
+        //缩放比例
         Double scaleLevel = 1;
         //井组
         DataTable well_group = new DataTable ();
@@ -78,6 +82,9 @@ namespace SBTP.View.Graphic
         ObservableCollection<groupModel> GroupCollection;
         //菜单集合
         ObservableCollection<OilDependenceModel> MenuCollection;
+
+        double offsetLeft = 0;
+        double offsetTop = 0;
 
         //加载数据流
         private zcjz_bll bll { get; set; }
@@ -102,10 +109,20 @@ namespace SBTP.View.Graphic
             well_group = GetDataWellGroup();
             location = GetWellLocation();
             ModelBinding();
-            MenuBinding();
+            MenuBinding();            
             //数据源绑定
             myConvas.DataContext = MenuCollection;
+            SetOffsetAndCanvasSize();
             DrawPoints();
+        }
+
+        private void SetOffsetAndCanvasSize()
+        {
+            KeyValuePair<double, double> devi = this.Deviation(out KeyValuePair<double, double> w_h);
+            offsetLeft = devi.Key - 100;
+            offsetTop = devi.Value - 100;
+            myConvas.Width = w_h.Key +100;
+            myConvas.Height = w_h.Value +100;
         }
 
         private DataTable GetDataWellGroup()
@@ -291,9 +308,6 @@ namespace SBTP.View.Graphic
         private void DrawPoints()
         {
             if (location.Rows.Count == 0 || well_group.Rows.Count == 0) { return; }
-            KeyValuePair<double, double> devi = this.Deviation();
-            double offsetLeft = devi.Key - 100;
-            double offsetTop = devi.Value - 100;
             //临时油井集合，去重功能
             List<string> tempoilwells = new List<string>();
 
@@ -359,10 +373,10 @@ namespace SBTP.View.Graphic
         }
 
         /// <summary>
-        /// 计算点位偏移量
+        /// 计算点位偏移量、最大xy值
         /// </summary>
         /// <returns></returns>
-        private KeyValuePair<double, double> Deviation()
+        private KeyValuePair<double, double> Deviation(out KeyValuePair<double,double> WidthAndHeight)
         {
             well_collection = new Dictionary<string, Point>();
             foreach (DataRow dr in well_group.Rows)
@@ -381,7 +395,10 @@ namespace SBTP.View.Graphic
             }
             double x_min = well_collection.ToList().Min(x => x.Value.X);
             double y_min = well_collection.ToList().Min(y => y.Value.Y);
+            double x_max = well_collection.ToList().Max(x => x.Value.X);
+            double y_max = well_collection.ToList().Max(y => y.Value.Y);
 
+            WidthAndHeight = new KeyValuePair<double, double>(x_max, y_max);
             return new KeyValuePair<double, double>(x_min, y_min);
         }
         /// <summary>
@@ -428,7 +445,8 @@ namespace SBTP.View.Graphic
         /// <param name="e"></param>
         private void MyConvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            startMovePosition = e.GetPosition((Canvas)sender);
+            //startMovePosition = e.GetPosition((Canvas)sender);
+            startMovePosition = e.GetPosition(outContainer);
             isMoving = true;
         }
 
@@ -440,7 +458,8 @@ namespace SBTP.View.Graphic
         private void MyConvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             isMoving = false;
-            Point endMovePosition = e.GetPosition((Canvas)sender);
+            //Point endMovePosition = e.GetPosition((Canvas)sender);
+            Point endMovePosition = e.GetPosition(outContainer);
 
             //为了避免跳跃式的变换，单次有效变化 累加入 totalTranslate中。           
             totalTranslate.X += (endMovePosition.X - startMovePosition.X) / scaleLevel;
@@ -456,7 +475,8 @@ namespace SBTP.View.Graphic
         {
             if (isMoving)
             {
-                Point currentMousePosition = e.GetPosition((Canvas)sender);//当前鼠标位置
+                //Point currentMousePosition = e.GetPosition((Canvas)sender);//当前鼠标位置
+                Point currentMousePosition = e.GetPosition(outContainer);
 
                 Point deltaPt = new Point(0, 0);
                 deltaPt.X = (currentMousePosition.X - startMovePosition.X) / scaleLevel;
@@ -476,7 +496,8 @@ namespace SBTP.View.Graphic
         /// <param name="e"></param>
         private void MyConvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Point scaleCenter = e.GetPosition((Canvas)sender);
+            //Point scaleCenter = e.GetPosition((Canvas)sender);
+            Point scaleCenter = e.GetPosition(outContainer);
 
             if (e.Delta > 0)
             {
@@ -502,7 +523,8 @@ namespace SBTP.View.Graphic
         {
             TransformGroup tfGroup = new TransformGroup();
             tfGroup.Children.Add(tempTranslate);
-            tfGroup.Children.Add(totalScale);
+            myConvas.RenderTransform = totalScale;
+            //tfGroup.Children.Add(totalScale);
 
             foreach (UIElement ue in myConvas.Children)
             {

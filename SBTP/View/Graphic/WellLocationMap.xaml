@@ -12,8 +12,8 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
-            <Border HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="2">
-                <Canvas Background="LightBlue" Width="3000" Height="3000" Name="myConvas" MouseLeftButtonDown="MyConvas_MouseLeftButtonDown" MouseLeftButtonUp="MyConvas_MouseLeftButtonUp" MouseMove="MyConvas_MouseMove" MouseWheel="MyConvas_MouseWheel" />
+            <Border Name="outContainer" Background="LightBlue" HorizontalAlignment="Left" VerticalAlignment="Top" BorderBrush="Black" BorderThickness="2" MouseLeftButtonDown="MyConvas_MouseLeftButtonDown" MouseLeftButtonUp="MyConvas_MouseLeftButtonUp" MouseMove="MyConvas_MouseMove" MouseWheel="MyConvas_MouseWheel">
+                <Canvas Background="LightBlue" Name="myConvas"  />
             </Border>
         </ScrollViewer>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">

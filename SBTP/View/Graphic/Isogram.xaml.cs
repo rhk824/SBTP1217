@@ -53,19 +53,6 @@ namespace SBTP.View.Graphic
         {
             InitializeComponent();
             value_name = ValueName;
-            //TargetPoints = targetPoints;
-            //List<KeyValuePair<string, KeyValuePair<double, Point>>> newTargetPoints = new List<KeyValuePair<string, KeyValuePair<double, Point>>>();
-            ////测量点坐标变换
-            //Thread t = new Thread(() => {
-            //    targetPoints.ForEach(x => newTargetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(x.Key, new KeyValuePair<double, Point>(x.Value.Key, new Point(x.Value.Value.X - 15000, x.Value.Value.Y - 68000)))));
-            //    targetPointsCollection = newTargetPoints;
-            //    App.Current.Dispatcher.BeginInvoke(new Action(() =>
-            //    {
-            //        GraphicGeneration(targetPointsCollection);
-            //    }));
-            //});
-            //t.IsBackground = true;
-            //t.Start();
         }
 
         /// <summary>
@@ -188,6 +175,9 @@ namespace SBTP.View.Graphic
                     }
                 }
             }
+            myConvas.Width = grid_points.Max(x => x.X) + 100;
+            myConvas.Height = grid_points.Max(y => y.Y) + 100;
+
             grid_points.AddRange(inner_points);
             //初始化网格点集合
             cubes = PointDivide(s, s);
@@ -203,23 +193,6 @@ namespace SBTP.View.Graphic
             IsogramGenerate(25, triangle_collection);
             //添加试验点
             DrawTestPoints(targetPointsCollection);
-
-            //坐标变换
-            //double scaleLevel = 0.9;
-            //totalTranslate.X = -x_s;
-            //totalTranslate.Y = -y_s;
-            //totalScale.CenterX = 0;
-            //totalScale.CenterY = 0;
-            //totalScale.ScaleX = scaleLevel;
-            //totalScale.ScaleY = scaleLevel;
-
-            //TransformGroup tfGroup = new TransformGroup();
-            //tfGroup.Children.Add(totalTranslate);
-            //tfGroup.Children.Add(totalScale);
-            //foreach (UIElement ue in myConvas.Children)
-            //{
-            //    ue.RenderTransform = tfGroup;
-            //}
         }
 
         #region 拖拽放缩
@@ -472,7 +445,7 @@ namespace SBTP.View.Graphic
                     Vector v_0 = new Vector(1, 0);
                     //目标点i右下正方形点j集合
                     double cosa = (v_0 * v) / (v_0.Length * v.Length);
-                    double angle = double.Parse(((Math.Acos(cosa) * 180) / Math.PI).ToString("0.##"));
+                    double angle = Math.Round(Math.Acos(cosa) * 180 / Math.PI, 2);
                     if ((v_0.X * v.Y - v_0.Y * v.X) < 0)
                         angle = 360 - angle;
                     if ((j.X - i.X == h_step || j.Y - i.Y == v_step) && (angle == 90.0 || angle == 45.0 || angle == 0))
@@ -503,7 +476,7 @@ namespace SBTP.View.Graphic
         /// <returns></returns>
         private double D_Value(Point target)
         {
-            int count = targetPointsCollection.Count;
+            //int count = targetPointsCollection.Count;
             double sum1 = 0;
             double sum2 = 0;
             foreach (var i in targetPointsCollection)
@@ -604,9 +577,9 @@ namespace SBTP.View.Graphic
         private void IsogramGenerate(int line_count, List<object> triangles)
         {
             var key_collection = (from item in ValuePoints select item.Key).ToList();
-            double MaxValue = double.Parse(key_collection.Max().ToString("0.##"));
-            double MinValue = double.Parse(key_collection.Min().ToString("0.##"));
-            double IsogramStep = double.Parse(((MaxValue - MinValue) / (line_count - 1)).ToString("0.##"));
+            double MaxValue = Math.Round(key_collection.Max(), 2);
+            double MinValue = Math.Round(key_collection.Min(), 2);
+            double IsogramStep = Math.Round((MaxValue - MinValue) / (line_count - 1), 2);
             for (int i = 0; i < line_count; i++)
             {
                 double h0 = i * IsogramStep + MinValue;
