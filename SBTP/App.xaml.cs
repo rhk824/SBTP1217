@@ -31,11 +31,6 @@ namespace SBTP
 
         public static bool is_debug = false; // 调试模式（正式版发布时，删掉此变量及相关调试代码，全项目搜 --->  #region 调试模式  <---）
 
-        //protected override void OnStartup(StartupEventArgs e)
-        //{
-        //    ExceptionlessClient.Default.Register();
-        //    base.OnStartup(e);
-        //}
         public App()
         {
             this.Startup += new StartupEventHandler(App_Startup);

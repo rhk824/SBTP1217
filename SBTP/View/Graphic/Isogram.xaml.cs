@@ -203,7 +203,7 @@ namespace SBTP.View.Graphic
         /// <param name="e"></param>
         private void MyConvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            startMovePosition = e.GetPosition((Canvas)sender);
+            startMovePosition = e.GetPosition(outside);
             isMoving = true;
         }
 
@@ -215,7 +215,7 @@ namespace SBTP.View.Graphic
         private void MyConvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             isMoving = false;
-            Point endMovePosition = e.GetPosition((Canvas)sender);
+            Point endMovePosition = e.GetPosition(outside);
 
             //为了避免跳跃式的变换，单次有效变化 累加入 totalTranslate中。           
             totalTranslate.X += (endMovePosition.X - startMovePosition.X) / scaleLevel;
@@ -231,7 +231,7 @@ namespace SBTP.View.Graphic
         {
             if (isMoving)
             {
-                Point currentMousePosition = e.GetPosition((Canvas)sender);//当前鼠标位置
+                Point currentMousePosition = e.GetPosition(outside);//当前鼠标位置
 
                 Point deltaPt = new Point(0, 0);
                 deltaPt.X = (currentMousePosition.X - startMovePosition.X) / scaleLevel;
@@ -251,7 +251,7 @@ namespace SBTP.View.Graphic
         /// <param name="e"></param>
         private void MyConvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            Point scaleCenter = e.GetPosition((Canvas)sender);
+            Point scaleCenter = e.GetPosition(outside);
 
             if (e.Delta > 0)
             {
@@ -277,7 +277,8 @@ namespace SBTP.View.Graphic
         {
             TransformGroup tfGroup = new TransformGroup();
             tfGroup.Children.Add(tempTranslate);
-            tfGroup.Children.Add(totalScale);
+            myConvas.RenderTransform = totalScale;
+            //tfGroup.Children.Add(totalScale);
 
             foreach (UIElement ue in myConvas.Children)
             {
@@ -295,22 +296,31 @@ namespace SBTP.View.Graphic
         {
             foreach (var i in dic)
             {
-                Line line = new Line();
-                line.X1 = i.Value.Value.X;
-                line.Y1 = i.Value.Value.Y;
-                line.X2 = i.Value.Value.X +10;
-                line.Y2 = i.Value.Value.Y +10;
-                line.StrokeThickness = 10;
-                line.Stroke = new SolidColorBrush(Colors.Red);
-                line.Fill = new SolidColorBrush(Colors.Red);
-                ToolTip toolTip = new ToolTip();
-                toolTip.Content = "井号:" + i.Key + "\r\n" + value_name + ":" + i.Value.Key;
-                line.ToolTip = toolTip;
-                //var point_ = newTestPoint();
-                //Canvas.SetLeft(point_, i.Value.X);
-                //Canvas.SetTop(point_, i.Value.Y);
-                //myConvas.Children.Add(point_);
-                myConvas.Children.Add(line);
+                //Line line = new Line();
+                //line.X1 = i.Value.Value.X;
+                //line.Y1 = i.Value.Value.Y;
+                //line.X2 = i.Value.Value.X +10;
+                //line.Y2 = i.Value.Value.Y +10;
+                //line.StrokeThickness = 10;
+                //line.Stroke = new SolidColorBrush(Colors.Red);
+                //line.Fill = new SolidColorBrush(Colors.Red);
+                //line.ToolTip = toolTip;
+                var point_ = newTestPoint();
+                point_.ToolTip = new ToolTip
+                {
+                    Content = "井号:" + i.Key + "\r\n" + value_name + ":" + i.Value.Key
+                };
+                TextBlock wellname = new TextBlock()
+                {
+                    Text = i.Key
+                };
+                Canvas.SetLeft(point_, i.Value.Value.X);
+                Canvas.SetTop(point_, i.Value.Value.Y);
+                Canvas.SetLeft(wellname, i.Value.Value.X);
+                Canvas.SetTop(wellname, i.Value.Value.Y - 20);
+                myConvas.Children.Add(point_);
+                myConvas.Children.Add(wellname);
+                //myConvas.Children.Add(line);
             }
         }
 
@@ -332,18 +342,18 @@ namespace SBTP.View.Graphic
         /// 试验点样式
         /// </summary>
         /// <returns></returns>
-        private Ellipse newTestPoint()
+        private RoundButton newTestPoint()
         {
-            //RoundButton roundButton = new RoundButton();
-            //roundButton.EllipseDiameter = 30;
-            //roundButton.FillColor = Brushes.Red;
-            //return roundButton;
-            Ellipse newpoint = new Ellipse();
-            newpoint.Height = 10;
-            newpoint.Width = 10;
-            newpoint.Fill = new SolidColorBrush(Colors.Red);
-            newpoint.Stroke = new SolidColorBrush(Colors.Red);
-            return newpoint;
+            RoundButton roundButton = new RoundButton();
+            roundButton.EllipseDiameter = 30;
+            roundButton.FillColor = Brushes.Red;
+            return roundButton;
+            //Ellipse newpoint = new Ellipse();
+            //newpoint.Height = 10;
+            //newpoint.Width = 10;
+            //newpoint.Fill = new SolidColorBrush(Colors.Red);
+            //newpoint.Stroke = new SolidColorBrush(Colors.Red);
+            //return newpoint;
 
         }
 

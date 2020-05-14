@@ -300,9 +300,9 @@ namespace SBTP.View.File
                 var bindGrid = doAsyncTask(item_node_name);
                 Task closeLoaing = bindGrid.ContinueWith(t => { this.Dispatcher.Invoke(() => { loading.Visibility = Visibility.Collapsed; }); });
                 await closeLoaing;
-                table.DataSource = bindGrid.Result;                
+                table.DataSource = bindGrid.Result;
             }
-            show_window.Header = parent_node_display_name + "-" + node_display_name;
+            show_window.Header = parent_node_display_name + "-" + Unity.KeepChinese(node_display_name);
             loading.Visibility = Visibility.Collapsed;
         }
 
