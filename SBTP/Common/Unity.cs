@@ -10,6 +10,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Common
 {
@@ -143,6 +145,20 @@ namespace Common
                     originalSource.Columns[i].ColumnName = row["FIELD_CHINESE_NAME"].ToString();
             }
             return originalSource;
+        }
+
+        public static DrawingBrush NetGridBg(Color bg, Color pen)
+        {
+            DrawingBrush _gridBrush = new DrawingBrush(new GeometryDrawing(
+        new SolidColorBrush(bg),
+             new Pen(new SolidColorBrush(pen), 1.0),
+                 new RectangleGeometry(new Rect(0, 0, 20, 20))));
+            _gridBrush.Stretch = Stretch.None;
+            _gridBrush.TileMode = TileMode.Tile;
+            _gridBrush.Viewport = new Rect(0.0, 0.0, 20, 20);
+            _gridBrush.ViewportUnits = BrushMappingMode.Absolute;
+
+            return _gridBrush;
         }
 
 

@@ -361,7 +361,8 @@ namespace SBTP.View.Graphic
                 Label well_name = new Label
                 {
                     FontSize = 12,
-                    Content = dr[0].ToString()
+                    Content = dr[0].ToString(),
+                    Foreground = Brushes.Blue
                 };
                 Canvas.SetLeft(well_name, double.Parse(drs[0]["ZB_X"].ToString()) - offsetLeft + 20);
                 Canvas.SetTop(well_name, double.Parse(drs[0]["ZB_Y"].ToString()) - offsetTop + 20);
@@ -421,7 +422,7 @@ namespace SBTP.View.Graphic
         {
             RoundButton roundButton = new RoundButton();
             roundButton.EllipseDiameter = 15;
-            roundButton.FillColor = Brushes.Red;
+            roundButton.FillColor = Brushes.Blue;
             return roundButton;
         }
 
@@ -661,6 +662,11 @@ namespace SBTP.View.Graphic
 
             submit_bll(this.bll);
             Close();
+        }
+
+        private void outContainer_Loaded(object sender, RoutedEventArgs e)
+        {
+            outContainer.Background = Unity.NetGridBg(Colors.LightGray, Colors.DarkGray);
         }
     }
 }

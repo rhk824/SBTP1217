@@ -9,6 +9,7 @@ using System.Linq;
 using SBTP.BLL;
 using System.Windows.Input;
 using System.Threading;
+using Common;
 
 namespace SBTP.View.Graphic
 {
@@ -62,8 +63,8 @@ namespace SBTP.View.Graphic
         /// <returns></returns>
         public void GraphicGeneration(List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPoints)
         {
-            TranslateTransform totalTranslate = new TranslateTransform();
-            ScaleTransform totalScale = new ScaleTransform();
+            //TranslateTransform totalTranslate = new TranslateTransform();
+            //ScaleTransform totalScale = new ScaleTransform();
             int X_max = 0;
             int Y_max = 0;
             int X_min = 0;
@@ -132,7 +133,7 @@ namespace SBTP.View.Graphic
                 line.Y2 = y_e;
                 v_Lines.Add(line);
 
-                myConvas.Children.Add(line);
+                //myConvas.Children.Add(line);
             }
 
             for (int j = 1; j < v_PointCount - 1; j++)
@@ -155,8 +156,7 @@ namespace SBTP.View.Graphic
                 line.X2 = x_e;
                 line.Y2 = y_s + s * j;
                 h_Lines.Add(line);
-
-                myConvas.Children.Add(line);
+                //myConvas.Children.Add(line);
             }
 
             foreach (Line i in h_Lines)
@@ -175,6 +175,7 @@ namespace SBTP.View.Graphic
                     }
                 }
             }
+            //定义画布尺寸
             myConvas.Width = grid_points.Max(x => x.X) + 100;
             myConvas.Height = grid_points.Max(y => y.Y) + 100;
 
@@ -193,6 +194,12 @@ namespace SBTP.View.Graphic
             IsogramGenerate(25, triangle_collection);
             //添加试验点
             DrawTestPoints(targetPointsCollection);
+
+            //计算偏移量并且平移整体元素
+            foreach (UIElement item in myConvas.Children)
+            {
+                item.RenderTransform = new TranslateTransform(-grid_points.Min(x => x.X), -grid_points.Min(y => y.Y));
+            }
         }
 
         #region 拖拽放缩
@@ -289,7 +296,7 @@ namespace SBTP.View.Graphic
         #endregion
 
         /// <summary>
-        /// 试验点(黑色)
+        /// 试验点(蓝色)
         /// </summary>
         /// <param name="dic"></param>
         private void DrawTestPoints(List<KeyValuePair<string, KeyValuePair<double, Point>>> dic)
@@ -312,7 +319,8 @@ namespace SBTP.View.Graphic
                 };
                 TextBlock wellname = new TextBlock()
                 {
-                    Text = i.Key
+                    Text = i.Key,
+                    Foreground = Brushes.Blue
                 };
                 Canvas.SetLeft(point_, i.Value.Value.X);
                 Canvas.SetTop(point_, i.Value.Value.Y);
@@ -346,7 +354,7 @@ namespace SBTP.View.Graphic
         {
             RoundButton roundButton = new RoundButton();
             roundButton.EllipseDiameter = 30;
-            roundButton.FillColor = Brushes.Red;
+            roundButton.FillColor = Brushes.Blue;
             return roundButton;
             //Ellipse newpoint = new Ellipse();
             //newpoint.Height = 10;
@@ -377,7 +385,7 @@ namespace SBTP.View.Graphic
         {
             Line newLine = new Line();
 
-            newLine.StrokeThickness = 5;
+            newLine.StrokeThickness = 2;
             newLine.Stroke = new SolidColorBrush(Colors.Yellow);
             newLine.Fill = new SolidColorBrush(Colors.Yellow);
             return newLine;
@@ -694,5 +702,9 @@ namespace SBTP.View.Graphic
             return new Point(x, y);
         }
 
+        private void myConvas_Loaded(object sender, RoutedEventArgs e)
+        {
+            outside.Background = Unity.NetGridBg(Colors.LightGray, Colors.DarkGray);
+        }
     }
 }
