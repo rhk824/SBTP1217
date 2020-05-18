@@ -195,12 +195,12 @@ namespace SBTP.View.TPJ
 
             if (M_Func.IsChecked == true)
                 //计算50个点的曲线,步长0.1
-                for (int i = 0; i <= 50; i++)
+                for (int i = 0; i <= 100; i++)
                     Point_collection.Add(new Point(i * 0.1, FunctionType.PowerFunction(i * 0.1, Math.Exp(result.Key), result.Value) - m_c));
 
             if (ZS_Func.IsChecked == true)
                 //计算50个点的曲线,步长0.1
-                for (int i = 0; i <= 50; i++)
+                for (int i = 0; i <= 100; i++)
                     Point_collection.Add(new Point(i * 0.1, FunctionType.ExponentialFunction(i * 0.1, Math.Exp(result.Key), result.Value) - zs_c));
             LSM sM = new LSM(Data_Points, Point_collection);
             sM.ShowDialog();
@@ -285,31 +285,5 @@ namespace SBTP.View.TPJ
             //幂函数
             m_c = FunctionType.PowerFunction(STL_Average, Math.Exp(result.Key), result.Value) - KXD_Average;
         }
-
-        ///// <summary>
-        ///// 幂函数
-        ///// </summary>
-        ///// <param name="k">渗透率</param>
-        ///// <param name="a">a</param>
-        ///// <param name="b">截距b</param>
-        ///// <returns></returns>
-        //public static double PowerFunction(double k, double a, double b)
-        //{
-        //    double y = a * Math.Exp(b * k);
-        //    return y;
-        //}
-
-        ///// <summary>
-        ///// 指数函数
-        ///// </summary>
-        ///// <param name="k">渗透率</param>
-        ///// <param name="a">a</param>
-        ///// <param name="b">截距b</param>
-        ///// <returns></returns>
-        //public static double ExponentialFunction(double k, double a, double b)
-        //{
-        //    double y = a * Math.Pow(k, b);
-        //    return y;
-        //}
     }
 }

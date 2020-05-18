@@ -226,7 +226,7 @@ namespace SBTP.View.JCXZ
             {
                 targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(i[0].ToString(),new KeyValuePair<double, Point>(double.Parse(i["JJJYD"].ToString()), new Point(double.Parse(i["ZBX"].ToString()), double.Parse(i["ZBY"].ToString())))));               
             }
-            Graphic.Isogram isogram = new Graphic.Isogram(targetPoints, "井距均匀度");
+            Graphic.Isogram isogram = new Graphic.Isogram("井距均匀度");
             Task drawLines = Task.Run(()=> {
                 this.Dispatcher.Invoke(() => { isogram.TargetPoints = targetPoints; }); 
             }).ContinueWith(t=> { this.Dispatcher.Invoke(()=> { this.loading.Visibility = Visibility.Collapsed; }); });
@@ -243,8 +243,8 @@ namespace SBTP.View.JCXZ
                 targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(i[0].ToString(), new KeyValuePair<double, Point>(double.Parse(i["XWJJD"].ToString()), new Point(double.Parse(i["ZBX"].ToString()), double.Parse(i["ZBY"].ToString())))));
 
             }
-            View.Graphic.Isogram isogram = new Graphic.Isogram(targetPoints,"相位均匀度");
-            
+            View.Graphic.Isogram isogram = new Graphic.Isogram("相位均匀度");
+            isogram.TargetPoints = targetPoints;
             iso.Children.Add(isogram);  
         }
 
@@ -257,7 +257,8 @@ namespace SBTP.View.JCXZ
                 targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(i[0].ToString(), new KeyValuePair<double, Point>(double.Parse(i["WSCD"].ToString()), new Point(double.Parse(i["ZBX"].ToString()), double.Parse(i["ZBY"].ToString())))));
 
             }
-            View.Graphic.Isogram isogram = new Graphic.Isogram(targetPoints,"完善度");           
+            View.Graphic.Isogram isogram = new Graphic.Isogram("完善度");
+            isogram.TargetPoints = targetPoints;
             iso.Children.Add(isogram);  
         }
     }

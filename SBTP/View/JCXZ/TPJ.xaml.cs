@@ -604,7 +604,8 @@ namespace SBTP.View.JCXZ
 
             }
 
-            Graphic.Isogram isogram = new Graphic.Isogram(targetPoints, "含水量");
+            Graphic.Isogram isogram = new Graphic.Isogram("含水量");
+            isogram.TargetPoints = targetPoints;
             iso.Children.Add(isogram as UIElement);
         }
 
@@ -626,7 +627,8 @@ namespace SBTP.View.JCXZ
                 targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(dm.JH.ToString(), new KeyValuePair<double, Point>(double.Parse(dm.AWI.ToString("0.###")), new Point(double.Parse(zb_x), double.Parse(zb_y)))));
 
             }
-            Graphic.Isogram isogram = new Graphic.Isogram(targetPoints, "视吸水指数");
+            Graphic.Isogram isogram = new Graphic.Isogram("视吸水指数");
+            isogram.TargetPoints = targetPoints;
             iso.Children.Add(isogram as UIElement);
         }
 

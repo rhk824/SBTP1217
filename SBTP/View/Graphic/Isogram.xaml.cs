@@ -32,7 +32,7 @@ namespace SBTP.View.Graphic
         private static List<Line> h_Lines = new List<Line>();
         private static List<Point> grid_points = new List<Point>();
         private static List<Point> center_point = new List<Point>();
-        private static List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPointsCollection = new List<KeyValuePair<string, KeyValuePair<double, Point>>>();
+        private static List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPointsCollection;
         private static List<object> cubes = new List<object>();
         private static List<KeyValuePair<double, Point>> ValuePoints = new List<KeyValuePair<double, Point>>();
         //测试点值名称
@@ -42,15 +42,19 @@ namespace SBTP.View.Graphic
         {
             set
             {
-                List<KeyValuePair<string, KeyValuePair<double, Point>>> newTargetPoints = new List<KeyValuePair<string, KeyValuePair<double, Point>>>();
-                value.ForEach(x => newTargetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(x.Key, new KeyValuePair<double, Point>(x.Value.Key, new Point(x.Value.Value.X - 15000, x.Value.Value.Y - 68000)))));
-                targetPointsCollection = newTargetPoints;
+                targetPointsCollection = new List<KeyValuePair<string, KeyValuePair<double, Point>>>();
+                //设置偏移量
+                double min_x = value.Min(x => x.Value.Value.X);
+                double min_y = value.Min(y => y.Value.Value.Y);
+
+                value.ForEach(x => targetPointsCollection.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(x.Key,
+                    new KeyValuePair<double, Point>(x.Value.Key, new Point(x.Value.Value.X - min_x + 500, x.Value.Value.Y - min_y + 500)))));
                 GraphicGeneration(targetPointsCollection);
             }
         }
 
         public Isogram() { }
-        public Isogram(List<KeyValuePair<string,KeyValuePair<double, Point>>> targetPoints,string ValueName)
+        public Isogram(string ValueName)
         {
             InitializeComponent();
             value_name = ValueName;
@@ -99,20 +103,20 @@ namespace SBTP.View.Graphic
             else { x_e = X_max + 6 * s - X; }
             if (Y > s) { y_e = Y_max + 6 * s - Y % s; }
             else { y_e = Y_max + 6 * s - Y; }
-            Point left_up = new Point(x_s, y_s);
-            Point left_down = new Point(x_s, y_e);
-            Point right_up = new Point(x_e, y_s);
-            Point right_down = new Point(x_e, y_e);
+            //Point left_up = new Point(x_s, y_s);
+            //Point left_down = new Point(x_s, y_e);
+            //Point right_up = new Point(x_e, y_s);
+            //Point right_down = new Point(x_e, y_e);
 
-            myConvas.Width = x_e - x_s;
-            myConvas.Height = y_e - y_s;
+            //myConvas.Width = x_e - x_s;
+            //myConvas.Height = y_e - y_s;
 
             int h_PointCount = Convert.ToInt32(x_e - x_s) / s + 1;
             int v_PointCount = Convert.ToInt32(y_e - y_s) / s + 1;
             //中心点
             List<Point> inner_points = new List<Point>();
 
-            for (int i = 0; i <= h_PointCount - 1; i++)
+            for (int i = 0; i < h_PointCount; i++)
             {
                 //var myPoint1 = newPoint();
                 //var myPoint2 = newPoint();
@@ -136,19 +140,23 @@ namespace SBTP.View.Graphic
                 //myConvas.Children.Add(line);
             }
 
-            for (int j = 1; j < v_PointCount - 1; j++)
+            for (int j = 0; j < v_PointCount; j++)
             {
+                if (j != 0 && j != v_PointCount - 1)
+                {
+                    grid_points.Add(new Point(x_s, y_s + s * j));
+                    grid_points.Add(new Point(x_e, y_s + s * j));
+                }
                 //var myPoint1 = newPoint();
                 //var myPoint2 = newPoint();
                 //Canvas.SetLeft(myPoint1, x_s);
                 //Canvas.SetTop(myPoint1, y_s + s * j);
                 //myConvas.Children.Add(myPoint1);
-                grid_points.Add(new Point(x_s, y_s + s * j));
+
 
                 //Canvas.SetLeft(myPoint2, x_e);
                 //Canvas.SetTop(myPoint2, y_s + s * j);
                 //myConvas.Children.Add(myPoint2);
-                grid_points.Add(new Point(x_e, y_s + s * j));
 
                 Line line = newLine();
                 line.X1 = x_s;
@@ -195,11 +203,11 @@ namespace SBTP.View.Graphic
             //添加试验点
             DrawTestPoints(targetPointsCollection);
 
-            //计算偏移量并且平移整体元素
-            foreach (UIElement item in myConvas.Children)
-            {
-                item.RenderTransform = new TranslateTransform(-grid_points.Min(x => x.X), -grid_points.Min(y => y.Y));
-            }
+            ////计算偏移量并且平移整体元素
+            //foreach (UIElement item in myConvas.Children)
+            //{
+            //    item.RenderTransform = new TranslateTransform(-grid_points.Min(x => x.X), -grid_points.Min(y => y.Y));
+            //}
         }
 
         #region 拖拽放缩
