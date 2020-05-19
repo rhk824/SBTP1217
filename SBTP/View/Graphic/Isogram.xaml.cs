@@ -311,15 +311,6 @@ namespace SBTP.View.Graphic
         {
             foreach (var i in dic)
             {
-                //Line line = new Line();
-                //line.X1 = i.Value.Value.X;
-                //line.Y1 = i.Value.Value.Y;
-                //line.X2 = i.Value.Value.X +10;
-                //line.Y2 = i.Value.Value.Y +10;
-                //line.StrokeThickness = 10;
-                //line.Stroke = new SolidColorBrush(Colors.Red);
-                //line.Fill = new SolidColorBrush(Colors.Red);
-                //line.ToolTip = toolTip;
                 var point_ = newTestPoint();
                 point_.ToolTip = new ToolTip
                 {
@@ -336,7 +327,6 @@ namespace SBTP.View.Graphic
                 Canvas.SetTop(wellname, i.Value.Value.Y - 20);
                 myConvas.Children.Add(point_);
                 myConvas.Children.Add(wellname);
-                //myConvas.Children.Add(line);
             }
         }
 
@@ -575,22 +565,20 @@ namespace SBTP.View.Graphic
                 l1.AddRange(l2);
                 for (int i = 0; i < 4; i++)
                 {
-                    if (i != 3)
+                    List<Point> triangle_points = new List<Point>();
+                    if (i < 3)
                     {
-                        List<Point> triangle_points = new List<Point>();
+                        if (i >= l1.Count - 1) continue;
                         triangle_points.Add(l1[i]);
                         triangle_points.Add(l1[i + 1]);
-                        triangle_points.Add(centers[cube.IndexOf(p)]);
-                        triangles.Add(triangle_points);
                     }
                     else
                     {
-                        List<Point> triangle_points = new List<Point>();
                         triangle_points.Add(l1[3]);
                         triangle_points.Add(l1[0]);
-                        triangle_points.Add(centers[cube.IndexOf(p)]);
-                        triangles.Add(triangle_points);
                     }
+                    triangle_points.Add(centers[cube.IndexOf(p)]);
+                    triangles.Add(triangle_points);
                 }
             }
             return triangles;
