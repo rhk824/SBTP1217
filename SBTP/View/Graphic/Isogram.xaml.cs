@@ -389,6 +389,31 @@ namespace SBTP.View.Graphic
             return newLine;
         }
 
+        private PathFigure IsogramLineType(Point p1,Point p2)
+        {
+            PathFigure pathFigure = new PathFigure();
+            PathSegmentCollection pathSegments = new PathSegmentCollection();
+            PathFigureCollection pathFigures = new PathFigureCollection();
+            pathSegments.Add(new QuadraticBezierSegment(p1,p2,true));
+
+            pathFigure.Segments = pathSegments;
+            pathFigure.StartPoint = p1;
+            
+            pathFigures.Add(pathFigure);
+            //pathGeometry.Figures = pathFigures;
+
+            return pathFigure;
+        }
+
+        private Path CreatPath()
+        {
+            return new Path()
+            {
+                Fill = new SolidColorBrush(Colors.Yellow),
+                Stroke = new SolidColorBrush(Colors.Yellow)
+            };
+        }
+
         /// <summary>
         /// 求直线斜率k
         /// </summary>
@@ -594,6 +619,12 @@ namespace SBTP.View.Graphic
             double MaxValue = Math.Round(key_collection.Max(), 2);
             double MinValue = Math.Round(key_collection.Min(), 2);
             double IsogramStep = Math.Round((MaxValue - MinValue) / (line_count - 1), 2);
+            Path newpath = CreatPath();
+            PathFigureCollection pathFigures = new PathFigureCollection();
+            newpath.Data = new PathGeometry()
+            {
+                Figures = pathFigures
+            };
             for (int i = 0; i < line_count; i++)
             {
                 double h0 = i * IsogramStep + MinValue;
@@ -601,7 +632,7 @@ namespace SBTP.View.Graphic
                 {
                     List<Point> pass_point = PassPoint(p, h0);
                     List<Line> pass_side = PassSide(p, h0);
-                    Line line = IsogramLine();
+                    
                     Point a = new Point();
                     Point b = new Point();
                     if (pass_point.Count == 0 && pass_side.Count == 0)
@@ -635,14 +666,17 @@ namespace SBTP.View.Graphic
                     }
                     else if (pass_point.Count == 1 && pass_side.Count == 0)
                         continue;
-                    line.X1 = a.X;
-                    line.Y1 = a.Y;
-                    line.X2 = b.X;
-                    line.Y2 = b.Y;
-                    myConvas.Children.Add(line);
+                    pathFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y)));
+                    //Line line = IsogramLine();
+                    //line.X1 = a.X;
+                    //line.Y1 = a.Y;
+                    //line.X2 = b.X;
+                    //line.Y2 = b.Y;
+                    //myConvas.Children.Add(line);
+                    //myConvas.Children.Add(path);
                 }
             }
-
+            myConvas.Children.Add(newpath);
         }
 
         /// <summary>
@@ -701,6 +735,7 @@ namespace SBTP.View.Graphic
         private void myConvas_Loaded(object sender, RoutedEventArgs e)
         {
             outside.Background = Unity.NetGridBg(Colors.LightGray, Colors.DarkGray);
+
         }
     }
 }

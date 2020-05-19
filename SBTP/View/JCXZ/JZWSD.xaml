@@ -14,32 +14,31 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="50"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" BorderThickness="2" Margin="2" Header="筛选">
-            <Grid >
-                <TextBlock Text="井组：" VerticalAlignment="Center" Margin="10,0,0,0" />
-                <Button Name="Group_Qury_Btn" Content="查询" Width="75" VerticalAlignment="Center" Margin="179,0,0,0" HorizontalAlignment="Left" Click="Group_Qury_Btn_Click"/>
-                <Button Content="导出" Width="75" VerticalAlignment="Center" Margin="259,0,0,0" HorizontalAlignment="Left" RenderTransformOrigin="0.32,0.614"/>
-                <!--<ComboBox Name="Well_Name" HorizontalAlignment="Left" Margin="54,0,0,0" VerticalAlignment="Center" Width="120"/>-->
-                <TextBox Name="Well_Name" HorizontalAlignment="Left" Margin="54,0,0,0" VerticalAlignment="Center" Width="120"></TextBox>
-            </Grid>
+        <GroupBox Grid.Row="0" BorderThickness="2" Margin="2" Header="默认参数">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0">
+                    <TextBlock  Text="配位数："/>
+                    <TextBox Name="PWS" Width="50" Text="4"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0">
+                    <TextBlock Text="井距："/>
+                    <TextBox  Name="JJ" Width="50" Text="0.2"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0">
+                    <TextBlock  Text="相位："/>
+                    <TextBox Name="XW" Width="50" Text="0.2"/>
+                </StackPanel>
+            </StackPanel>
         </GroupBox>
-        <GroupBox Grid.Row="0" Grid.Column="1" BorderThickness="2" Margin="2" Header="默认参数">
-            <Grid >
-                <TextBlock HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" Text="配位数：" VerticalAlignment="Center"/>
-                <TextBlock HorizontalAlignment="Left" Margin="117,0,0,0" TextWrapping="Wrap" Text="井距：" VerticalAlignment="Center" RenderTransformOrigin="-3.042,1.51"/>
-                <TextBlock HorizontalAlignment="Left" Margin="207,0,0,0" TextWrapping="Wrap" Text="相位：" VerticalAlignment="Center" RenderTransformOrigin="1.403,0.531"/>
-                <TextBox Name="PWS" HorizontalAlignment="Left" Height="22" Margin="63,0,0,0" TextWrapping="Wrap" Text="4" VerticalAlignment="Center" Width="49"/>
-                <TextBox Name="JJ" HorizontalAlignment="Left" Height="22" Margin="153,0,0,0" TextWrapping="Wrap" Text="0.2" VerticalAlignment="Center" Width="49" RenderTransformOrigin="1.888,0.636"/>
-                <TextBox Name="XW" HorizontalAlignment="Left" Height="22" Margin="243,0,0,0" TextWrapping="Wrap" Text="0.2" VerticalAlignment="Center" Width="49"/>
-                <!--<Button Name="Calculation_Btn" Content="计算" HorizontalAlignment="Left" Margin="297,0,0,0" VerticalAlignment="Center" Width="75" Click="Calculation_Btn_Click"/>-->
-            </Grid>
-        </GroupBox>
+        <!--<GroupBox Grid.Row="0" Grid.Column="1" BorderThickness="2" Margin="2" Header="显示">
+            <Grid ></Grid>
+        </GroupBox>-->
         <GroupBox Grid.Row="1" Grid.RowSpan="3" BorderThickness="2" Margin="2" Header="完善程度">
             <Grid >
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -56,21 +55,34 @@
                 </ScrollViewer>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="等值图">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                <StackPanel Name="iso" Orientation="Horizontal"   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-            </ScrollViewer>
+        <GroupBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="4" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="等值图">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="0">
+                    <StackPanel Name="iso" Orientation="Horizontal"   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                </ScrollViewer>
+                <GroupBox Grid.Row="1" BorderThickness="2" Margin="2" Header="操作">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <RadioButton GroupName="cz" Content="井距" Checked="RadioButton_Checked"/>
+                            <RadioButton GroupName="cz" Content="相位" Checked="RadioButton_Checked"  Margin="60,0,60,0"/>
+                            <RadioButton GroupName="cz" Content="综合" Checked="RadioButton_Checked"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
+
         </GroupBox>
         <Grid Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2" Name="loading" Visibility="Collapsed"  Background="LightGray" Opacity="0.5">
             <Loading:Loading />
         </Grid>
         <GroupBox Grid.Row="4" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="操作">
-            <Grid>
-                <Button x:Name="JJBtn" Content="井距"  Width="75" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left" Click="JJBtn_Click"/>
-                <Button x:Name="XWBtn" Content="相位"  Width="75" VerticalAlignment="Center" Margin="95,0,0,0" HorizontalAlignment="Left" Click="XWBtn_Click"/>
-                <Button x:Name="WSDBtn" Content="综合"  Width="75" VerticalAlignment="Center" Margin="180,0,0,0" HorizontalAlignment="Left" Click="WSDBtn_Click"/>
-                <Button x:Name="SaveBtn" Content="保存"  Width="75" VerticalAlignment="Center" Margin="0,0,10,0" HorizontalAlignment="Right" Click="SaveBtn_Click"/>
-            </Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
+                <Button Name="SaveBtn" Content="保存"  Width="70" VerticalAlignment="Center" Click="SaveBtn_Click"/>
+            </StackPanel>
         </GroupBox>
     </Grid>
 </Page>

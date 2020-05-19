@@ -7,9 +7,6 @@
         mc:Ignorable="d"
         Title="数据导入" Height="450" Width="900" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid Grid.IsSharedSizeScope="True">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="80"/>
@@ -29,15 +26,12 @@
                 </DataGrid.Resources>
             </DataGrid>
         </GroupBox>
-        <Grid  Name="loading" Visibility="Collapsed"  Background="LightGray" Opacity="0.5" Grid.Row="0" >
-            <Loading:Loading />
-        </Grid>
         <GroupBox Grid.Row="1" BorderThickness="2" Margin="2" Header="操作">
             <Grid VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <Label x:Name="label" Content="文件导入:" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,10,0"/>
-                    <TextBox Name="filename" HorizontalAlignment="Left" Margin="0,0,10,0" Width="200" BorderThickness="1" />
-                    <Button x:Name="btnImport" Content="..." HorizontalAlignment="Left" Margin="0,0,10,0"  Width="40" Click="BtnImport_Click"/>
+                    <TextBox Name="filename" HorizontalAlignment="Left" Margin="0,0,2,0" Width="200" BorderThickness="1" />
+                    <Button x:Name="btnImport" Content="..." HorizontalAlignment="Left" Width="40" Click="BtnImport_Click"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Label Content="表名:" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,10,0"/>
@@ -50,5 +44,9 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
+        <Grid  Name="loading" Visibility="Collapsed"  Background="LightGray" Opacity="0.5" Grid.Row="0" Grid.RowSpan="2" >
+            <Loading:Loading />
+        </Grid>
     </Grid>
+
 </Window>

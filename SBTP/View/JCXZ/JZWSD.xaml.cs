@@ -23,9 +23,16 @@ namespace SBTP.View.JCXZ
         public JZWSD()
         {
             InitializeComponent();
+            this.Loaded += JZWSD_Loaded;
+
+        }
+
+        private void JZWSD_Loaded(object sender, RoutedEventArgs e)
+        {
             well_group = Data.DatHelper.Read();
             water_well_collection = BLL.WellGroupBaseData.WaterWellCollection(getDataTable("WATER_WELL_MONTH"));
             oil_well_collection = BLL.WellGroupBaseData.OilWellCollection(getDataTable("OIL_WELL_MONTH"));
+            Wsd_Group_Loaded();
         }
 
         public DataTable getDataTable(string table_name)
@@ -40,11 +47,9 @@ namespace SBTP.View.JCXZ
             return dt;
         }
 
-        private void Group_Qury_Btn_Click(object sender, RoutedEventArgs e)
+        private void Wsd_Group_Loaded()
         {
-            string well_name = this.Well_Name.Text;
             DataTable well_group_wsd = new DataTable("JZWSD");
-
             well_group_wsd.Columns.Add("WELL", Type.GetType("System.String"));
             well_group_wsd.Columns.Add("ZBX", Type.GetType("System.String"));
             well_group_wsd.Columns.Add("ZBY", Type.GetType("System.String"));
@@ -54,17 +59,7 @@ namespace SBTP.View.JCXZ
             well_group_wsd.Columns.Add("WSCD", Type.GetType("System.String"));
             well_group_wsd.Columns.Add("WSJBS", Type.GetType("System.String"));
 
-            DataRow[] well_groups = null;
-
-            if (!string.IsNullOrEmpty(well_name))
-            {
-                well_groups = well_group.Select("水井井号 like '%" + well_name + "%'");
-
-            }
-            else
-            {
-                well_groups = well_group.Select();
-            }
+            DataRow[] well_groups = well_group.Select();
             if (well_groups.Length != 0)
             {
                 foreach (DataRow dr in well_groups)
@@ -74,15 +69,12 @@ namespace SBTP.View.JCXZ
                     double xw = PhaseEvennessIndex(dr[0].ToString());
                     Point water_well = new Point();
                     water_well_collection.TryGetValue(dr[0].ToString(), out water_well);
-                    well_group_wsd.Rows.Add(new object[] { dr[0], water_well.X.ToString("0.#"), water_well.Y.ToString("0.#"), pwl.ToString("0.##"), jj.ToString("0.##"), xw.ToString("0.##"), (pwl * jj * xw).ToString("0.##"), "1" });
+                    well_group_wsd.Rows.Add(new object[] { dr[0], Math.Round(water_well.X, 1), Math.Round(water_well.Y, 1), Math.Round(pwl, 2), Math.Round(jj, 2), Math.Round(xw, 2), Math.Round(pwl * jj * xw, 2), "1" });
                 }
                 DataView dv = new DataView(well_group_wsd);
                 this.wsd_table = well_group_wsd;
                 this.Jzwsd_Grid.ItemsSource = dv;
             }
-            else
-                MessageBox.Show("查无此井名！");
-
         }
         #region 井距均匀度
 
@@ -196,7 +188,7 @@ namespace SBTP.View.JCXZ
             if (oil_wells.Length != 0)
             {
                 oil_number = System.Convert.ToInt16(oil_wells[0][1].ToString());
-                double result = (double)oil_number / System.Convert.ToInt16(this.PWS.Text);
+                double result = (double)oil_number / System.Convert.ToInt32(this.PWS.Text);
                 return result;
             }
             else
@@ -211,55 +203,33 @@ namespace SBTP.View.JCXZ
             DataRowView view = this.Jzwsd_Grid.Items.CurrentItem as DataRowView;
             this.wsd_table = view.Row.Table;
             
-            if (Data.DatHelper.SaveToDat(this.wsd_table, System.Convert.ToSingle(this.PWS.Text), System.Convert.ToSingle(this.JJ.Text), System.Convert.ToSingle(this.XW.Text)))
+            if (Data.DatHelper.SaveToDat(this.wsd_table, Convert.ToInt32(this.PWS.Text), Convert.ToInt32(this.JJ.Text), Convert.ToInt32(this.XW.Text)))
                 MessageBox.Show("保存成功！");
             else
                 MessageBox.Show("保存失败！");
         }
 
-        private async void JJBtn_Click(object sender, RoutedEventArgs e)
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            this.loading.Visibility = Visibility.Visible;
+            string name = (e.Source as RadioButton).Content.ToString();
+            string colname = string.Empty;
+            switch (name)
+            {
+                case "井距": colname = "JJJYD"; break;
+                case "相位": colname = "XWJJD"; break;
+                case "综合": colname = "WSCD"; break;
+            }
             iso.Children.Clear();
             List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPoints = new List<KeyValuePair<string, KeyValuePair<double, Point>>>();
             foreach (DataRow i in wsd_table.Rows)
             {
-                targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(i[0].ToString(),new KeyValuePair<double, Point>(double.Parse(i["JJJYD"].ToString()), new Point(double.Parse(i["ZBX"].ToString()), double.Parse(i["ZBY"].ToString())))));               
+                targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(i[0].ToString(), new KeyValuePair<double, Point>(double.Parse(i[colname].ToString()), new Point(double.Parse(i["ZBX"].ToString()), double.Parse(i["ZBY"].ToString())))));
             }
-            Graphic.Isogram isogram = new Graphic.Isogram("井距均匀度");
-            Task drawLines = Task.Run(()=> {
-                this.Dispatcher.Invoke(() => { isogram.TargetPoints = targetPoints; }); 
-            }).ContinueWith(t=> { this.Dispatcher.Invoke(()=> { this.loading.Visibility = Visibility.Collapsed; }); });
-            await drawLines;
-            iso.Children.Add(isogram);            
-        }
-
-        private void XWBtn_Click(object sender, RoutedEventArgs e)
-        {
-            iso.Children.Clear();
-            List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPoints = new List<KeyValuePair<string, KeyValuePair<double, Point>>>();
-            foreach (DataRow i in wsd_table.Rows)
+            Graphic.Isogram isogram = new Graphic.Isogram(name)
             {
-                targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(i[0].ToString(), new KeyValuePair<double, Point>(double.Parse(i["XWJJD"].ToString()), new Point(double.Parse(i["ZBX"].ToString()), double.Parse(i["ZBY"].ToString())))));
-
-            }
-            View.Graphic.Isogram isogram = new Graphic.Isogram("相位均匀度");
-            isogram.TargetPoints = targetPoints;
-            iso.Children.Add(isogram);  
-        }
-
-        private void WSDBtn_Click(object sender, RoutedEventArgs e)
-        {
-            iso.Children.Clear();
-            List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPoints = new List<KeyValuePair<string, KeyValuePair<double, Point>>>();
-            foreach (DataRow i in wsd_table.Rows)
-            {
-                targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(i[0].ToString(), new KeyValuePair<double, Point>(double.Parse(i["WSCD"].ToString()), new Point(double.Parse(i["ZBX"].ToString()), double.Parse(i["ZBY"].ToString())))));
-
-            }
-            View.Graphic.Isogram isogram = new Graphic.Isogram("完善度");
-            isogram.TargetPoints = targetPoints;
-            iso.Children.Add(isogram);  
+                TargetPoints = targetPoints
+            };
+            iso.Children.Add(isogram);
         }
     }
 }
