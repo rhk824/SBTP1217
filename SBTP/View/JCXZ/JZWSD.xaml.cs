@@ -209,7 +209,7 @@ namespace SBTP.View.JCXZ
                 MessageBox.Show("保存失败！");
         }
 
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        private async void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
             string name = (e.Source as RadioButton).Content.ToString();
             string colname = string.Empty;

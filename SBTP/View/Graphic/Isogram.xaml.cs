@@ -10,9 +10,14 @@ using SBTP.BLL;
 using System.Windows.Input;
 using System.Threading;
 using Common;
+using com.google.protobuf;
 
 namespace SBTP.View.Graphic
 {
+    struct Line
+    {
+       public double X1, X2, Y1, Y2;
+    }
     /// <summary>
     /// Isogram.xaml 的交互逻辑
     /// </summary>
@@ -51,6 +56,7 @@ namespace SBTP.View.Graphic
                     new KeyValuePair<double, Point>(x.Value.Key, new Point(x.Value.Value.X - min_x + 500, x.Value.Value.Y - min_y + 500)))));
                 GraphicGeneration(targetPointsCollection);
             }
+            get => targetPointsCollection;
         }
 
         public Isogram() { }
@@ -67,8 +73,6 @@ namespace SBTP.View.Graphic
         /// <returns></returns>
         public void GraphicGeneration(List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPoints)
         {
-            //TranslateTransform totalTranslate = new TranslateTransform();
-            //ScaleTransform totalScale = new ScaleTransform();
             int X_max = 0;
             int Y_max = 0;
             int X_min = 0;
@@ -93,53 +97,34 @@ namespace SBTP.View.Graphic
             else { s = 640; }
 
             //图像区域边界坐标
-            //double x_s = 0;
             double x_s = X_min - 5 * s;
             double x_e = 0;
-            //double y_s = 0;
             double y_s = Y_min - 5 * s;
             double y_e = 0;
             if (X > s) { x_e = X_max + 6 * s - X % s; }
             else { x_e = X_max + 6 * s - X; }
             if (Y > s) { y_e = Y_max + 6 * s - Y % s; }
             else { y_e = Y_max + 6 * s - Y; }
-            //Point left_up = new Point(x_s, y_s);
-            //Point left_down = new Point(x_s, y_e);
-            //Point right_up = new Point(x_e, y_s);
-            //Point right_down = new Point(x_e, y_e);
-
-            //myConvas.Width = x_e - x_s;
-            //myConvas.Height = y_e - y_s;
 
             int h_PointCount = Convert.ToInt32(x_e - x_s) / s + 1;
             int v_PointCount = Convert.ToInt32(y_e - y_s) / s + 1;
             //中心点
             List<Point> inner_points = new List<Point>();
-
+            //水平网格线集合
             for (int i = 0; i < h_PointCount; i++)
             {
-                //var myPoint1 = newPoint();
-                //var myPoint2 = newPoint();
-                //Canvas.SetLeft(myPoint1, x_s + s * i);
-                //Canvas.SetTop(myPoint1, y_s);
-                //myConvas.Children.Add(myPoint1);
                 grid_points.Add(new Point(x_s + s * i, y_s));
-
-                //Canvas.SetLeft(myPoint2, x_s + s * i);
-                //Canvas.SetTop(myPoint2, y_e);
-                //myConvas.Children.Add(myPoint2);
                 grid_points.Add(new Point(x_s + s * i, y_e));
-
-                Line line = newLine();
-                line.X1 = x_s + s * i;
-                line.Y1 = y_s;
-                line.X2 = x_s + s * i;
-                line.Y2 = y_e;
+                Line line = new Line
+                {
+                    X1 = x_s + s * i,
+                    Y1 = y_s,
+                    X2 = x_s + s * i,
+                    Y2 = y_e
+                };
                 v_Lines.Add(line);
-
-                //myConvas.Children.Add(line);
             }
-
+            //竖直网格线集合
             for (int j = 0; j < v_PointCount; j++)
             {
                 if (j != 0 && j != v_PointCount - 1)
@@ -147,26 +132,16 @@ namespace SBTP.View.Graphic
                     grid_points.Add(new Point(x_s, y_s + s * j));
                     grid_points.Add(new Point(x_e, y_s + s * j));
                 }
-                //var myPoint1 = newPoint();
-                //var myPoint2 = newPoint();
-                //Canvas.SetLeft(myPoint1, x_s);
-                //Canvas.SetTop(myPoint1, y_s + s * j);
-                //myConvas.Children.Add(myPoint1);
-
-
-                //Canvas.SetLeft(myPoint2, x_e);
-                //Canvas.SetTop(myPoint2, y_s + s * j);
-                //myConvas.Children.Add(myPoint2);
-
-                Line line = newLine();
-                line.X1 = x_s;
-                line.Y1 = y_s + s * j;
-                line.X2 = x_e;
-                line.Y2 = y_s + s * j;
+                Line line = new Line
+                {
+                    X1 = x_s,
+                    Y1 = y_s + s * j,
+                    X2 = x_e,
+                    Y2 = y_s + s * j
+                };
                 h_Lines.Add(line);
-                //myConvas.Children.Add(line);
             }
-
+            //网格线交点集合
             foreach (Line i in h_Lines)
             {
                 foreach (Line j in v_Lines)
@@ -175,10 +150,6 @@ namespace SBTP.View.Graphic
                     cross = crossPoint(i, j);
                     if (cross.X != x_s && cross.X != x_e)
                     {
-                        //var cross_point = newPoint();
-                        //Canvas.SetLeft(cross_point, cross.X);
-                        //Canvas.SetTop(cross_point, cross.Y);
-                        //myConvas.Children.Add(cross_point);
                         inner_points.Add(new Point(cross.X, cross.Y));
                     }
                 }
@@ -197,17 +168,11 @@ namespace SBTP.View.Graphic
             //给所有点赋属性值
             ValuePoints = PropertyPointCal(grid_points);
             //三角划分
-            var triangle_collection = Triangulation(center_point, cubes);
+            var trian = Triangulation(center_point, cubes);
             //等值线生成
-            IsogramGenerate(25, triangle_collection);
+            IsogramGenerate(25, trian);
             //添加试验点
-            DrawTestPoints(targetPointsCollection);
-
-            ////计算偏移量并且平移整体元素
-            //foreach (UIElement item in myConvas.Children)
-            //{
-            //    item.RenderTransform = new TranslateTransform(-grid_points.Min(x => x.X), -grid_points.Min(y => y.Y));
-            //}
+            DrawTestPoints(TargetPoints);
         }
 
         #region 拖拽放缩
@@ -354,63 +319,37 @@ namespace SBTP.View.Graphic
             roundButton.EllipseDiameter = 30;
             roundButton.FillColor = Brushes.Blue;
             return roundButton;
-            //Ellipse newpoint = new Ellipse();
-            //newpoint.Height = 10;
-            //newpoint.Width = 10;
-            //newpoint.Fill = new SolidColorBrush(Colors.Red);
-            //newpoint.Stroke = new SolidColorBrush(Colors.Red);
-            //return newpoint;
-
         }
+
 
         /// <summary>
-        /// 网格线样式
+        /// 等值线
         /// </summary>
+        /// <param name="p1">起点</param>
+        /// <param name="p2">终点</param>
         /// <returns></returns>
-        private Line newLine()
-        {
-            Line newLine = new Line();
-            newLine.Stroke = new SolidColorBrush(Colors.Red);
-            newLine.Fill = new SolidColorBrush(Colors.Red);
-            return newLine;
-        }
-
-        /// <summary>
-        /// 等值线样式
-        /// </summary>
-        /// <returns></returns>
-        private Line IsogramLine()
-        {
-            Line newLine = new Line();
-
-            newLine.StrokeThickness = 2;
-            newLine.Stroke = new SolidColorBrush(Colors.Yellow);
-            newLine.Fill = new SolidColorBrush(Colors.Yellow);
-            return newLine;
-        }
-
-        private PathFigure IsogramLineType(Point p1,Point p2)
+        private PathFigure IsogramLineType(Point p1, Point p2)
         {
             PathFigure pathFigure = new PathFigure();
-            PathSegmentCollection pathSegments = new PathSegmentCollection();
-            PathFigureCollection pathFigures = new PathFigureCollection();
-            pathSegments.Add(new QuadraticBezierSegment(p1,p2,true));
-
+            PathSegmentCollection pathSegments = new PathSegmentCollection
+            {
+                new QuadraticBezierSegment(p1, p2, true)
+            };
             pathFigure.Segments = pathSegments;
             pathFigure.StartPoint = p1;
-            
-            pathFigures.Add(pathFigure);
-            //pathGeometry.Figures = pathFigures;
-
             return pathFigure;
         }
-
-        private Path CreatPath()
+        /// <summary>
+        /// 创建等值线
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        private Path CreatPath(Brush color)
         {
             return new Path()
             {
-                Fill = new SolidColorBrush(Colors.Yellow),
-                Stroke = new SolidColorBrush(Colors.Yellow)
+                Fill = color,
+                Stroke = color
             };
         }
 
@@ -517,7 +456,6 @@ namespace SBTP.View.Graphic
         /// <returns></returns>
         private double D_Value(Point target)
         {
-            //int count = targetPointsCollection.Count;
             double sum1 = 0;
             double sum2 = 0;
             foreach (var i in targetPointsCollection)
@@ -616,18 +554,31 @@ namespace SBTP.View.Graphic
         private void IsogramGenerate(int line_count, List<object> triangles)
         {
             var key_collection = (from item in ValuePoints select item.Key).ToList();
-            double MaxValue = Math.Round(key_collection.Max(), 2);
-            double MinValue = Math.Round(key_collection.Min(), 2);
-            double IsogramStep = Math.Round((MaxValue - MinValue) / (line_count - 1), 2);
-            Path newpath = CreatPath();
-            PathFigureCollection pathFigures = new PathFigureCollection();
-            newpath.Data = new PathGeometry()
-            {
-                Figures = pathFigures
-            };
+            double MaxValue = Math.Round(key_collection.Max(), 5);
+            double MinValue = Math.Round(key_collection.Min(), 5);
+            double diff = MaxValue - MinValue;
+            double IsogramStep = Math.Round(diff / (line_count - 1), 5);
+            #region 创建三种颜色等值线
+            //创建等值线图层
+            //高数值
+            Path high = CreatPath(Brushes.White);
+            //中数值
+            Path middle = CreatPath(Brushes.Red);
+            //低数值
+            Path low = CreatPath(Brushes.DarkBlue);
+            PathFigureCollection highFigures = new PathFigureCollection();
+            PathFigureCollection middleFigures = new PathFigureCollection();
+            PathFigureCollection lowFigures = new PathFigureCollection();
+
+            high.Data = new PathGeometry() { Figures = highFigures };
+            middle.Data = new PathGeometry() { Figures = middleFigures };
+            low.Data = new PathGeometry() { Figures = lowFigures };
+            #endregion
+
             for (int i = 0; i < line_count; i++)
-            {
+            {               
                 double h0 = i * IsogramStep + MinValue;
+
                 foreach (List<Point> p in triangles)
                 {
                     List<Point> pass_point = PassPoint(p, h0);
@@ -666,17 +617,25 @@ namespace SBTP.View.Graphic
                     }
                     else if (pass_point.Count == 1 && pass_side.Count == 0)
                         continue;
-                    pathFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y)));
-                    //Line line = IsogramLine();
-                    //line.X1 = a.X;
-                    //line.Y1 = a.Y;
-                    //line.X2 = b.X;
-                    //line.Y2 = b.Y;
-                    //myConvas.Children.Add(line);
-                    //myConvas.Children.Add(path);
+                    //按数值划分等值线
+                    if (h0 > MinValue + diff * 2 / 3)
+                    {
+                        highFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y)));
+                    }
+                    else if (h0 <= MinValue + diff * 2 / 3 && h0 > MinValue + diff / 3)
+                    {
+                        middleFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y)));
+                    }
+                    else
+                    {
+                        lowFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y)));
+                    }
                 }
             }
-            myConvas.Children.Add(newpath);
+            myConvas.Children.Add(high);
+            myConvas.Children.Add(middle);
+            myConvas.Children.Add(low);
+
         }
 
         /// <summary>
@@ -709,9 +668,30 @@ namespace SBTP.View.Graphic
             double h3 = (from item in ValuePoints where item.Value == p3 select item).ToArray()[0].Key;
             //Dictionary<double, Line> line_dic = new Dictionary<double, Line>();
             List<Line> line_list = new List<Line>();
-            if ((h1 - h) * (h2 - h) < 0) { Line line = new Line(); line.X1 = p1.X; line.Y1 = p1.Y; line.X2 = p2.X; line.Y2 = p2.Y; line_list.Add(line); }
-            if ((h2 - h) * (h3 - h) < 0) { Line line = new Line(); line.X1 = p2.X; line.Y1 = p2.Y; line.X2 = p3.X; line.Y2 = p3.Y; line_list.Add(line); }
-            if ((h1 - h) * (h3 - h) < 0) { Line line = new Line(); line.X1 = p3.X; line.Y1 = p3.Y; line.X2 = p1.X; line.Y2 = p1.Y; line_list.Add(line); }
+            if ((h1 - h) * (h2 - h) < 0) {
+                Line line = new Line
+                {
+                    X1 = p1.X,
+                    Y1 = p1.Y,
+                    X2 = p2.X,
+                    Y2 = p2.Y
+                }; line_list.Add(line); }
+            if ((h2 - h) * (h3 - h) < 0) {
+                Line line = new Line
+                {
+                    X1 = p2.X,
+                    Y1 = p2.Y,
+                    X2 = p3.X,
+                    Y2 = p3.Y
+                }; line_list.Add(line); }
+            if ((h1 - h) * (h3 - h) < 0) {
+                Line line = new Line
+                {
+                    X1 = p3.X,
+                    Y1 = p3.Y,
+                    X2 = p1.X,
+                    Y2 = p1.Y
+                }; line_list.Add(line); }
 
             return line_list;
         }
@@ -735,7 +715,6 @@ namespace SBTP.View.Graphic
         private void myConvas_Loaded(object sender, RoutedEventArgs e)
         {
             outside.Background = Unity.NetGridBg(Colors.LightGray, Colors.DarkGray);
-
         }
     }
 }

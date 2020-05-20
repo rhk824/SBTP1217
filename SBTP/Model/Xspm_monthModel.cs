@@ -25,7 +25,5 @@ namespace SBTP.Model
         public string XCH { get; set; } = "";
         public string XFCH { get; set; } = "";
         public string ZT { set; get; } = "0";
-
-
     }
 }
