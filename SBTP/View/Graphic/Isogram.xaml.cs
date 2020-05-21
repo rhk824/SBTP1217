@@ -16,7 +16,21 @@ namespace SBTP.View.Graphic
 {
     struct Line
     {
-       public double X1, X2, Y1, Y2;
+        public double X1, X2, Y1, Y2;
+    }
+
+    public class MyIsoValueProperties : DependencyObject
+    {
+        public static double GetIsoValue(DependencyObject obj)
+        {
+            return (double)obj.GetValue(IsoValueProperty);
+        }
+        public static void SetIsoValue(DependencyObject obj, double value)
+        {
+           obj.SetValue(IsoValueProperty, value);
+        }
+        public static readonly DependencyProperty IsoValueProperty = DependencyProperty.RegisterAttached("IsoValue", typeof(Double), typeof(MyIsoValueProperties));
+
     }
     /// <summary>
     /// Isogram.xaml 的交互逻辑
@@ -33,15 +47,20 @@ namespace SBTP.View.Graphic
         Double scaleLevel = 1;
 
 
-        private static List<Line> v_Lines = new List<Line>();
-        private static List<Line> h_Lines = new List<Line>();
-        private static List<Point> grid_points = new List<Point>();
-        private static List<Point> center_point = new List<Point>();
-        private static List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPointsCollection;
-        private static List<object> cubes = new List<object>();
-        private static List<KeyValuePair<double, Point>> ValuePoints = new List<KeyValuePair<double, Point>>();
+        private List<Line> v_Lines = new List<Line>();
+        private List<Line> h_Lines = new List<Line>();
+        private List<Point> grid_points = new List<Point>();
+        private List<Point> center_point = new List<Point>();
+        private List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPointsCollection;
+        private List<object> cubes = new List<object>();
+        private List<KeyValuePair<double, Point>> ValuePoints = new List<KeyValuePair<double, Point>>();
         //测试点值名称
-        private static string value_name;
+        private string value_name;
+        //线条数量,缺省25
+        public int LineCount { set; get; } = 25;
+        private Path HighValues { set; get; } = CreatPath(Brushes.White);
+        private Path MiddleValues { set; get; } = CreatPath(Brushes.Red);
+        private Path LowValues { set; get; } = CreatPath(Brushes.DarkBlue);
 
         public List<KeyValuePair<string, KeyValuePair<double, Point>>> TargetPoints
         {
@@ -54,15 +73,22 @@ namespace SBTP.View.Graphic
 
                 value.ForEach(x => targetPointsCollection.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(x.Key,
                     new KeyValuePair<double, Point>(x.Value.Key, new Point(x.Value.Value.X - min_x + 500, x.Value.Value.Y - min_y + 500)))));
-                GraphicGeneration(targetPointsCollection);
+//                GraphicGeneration();
             }
             get => targetPointsCollection;
         }
 
-        public Isogram() { }
+        public Isogram() { InitializeComponent(); }
+
         public Isogram(string ValueName)
         {
             InitializeComponent();
+            value_name = ValueName;
+        }
+        public Isogram(string ValueName,int linecount)
+        {
+            InitializeComponent();
+            this.LineCount = linecount;
             value_name = ValueName;
         }
 
@@ -71,7 +97,7 @@ namespace SBTP.View.Graphic
         /// </summary>
         /// <param name="targetPoints"></param>
         /// <returns></returns>
-        public void GraphicGeneration(List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPoints)
+        public KeyValuePair<double,double> GraphicGeneration( out double step)
         {
             int X_max = 0;
             int Y_max = 0;
@@ -79,10 +105,10 @@ namespace SBTP.View.Graphic
             int Y_min = 0;
             //网格边长
             int s = 5;
-            X_max = Convert.ToInt32((from item in targetPoints select item.Value.Value.X).Max());
-            Y_max = Convert.ToInt32((from item in targetPoints select item.Value.Value.Y).Max());
-            X_min = Convert.ToInt32((from item in targetPoints select item.Value.Value.X).Min());
-            Y_min = Convert.ToInt32((from item in targetPoints select item.Value.Value.Y).Min());
+            X_max = Convert.ToInt32((from item in TargetPoints select item.Value.Value.X).Max());
+            Y_max = Convert.ToInt32((from item in TargetPoints select item.Value.Value.Y).Max());
+            X_min = Convert.ToInt32((from item in TargetPoints select item.Value.Value.X).Min());
+            Y_min = Convert.ToInt32((from item in TargetPoints select item.Value.Value.Y).Min());
 
             int X = X_max - X_min;
             int Y = Y_max - Y_min;
@@ -169,10 +195,11 @@ namespace SBTP.View.Graphic
             ValuePoints = PropertyPointCal(grid_points);
             //三角划分
             var trian = Triangulation(center_point, cubes);
-            //等值线生成
-            IsogramGenerate(25, trian);
             //添加试验点
             DrawTestPoints(TargetPoints);
+            //等值线生成
+            return IsogramGenerate(LineCount, trian, out step);
+
         }
 
         #region 拖拽放缩
@@ -246,8 +273,46 @@ namespace SBTP.View.Graphic
             totalScale.ScaleY = scaleLevel;
             totalScale.CenterX = scaleCenter.X;
             totalScale.CenterY = scaleCenter.Y;
+            if(scaleLevel<0.6)
+            {
+                List<double> list = ExceptIsoValues(HighValues);
+                list.RemoveRange(0, 4);
+                List<double> list1 = ExceptIsoValues(MiddleValues);
+                list.RemoveRange(0, 4);
+                //List<double> list2 = ExceptIsoValues(LowValues);
+                //list.RemoveRange(0, 1);
+
+                List<PathFigure> l1 = (HighValues.Data as PathGeometry).Figures.OfType<PathFigure>().ToList().FindAll(x => list.Contains(MyIsoValueProperties.GetIsoValue(x)));
+                List<PathFigure> l2 = (MiddleValues.Data as PathGeometry).Figures.OfType<PathFigure>().ToList().FindAll(x => list1.Contains(MyIsoValueProperties.GetIsoValue(x)));
+                //List<PathFigure> l3 = (LowValues.Data as PathGeometry).Figures.OfType<PathFigure>().ToList().FindAll(x => list2.Contains(MyIsoValueProperties.GetIsoValue(x)));
+
+                foreach (var item in l1)
+                {
+                    (HighValues.Data as PathGeometry).Figures.Remove(item);
+                }
+                foreach (var item in l2)
+                {
+                    (MiddleValues.Data as PathGeometry).Figures.Remove(item);
+                }
+                //foreach (var item in l3)
+                //{
+                //    (LowValues.Data as PathGeometry).Figures.Remove(item);
+                //}
+            }
+
+            //foreach (var item in highFigures)
+            //{
+            //    double temp = MyIsoValueProperties.GetIsoValue(item);
+            //}
 
             adjustGraph();
+        }
+
+        private List<double> ExceptIsoValues(Path path)
+        {
+            List<double> isoValues = new List<double>();
+            (path.Data as PathGeometry).Figures.OfType<PathFigure>().ToList().ForEach(x => isoValues.Add(MyIsoValueProperties.GetIsoValue(x)));
+            return isoValues.Distinct().OrderByDescending(x => x).ToList();
         }
 
         /// <summary>
@@ -328,7 +393,7 @@ namespace SBTP.View.Graphic
         /// <param name="p1">起点</param>
         /// <param name="p2">终点</param>
         /// <returns></returns>
-        private PathFigure IsogramLineType(Point p1, Point p2)
+        private PathFigure IsogramLineType(Point p1, Point p2, double value)
         {
             PathFigure pathFigure = new PathFigure();
             PathSegmentCollection pathSegments = new PathSegmentCollection
@@ -337,6 +402,8 @@ namespace SBTP.View.Graphic
             };
             pathFigure.Segments = pathSegments;
             pathFigure.StartPoint = p1;
+            MyIsoValueProperties.SetIsoValue(pathFigure, value);
+            //pathFigure.
             return pathFigure;
         }
         /// <summary>
@@ -344,7 +411,7 @@ namespace SBTP.View.Graphic
         /// </summary>
         /// <param name="color"></param>
         /// <returns></returns>
-        private Path CreatPath(Brush color)
+        private static Path CreatPath(Brush color)
         {
             return new Path()
             {
@@ -551,44 +618,36 @@ namespace SBTP.View.Graphic
         /// </summary>
         /// <param name="points"></param>
         /// <param name="line_count"></param>
-        private void IsogramGenerate(int line_count, List<object> triangles)
+        private KeyValuePair<double,double> IsogramGenerate(int line_count, List<object> triangles,out double diff)
         {
             var key_collection = (from item in ValuePoints select item.Key).ToList();
             double MaxValue = Math.Round(key_collection.Max(), 5);
             double MinValue = Math.Round(key_collection.Min(), 5);
-            double diff = MaxValue - MinValue;
+            diff = MaxValue - MinValue;
             double IsogramStep = Math.Round(diff / (line_count - 1), 5);
             #region 创建三种颜色等值线
             //创建等值线图层
-            //高数值
-            Path high = CreatPath(Brushes.White);
-            //中数值
-            Path middle = CreatPath(Brushes.Red);
-            //低数值
-            Path low = CreatPath(Brushes.DarkBlue);
             PathFigureCollection highFigures = new PathFigureCollection();
             PathFigureCollection middleFigures = new PathFigureCollection();
             PathFigureCollection lowFigures = new PathFigureCollection();
 
-            high.Data = new PathGeometry() { Figures = highFigures };
-            middle.Data = new PathGeometry() { Figures = middleFigures };
-            low.Data = new PathGeometry() { Figures = lowFigures };
+            HighValues.Data = new PathGeometry() { Figures = highFigures };
+            MiddleValues.Data = new PathGeometry() { Figures = middleFigures };
+            LowValues.Data = new PathGeometry() { Figures = lowFigures };
             #endregion
 
             for (int i = 0; i < line_count; i++)
-            {               
+            {
+                //等值线数值
                 double h0 = i * IsogramStep + MinValue;
-
                 foreach (List<Point> p in triangles)
                 {
                     List<Point> pass_point = PassPoint(p, h0);
                     List<Line> pass_side = PassSide(p, h0);
-                    
+
                     Point a = new Point();
                     Point b = new Point();
-                    if (pass_point.Count == 0 && pass_side.Count == 0)
-                        continue;
-                    else if (pass_point.Count == 2 && pass_side.Count == 0)
+                    if (pass_point.Count == 2 && pass_side.Count == 0)
                     {
                         a = pass_point[0];
                         b = pass_point[1];
@@ -615,27 +674,28 @@ namespace SBTP.View.Graphic
                         Point l12 = new Point(l1.X2, l1.Y2);
                         b = D_Point(l11, l12, h0);
                     }
-                    else if (pass_point.Count == 1 && pass_side.Count == 0)
+                    else
                         continue;
                     //按数值划分等值线
                     if (h0 > MinValue + diff * 2 / 3)
                     {
-                        highFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y)));
+                        highFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y), h0));
                     }
                     else if (h0 <= MinValue + diff * 2 / 3 && h0 > MinValue + diff / 3)
                     {
-                        middleFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y)));
+                        middleFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y), h0));
                     }
                     else
                     {
-                        lowFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y)));
+                        lowFigures.Add(IsogramLineType(new Point(a.X, a.Y), new Point(b.X, b.Y), h0));
                     }
                 }
             }
-            myConvas.Children.Add(high);
-            myConvas.Children.Add(middle);
-            myConvas.Children.Add(low);
+            myConvas.Children.Add(HighValues);
+            myConvas.Children.Add(MiddleValues);
+            myConvas.Children.Add(LowValues);
 
+            return new KeyValuePair<double, double>(MaxValue, MinValue);
         }
 
         /// <summary>
@@ -714,7 +774,7 @@ namespace SBTP.View.Graphic
 
         private void myConvas_Loaded(object sender, RoutedEventArgs e)
         {
-            outside.Background = Unity.NetGridBg(Colors.LightGray, Colors.DarkGray);
+            outside.Background = Unity.NetGridBg(Colors.LightSlateGray, Colors.DarkGray);
         }
     }
 }

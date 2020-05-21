@@ -59,7 +59,7 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="0">
                     <StackPanel Name="iso" Orientation="Horizontal"   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
@@ -68,11 +68,25 @@
                     <Loading:Loading />
                 </Grid>
                 <GroupBox Grid.Row="1" BorderThickness="2" Margin="2" Header="操作">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,2,0">
+                            <Label VerticalAlignment="Center" Content="线条数:"/>
+                            <TextBox Width="30" Name="line_count" Text="25"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,5,0">
+                            <Label VerticalAlignment="Center" Content="范围:"/>
+                            <Label  Name="value_min" Content="___"/>
+                            <Label VerticalAlignment="Center" Content="-"/>
+                            <Label Name="value_max" Content="___"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                            <Label Content="步长:"/>
+                            <Label Name="iso_step" Content="___"/>
+                        </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                            <RadioButton GroupName="cz" Content="井距" Checked="RadioButton_Checked"/>
-                            <RadioButton GroupName="cz" Content="相位" Checked="RadioButton_Checked"  Margin="60,0,60,0"/>
-                            <RadioButton GroupName="cz" Content="综合" Checked="RadioButton_Checked"/>
+                            <Button Content="井距" Click="RadioButton_Checked"/>
+                            <Button Content="相位" Click="RadioButton_Checked"  Margin="20,0,20,0"/>
+                            <Button Content="综合" Click="RadioButton_Checked"/>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>

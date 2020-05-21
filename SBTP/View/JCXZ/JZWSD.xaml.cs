@@ -211,7 +211,8 @@ namespace SBTP.View.JCXZ
 
         private async void RadioButton_Checked(object sender, RoutedEventArgs e)
         {
-            string name = (e.Source as RadioButton).Content.ToString();
+            string name = (e.Source as Button).Content.ToString();
+            int count = string.IsNullOrEmpty(this.line_count.Text) ? 25 : int.Parse(this.line_count.Text);
             string colname = string.Empty;
             switch (name)
             {
@@ -225,10 +226,14 @@ namespace SBTP.View.JCXZ
             {
                 targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(i[0].ToString(), new KeyValuePair<double, Point>(double.Parse(i[colname].ToString()), new Point(double.Parse(i["ZBX"].ToString()), double.Parse(i["ZBY"].ToString())))));
             }
-            Graphic.Isogram isogram = new Graphic.Isogram(name)
+            Graphic.Isogram isogram = new Graphic.Isogram(name, count)
             {
                 TargetPoints = targetPoints
             };
+            KeyValuePair<double, double> range = isogram.GraphicGeneration(out double step);
+            value_min.Content = range.Value;
+            value_max.Content = range.Key;
+            iso_step.Content = Math.Round(step, 5);
             iso.Children.Add(isogram);
         }
     }
