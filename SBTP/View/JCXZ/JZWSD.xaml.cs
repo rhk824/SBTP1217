@@ -203,7 +203,7 @@ namespace SBTP.View.JCXZ
             DataRowView view = this.Jzwsd_Grid.Items.CurrentItem as DataRowView;
             this.wsd_table = view.Row.Table;
             
-            if (Data.DatHelper.SaveToDat(this.wsd_table, Convert.ToInt32(this.PWS.Text), Convert.ToInt32(this.JJ.Text), Convert.ToInt32(this.XW.Text)))
+            if (Data.DatHelper.SaveToDat(this.wsd_table, Convert.ToSingle(this.PWS.Text), Convert.ToSingle(this.JJ.Text), Convert.ToSingle(this.XW.Text)))
                 MessageBox.Show("保存成功！");
             else
                 MessageBox.Show("保存失败！");
@@ -230,6 +230,7 @@ namespace SBTP.View.JCXZ
             {
                 TargetPoints = targetPoints
             };
+            scaleTimes.DataContext = isogram;
             KeyValuePair<double, double> range = isogram.GraphicGeneration(out double step);
             value_min.Content = range.Value;
             value_max.Content = range.Key;

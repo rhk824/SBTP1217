@@ -72,6 +72,8 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,2,0">
                             <Label VerticalAlignment="Center" Content="线条数:"/>
                             <TextBox Width="30" Name="line_count" Text="25"/>
+                            <Label Content="放缩倍数:"/>
+                            <Label Content="{Binding Path=ScaleTimes, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Name="scaleTimes"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,5,0">
                             <Label VerticalAlignment="Center" Content="范围:"/>
