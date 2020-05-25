@@ -28,20 +28,25 @@
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" BorderThickness="2" Margin="2" Header="默认参数">
-            <StackPanel Orientation="Horizontal">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" >
-                    <TextBlock  Text="配位数："/>
-                    <TextBox Name="PWS" Width="50" Text="4"/>
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" >
+                        <TextBlock  Text="配位数："/>
+                        <TextBox Name="PWS" Width="50" Text="4"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                        <TextBlock Text="井距："/>
+                        <TextBox  Name="JJ" Width="50" Text="0.2"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0">
+                        <TextBlock  Text="相位："/>
+                        <TextBox Name="XW" Width="50" Text="0.2"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <TextBlock Text="井距："/>
-                    <TextBox  Name="JJ" Width="50" Text="0.2"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="计算" Name="btn_cal" Click="btn_cal_Click"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0">
-                    <TextBlock  Text="相位："/>
-                    <TextBox Name="XW" Width="50" Text="0.2"/>
-                </StackPanel>
-            </StackPanel>
+            </Grid>
         </GroupBox>
         <!--<GroupBox Grid.Row="0" Grid.Column="1" BorderThickness="2" Margin="2" Header="显示">
             <Grid ></Grid>

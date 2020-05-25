@@ -21,6 +21,7 @@ namespace SBTP.View.JCXZ
         private Dictionary<string, Point> oil_well_collection;
         private DataTable well_group;
         private DataTable wsd_table;
+        private DataTable well_group_wsd;
         public JZWSD()
         {
             InitializeComponent();
@@ -33,7 +34,7 @@ namespace SBTP.View.JCXZ
             well_group = Data.DatHelper.Read();
             water_well_collection = BLL.WellGroupBaseData.WaterWellCollection(getDataTable("WATER_WELL_MONTH"));
             oil_well_collection = BLL.WellGroupBaseData.OilWellCollection(getDataTable("OIL_WELL_MONTH"));
-            Wsd_Group_Loaded();
+            Wsd_Group_Table_Loaded();
         }
 
         public DataTable getDataTable(string table_name)
@@ -48,18 +49,8 @@ namespace SBTP.View.JCXZ
             return dt;
         }
 
-        private void Wsd_Group_Loaded()
+        private void BindGrid()
         {
-            DataTable well_group_wsd = new DataTable("JZWSD");
-            well_group_wsd.Columns.Add("WELL", Type.GetType("System.String"));
-            well_group_wsd.Columns.Add("ZBX", Type.GetType("System.String"));
-            well_group_wsd.Columns.Add("ZBY", Type.GetType("System.String"));
-            well_group_wsd.Columns.Add("PWL", Type.GetType("System.String"));
-            well_group_wsd.Columns.Add("JJJYD", Type.GetType("System.String"));
-            well_group_wsd.Columns.Add("XWJJD", Type.GetType("System.String"));
-            well_group_wsd.Columns.Add("WSCD", Type.GetType("System.String"));
-            well_group_wsd.Columns.Add("WSJBS", Type.GetType("System.String"));
-
             DataRow[] well_groups = well_group.Select();
             if (well_groups.Length != 0)
             {
@@ -68,14 +59,36 @@ namespace SBTP.View.JCXZ
                     double pwl = WellsCoordinationNumber(dr[0].ToString());
                     double jj = WellEvennessIndex(dr[0].ToString());
                     double xw = PhaseEvennessIndex(dr[0].ToString());
-                    Point water_well = new Point();
-                    water_well_collection.TryGetValue(dr[0].ToString(), out water_well);
-                    well_group_wsd.Rows.Add(new object[] { dr[0], Math.Round(water_well.X, 1), Math.Round(water_well.Y, 1), Math.Round(pwl, 2), Math.Round(jj, 2), Math.Round(xw, 2), Math.Round(pwl * jj * xw, 2), "1" });
+                    water_well_collection.TryGetValue(dr[0].ToString(), out Point water_well);
+                    well_group_wsd.Rows.Add(
+                        new object[]
+                        {
+                            dr[0],
+                            Math.Round(water_well.X, 1),
+                            Math.Round(water_well.Y, 1),
+                            Math.Round(pwl, 2), Math.Round(jj, 2),
+                            Math.Round(xw, 2),
+                            Math.Round(pwl * jj * xw, 2),
+                            "1"
+                        });
                 }
-                DataView dv = new DataView(well_group_wsd);
                 this.wsd_table = well_group_wsd;
-                this.Jzwsd_Grid.ItemsSource = dv;
+                this.Jzwsd_Grid.ItemsSource = new DataView(well_group_wsd); ;
             }
+        }
+
+        private void Wsd_Group_Table_Loaded()
+        {
+            well_group_wsd = new DataTable("JZWSD");
+            well_group_wsd.Columns.Add("WELL", Type.GetType("System.String"));
+            well_group_wsd.Columns.Add("ZBX", Type.GetType("System.String"));
+            well_group_wsd.Columns.Add("ZBY", Type.GetType("System.String"));
+            well_group_wsd.Columns.Add("PWL", Type.GetType("System.String"));
+            well_group_wsd.Columns.Add("JJJYD", Type.GetType("System.String"));
+            well_group_wsd.Columns.Add("XWJJD", Type.GetType("System.String"));
+            well_group_wsd.Columns.Add("WSCD", Type.GetType("System.String"));
+            well_group_wsd.Columns.Add("WSJBS", Type.GetType("System.String"));
+            BindGrid();
         }
         #region 井距均匀度
 
@@ -90,7 +103,7 @@ namespace SBTP.View.JCXZ
                 water_well_collection.TryGetValue(well_name, out water_well_point);
             else
                 return 0;
-            DataRow[] oil_wells = well_group.Select("水井井号='"+well_name+"'");
+            DataRow[] oil_wells = well_group.Select("水井井号='" + well_name + "'");
             List<string> oil_collection = new List<string>();
             if (oil_wells.Length != 0) { oil_collection = oil_wells[0][2].ToString().Split(',').ToList(); }
             List<double> distance = new List<double>();
@@ -99,7 +112,7 @@ namespace SBTP.View.JCXZ
                 Point oil_well_point = new Point();
                 if (oil_well_collection.ContainsKey(item))
                     oil_well_collection.TryGetValue(item, out oil_well_point);
-                double well_distance = Math.Sqrt(Math.Pow(oil_well_point.X-water_well_point.X,2)+Math.Pow(oil_well_point.Y-water_well_point.Y,2));
+                double well_distance = Math.Sqrt(Math.Pow(oil_well_point.X - water_well_point.X, 2) + Math.Pow(oil_well_point.Y - water_well_point.Y, 2));
                 distance.Add(well_distance);
             }
             double average = distance.ToArray().Average();
@@ -200,7 +213,6 @@ namespace SBTP.View.JCXZ
 
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-
             DataRowView view = this.Jzwsd_Grid.Items.CurrentItem as DataRowView;
             this.wsd_table = view.Row.Table;
             
@@ -249,6 +261,11 @@ namespace SBTP.View.JCXZ
         {
             var mainWindow = Unity.GetAncestor<MainWindow>(this);
             mainWindow.Skip(this.GetType().Namespace + ".ZCJZ");
+        }
+
+        private void btn_cal_Click(object sender, RoutedEventArgs e)
+        {
+            BindGrid();
         }
     }
 }

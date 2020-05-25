@@ -148,7 +148,7 @@ namespace SBTP.View.TPJ
             if (rb_gsf.IsChecked == true) para = page_gsf.calculate();
             if (rb_ckf.IsChecked == true) para = page_ckf.calculate();
 
-            bll.set_tpjing_info(para, FunctionName, double.Parse(Value_a.Text), double.Parse(Value_a.Text), FunctionName.Equals("ZS_Func") ? zs_c : m_c);
+            bll.set_tpjing_info(para, FunctionName, double.Parse(Value_a.Text), double.Parse(Value_b.Text), FunctionName.Equals("ZS_Func") ? zs_c : m_c);
         }
 
         private void Btn_save_Click(object sender, RoutedEventArgs e)
