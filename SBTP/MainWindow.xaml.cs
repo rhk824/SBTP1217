@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using Application = System.Windows.Forms.Application;
@@ -163,10 +164,17 @@ namespace SBTP
                 pageContainer.Content = null;
             }
         }
-
         private void Quit_Click(object sender, RoutedEventArgs e)
         {
             App.Current.Shutdown();
         }
+
+        public void Skip(string pagename)
+        {
+            Assembly assembly = this.GetType().Assembly;
+            Page page = (Page)assembly.CreateInstance(pagename);
+            pageContainer.NavigationService.Navigate(page);
+        }
+
     }
 }

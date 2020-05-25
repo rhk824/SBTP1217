@@ -8,6 +8,13 @@
       mc:Ignorable="d" 
       d:DesignHeight="520" d:DesignWidth="1000" Background="#eee"
       Title="ysfx">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
 
     <Grid Grid.IsSharedSizeScope="True">
         <Grid.RowDefinitions>
@@ -90,8 +97,12 @@
         </GroupBox>
         <GroupBox Grid.Row="3" Grid.Column="1" Grid.RowSpan="1" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="操作">
             <Grid>
-                <Button Content="保存" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Width="75"/>
-                <Button Name="Btn_Compute" Content="计算" HorizontalAlignment="Right" Margin="0,0,95,0" VerticalAlignment="Center" Width="75" Click="Btn_Compute_Click"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Name="Btn_Compute" Content="计算" Click="Btn_Compute_Click"/>
+                    <Button Content="保存"/>
+                    <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
+                    <Button Name="btn_close" Content="关闭" Click="btn_close_Click"/>
+                </StackPanel>
             </Grid>
         </GroupBox>
     </Grid>

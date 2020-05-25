@@ -234,6 +234,8 @@
         <Grid Grid.Row="4" Grid.Column="2">
             <StackPanel Style="{StaticResource sp_bottom}">
                 <Button Name="btn_save" Content="保存" Click="Btn_save_Click" />
+                <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
+                <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

@@ -256,6 +256,18 @@ namespace SBTP.View.TPJ
             return new KeyValuePair<double, double>(a, b);
         }
 
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".LXXZ");
+        }
+
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(" ");
+        }
+
         private void Radio_Checked(object sender, RoutedEventArgs e)
         {
             FunctionName = (e.Source as RadioButton).Name;

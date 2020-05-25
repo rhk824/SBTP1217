@@ -131,6 +131,8 @@
             <StackPanel Style="{StaticResource sp_bottom}">
                 <Button Name="btn_calculate" Content="计算" Click="Btn_calculate_Click" />
                 <Button Name="btn_save" Content="保存" Click="Btn_save_Click" />
+                <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
+                <Button Name="btn_close" Content="关闭" Click="btn_close_Click"/>
             </StackPanel>
         </Grid>
 

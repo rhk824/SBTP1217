@@ -1,4 +1,5 @@
-﻿using Maticsoft.DBUtility;
+﻿using Common;
+using Maticsoft.DBUtility;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -295,6 +296,18 @@ namespace SBTP.View.TPJ
                     item.Click += CheckedEvent;
                 }
             }
+        }
+
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".NDXZ");
+        }
+
+        private void btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".CCWX");
         }
     }
 }

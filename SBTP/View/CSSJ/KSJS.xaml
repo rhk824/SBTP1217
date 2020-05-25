@@ -66,9 +66,14 @@
 
         <GroupBox Header="操作" Grid.Row="2">
             <Grid>
-                <Button Name="Btn_Import" Content="批量导入" Width="75" HorizontalAlignment="Right" Margin="0,0,185,0" VerticalAlignment="Center" Click="Btn_Import_Click" />
-                <Button Name="Btn_Save" Content="保存" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" Width="75" Click="Btn_Save_Click"/>
-                <Button Name="Btn_Compute" Content="计算" HorizontalAlignment="Right" Margin="0,0,95,0" VerticalAlignment="Center" Width="75" Click="Btn_Compute_Click" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Name="Btn_Import" Content="批量导入" Click="Btn_Import_Click" />
+                    <Button Name="Btn_Compute" Content="计算" Click="Btn_Compute_Click" />
+                    <Button Name="Btn_Save" Content="保存" Click="Btn_Save_Click"/>
+                    <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
+                    <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
+                </StackPanel>
+
             </Grid>
         </GroupBox>
     </Grid>

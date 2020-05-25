@@ -73,8 +73,9 @@
         
         <GroupBox Grid.Column="2" Grid.Row="3" Header="操作">
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
-                <Button Content="保存数据" Click="Button_Click"/>
-                <Button Content="取消" />
+                <Button Content="保存" Click="Button_Click"/>
+                <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
+                <Button Name="btn_close" Content="关闭" Click="btn_close_Click"/>
             </StackPanel>
         </GroupBox>
         

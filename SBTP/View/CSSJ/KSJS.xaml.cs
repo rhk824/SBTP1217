@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using Microsoft.Win32;
 using System.Data;
 using Excel = Microsoft.Office.Interop.Excel;
+using Common;
 
 namespace SBTP.View.CSSJ
 {
@@ -96,6 +97,18 @@ namespace SBTP.View.CSSJ
             excelApp.Quit();
 
             MessageBox.Show("保存成功！");
+        }
+
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".DSSJ");
+        }
+
+        private void btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".TPYLYH");
         }
     }
 

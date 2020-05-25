@@ -88,7 +88,9 @@
         </GroupBox>
         <GroupBox Grid.Row="2" Header="操作">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Name="Save_Btn" Width="80" Content="保存" Click="Save_Btn_Click"/>
+                <Button Name="Save_Btn" Content="保存" Click="Save_Btn_Click"/>
+                <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
+                <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
             </StackPanel>
         </GroupBox>
     </Grid>

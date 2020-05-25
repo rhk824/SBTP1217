@@ -10,7 +10,7 @@ using SBTP.Data;
 using SBTP.BLL;
 using Maticsoft.DBUtility;
 using System.Windows.Forms.DataVisualization.Charting;
-
+using Common;
 
 namespace SBTP.View.Well
 {
@@ -396,6 +396,18 @@ namespace SBTP.View.Well
         {
             lineWidth = (int)e.NewValue;
             drawConvas();
+        }
+
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(" ");
+        }
+
+        private void btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".TPC");
         }
 
         private void setListBox2()

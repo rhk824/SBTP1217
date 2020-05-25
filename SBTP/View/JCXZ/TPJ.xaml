@@ -9,11 +9,16 @@
       MinWidth="1000" MinHeight="520" Background="#eee"
       Title="tpj">
     <Page.Resources>
-        <ObjectDataProvider x:Key="PZGZEnumKey" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type Type="local:PZGZEnum"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="PZGZEnumKey" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+                <ObjectDataProvider.MethodParameters>
+                    <x:Type Type="local:PZGZEnum"/>
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
 
     <Grid Grid.IsSharedSizeScope="True" Name="Tpj_Grid">
@@ -78,10 +83,16 @@
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="3" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="3" BorderThickness="2" Margin="2" Header="操作">
-            <Grid>
-                <Button x:Name="HSL" Content="综合含水"  Width="75" VerticalAlignment="Center" Margin="10,0,0,0" HorizontalAlignment="Left" Click="HSL_Click"/>
-                <Button x:Name="XSZS" Content="视吸水指数"  Width="75" VerticalAlignment="Center" Margin="95,0,0,0" HorizontalAlignment="Left" Click="XSZS_Click"/>
-                <Button x:Name="Save" Content="保存"  Width="75" VerticalAlignment="Center" Margin="0,0,10,0" HorizontalAlignment="Right" Click="Save_Click"/>
+            <Grid VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <Button x:Name="HSL" Content="综合含水" VerticalAlignment="Center" HorizontalAlignment="Left" Click="HSL_Click"/>
+                    <Button x:Name="XSZS" Content="视吸水指数" VerticalAlignment="Center"  HorizontalAlignment="Left" Click="XSZS_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="Save" Content="保存" VerticalAlignment="Center" HorizontalAlignment="Right" Click="Save_Click"/>
+                    <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
+                    <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
+                </StackPanel>
             </Grid>           
         </GroupBox>
     </Grid>

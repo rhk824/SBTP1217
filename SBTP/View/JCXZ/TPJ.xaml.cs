@@ -1,4 +1,5 @@
-﻿using Maticsoft.DBUtility;
+﻿using Common;
+using Maticsoft.DBUtility;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
@@ -650,6 +651,18 @@ namespace SBTP.View.JCXZ
                 }
             }
 
+        }
+
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".TPC");
+        }
+
+        private void btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".JZWSD");
         }
     }
 }

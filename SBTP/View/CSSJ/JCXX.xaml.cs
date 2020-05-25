@@ -68,5 +68,17 @@ namespace SBTP.View.CSSJ
         {
             _bll.btn_jgxx();
         }
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".TPYLYH");
+        }
+
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(" ");
+        }
     }
 }

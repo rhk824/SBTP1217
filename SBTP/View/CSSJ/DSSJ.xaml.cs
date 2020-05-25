@@ -1,4 +1,5 @@
-﻿using SBTP.Data;
+﻿using Common;
+using SBTP.Data;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
@@ -658,6 +659,17 @@ namespace SBTP.View.CSSJ
             {
                 FindVisualChild<TextBlock>(SJ_Grid.Columns[11].GetCellContent(SJ_Grid.Items[i]))[0].Text = Math.Round(PressureVal(i + 1, (DSJ_Well.SelectedItem as tpc_model).jh), 3).ToString();
             }
+        }
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(" ");
+        }
+
+        private void btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".KSJS");
         }
     }
 }

@@ -105,5 +105,17 @@ namespace SBTP.View.JCXZ
         {
             bll.btn_load(jzlt);
         }
+
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".YSFX");
+        }
+
+        private void btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".TPJ");
+        }
     }
 }

@@ -97,5 +97,17 @@ namespace SBTP.View.JCXZ
             MessageBox.Show(Unity.hint(bll.btn_save()));
         }
 
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".JZWSD");
+        }
+
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(" ");
+        }
     }
 }

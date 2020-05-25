@@ -8,6 +8,7 @@ using SBTP.Model;
 using Maticsoft.DBUtility;
 using System.Collections.ObjectModel;
 using System;
+using Common;
 
 namespace SBTP.View.TPJ
 {
@@ -151,9 +152,17 @@ namespace SBTP.View.TPJ
             bindListBox();
         }
 
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(" ");
+        }
 
-
-
+        private void btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".LXXZ");
+        }
     }
 
 

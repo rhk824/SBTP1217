@@ -7,6 +7,13 @@
       xmlns:Loading="clr-namespace:SBTP.BLL"
       mc:Ignorable="d" Background="#eee"
       Title="jzwsd" MinWidth="1000" MinHeight="520">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
 
     <Grid Grid.IsSharedSizeScope="True">
         <Grid.ColumnDefinitions>
@@ -14,7 +21,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="60"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -22,11 +29,11 @@
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" BorderThickness="2" Margin="2" Header="默认参数">
             <StackPanel Orientation="Horizontal">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" >
                     <TextBlock  Text="配位数："/>
                     <TextBox Name="PWS" Width="50" Text="4"/>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <TextBlock Text="井距："/>
                     <TextBox  Name="JJ" Width="50" Text="0.2"/>
                 </StackPanel>
@@ -87,7 +94,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Button Content="井距" Click="RadioButton_Checked"/>
-                            <Button Content="相位" Click="RadioButton_Checked"  Margin="20,0,20,0"/>
+                            <Button Content="相位" Click="RadioButton_Checked"/>
                             <Button Content="综合" Click="RadioButton_Checked"/>
                         </StackPanel>
                     </StackPanel>
@@ -97,7 +104,9 @@
         </GroupBox>
         <GroupBox Grid.Row="4" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="操作">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0">
-                <Button Name="SaveBtn" Content="保存"  Width="70" VerticalAlignment="Center" Click="SaveBtn_Click"/>
+                <Button Name="SaveBtn" Content="保存" VerticalAlignment="Center" Click="SaveBtn_Click"/>
+                <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
+                <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
             </StackPanel>
         </GroupBox>
     </Grid>

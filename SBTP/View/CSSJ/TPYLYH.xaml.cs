@@ -1,4 +1,5 @@
-﻿using Maticsoft.DBUtility;
+﻿using Common;
+using Maticsoft.DBUtility;
 using SBTP.BLL;
 using SBTP.Common;
 using SBTP.Model;
@@ -387,6 +388,18 @@ namespace SBTP.View.CSSJ
             List<Point> bj_zy = currentItem.Bjandzy;
             List<Point> bj_tcb = currentItem.Bjandtcb;
             CreateChart(jh, bj_zy, bj_tcb);
+        }
+
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".KSJS");
+        }
+
+        private void btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".JCXX");
         }
     }
 }

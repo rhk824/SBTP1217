@@ -161,6 +161,25 @@ namespace Common
             return _gridBrush;
         }
 
+        /// <summary>
+        /// 获取父级元素
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="reference"></param>
+        /// <returns></returns>
+        public static T GetAncestor<T>(DependencyObject reference) where T : DependencyObject
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(reference);
+            while (!(parent is T) && parent != null)
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+            if (parent != null)
+                return (T)parent;
+            else
+                return null;
+        }
+
 
     }
 }

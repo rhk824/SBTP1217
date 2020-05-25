@@ -227,6 +227,8 @@
         <Grid Grid.Row="1" Grid.ColumnSpan="3">
             <StackPanel Style="{StaticResource sp_bottom}">
                 <Button Content="保存" Name="SaveBtn" Click="SaveBtn_Click"/>
+                <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
+                <Button Name="btn_close" Content="关闭" Click="btn_close_Click"/>
             </StackPanel>
         </Grid>
 

@@ -23,6 +23,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
@@ -30,21 +31,18 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Header="调剖井" Grid.Column="0" Grid.RowSpan="2">
+        <GroupBox Header="调剖井" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2">
             <ListBox Name="tpj_list" SelectionMode="Extended"/>
         </GroupBox>
-
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.RowSpan="2">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.Row="0">
             <Button Name="btn_right" Content="→" Click="btn_right_Click"  />
             <Button Name="btn_left" Content="←" Click="btn_left_Click" />
         </StackPanel>
-
         <Grid Grid.Row="0" Grid.Column="2" Margin="0,2,2,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
             <Grid Grid.Row="1" Margin="0,0,0,5">
                 <Grid.Resources>
                     <DataTemplate x:Key="jh">
@@ -144,15 +142,18 @@
                         <TextBox Name="step" Text="3" Width="50"/>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <!--<TextBlock Text="机器学习算法:"/>
-                        <ComboBox Name="Machine" Height="25"/>-->
                         <Button Content="优化计算" Name="YHCalculation" Click="YHCalculation_Click"/>
-                        <Button Content="保存" Name="save" Click="save_Click"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>
         </Grid>
 
-
+        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="保存" Name="save" Click="save_Click"/>
+                <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
+                <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>
