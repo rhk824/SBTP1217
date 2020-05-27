@@ -9,6 +9,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SBTP.BLL
 {
@@ -152,6 +153,11 @@ namespace SBTP.BLL
         /// </summary>
         public void btn_load(tpc_jzlt_model jzlt)
         {
+            if (jzlt == null)
+            {
+                MessageBox.Show("请在井组连通中选择一口井");
+                return;
+            }
             List<DB_XCSJ> list = new List<DB_XCSJ>(); // 获取被选中井组连通项油井的小层数据
             foreach (DB_XCSJ item in oc_xcsj.Where(p => p.Selected == true)) list.Add(item);
 

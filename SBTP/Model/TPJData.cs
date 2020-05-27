@@ -16,7 +16,7 @@ namespace SBTP.Model
         /// <summary>
         /// 配注管柱
         /// </summary>
-        public PZGZEnum PZGZ { set; get; }
+        //public PZGZEnum PZGZ { set; get; }
         /// <summary>
         /// 视吸水指数
         /// </summary>

@@ -127,6 +127,24 @@ namespace Common
             }
             return chineseString;
         }
+        /// <summary>
+        /// 保留数字
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string KeepNumber(string str)
+        {
+            string numberString = "";
+            //将传入参数中的数字字符添加到结果字符串中
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] >= 48 && str[i] <= 57) //数字
+                {
+                    numberString += str[i];
+                }
+            }
+            return numberString;
+        }
 
         /// <summary>
         /// 中文列名

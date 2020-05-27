@@ -92,7 +92,9 @@ namespace SBTP.View.JCXZ
 
         private void Dg_jzlt_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
-            jzlt = (tpc_jzlt_model)dg_jzlt.SelectedItem;
+            jzlt = dg_jzlt.SelectedItem as tpc_jzlt_model;
+            jzlt.Selected = true;
+            bll.oc_jzlt.Where<tpc_jzlt_model>(x => !x.yj.Equals(jzlt.yj)).ToList().ForEach(x => x.Selected = false);
             bll.oc_xcsj.Clear();
         }
 

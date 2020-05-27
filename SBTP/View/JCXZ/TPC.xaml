@@ -83,8 +83,8 @@
                         <DataGridCheckBoxColumn Binding="{Binding Selected, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
                         <DataGridTextColumn Binding="{Binding jh}" Header="井号"/>
                         <DataGridTextColumn Binding="{Binding cd}" Header="层段"/>
-                        <DataGridTextColumn Header="有效厚度顶深" Binding="{Binding yxhd_ds}"/>
-                        <DataGridTemplateColumn Header="有效厚度">
+                        <DataGridTextColumn Header="有效厚度顶深(m)" Binding="{Binding yxhd_ds}"/>
+                        <DataGridTemplateColumn Header="有效厚度(m)">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding yxhd}">
@@ -99,7 +99,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="注入分数">
+                        <DataGridTemplateColumn Header="注入分数(%)">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding zrfs, StringFormat={}{0:F2}}">
@@ -114,8 +114,8 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Binding="{Binding zzhd}" Header="增注厚度"/>
-                        <DataGridTemplateColumn Header="增注比例">
+                        <DataGridTextColumn Binding="{Binding zzhd}" Header="增注厚度(m)"/>
+                        <DataGridTemplateColumn Header="增注比例(%)">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding zzbl, StringFormat={}{0:F2}}">
@@ -131,8 +131,8 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Binding="{Binding zzrfs}" Header="增注入分数"/>
-                        <DataGridTextColumn Binding="{Binding ltsl}" Header="连通数量"/>
-                        <DataGridComboBoxColumn Header="标识"
+                        <DataGridTextColumn Binding="{Binding ltsl}" Header="连通井数量(口)"/>
+                        <DataGridComboBoxColumn Header="方法"
                                                 TextBinding="{Binding bs_string}"
                                                 SelectedItemBinding="{Binding bs_string, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridComboBoxColumn.ItemsSource>
@@ -143,6 +143,7 @@
                             </DataGridComboBoxColumn.ItemsSource>
                         </DataGridComboBoxColumn>
                         <DataGridTextColumn Binding="{Binding csrq}" Header="测试日期"/>
+                        <DataGridTextColumn Binding="{Binding bs_c}" Header="标识"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -189,26 +190,34 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
                                     <CheckBox IsChecked="{Binding Selected, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" />
                                     <TextBlock Text="{Binding YCZ}" VerticalAlignment="Center" />
+                                    <TextBlock Text="_" VerticalAlignment="Center"/>
                                     <TextBlock Text="{Binding XCH}" VerticalAlignment="Center" />
+                                    <TextBlock Text="_" VerticalAlignment="Center"/>
                                     <TextBlock Text="{Binding XCXH}" VerticalAlignment="Center" />
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                    <TextBlock Text="有效厚度: " VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding YXHD}" VerticalAlignment="Center" />
+                                    <TextBlock Text="  油井井号: " VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding JH}" VerticalAlignment="Center" />
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
+                                    <TextBlock Text="  有效厚度: " VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding YXHD}" VerticalAlignment="Center" />
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
                                     <TextBlock Text="  渗透率: " VerticalAlignment="Center" />
                                     <TextBlock Text="{Binding STL}" VerticalAlignment="Center" />
                                 </StackPanel>
 
-                                <Grid Grid.Row="1" Grid.ColumnSpan="3" Height="{Binding Path=YXHD, Converter={StaticResource tpc_height_converter}}" Background="Orange" />
+                                <Grid Grid.Row="1" Grid.ColumnSpan="4" Height="{Binding Path=YXHD, Converter={StaticResource tpc_height_converter}}" Background="Orange" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
