@@ -783,7 +783,7 @@ namespace SBTP.Data
                     row_str.AppendFormat("{0}\t", item.zzrfs);
                     row_str.AppendFormat("{0}\t", item.ltsl);
                     row_str.AppendFormat("{0}\t", item.bs_string);
-                    row_str.AppendFormat("{0}\r\n", item.csrq);
+                    row_str.AppendFormat("{0}\t", item.csrq);
                     row_str.AppendFormat("{0}\r\n", item.bs_c);
                     newData.Add(row_str.ToString());
                 }
