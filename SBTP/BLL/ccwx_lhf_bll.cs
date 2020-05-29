@@ -45,9 +45,20 @@ namespace SBTP.BLL
         {
             this.tpjing = tpjing;
             oc_yajiang = new ObservableCollection<ccwx_yajiang_model>();
+            qkcs qkcs = readParam();
+            u = qkcs == null ? 10 : qkcs.Qtgn;
         }
 
         #region 对接视图层（公共接口）
+
+        /// <summary>
+        /// 读取区块参数
+        /// </summary>
+        /// <returns></returns>
+        private qkcs readParam()
+        {
+            return Data.DatHelper.readQkcs();
+        }
 
         /// <summary>
         /// 计算 ln 值
@@ -79,7 +90,6 @@ namespace SBTP.BLL
                 model.kh = kh;
                 model.k1 = kh / ((tpjing.yxhd - tpjing.zzhd) * (tpjing.zrfs - tpjing.zzrfs));
                 model.k2 = kh / (tpjing.zzhd * tpjing.zzrfs);
-                model.kxd = 0;
                 model.r1 = calculate_r(model.k1);
                 model.r2 = calculate_r(model.k2);
                 model.calculate_type = 1;
@@ -105,7 +115,7 @@ namespace SBTP.BLL
         private double calculate_kh(double k)
         {
             double Q = calculate_q();
-            return 0.11574 * ((Q * u * b) / (2 * Math.PI * k));
+            return 0.011574 * ((Q * u * b) / (2 * Math.PI * k));
         }
         /// <summary>
         /// 计算孔喉半径

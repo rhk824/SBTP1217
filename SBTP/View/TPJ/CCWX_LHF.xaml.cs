@@ -70,7 +70,7 @@ namespace SBTP.View.TPJ
             ChartArea chartArea = new ChartArea();
             chartArea.AxisX.LabelStyle.Font = new System.Drawing.Font("Trebuchet MS", 8.25F, System.Drawing.FontStyle.Bold);
             chartArea.AxisX.MajorGrid.Enabled = false;
-            
+            chartArea.AxisX.IsReversed = true;
             chartArea.AxisX.Minimum = 0;
             chartArea.AxisX.Interval = 0.5;
             chartArea.AxisX.ScaleView.Size = 4;
@@ -242,12 +242,6 @@ namespace SBTP.View.TPJ
         private void Btn_draw_Click(object sender, RoutedEventArgs e)
         {
             create_chart();
-        }
-
-        private void Chart_Click(object sender, EventArgs e)
-        {
-            
-            MessageBox.Show("1111");
         }
 
         private void btn_calculation_Click(object sender, RoutedEventArgs e)

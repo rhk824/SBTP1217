@@ -92,7 +92,6 @@ namespace SBTP.BLL
             reader.Close();
             reader.Dispose();
             return data;
-
         }
 
         public static string getMinDate()

@@ -408,6 +408,9 @@
     <Compile Include="View\TPJ\CCWX_LHF.xaml.cs">
       <DependentUpon>CCWX_LHF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\TPJ\ChooseWell.xaml.cs">
+      <DependentUpon>ChooseWell.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TPJ\LXXZ.xaml.cs">
       <DependentUpon>LXXZ.xaml</DependentUpon>
     </Compile>
@@ -691,6 +694,10 @@
     <Page Include="View\TPJ\CCWX_LHF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\TPJ\ChooseWell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\TPJ\LXXZ.xaml">
       <SubType>Designer</SubType>

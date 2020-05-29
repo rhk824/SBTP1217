@@ -121,7 +121,7 @@ namespace SBTP.Data
         private static void CheckRLS2()
         {
             string inputStr = "**CCWXJS\r\n";
-            inputStr += "*CPERM // 井号 增注入分数 计算方法类别 封堵段渗透率 增注段渗透率 封堵段孔喉半径 增注段孔喉半径\r\n";
+            inputStr += "*CPERM // 井号 层号 有效厚度 注入分数 增注厚度 增注分数 油饱和度 封堵段渗透率 增注段渗透率 封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径 算法标识\r\n";
             inputStr += "/CCWXJS\r\n";
             inputStr += "**NHQXCS 函数名称 a值 b值 c值\r\n";
             inputStr += "/NHQXCS\r\n";
@@ -1181,7 +1181,8 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*CPERM // 井号 增注入分数 计算方法类别 封堵段渗透率 增注段渗透率 封堵段孔喉半径 增注段孔喉半径");
+                int startIndex = lines.IndexOf("*CPERM // 井号 层号 有效厚度 注入分数 增注厚度 增注分数 油饱和度 封堵段渗透率 增注段渗透率 " +
+                    "封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径 算法标识");
                 int endIndex = lines.IndexOf("/CCWXJS");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -1189,12 +1190,19 @@ namespace SBTP.Data
                 foreach (ccwx_tpjing_model item in list)
                 {
                     data_str.AppendFormat("{0}\t", item.jh);
+                    data_str.AppendFormat("{0}\t", item.cd);
+                    data_str.AppendFormat("{0}\t", item.yxhd);
+                    data_str.AppendFormat("{0}\t", item.zrfs);
+                    data_str.AppendFormat("{0}\t", item.zzhd);
                     data_str.AppendFormat("{0}\t", item.zzrfs);
-                    data_str.AppendFormat("{0}\t", item.calculate_type);
+                    data_str.AppendFormat("{0}\t", item.ybhd);                    
                     data_str.AppendFormat("{0}\t", item.k1);
                     data_str.AppendFormat("{0}\t", item.k2);
+                    data_str.AppendFormat("{0}\t", item.fddkxd);
+                    data_str.AppendFormat("{0}\t", item.zzdkxd);
                     data_str.AppendFormat("{0}\t", item.r1);
-                    data_str.AppendFormat("{0}\r\n", item.r2);
+                    data_str.AppendFormat("{0}\t", item.r2);
+                    data_str.AppendFormat("{0}\r\n", item.calculate_type);
                 }
                 newLines.Insert(startIndex + 1, data_str.ToString());
                 sw.Write(string.Join("", newLines.ToArray()));
@@ -1229,7 +1237,6 @@ namespace SBTP.Data
                     }
                 }
             }
-
             //调剖井数据
             if (fileStr.Length == 0) return null;
             string[] table = fileStr.Substring(0, fileStr.Length - 1).Split(',');
@@ -1239,10 +1246,19 @@ namespace SBTP.Data
                 data.Add(new ccwx_tpjing_model
                 {
                     jh = arr[0],
-                    zzrfs = Unity.ToDouble(arr[1]),
-                    calculate_type = Unity.ToInt(arr[2]),
-                    k1 = Unity.ToDouble(arr[3]),
-                    k2 = Unity.ToDouble(arr[4])
+                    cd = arr[1],
+                    yxhd = Unity.ToDouble(arr[2]),
+                    zrfs = Unity.ToDouble(arr[3]),
+                    zzhd = Unity.ToDouble(arr[4]),
+                    zzrfs = Unity.ToDouble(arr[5]),
+                    ybhd = Unity.ToDouble(arr[6]),
+                    k1 = Unity.ToDouble(arr[7]),
+                    k2 = Unity.ToDouble(arr[8]),
+                    fddkxd = Unity.ToDouble(arr[9]),
+                    zzdkxd = Unity.ToDouble(arr[10]),
+                    r1 = Unity.ToDouble(arr[11]),
+                    r2 = Unity.ToDouble(arr[12]),                    
+                    calculate_type = Unity.ToInt(arr[13])
                 });
             }
             return data;
@@ -1265,9 +1281,7 @@ namespace SBTP.Data
                     startIndex = lines.IndexOf("**NHQXCS 函数名称 a值 b值 c值") + 1;
                 else
                     lines.RemoveAt(startIndex);
-                //int startIndex = lines.IndexOf("**NHQXCS 函数名称 a值 b值 c值");
-                //int endIndex = lines.IndexOf("/NHQXCS");
-                //lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
+
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
                 StringBuilder data_str = new StringBuilder();
                 data_str.AppendFormat("{0}\t", function.Name);

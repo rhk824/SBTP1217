@@ -46,10 +46,10 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="10">粘度(mPa·s)</TextBlock>
-                        <TextBox Name="tb_u" Text="10" Width="40" Height="20" FontSize="10"/>
+                        <TextBox Name="tb_u" Text="{Binding u}" Width="40" Height="20" FontSize="10"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontSize="10">地层综合系数</TextBlock>
+                        <TextBlock FontSize="10">体积系数</TextBlock>
                         <TextBox Name="tb_b" Text="1" Width="40" Height="20" FontSize="10"/>
                     </StackPanel>
                 </StackPanel>
@@ -63,7 +63,7 @@
 
         <GroupBox Name="gb_right" Grid.Column="1" Header="** 井 压降曲线图">
             <WindowsFormsHost Name="wfh">
-                <wfc:Chart Click="Chart_Click"/>
+                <wfc:Chart/>
             </WindowsFormsHost>
         </GroupBox>
         
