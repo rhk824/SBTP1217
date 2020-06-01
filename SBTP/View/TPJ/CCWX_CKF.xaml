@@ -23,19 +23,21 @@
         </Grid.ColumnDefinitions>
 
         <GroupBox Name="gb_left" Header="** 井 小层数据">
-            <DataGrid ItemsSource="{Binding oc_xcsj}" LayoutUpdated="Layout_Updated" x:Name="xc_grid">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="油层组" Binding="{Binding YCZ}"/>
-                    <DataGridTextColumn Header="小层号" Binding="{Binding XCH}"/>
-                    <DataGridTextColumn Header="砂岩厚度" Binding="{Binding SYHD}"/>
-                    <DataGridTextColumn Header="有效厚度" Binding="{Binding YXHD}"/>
-                    <DataGridTextColumn Header="渗透率" Binding="{Binding STL}"/>
-                    <DataGridCheckBoxColumn Header="封堵段" Binding="{Binding fdd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridCheckBoxColumn Header="增注段" Binding="{Binding zzd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                    <!--<DataGridTextColumn Header="封堵段" Binding="{Binding fdd}"/>
-                    <DataGridTextColumn Header="增注段" Binding="{Binding zzd}"/>-->
-                </DataGrid.Columns>
-            </DataGrid>
+            <StackPanel Orientation="Vertical">
+                <CheckBox Name="isCal_K" Content="是否计算渗透率" VerticalAlignment="Center" HorizontalAlignment="Right" IsChecked="{Binding isCalculateStl,Mode=TwoWay}"/>
+                <DataGrid ItemsSource="{Binding oc_xcsj}" LayoutUpdated="Layout_Updated" x:Name="xc_grid">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="油层组" Binding="{Binding YCZ}"/>
+                        <DataGridTextColumn Header="小层号" Binding="{Binding XCH}"/>
+                        <DataGridTextColumn Header="砂岩厚度" Binding="{Binding SYHD}"/>
+                        <DataGridTextColumn Header="有效厚度" Binding="{Binding YXHD}"/>
+                        <DataGridTextColumn Header="渗透率" Binding="{Binding STL}"/>
+                        <DataGridTextColumn Header="含油饱和度" Binding="{Binding HYBHD}"/>
+                        <DataGridCheckBoxColumn Header="封堵段" Binding="{Binding fdd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                        <DataGridCheckBoxColumn Header="增注段" Binding="{Binding zzd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
         </GroupBox>
 
         <GroupBox Name="gb_right" Grid.Column="1" Header="** 井 沉积柱状图">

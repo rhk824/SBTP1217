@@ -21,7 +21,7 @@ namespace SBTP.View.TPJ
         ccwx_lhf_bll bll { get; set; } // bll
         List<ccwx_yajiang_model> list;
         //斜率
-        double k;
+        double k;        
 
 
         public CCWX_LHF(ccwx_tpjing_model tpjing)
@@ -250,6 +250,8 @@ namespace SBTP.View.TPJ
             bll.t = Unity.ToDouble(tb_t.Text);
             bll.u = Unity.ToDouble(tb_u.Text);
             bll.b = Unity.ToDouble(tb_b.Text);
+            if (isEnabled.IsChecked == true)
+                bll.yjDate = yjDate.SelectedDate.ToString();
 
             // 计算 ln
             bll.calculate_ln();

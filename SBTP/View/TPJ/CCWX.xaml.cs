@@ -112,10 +112,25 @@ namespace SBTP.View.TPJ
 
         private void Dg_tpjing_info_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
         {
-            bll.tpjing = (ccwx_tpjing_model)dg_tpjing_info.SelectedItem;
-            if (rb_lhf.IsChecked == true) nav_algorithm("lhf");
+            var selectItem = dg_tpjing_info.SelectedItem as ccwx_tpjing_model;
+            selectItem.Selected = true;
+            ccwx_bll.oc_tpjing_info.OfType<ccwx_tpjing_model>().ToList().ForEach(x => {
+                if (!x.jh.Equals(selectItem.jh))
+                    x.Selected = false;
+            });
+            bll.tpjing = selectItem;
+            if (rb_lhf.IsChecked == true)
+            {
+                nav_algorithm("lhf");
+                if (selectItem.IsCustomize)
+                    ccwx_lhf_bll.isChecked = true;
+                else
+                    ccwx_lhf_bll.isChecked = false;
+            }               
             if (rb_gsf.IsChecked == true) nav_algorithm("gsf");
             if (rb_ckf.IsChecked == true) nav_algorithm("ckf");
+            
+
         }
 
         private void Rb_lhf_Click(object sender, RoutedEventArgs e)

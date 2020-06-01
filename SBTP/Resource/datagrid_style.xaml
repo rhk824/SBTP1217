@@ -102,7 +102,7 @@
 
                         <!--名称设置-->
                         <TextBlock Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2">
-                            <Run Text="渗透率（μm" /><Run Text="2" BaselineAlignment="TextTop" FontSize="8" /><Run Text="）" />
+                            <Run Text="孔喉半径（μm" /><Run Text="2" BaselineAlignment="TextTop" FontSize="8" /><Run Text="）" />
                         </TextBlock>
                         <TextBlock Text="封堵段" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
                         <TextBlock Text="增注段" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1" />

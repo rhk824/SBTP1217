@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SBTP.View.TPJ"
         mc:Ignorable="d"
-        Title="ChooseWell" Height="450" Width="350" Background="#eee">
+        Title="自定义添加" Height="450" Width="300" Background="#eee" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -15,14 +15,13 @@
             <Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <TextBlock Text="井号："/>
-                    <TextBox Name="wellname" Width="200" TextInput="wellname_TextInput"/>
+                    <TextBox Name="wellname" Width="150" TextChanged="wellname_TextChanged"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0">
-                    <Button Content="添加" Width="80"/>
+                    <Button Content="添加" Width="80" Click="Button_Click"/>
                 </StackPanel>
             </Grid>
         </GroupBox>
-        <DataGrid Grid.Row="1" ItemsSource="{Binding WaterWellsCollection}" />
-
+        <DataGrid Name="Wells" Grid.Row="1" ItemsSource="{Binding DataSource,Mode=TwoWay}" IsReadOnly="True" CanUserReorderColumns="False"/>
     </Grid>
 </Window>

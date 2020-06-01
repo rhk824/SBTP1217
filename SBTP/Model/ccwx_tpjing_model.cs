@@ -22,10 +22,11 @@ namespace SBTP.Model
         private double _r2;
         private double _fddkxd;
         private double _zzdkxd;
-        private double _ybhd;
+        private double _ybhd = Data.DatHelper.readQkcs().Cyybhd;
         private int _calculate_type;
         private string _csrq;
         private int _bs;
+        private bool isCustomize = false;
 
         #region Property Getters And Setters
 
@@ -166,7 +167,7 @@ namespace SBTP.Model
             get { return _r1; }
             set
             {
-                _r1 = Math.Round(value, 1);
+                _r1 = Math.Round(value, 3);
                 NotifyPropertyChanged("r1");
             }
         }
@@ -179,7 +180,7 @@ namespace SBTP.Model
             get { return _r2; }
             set
             {
-                _r2 = Math.Round(value, 1);
+                _r2 = Math.Round(value, 3);
                 NotifyPropertyChanged("r2");
             }
         }
@@ -224,6 +225,10 @@ namespace SBTP.Model
         /// 标识
         /// </summary>
         public int bs { get => _bs; set { _bs = value; NotifyPropertyChanged("bs"); } }
+        /// <summary>
+        /// 是否为自定义添加的井,默认为false
+        /// </summary>
+        public bool IsCustomize { get => isCustomize; set { isCustomize = value; NotifyPropertyChanged("IsCustomize"); } }
 
         #endregion
     }

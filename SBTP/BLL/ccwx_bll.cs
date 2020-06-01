@@ -26,12 +26,11 @@ namespace SBTP.BLL
         /// <summary>
         /// 调剖井数据
         /// </summary>
-        public ObservableCollection<ccwx_tpjing_model> oc_tpjing_info { get; set; }
+        public static ObservableCollection<ccwx_tpjing_model> oc_tpjing_info { get; set; } = new ObservableCollection<ccwx_tpjing_model>();
 
         public ccwx_bll()
         {
             oc_tpjing = new ObservableCollection<ccwx_tpjing_model>();
-            oc_tpjing_info = new ObservableCollection<ccwx_tpjing_model>();
             //tpjing = new ccwx_tpjing_model();
             try
             {
@@ -155,7 +154,6 @@ namespace SBTP.BLL
                     zzhd = item.zzhd,
                     zzrfs = item.zzrfs,
                     csrq = item.csrq,
-                    ybhd = 0,
                     k1 = 0,
                     k2 = 0,
                     r1 = 0,

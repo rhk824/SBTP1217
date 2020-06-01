@@ -1,4 +1,6 @@
 ﻿using Maticsoft.DBUtility;
+using SBTP.BLL;
+using SBTP.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,11 +24,13 @@ namespace SBTP.View.TPJ
     public partial class ChooseWell : Window
     {
         public DataTable WaterWellsCollection { set; get; } = new DataTable();
+        public DataTable DataSource { set; get; } = new DataTable();
         public ChooseWell()
         {
             InitializeComponent();
             DataContext = this;
             WaterWellsCollection = SelectWell();
+            DataSource = WaterWellsCollection.Copy();
         }
 
         private DataTable SelectWell()
@@ -34,10 +38,23 @@ namespace SBTP.View.TPJ
             return DbHelperOleDb.Query("Select distinct JH as 井号 from WATER_WELL_MONTH").Tables[0];
         }
 
-        private void wellname_TextInput(object sender, TextCompositionEventArgs e)
+        private void wellname_TextChanged(object sender, TextChangedEventArgs e)
         {
-            string name = wellname.Text;
-            WaterWellsCollection.Select("井号 like %" + name + "%");
+            string name = wellname.Text.Trim();
+            DataSource.Clear();
+            if (string.IsNullOrEmpty(name))
+                WaterWellsCollection.Select().OfType<DataRow>().ToList().ForEach(x => DataSource.Rows.Add(x.ItemArray));
+            else
+                WaterWellsCollection.Select("井号 like '%" + name + "%'").OfType<DataRow>().ToList().ForEach(x => DataSource.Rows.Add(x.ItemArray));
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Wells.SelectedItems.OfType<DataRowView>().ToList().ForEach(x => ccwx_bll.oc_tpjing_info.Add(new ccwx_tpjing_model() { 
+            jh = x.Row.ItemArray[0].ToString(),
+            IsCustomize = true
+            }));
+            this.Close();
         }
     }
 }

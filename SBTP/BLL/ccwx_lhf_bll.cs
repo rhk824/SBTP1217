@@ -39,6 +39,11 @@ namespace SBTP.BLL
         /// 地层综合系数
         /// </summary>
         public double b { get; set; }
+        /// <summary>
+        /// 自定义压降时间
+        /// </summary>
+        public string yjDate { set; get; }
+        public static bool? isChecked { set; get; } = null;
         #endregion
 
         public ccwx_lhf_bll(ccwx_tpjing_model tpjing)
@@ -83,9 +88,7 @@ namespace SBTP.BLL
             try
             {
                 ccwx_tpjing_model model = new ccwx_tpjing_model();
-
                 double kh = calculate_kh(k);
-
                 model.jh = tpjing.jh;
                 model.kh = kh;
                 model.k1 = kh / ((tpjing.yxhd - tpjing.zzhd) * (tpjing.zrfs - tpjing.zzrfs));
@@ -137,9 +140,9 @@ namespace SBTP.BLL
         private double calculate_q()
         {
             if (string.IsNullOrEmpty(tpjing.csrq)) return 0;
+            if (tpjing.IsCustomize)
+                tpjing.csrq = this.yjDate;
             DateTime time = Convert.ToDateTime(tpjing.csrq);
-            int year = time.Year;
-            int month = time.Month;
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * ");
             sql.Append(" from water_well_month ");
@@ -148,9 +151,9 @@ namespace SBTP.BLL
 
             double yzsl = Unity.ToDouble(dt.Rows[0]["yzsl"]);
             double yzmyl = Unity.ToDouble(dt.Rows[0]["yzmyl"]);
-            double days = DateTime.DaysInMonth(year, month);
+            double days = Unity.ToDouble(dt.Rows[0]["ts"]);
 
-            return (yzsl + yzmyl) / days;
+            return days == 0 ? 0 : (yzsl + yzmyl) / days;
         }
         /// <summary>
         /// 孔隙度的均值
