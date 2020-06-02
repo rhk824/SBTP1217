@@ -1144,7 +1144,7 @@ namespace SBTP.Data
             CheckRLS2();
             string fileStr = "";
             string readStr = " ";
-            List<string[]> tpc_list = new List<string[]>();
+            //List<string[]> tpc_list = new List<string[]>();
             if (!File.Exists(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT")) { return null; }
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -1335,7 +1335,7 @@ namespace SBTP.Data
                 int endIndex = lines.IndexOf("/TPJND");
                 //lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
-                string dataStr = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t\r\n", jh, ytnd, klnd, kllj, ytmc, klmc);
+                string dataStr = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\r\n", jh, ytnd, klnd, kllj, ytmc, klmc);
 
                 newLines.Insert(startIndex + 1, dataStr);
                 sw.Write(string.Join("", newLines.ToArray()));
@@ -1370,10 +1370,11 @@ namespace SBTP.Data
 
             //调剖井数据
             if (fileStr.Length == 0) return null;
-            string[] table = fileStr.Substring(0, fileStr.Length - 1).Split(',');
+            string[] table = fileStr.Split(',');
             for (int i = 0; i < table.Length; i++)
             {
-                string[] arr = table[i].Split('\t');
+                if (string.IsNullOrWhiteSpace(table[i])) continue;
+                string[] arr = table[i].Split(' ');
                 data.Add(new TPJND_Model
                 {
                     JH = arr[0],

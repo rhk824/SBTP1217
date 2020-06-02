@@ -22,47 +22,46 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="50"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         
-        <GroupBox Grid.Row="0" Grid.Column="0" Header="待选剂井">
-            <ListBox Name="LB_daixuan" Margin="5" SelectionMode="Extended" />
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="待选剂井" Grid.RowSpan="3">
+            <ListBox Name="LB_daixuan" Margin="5" SelectionMode="Extended" ItemsSource="{Binding list_tpj}" DisplayMemberPath="jh"/>
         </GroupBox>
-        <Button Name="Btn_Select" Content="→" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Grid.Column="1" Click="Btn_Select_Click"/>
-        <Button Name="Btn_Delete" Content="↑" HorizontalAlignment="Center" VerticalAlignment="Center" Width="25" Grid.Row="1" Click="Btn_Delete_Click"/>
-        <GroupBox Grid.Row="2" Grid.Column="0" Grid.RowSpan="2" Header="已选剂井">
-            <ListBox Name="LB_yixuan" Margin="5" SelectionMode="Extended" />
-        </GroupBox>
+        <StackPanel Grid.Column="1" Grid.RowSpan="3" Orientation="Vertical"  HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Name="Btn_Select" Content="→"  Click="Btn_Select_Click"/>
+            <Button Name="Btn_Delete" Content="←"  Click="Btn_Delete_Click"/>
+        </StackPanel>
         
         <GroupBox Grid.Row="0" Grid.Column="2" Header="调剖井信息">
-            <DataGrid Name="DataGrid1" ColumnWidth="*" IsReadOnly="True">
+            <DataGrid Name="DataGrid1" ItemsSource="{Binding List}" ColumnWidth="*">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="井号" Binding="{Binding JH}" />
                     <DataGridTextColumn Header="液体名称" Binding="{Binding YTMC}" />
                     <DataGridTextColumn Header="颗粒名称" Binding="{Binding KLMC}" />
-                    <DataGridTextColumn Header="封堵段渗透率K1" Binding="{Binding K1}" />
-                    <DataGridTextColumn Header="增注段渗透率K2" Binding="{Binding K2}" />
-                    <DataGridTextColumn Header="液体浓度" Binding="{Binding YTND}" />
+                    <DataGridTextColumn Header="封堵段渗透率K1(μ㎡)" Binding="{Binding K1}" />
+                    <DataGridTextColumn Header="增注段渗透率K2(μ㎡)" Binding="{Binding K2}" />
+                    <DataGridTextColumn Header="液体浓度(mg/L)" Binding="{Binding YTND}" />
                     <DataGridTextColumn Header="增注入分数" Binding="{Binding ZZRFS}" />
-                    <DataGridTextColumn Header="颗粒浓度" Binding="{Binding KLND}" />
-                    <DataGridTextColumn Header="颗粒粒径" Binding="{Binding KLLJ}" />
+                    <DataGridTextColumn Header="颗粒浓度(mg/L)" Binding="{Binding KLND}" />
+                    <DataGridTextColumn Header="颗粒粒径(mm)" Binding="{Binding KLLJ}" />
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
 
         <GroupBox Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Header="应用井信息">
-            <DataGrid Name="DataGrid2" ColumnWidth="*" IsReadOnly="True"  MouseDoubleClick="DataGrid2_MouseDoubleClick">
+            <DataGrid Name="DataGrid2" ColumnWidth="*" MouseDoubleClick="DataGrid2_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="井号" Binding="{Binding JH}" />
                     <DataGridTextColumn Header="液体名称" Binding="{Binding YMC}" />
                     <DataGridTextColumn Header="颗粒名称" Binding="{Binding GMC}" />
                     <DataGridTextColumn Header="渗透率" Binding="{Binding TSTL}" />
                     <DataGridTextColumn Header="调剖深度" Binding="{Binding BJ}" />
-                    <DataGridTextColumn Header="液体浓度" Binding="{Binding YND}" />
+                    <DataGridTextColumn Header="液体浓度(mg/L)" Binding="{Binding YND}" />
                     <DataGridTextColumn Header="液体用量" Binding="{Binding YYL}" />
-                    <DataGridTextColumn Header="颗粒浓度" Binding="{Binding GND}" />
-                    <DataGridTextColumn Header="颗粒粒径" Binding="{Binding GLJ}" />
+                    <DataGridTextColumn Header="颗粒浓度(mg/L)" Binding="{Binding GND}" />
+                    <DataGridTextColumn Header="颗粒粒径(mm)" Binding="{Binding GLJ}" />
                     <DataGridTextColumn Header="颗粒用量" Binding="{Binding GYL}" />
                     <DataGridTextColumn Header="压力上升幅度" Binding="{Binding YLSF}" />
                     <DataGridTextColumn Header="增油" Binding="{Binding ZY}" />
@@ -71,7 +70,7 @@
             </DataGrid>
         </GroupBox>
         
-        <GroupBox Grid.Column="2" Grid.Row="3" Header="操作">
+        <GroupBox Grid.Column="0" Grid.Row="3" Header="操作" Grid.ColumnSpan="3">
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
                 <Button Content="保存" Click="Button_Click"/>
                 <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>

@@ -182,7 +182,6 @@
     <Compile Include="BLL\FzjMonth.cs" />
     <Compile Include="BLL\jcxx_bll.cs" />
     <Compile Include="BLL\Loading.cs" />
-    <Compile Include="BLL\NewDataPoint.cs" />
     <Compile Include="BLL\OilWellC.cs" />
     <Compile Include="BLL\OilWellMonth.cs" />
     <Compile Include="BLL\RoundButton.cs" />
