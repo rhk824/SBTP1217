@@ -5,6 +5,7 @@ using SBTP.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -12,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace SBTP.BLL
 {
-    public class jcxx_bll
+    public class jcxx_bll:INotifyPropertyChanged
     {
-
+        private ObservableCollection<string> oc_tpc_;
         /// <summary>
         /// 调剖层（井号）
         /// </summary>
-        public ObservableCollection<string> oc_tpc { get; set; }
+        public ObservableCollection<string> oc_tpc { get=> oc_tpc_; set { oc_tpc_ = value; NotifyPropertyChanged("oc_tpc"); } } 
         /// <summary>
         /// 调剖井信息
         /// </summary>
@@ -35,33 +36,51 @@ namespace SBTP.BLL
         /// 费用信息
         /// </summary>
         public ObservableCollection<jcxx_jgxx_model> oc_jgxx { get; set; }
+        #region
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged(String info)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+        }
+        #endregion
 
         public jcxx_bll()
         {
-            oc_tpc = new ObservableCollection<string>(Data.DatHelper.read_jcxx_tpcjh());
-            oc_tpcxx = new ObservableCollection<jcxx_tpcxx_model>(Data.DatHelper.read_jcxx_tpcxx());
-            oc_tpjxx = new ObservableCollection<jcxx_tpjxx_model>(Data.DatHelper.read_jcxx_tpjxx());
-            oc_tpcls = new ObservableCollection<jcxx_tpcls_model>(Data.DatHelper.read_jcxx_tpcls());
-            oc_jgxx = new ObservableCollection<jcxx_jgxx_model>(Data.DatHelper.read_jcxx_jgxx());
+            //var tpcxx = DatHelper.read_jcxx_tpcxx();
+            ////井号集合
+            //var wellCollection = from item in tpcxx select item.jh;
+            //oc_tpc = new ObservableCollection<ccwx_tpjing_model>();
+            //if (tpcxx == null)
+            //    DatHelper.read_ccwx().ForEach(x => oc_tpc.Add(x));
+            //else
+            //    DatHelper.read_ccwx().FindAll(x => !wellCollection.Contains(x.jh)).ForEach(y => oc_tpc.Add(y));
+            oc_tpc = new ObservableCollection<string>(DatHelper.read_jcxx_tpcjh());
+            //DatHelper.read_ccwx().FindAll()  read_jcxx_tpcxx()
+            oc_tpcxx = new ObservableCollection<jcxx_tpcxx_model>(DatHelper.read_jcxx_tpcxx());
+            oc_tpjxx = new ObservableCollection<jcxx_tpjxx_model>(DatHelper.read_jcxx_tpjxx());
+            oc_tpcls = new ObservableCollection<jcxx_tpcls_model>(DatHelper.read_jcxx_tpcls());
+            oc_jgxx = new ObservableCollection<jcxx_jgxx_model>(DatHelper.read_jcxx_jgxx());
 
             if (oc_tpc.Count == 0 && oc_tpcxx.Count > 0)
             {
                 return;
             }
-
-            if (oc_tpc.Count == 0)
+            else if (oc_tpc.Count == 0)
             {
-                List<tpc_model> list_tpc = Data.DatHelper.read_tpc();
+                List<ccwx_tpjing_model> list_tpc = DatHelper.read_ccwx();
 
                 if (list_tpc != null)
                 {
-                    foreach (tpc_model item in list_tpc)
+                    foreach (ccwx_tpjing_model item in list_tpc)
                     {
                         oc_tpc.Add(item.jh);
                     }
                 }
             }
         }
+
+
+
 
         #region 对接视图层（公共接口）
 

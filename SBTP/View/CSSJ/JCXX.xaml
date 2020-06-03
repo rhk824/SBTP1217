@@ -29,7 +29,7 @@
         </Grid.ColumnDefinitions>
 
         <GroupBox Header="待设计井">
-            <ListBox Name="lb_tpc" ItemsSource="{Binding oc_tpc}" DisplayMemberPath="jh" SelectionMode="Extended"/>
+            <ListBox Name="lb_tpc" ItemsSource="{Binding oc_tpc}" SelectionMode="Extended"/>
         </GroupBox>
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1">

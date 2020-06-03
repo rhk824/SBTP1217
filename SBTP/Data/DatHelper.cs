@@ -1336,7 +1336,6 @@ namespace SBTP.Data
                 //lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
                 string dataStr = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\r\n", jh, ytnd, klnd, kllj, ytmc, klmc);
-
                 newLines.Insert(startIndex + 1, dataStr);
                 sw.Write(string.Join("", newLines.ToArray()));
             }
@@ -1367,14 +1366,13 @@ namespace SBTP.Data
                     }
                 }
             }
-
             //调剖井数据
             if (fileStr.Length == 0) return null;
             string[] table = fileStr.Split(',');
             for (int i = 0; i < table.Length; i++)
             {
                 if (string.IsNullOrWhiteSpace(table[i])) continue;
-                string[] arr = table[i].Split(' ');
+                string[] arr = table[i].Split('\t');
                 data.Add(new TPJND_Model
                 {
                     JH = arr[0],
@@ -1601,7 +1599,7 @@ namespace SBTP.Data
         public static List<string> read_jcxx_tpcjh()
         {
             List<string> list = new List<string>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
+            if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;

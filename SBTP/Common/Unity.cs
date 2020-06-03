@@ -197,7 +197,5 @@ namespace Common
             else
                 return null;
         }
-
-
     }
 }

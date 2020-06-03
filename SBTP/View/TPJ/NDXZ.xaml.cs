@@ -13,6 +13,10 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Media.Animation;
 using System.Linq;
+using System.Web;
+using System.Text;
+using com.google.protobuf;
+using edu.stanford.nlp.ling.tokensregex.types;
 
 namespace SBTP.View.TPJ
 {
@@ -21,83 +25,105 @@ namespace SBTP.View.TPJ
     /// </summary>
     public partial class NDXZ : Page, INotifyPropertyChanged
     {
+        private Dictionary<string, string> tpj_names;
         private ObservableCollection<TPJ> _list = new ObservableCollection<TPJ>();
         public static ObservableCollection<ccwx_tpjing_model> list_tpj { set; get; }
         private List<ccwx_tpjing_model> list_tpj_delete { set; get; } = new List<ccwx_tpjing_model>();
-        ObservableCollection<string> collection = new ObservableCollection<string>();
-
+        public ObservableCollection<TPJ> List { get => _list; set { _list = value; NotifyPropertyChanged("List"); } }
+        public Dictionary<string, string> TpjNames
+        {
+            set
+            {
+                if (value == null)
+                    MessageBox.Show("未选择相应调剖剂");
+                tpj_names = value;
+                bindGrid2Data(value);
+            }
+            get => tpj_names;
+        }
+        public DataTable yyjDataSource { set; get; }
+        #region
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(String info)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
-        public ObservableCollection<TPJ> List { get => _list; set { _list = value; NotifyPropertyChanged("List"); } }
+        #endregion
 
         public NDXZ()
         {
             InitializeComponent();
             list_tpj = new ObservableCollection<ccwx_tpjing_model>();
-            if (DatHelper.read_ccwx() != null)
-                DatHelper.read_ccwx().ForEach(x => list_tpj.Add(x));
+            var ccwx = DatHelper.read_ccwx();
+            var tpjnd = DatHelper.TPJND_Read();
+            var NdJh = from i in tpjnd select i.JH;
+            if (ccwx != null)
+            {
+                ccwx.FindAll(x => !NdJh.Contains(x.jh)).ForEach(x => list_tpj.Add(x));
+                bindTpjxx(ccwx,tpjnd);
+            }              
+            TpjNames = DatHelper.Tpj_Read();
             DataContext = this;
-            //bindListBox();
         }
 
-        private void bindListBox()
-        {           
-            LB_daixuan.Items.Clear();
-            //LB_yixuan.Items.Clear();
-
-            List<string> temp_list = new List<string>();
-            //List<TPJND_Model> list = DatHelper.TPJND_Read();
-            //if (list != null)
-            //{
-            //    foreach (TPJND_Model tpj in list)
-            //    {
-            //        temp_list.Add(tpj.JH);
-            //        LB_yixuan.Items.Add(tpj.JH);
-            //    }
-            //}
-
-            DataTable dtable = DatHelper.Read();
-            foreach(DataRow dr in dtable.Rows)
+        private void bindTpjxx(List<ccwx_tpjing_model> list, List<TPJND_Model> list1)
+        {
+            List = new ObservableCollection<TPJ>();
+            for (int i = 0; i < list.Count; i++)
             {
-                //ListBoxItem item = new ListBoxItem();
-                //item.Content = dr[0];
-                if (temp_list.Contains(dr[0].ToString())) continue;
-                LB_daixuan.Items.Add(dr[0]);
+                List.Add(new TPJ()
+                {
+                    JH = list[i].jh,
+                    YTMC = list1[i].YTMC,
+                    KLMC = list1[i].KLMC,
+                    K1 = list[i].k1,
+                    K2 = list[i].k2,
+                    YTND = list1[i].YTND,
+                    ZZRFS = list[i].zzrfs,
+                    KLND = list1[i].KLND,
+                    KLLJ = list1[i].KLLJ
+                });
             }
+        }
+
+        private void bindGrid2Data(Dictionary<string,string> tpjname)
+        {
+            DataTable dt = DbHelperOleDb.Query("Select * from PC_XTPY_STATUS").Tables[0];
+            yyjDataSource = dt.Clone();
+            foreach (DataRow item in dt.Rows)
+            {
+                string ytmc = item["YMC"].ToString();
+                string gtmc = item["GMC"].ToString();
+                if (ytmc.GetHashCode().Equals(TpjNames["YTTPJ"].GetHashCode()) && gtmc.GetHashCode().Equals(TpjNames["KLTPJ"].GetHashCode()))
+                    yyjDataSource.Rows.Add(item.ItemArray);
+            }
+            this.DataGrid2.ItemsSource = yyjDataSource.DefaultView;
         }
 
         private void DataGrid2_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (DataGrid1.SelectedItems.Count != 1) { MessageBox.Show("请选择一条调剖井！"); return; }
-
-            int i = DataGrid1.SelectedIndex;
-            var item2 = (DataRowView)DataGrid2.SelectedItem;
-            (DataGrid1.Columns[5].GetCellContent(DataGrid1.Items[i]) as TextBlock).Text = item2["YND"].ToString();
-            (DataGrid1.Columns[7].GetCellContent(DataGrid1.Items[i]) as TextBlock).Text = item2["GND"].ToString();
-            (DataGrid1.Columns[8].GetCellContent(DataGrid1.Items[i]) as TextBlock).Text = item2["GLJ"].ToString();
-
+            var target = DataGrid1.SelectedItem as TPJ;
+            var selected = (DataRowView)DataGrid2.SelectedItem;
+            target.YTND = double.Parse(selected["YND"].ToString());
+            target.KLND = double.Parse(selected["GND"].ToString());
+            target.KLLJ = double.Parse(selected["GLJ"].ToString());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            int rows = DataGrid1.Items.Count;
-            for (int i = 0; i < rows; i++)
+            foreach (var item in List)
             {
-                string jh = (DataGrid1.Columns[0].GetCellContent(DataGrid1.Items[i]) as TextBlock).Text;
-                double ytnd = double.Parse((DataGrid1.Columns[5].GetCellContent(DataGrid1.Items[i]) as TextBlock).Text);
-                double klnd = double.Parse((DataGrid1.Columns[7].GetCellContent(DataGrid1.Items[i]) as TextBlock).Text);
-                double kllj = double.Parse((DataGrid1.Columns[8].GetCellContent(DataGrid1.Items[i]) as TextBlock).Text);
-                string ytmc = (DataGrid1.Columns[1].GetCellContent(DataGrid1.Items[i]) as TextBlock).Text;
-                string klmc = (DataGrid1.Columns[2].GetCellContent(DataGrid1.Items[i]) as TextBlock).Text;
+                string jh = item.JH;
+                double ytnd = item.YTND;
+                double klnd = item.KLND;
+                double kllj = item.KLLJ;
+                string ytmc = item.YTMC;
+                string klmc = item.KLMC;
                 if (ytnd == 0) continue;
-                DatHelper.TPJND_Save(jh, ytnd, klnd, kllj,ytmc,klmc);
+                DatHelper.TPJND_Save(jh, ytnd, klnd, kllj, ytmc, klmc);
             }
-            this.DataGrid1.ItemsSource = null;
-            this.DataGrid2.ItemsSource = null;
-            bindListBox();
+            MessageBox.Show("操作成功！");
         }
 
         /// <summary>
@@ -108,14 +134,6 @@ namespace SBTP.View.TPJ
         private void Btn_Select_Click(object sender, RoutedEventArgs e)
         {
             if (LB_daixuan.SelectedItems.Count == 0) { return; }
-
-            Dictionary<string, string> tpj_name = DatHelper.Tpj_Read();
-            if (tpj_name == null)
-            {
-                MessageBox.Show("未选择相应调剖剂");
-                return;
-            }
-            //list = new ObservableCollection<TPJ>();
             foreach (ccwx_tpjing_model lbi in LB_daixuan.SelectedItems)
             {
                 ccwx_tpjing_model tpj = list_tpj.ToList().Find(x=>x.jh.Equals(lbi.jh));
@@ -126,8 +144,8 @@ namespace SBTP.View.TPJ
                     K1 = tpj.k1,
                     K2 = tpj.k2,
                     ZZRFS = tpj.zzrfs,
-                    YTMC = tpj_name["YTTPJ"],
-                    KLMC = tpj_name["KLTPJ"]
+                    YTMC = TpjNames["YTTPJ"],
+                    KLMC = TpjNames["KLTPJ"]
                 };
                 List.Add(mytpj);
             }
@@ -137,12 +155,6 @@ namespace SBTP.View.TPJ
                 if (!list_tpj_delete.Contains(x))
                     list_tpj_delete.Add(x);
             });
-
-            //string sql = string.Format("Select * from PC_XTPY_STATUS Where YMC='{0}' And GMC='{1}'", tpj_name["YTTPJ"].Trim(), tpj_name["KLTPJ"].Trim());
-            string sql = "Select * from PC_XTPY_STATUS";
-            DataTable dtable = DbHelperOleDb.Query(sql).Tables[0];
-            DataRow[] datasource = dtable.Select(string.Format("GMC={0} and YMC={1}", tpj_name["KLTPJ"].Trim(), tpj_name["YTTPJ"].Trim()));
-            this.DataGrid2.ItemsSource = dtable.DefaultView;
         }
 
         private void Btn_Delete_Click(object sender, RoutedEventArgs e)
@@ -170,8 +182,6 @@ namespace SBTP.View.TPJ
             mainWindow.Skip(this.GetType().Namespace + ".LXXZ");
         }
     }
-
-
 
     public class TPJ : INotifyPropertyChanged
     {
