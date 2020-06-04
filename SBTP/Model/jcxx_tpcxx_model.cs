@@ -13,11 +13,15 @@ namespace SBTP.Model
         private double _yxhd;
         private double _zrfs;
         private double _zzhd;
-        private double _zzbl;
+        private double _ybhd;
         private double _zzrfs;
         private int _ltfs;
         private double _k1;
         private double _k2;
+        private double _r1;
+        private double _r2;
+        private double _zkxd;
+        private double _fkxd;
 
         #region Property Getters And Setters
 
@@ -87,15 +91,15 @@ namespace SBTP.Model
         }
 
         /// <summary>
-        /// 增注比例
+        /// 油饱和度
         /// </summary>
-        public double zzbl
+        public double ybhd
         {
-            get { return _zzbl; }
+            get { return _ybhd; }
             set
             {
-                _zzbl = value;
-                NotifyPropertyChanged("zzbl");
+                _ybhd = value;
+                NotifyPropertyChanged("ybhd");
             }
         }
 
@@ -137,6 +141,22 @@ namespace SBTP.Model
                 NotifyPropertyChanged("k1");
             }
         }
+        /// <summary>
+        /// 封堵段孔喉半径
+        /// </summary>
+        public double R1 { get => _r1; set { _r1 = value; NotifyPropertyChanged("R1"); } }
+        /// <summary>
+        /// 增注段孔喉半径
+        /// </summary>
+        public double R2 { get => _r2; set { _r2 = value; NotifyPropertyChanged("R2"); } }
+        /// <summary>
+        /// 增注段孔隙度
+        /// </summary>
+        public double Zkxd { get => _zkxd; set { _zkxd = value; NotifyPropertyChanged("Zkxd"); } }
+        /// <summary>
+        /// 封堵段孔隙度
+        /// </summary>
+        public double Fkxd { get => _fkxd; set { _fkxd = value; NotifyPropertyChanged("Fkxd"); } }
 
         /// <summary>
         /// 渗透率（增注段）
@@ -150,6 +170,8 @@ namespace SBTP.Model
                 NotifyPropertyChanged("k2");
             }
         }
+
+
 
         #endregion
     }

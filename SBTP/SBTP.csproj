@@ -255,6 +255,9 @@
     <Compile Include="View\CSSJ\KSJS.xaml.cs">
       <DependentUpon>KSJS.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\CSSJ\PZFA.xaml.cs">
+      <DependentUpon>PZFA.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CSSJ\TPYLYH.xaml.cs">
       <DependentUpon>TPYLYH.xaml</DependentUpon>
     </Compile>
@@ -488,6 +491,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CSSJ\KSJS.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CSSJ\PZFA.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

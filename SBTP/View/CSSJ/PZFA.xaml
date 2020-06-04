@@ -1,0 +1,52 @@
+﻿<Window x:Class="SBTP.View.CSSJ.PZFA"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:core="clr-namespace:System;assembly=mscorlib"
+        xmlns:calender="clr-namespace:SBTP.View.JCXZ"
+        xmlns:local="clr-namespace:SBTP.View.CSSJ"
+        mc:Ignorable="d"
+        Title="配注方案" Height="400" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="LXEnumKey" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+                <ObjectDataProvider.MethodParameters>               
+                    <x:Type Type="local:LXEnum"/>  
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate x:Key="fasj">
+                <TextBlock Text="{Binding Path= Date, StringFormat=\{0:d\}}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+            </DataTemplate>
+            <DataTemplate x:Key="fasjForEdite">
+                <DatePicker Text="{Binding Date, Mode=TwoWay,ValidatesOnExceptions=true, NotifyOnValidationError=true,UpdateSourceTrigger=PropertyChanged}" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <DataGrid Name="pzfa_grid" ItemsSource="{Binding DataSource}" LoadingRow="pzfa_grid_LoadingRow">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="井号" IsReadOnly="True" Binding="{Binding Jh}"/>
+                <DataGridTemplateColumn Header="方案时间" CellTemplate="{StaticResource fasj}" CellEditingTemplate="{StaticResource fasjForEdite}"/>
+                <DataGridTextColumn Header="配注层段号" Binding="{Binding Pzcdh}"/>
+                <DataGridTextColumn Header="比例系数" Binding="{Binding Blxs}"/>
+                <DataGridComboBoxColumn Header="驱油方式" SelectedItemBinding="{Binding Qyfs}" ItemsSource="{Binding Source={StaticResource LXEnumKey}}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <GroupBox Grid.Row="1" Header="操作">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="保存"/>
+                <Button Content="退出"/>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</Window>

@@ -51,7 +51,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
-                    <TextBlock Text="调剖井信息" />
+                    <TextBlock Text="调剖层信息" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Name="btn_tpcxx" Content="提取" Click="btn_tpcxx_Click" />
@@ -65,6 +65,7 @@
                         <DataGridTextColumn Header="注入分数（%）" Binding="{Binding zrfs, StringFormat={}{0:F2}}" />
                         <DataGridTextColumn Header="增注厚度（m）" Binding="{Binding zzhd}" />
                         <DataGridTextColumn Header="增注入分数（%）" Binding="{Binding zzrfs, StringFormat={}{0:F2}}" />
+                        <DataGridTextColumn Header="油饱和度" Binding="{Binding ybhd}" />
                         <DataGridTextColumn Header="连通方向（个）" Binding="{Binding ltfs}" />
                         <DataGridTemplateColumn HeaderStyle="{StaticResource header_k_style}">
                             <DataGridTemplateColumn.CellTemplate>
@@ -73,6 +74,28 @@
                                         <TextBlock Text="{Binding k1, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
                                         <Rectangle Style="{StaticResource line_cell_style}" />
                                         <TextBlock Text="{Binding k2, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn  HeaderStyle="{StaticResource header_kxd_style}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Fkxd, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                        <Rectangle Style="{StaticResource line_cell_style}" />
+                                        <TextBlock Text="{Binding Zkxd, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn HeaderStyle="{StaticResource header_r_style}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding R1, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                        <Rectangle Style="{StaticResource line_cell_style}" />
+                                        <TextBlock Text="{Binding R2, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -134,9 +157,10 @@
                     <TextBlock Text="调剖层驱替历史信息" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Name="btn_tpcls" Content="提取" Click="btn_tpcls_Click" />
+                    <Button Name="btn_pzfa" Content="配注方案" Click="btn_pzfa_Click" />
+                    <Button Name="btn_tpcls" Content="提取" Click="btn_tpcls_Click" IsEnabled="False"/>
                 </StackPanel>
-                <DataGrid Grid.Row="1" ItemsSource="{Binding oc_tpcls}">
+                <DataGrid Name="qtls" Grid.Row="1" ItemsSource="{Binding oc_tpcls}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn CellTemplate="{StaticResource SelectedColumn}" />
                         <DataGridTextColumn Header="井号" Binding="{Binding jh}" />

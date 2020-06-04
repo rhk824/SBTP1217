@@ -105,5 +105,17 @@ namespace SBTP.BLL
             string sql = "Select Max(NY) from WATER_WELL_MONTH where zt=0";
             return DbHelperOleDb.GetSingle(sql).ToString();
         }
+        public static string getMinDate(string jh)
+        {
+            string sql = "Select Min(NY) from WATER_WELL_MONTH where zt=0 and jh='" + jh + "'";
+            return DbHelperOleDb.GetSingle(sql).ToString();
+        }
+
+        public static string getMaxDate(string jh)
+        {
+            string sql = "Select Max(NY) from WATER_WELL_MONTH where zt=0 and jh='" + jh + "'";
+            return DbHelperOleDb.GetSingle(sql).ToString();
+        }
+
     }
 }

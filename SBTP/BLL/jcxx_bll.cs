@@ -46,16 +46,7 @@ namespace SBTP.BLL
 
         public jcxx_bll()
         {
-            //var tpcxx = DatHelper.read_jcxx_tpcxx();
-            ////井号集合
-            //var wellCollection = from item in tpcxx select item.jh;
-            //oc_tpc = new ObservableCollection<ccwx_tpjing_model>();
-            //if (tpcxx == null)
-            //    DatHelper.read_ccwx().ForEach(x => oc_tpc.Add(x));
-            //else
-            //    DatHelper.read_ccwx().FindAll(x => !wellCollection.Contains(x.jh)).ForEach(y => oc_tpc.Add(y));
             oc_tpc = new ObservableCollection<string>(DatHelper.read_jcxx_tpcjh());
-            //DatHelper.read_ccwx().FindAll()  read_jcxx_tpcxx()
             oc_tpcxx = new ObservableCollection<jcxx_tpcxx_model>(DatHelper.read_jcxx_tpcxx());
             oc_tpjxx = new ObservableCollection<jcxx_tpjxx_model>(DatHelper.read_jcxx_tpjxx());
             oc_tpcls = new ObservableCollection<jcxx_tpcls_model>(DatHelper.read_jcxx_tpcls());
@@ -88,14 +79,14 @@ namespace SBTP.BLL
         /// “→”按钮
         /// </summary>
         /// <param name="list"></param>
-        public void btn_right(List<jcxx_tpcxx_model> list)
+        public void btn_right(List<string> list)
         {
-            foreach (jcxx_tpcxx_model item in list)
+            foreach (string item in list)
             {
-                oc_tpc.Remove(item.jh);
-                oc_tpcxx.Add(new jcxx_tpcxx_model() { jh = item.jh });
-                oc_tpjxx.Add(new jcxx_tpjxx_model() { jh = item.jh });
-                oc_tpcls.Add(new jcxx_tpcls_model() { jh = item.jh });
+                oc_tpc.Remove(item);
+                oc_tpcxx.Add(new jcxx_tpcxx_model() { jh = item });
+                oc_tpjxx.Add(new jcxx_tpjxx_model() { jh = item });
+                oc_tpcls.Add(new jcxx_tpcls_model() { jh = item });
             }
         }
 
@@ -124,8 +115,8 @@ namespace SBTP.BLL
         public bool btn_tpcxx(out string message)
         {
             message = string.Empty;
-            List<tpc_model> list_tpc = Data.DatHelper.read_tpc();
-            List<ccwx_tpjing_model> list_ccwx = Data.DatHelper.read_ccwx();
+            List<tpc_model> list_tpc = DatHelper.read_tpc();
+            List<ccwx_tpjing_model> list_ccwx = DatHelper.read_ccwx();
             //if (list_tpc == null || list_ccwx == null) return;
             if (list_ccwx == null)
             {
@@ -139,11 +130,6 @@ namespace SBTP.BLL
                 {
                     if (item.jh == tpc.jh)
                     {
-                        item.cd = tpc.cd;
-                        item.yxhd = tpc.yxhd;
-                        item.zrfs = tpc.zrfs;
-                        item.zzhd = tpc.zzhd;
-                        item.zzrfs = tpc.zzrfs;
                         item.ltfs = tpc.ltsl;
                     }
                 }
@@ -152,8 +138,18 @@ namespace SBTP.BLL
                 {
                     if (item.jh == ccwx.jh)
                     {
+                        item.cd = ccwx.cd;
+                        item.yxhd = ccwx.yxhd;
+                        item.ybhd = ccwx.ybhd;
+                        item.zrfs = ccwx.zrfs;
+                        item.zzhd = ccwx.zzhd;
+                        item.zzrfs = ccwx.zzrfs;
                         item.k1 = ccwx.k1;
                         item.k2 = ccwx.k2;
+                        item.R1 = ccwx.r1;
+                        item.R2 = ccwx.r2;
+                        item.Fkxd = ccwx.fddkxd;
+                        item.Zkxd = ccwx.zzdkxd;
                     }
                 }
             }
