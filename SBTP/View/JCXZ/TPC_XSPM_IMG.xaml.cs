@@ -142,7 +142,7 @@ namespace SBTP.View.JCXZ
             tb_md.Text = string.Format("({0},{1})", this.top_left_x, this.top_left_y);
         }
 
-        private void Img_source_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        private void Img_source_MouseMove(object sender, MouseEventArgs e)
         {
             if (is_draw)
             {

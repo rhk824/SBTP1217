@@ -33,19 +33,34 @@
             <RowDefinition/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <DataGrid Name="pzfa_grid" ItemsSource="{Binding DataSource}" LoadingRow="pzfa_grid_LoadingRow">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="井号" IsReadOnly="True" Binding="{Binding Jh}"/>
-                <DataGridTemplateColumn Header="方案时间" CellTemplate="{StaticResource fasj}" CellEditingTemplate="{StaticResource fasjForEdite}"/>
-                <DataGridTextColumn Header="配注层段号" Binding="{Binding Pzcdh}"/>
-                <DataGridTextColumn Header="比例系数" Binding="{Binding Blxs}"/>
-                <DataGridComboBoxColumn Header="驱油方式" SelectedItemBinding="{Binding Qyfs}" ItemsSource="{Binding Source={StaticResource LXEnumKey}}"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="自定义评价起止时间"/>
+                <CheckBox Name="isEnabled" IsChecked="False">
+                    <CheckBox.Content>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <DatePicker Name="startDate" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM" IsEnabled="{Binding ElementName=isEnabled,Path=IsChecked,Mode=OneWay}"/>
+                            <TextBlock Text="-"/>
+                            <DatePicker Name="endDate" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM" IsEnabled="{Binding ElementName=isEnabled,Path=IsChecked,Mode=OneWay}"/>
+                        </StackPanel>
+                    </CheckBox.Content>
+                </CheckBox>
+            </StackPanel>
+            <DataGrid Name="pzfa_grid" ItemsSource="{Binding DataSource}" LoadingRow="pzfa_grid_LoadingRow" CanUserSortColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="井号" IsReadOnly="True" Binding="{Binding Jh}"/>
+                    <DataGridTemplateColumn Header="方案时间" CellTemplate="{StaticResource fasj}" CellEditingTemplate="{StaticResource fasjForEdite}"/>
+                    <DataGridTextColumn Header="配注层段号" Binding="{Binding Pzcdh}"/>
+                    <DataGridTextColumn Header="分注比例" Binding="{Binding Blxs}"/>
+                    <DataGridComboBoxColumn Header="驱油方式" SelectedItemBinding="{Binding Qyfs}" ItemsSource="{Binding Source={StaticResource LXEnumKey}}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        
         <GroupBox Grid.Row="1" Header="操作">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Content="保存"/>
-                <Button Content="退出"/>
+                <Button Name="save_btn" Content="保存" Click="save_btn_Click"/>
+                <Button Name="quit_btn" Content="退出" Click="quit_btn_Click"/>
             </StackPanel>
         </GroupBox>
     </Grid>

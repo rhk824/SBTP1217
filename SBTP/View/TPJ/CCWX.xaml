@@ -68,7 +68,7 @@
                         <TextBlock Name="Value_b" Text="**" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     </StackPanel>
                 </StackPanel>
-                <DataGrid Name="dg_tpjing_info" ItemsSource="{Binding oc_tpjing_info}" SelectionMode="Single" SelectedCellsChanged="Dg_tpjing_info_SelectedCellsChanged" Grid.Row="1">
+                <DataGrid Name="dg_tpjing_info" ItemsSource="{Binding oc_tpjing_info}" SelectionMode="Single" Grid.Row="1" LoadingRow="dg_tpjing_info_LoadingRow">
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn Binding="{Binding Selected, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Width="20" />
                         <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>

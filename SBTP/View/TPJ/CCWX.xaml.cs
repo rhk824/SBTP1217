@@ -110,29 +110,6 @@ namespace SBTP.View.TPJ
             }
         }
 
-        private void Dg_tpjing_info_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
-        {
-            var selectItem = dg_tpjing_info.SelectedItem as ccwx_tpjing_model;
-            selectItem.Selected = true;
-            ccwx_bll.oc_tpjing_info.OfType<ccwx_tpjing_model>().ToList().ForEach(x => {
-                if (!x.jh.Equals(selectItem.jh))
-                    x.Selected = false;
-            });
-            bll.tpjing = selectItem;
-            if (rb_lhf.IsChecked == true)
-            {
-                nav_algorithm("lhf");
-                if (selectItem.IsCustomize)
-                    ccwx_lhf_bll.isChecked = true;
-                else
-                    ccwx_lhf_bll.isChecked = false;
-            }               
-            if (rb_gsf.IsChecked == true) nav_algorithm("gsf");
-            if (rb_ckf.IsChecked == true) nav_algorithm("ckf");
-            
-
-        }
-
         private void Rb_lhf_Click(object sender, RoutedEventArgs e)
         {
             nav_algorithm("lhf");
@@ -286,6 +263,32 @@ namespace SBTP.View.TPJ
         private void diy_Click(object sender, RoutedEventArgs e)
         {
             new ChooseWell().ShowDialog();
+        }
+
+        private void dg_tpjing_info_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Selected += Row_Selected;
+        }
+
+        private void Row_Selected(object sender, RoutedEventArgs e)
+        {
+            var selectItem = (e.Source as DataGridRow).Item as ccwx_tpjing_model;
+            selectItem.Selected = true;
+            ccwx_bll.oc_tpjing_info.OfType<ccwx_tpjing_model>().ToList().ForEach(x => {
+                if (!x.jh.Equals(selectItem.jh))
+                    x.Selected = false;
+            });
+            bll.tpjing = selectItem;
+            if (rb_lhf.IsChecked == true)
+            {
+                nav_algorithm("lhf");
+                if (selectItem.IsCustomize)
+                    ccwx_lhf_bll.isChecked = true;
+                else
+                    ccwx_lhf_bll.isChecked = false;
+            }
+            if (rb_gsf.IsChecked == true) nav_algorithm("gsf");
+            if (rb_ckf.IsChecked == true) nav_algorithm("ckf");
         }
 
         private void Radio_Checked(object sender, RoutedEventArgs e)

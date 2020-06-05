@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SBTP.BLL
 {
-    public class jcxx_bll:INotifyPropertyChanged
+    public class jcxx_bll : INotifyPropertyChanged
     {
         private ObservableCollection<string> oc_tpc_;
         /// <summary>
@@ -31,7 +31,7 @@ namespace SBTP.BLL
         /// <summary>
         /// 调讴层驱替历史信息
         /// </summary>
-        public ObservableCollection<jcxx_tpcls_model> oc_tpcls { get; set; }
+        public static ObservableCollection<jcxx_tpcls_model> oc_tpcls { get; set; }
         /// <summary>
         /// 费用信息
         /// </summary>
@@ -186,7 +186,7 @@ namespace SBTP.BLL
         /// </summary>
         public void btn_tpcls()
         {
-            string[] tpjpara = Data.DatHelper.TPJParaRead();
+            string[] tpjpara = DatHelper.TPJParaRead();
             DateTime t1 = DateTime.Parse(tpjpara[1].ToString());
             DateTime t2 = DateTime.Parse(tpjpara[2].ToString());
             TimeSpan ts = t2.Subtract(t1); // 求评价时间范围的总天数
@@ -196,7 +196,7 @@ namespace SBTP.BLL
                 List<DB_WATER_WELL_MONTH> list_water = get_water_month(item.jh, t1, t2);
                 DB_WATER_WELL_MONTH t1_model = list_water.First();
                 DB_WATER_WELL_MONTH t2_model = list_water.Last();
-                item.dqrzl = ((t2_model.LZMYL + t2_model.LJZSL - t1_model.LZMYL - t1_model.LJZSL) * 10000) / ts.Days;
+                item.dqrzl = (t2_model.LZMYL + t2_model.LJZSL - t1_model.LZMYL - t1_model.LJZSL) / ts.Days;
                 item.ysybhd = 0;
                 item.ljzsl = t2_model.LJZSL;
                 item.ljzjl = t2_model.LZMYL + t2_model.LJZSL;

@@ -28,7 +28,6 @@ namespace SBTP.View.TPJ
         private Dictionary<string, string> tpj_names;
         private ObservableCollection<TPJ> _list = new ObservableCollection<TPJ>();
         public static ObservableCollection<ccwx_tpjing_model> list_tpj { set; get; }
-        private List<ccwx_tpjing_model> list_tpj_delete { set; get; } = new List<ccwx_tpjing_model>();
         public ObservableCollection<TPJ> List { get => _list; set { _list = value; NotifyPropertyChanged("List"); } }
         public Dictionary<string, string> TpjNames
         {
@@ -152,8 +151,6 @@ namespace SBTP.View.TPJ
             LB_daixuan.SelectedItems.OfType<ccwx_tpjing_model>().ToList().ForEach(x =>
             {
                 list_tpj.Remove(x);
-                if (!list_tpj_delete.Contains(x))
-                    list_tpj_delete.Add(x);
             });
         }
 
@@ -162,10 +159,12 @@ namespace SBTP.View.TPJ
             DataGrid1.SelectedItems.OfType<TPJ>().ToList().ForEach(x =>
             {
                 List.Remove(x);
-                list_tpj_delete.ForEach(y =>
+                list_tpj.Add(new ccwx_tpjing_model()
                 {
-                    if (y.jh.Equals(x.JH))
-                        list_tpj.Add(y);
+                    jh = x.JH,
+                    k1 = x.K1,
+                    k2 = x.K2,
+                    zzrfs = x.ZZRFS,
                 });
             });
         }

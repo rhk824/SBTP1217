@@ -1,9 +1,12 @@
 ﻿using Common;
+using Maticsoft.DBUtility;
+using SBTP.BLL;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,8 +28,6 @@ namespace SBTP.View.CSSJ
     {
         private ObservableCollection<PZFAModel> datasource;
         public ObservableCollection<PZFAModel> DataSource { get => datasource; set { datasource = value; NotifyPropertyChanged("DataSource"); } }
-
-        private bool isSelected = false;
         #region
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(String info)
@@ -72,6 +73,57 @@ namespace SBTP.View.CSSJ
             rowMenu.Items.Add(dele);
             e.Row.ContextMenu = rowMenu;
         }
+
+        private void save_btn_Click(object sender, RoutedEventArgs e)
+        {                      
+            DataSource.Select(x => x.Jh).Distinct().ToList().ForEach(x =>
+            {
+                //累计注水、注聚
+                double ljzs = 0, ljzj = 0;
+                List<PZFAModel> cdModels = DataSource.ToList().FindAll(y => y.Jh.Equals(x));
+                List<PZFAModel> qyfsMod = cdModels.FindAll(x => !string.IsNullOrEmpty(x.Qyfs));
+                if (qyfsMod.Count == 0)
+                {
+                    MessageBox.Show("未标注驱油类型");
+                    return;
+                }
+                else
+                    for (int i = 0; i < cdModels.Count; i++)
+                    {
+                        if (i == cdModels.Count - 1) continue;
+                        switch (cdModels[i].Qyfs)
+                        {
+                            case "水驱": ljzs += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Date, cdModels[i + 1].Date); break;
+                            case "聚驱": ljzj += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Date, cdModels[i + 1].Date); break;
+                        }
+                    }
+                jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ljzjl = Math.Round(ljzj, 4);
+                jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ljzsl = Math.Round(ljzs, 4);
+            });
+            this.Close();
+        }
+
+        private void quit_btn_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private double getMonthData(string qylx, string jh, double bl, string start, string end)
+        {
+            double ljzsl, ljzjl, result = 0;
+            string sql = $"select * from water_well_month where ZT=0 and jh=\"{jh}\" and ny >= #{Convert.ToDateTime(start).ToString("yyyy/MM")}# and ny< #{Convert.ToDateTime(end).ToString("yyyy/MM")}# order by ny";
+            DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
+            ljzsl = double.Parse(dt.Compute("Sum(YZSL)", "").ToString()) * bl / 10000;
+            ljzjl = (double.Parse(dt.Compute("Sum(YZMYL)", "").ToString()) + double.Parse(dt.Compute("Sum(YZSL)", "").ToString())) * bl / 10000;
+
+            switch (qylx)
+            {
+                case "水驱": result = ljzsl; break;
+                case "聚驱": result = ljzjl; break;
+            }
+            return result;
+        }
+
     }
     public enum LXEnum { 水驱, 聚驱 };
 
