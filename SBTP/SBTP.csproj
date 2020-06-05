@@ -199,6 +199,7 @@
     <Compile Include="BLL\zcjz_bll.cs" />
     <Compile Include="Common\Converter\TPC_Converter.cs" />
     <Compile Include="Common\Converter\ZCJZ_Converter.cs" />
+    <Compile Include="Common\DBContext.cs" />
     <Compile Include="Common\RunCMD.cs" />
     <Compile Include="Common\Unity.cs" />
     <Compile Include="Common\utils.cs" />

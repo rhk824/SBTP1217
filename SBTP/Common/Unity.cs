@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -71,32 +72,35 @@ namespace Common
             return int.TryParse(obj.ToString(), out num) ? num : 0;
         }
 
-        /// <summary>
-        /// 将 object 转换 DateTime 类型，并返回时间（yyyy-MM-dd）格式的字符串
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns>时间（yyyy-MM-dd）格式的字符串</returns>
-        public static string ToDateTime(object obj)
+        //public static string ToDateTime(object obj)
+        //{
+        //    if (obj == null)
+        //        return string.Empty;
+        //    DateTime result = (DateTime)obj;
+        //    return result.ToString("yyyy-MM-dd");
+        //}
+
+        public static decimal ToDecimal(object obj)
         {
-            if (obj == null)
-                return string.Empty;
-            DateTime result = (DateTime)obj;
-            return result.ToString("yyyy-MM-dd");
+            return decimal.TryParse(obj.ToString(), out decimal num) ? num : 0;
         }
 
-        /// <summary>
-        /// 将 object 转换 DateTime 类型，并返回时间（yyyy-MM-dd）格式的字符串
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="format"></param>
-        /// <returns></returns>
-        public static string ToDateTime(object obj, string format = "yyyy-MM-dd")
+        public static DateTime? ToDateTime(object obj)
+        {
+            System.ComponentModel.NullableConverter nullableDateTime = new System.ComponentModel.NullableConverter(typeof(DateTime?));
+            return (DateTime?)nullableDateTime.ConvertFromString(obj.ToString());
+        }
+
+        public static string DateTimeToString(object obj, string format)
         {
             if (obj == null)
+            {
                 return null;
-            DateTime result = (DateTime)obj;
-            return result.ToString(format);
+            }
+            var dateString = (DateTime)obj;
+            return string.Format(CultureInfo.CurrentCulture, "{0:" + format + "}", dateString);
         }
+
 
         public static string DateMathed(string dateString)
         {

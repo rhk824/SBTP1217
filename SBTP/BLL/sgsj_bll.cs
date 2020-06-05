@@ -379,6 +379,57 @@ namespace SBTP.BLL
             return keyValuePairs;
         }
 
+        public bool Update000(out string message)
+        {
+            message = string.Empty;
+
+            var oilList = DBContext.getList_OIL_WELL_MONTH();
+            var waterList = DBContext.getList_WATER_WELL_MONTH();
+
+            if (!oilList.Any() && !waterList.Any())
+            {
+                message = "油水井井史其中至少一个无数据，检查数据管理";
+                return false;
+            }
+
+            var oil_list = oilList.Where(p => p.NY != null).OrderBy(p => p.NY).ToList();
+            if (!oil_list.Any())
+            {
+                message = "油井井史中未检测到最早时间，检查时间字段";
+                return false;
+            }
+
+            var oil_ny = oil_list.First().NY;
+            var water_list = waterList.Where(p => p.NY == oil_ny).ToList();
+            if (!water_list.Any())
+            {
+                message = "水井井史中未检测到相应的油井井史最早时间，检查时间字段";
+                return false;
+            }
+
+            decimal yzsl = water_list.Sum(p=>p.YZSL);
+            decimal yzmyl = water_list.Sum(p=>p.YZMYL);
+            string cy_message = string.Empty;
+            if (yzsl == 0)
+            {
+                cy_message = "一次采油";
+            }
+            else if (yzmyl == 0 && yzsl > 0)
+            {
+                cy_message = "二次采油";
+            }
+            else if (yzmyl > 0)
+            {
+                cy_message = "三次采油";
+            }
+
+            update_tag("前言_油井井史最早时间", Unity.DateTimeToString(oil_ny, "yyyy年MM月"));
+            update_tag("前言_采油次数", cy_message);
+
+            message = "操作成功";
+            return true;
+        }
+
         public void update021()
         {
             this.dt021.Clear();
@@ -985,10 +1036,5 @@ namespace SBTP.BLL
         }
 
         #endregion
-
-
-
-
-
     }
 }

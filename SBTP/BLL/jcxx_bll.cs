@@ -181,10 +181,12 @@ namespace SBTP.BLL
                 List<DB_WATER_WELL_MONTH> list_water = get_water_month(item.jh, t1, t2);
                 DB_WATER_WELL_MONTH t1_model = list_water.First();
                 DB_WATER_WELL_MONTH t2_model = list_water.Last();
-                item.dqrzl = ((t2_model.LZMYL + t2_model.LJZSL - t1_model.LZMYL - t1_model.LJZSL) * 10000) / ts.Days;
+                var dqrzl = ((t2_model.LZMYL + t2_model.LJZSL - t1_model.LZMYL - t1_model.LJZSL) * 10000) / ts.Days;
+                var ljzjl = t2_model.LZMYL + t2_model.LJZSL;
+                item.dqrzl = (double)dqrzl;
                 item.ysybhd = 0;
-                item.ljzsl = t2_model.LJZSL;
-                item.ljzjl = t2_model.LZMYL + t2_model.LJZSL;
+                item.ljzsl = (double)t2_model.LJZSL;
+                item.ljzjl = (double)ljzjl;
             }
         }
 
@@ -242,9 +244,9 @@ namespace SBTP.BLL
                 list_water.Add(new DB_WATER_WELL_MONTH()
                 {
                     JH = Unity.ToString(dt.Rows[i]["jh"]),
-                    NY = Unity.ToString(dt.Rows[i]["ny"]),
-                    LZMYL = Unity.ToDouble(dt.Rows[i]["lzmyl"]),
-                    LJZSL = Unity.ToDouble(dt.Rows[i]["ljzsl"])
+                    NY = Unity.ToDateTime(dt.Rows[i]["NY"]),
+                    LZMYL = Unity.ToDecimal(dt.Rows[i]["lzmyl"]),
+                    LJZSL = Unity.ToDecimal(dt.Rows[i]["ljzsl"])
                 });
             }
             return list_water;

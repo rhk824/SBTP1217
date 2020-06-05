@@ -231,15 +231,19 @@ namespace SBTP.Model
     public class DB_OIL_WELL_MONTH : Base
     {
         private string _jh;
-        private string _ny;
-        private double _ts;
-        private double _ycyl;
-        private double _ycsl;
-        private double _dym;
-        private double _yy;
-        private double _ty;
-        private double _ly;
-        private int _zt;
+        private DateTime? _ny;
+        private decimal _ts;
+        private decimal _ycyl;
+        private decimal _ycsl;
+        private decimal _dym;
+        private decimal _yy;
+        private decimal _ty;
+        private decimal _ly;
+        private decimal _zt;
+        private decimal _ccjhwnd;
+        private decimal _ljcyl;
+        private decimal _ljcsl;
+        private decimal _hs;
 
         #region Property Getters And Setters
 
@@ -259,7 +263,7 @@ namespace SBTP.Model
         /// <summary>
         /// 年月
         /// </summary>
-        public string NY
+        public DateTime? NY
         {
             get { return _ny; }
             set
@@ -272,7 +276,7 @@ namespace SBTP.Model
         /// <summary>
         /// 生产天数
         /// </summary>
-        public double TS
+        public decimal TS
         {
             get { return _ts; }
             set
@@ -286,7 +290,7 @@ namespace SBTP.Model
         /// <summary>
         /// 月产油量（月产液量=月产油量+月产水量）
         /// </summary>
-        public double YCYL
+        public decimal YCYL
         {
             get { return _ycyl; }
             set
@@ -299,7 +303,7 @@ namespace SBTP.Model
         /// <summary>
         /// 月产水量（月产液量=月产油量+月产水量）
         /// </summary>
-        public double YCSL
+        public decimal YCSL
         {
             get { return _ycsl; }
             set
@@ -312,7 +316,7 @@ namespace SBTP.Model
         /// <summary>
         /// 动液面
         /// </summary>
-        public double DYM
+        public decimal DYM
         {
             get { return _dym; }
             set
@@ -325,7 +329,7 @@ namespace SBTP.Model
         /// <summary>
         /// 油压
         /// </summary>
-        public double YY
+        public decimal YY
         {
             get { return _yy; }
             set
@@ -338,7 +342,7 @@ namespace SBTP.Model
         /// <summary>
         /// 套压
         /// </summary>
-        public double TY
+        public decimal TY
         {
             get { return _ty; }
             set
@@ -351,7 +355,7 @@ namespace SBTP.Model
         /// <summary>
         /// 流压
         /// </summary>
-        public double LY
+        public decimal LY
         {
             get { return _ly; }
             set
@@ -364,13 +368,53 @@ namespace SBTP.Model
         /// <summary>
         /// 措施状态
         /// </summary>
-        public int ZT
+        public decimal ZT
         {
             get { return _zt; }
             set
             {
                 _zt = value;
                 NotifyPropertyChanged("ZT");
+            }
+
+        }
+        public decimal CCJHWND
+        {
+            get { return _ccjhwnd; }
+            set
+            {
+                _ccjhwnd = value;
+                NotifyPropertyChanged("CCJHWND");
+            }
+
+        }
+        public decimal LJCYL
+        {
+            get { return _ljcyl; }
+            set
+            {
+                _ljcyl = value;
+                NotifyPropertyChanged("LJCYL");
+            }
+
+        }
+        public decimal LJCSL
+        {
+            get { return _ljcsl; }
+            set
+            {
+                _ljcsl = value;
+                NotifyPropertyChanged("LJCSL");
+            }
+
+        }
+        public decimal HS
+        {
+            get { return _hs; }
+            set
+            {
+                _hs = value;
+                NotifyPropertyChanged("HS");
             }
 
         }
@@ -385,19 +429,19 @@ namespace SBTP.Model
     public class DB_WATER_WELL_MONTH : Base
     {
         private string _jh;
-        private string _ny;
-        private double _ts;
-        private double _zsfs;
-        private double _yzsl;
-        private double _pccds;
-        private double _yzmyl;
-        private double _yy;
-        private double _ty;
-        private double _ly;
-        private double _lzmyl;
-        private double _ljzsl;
-        private double _ljzjl;
-        private double _zt;
+        private DateTime? _ny;
+        private decimal _ts;
+        private decimal _zsfs;
+        private decimal _yzsl;
+        private decimal _pzcds;
+        private decimal _yzmyl;
+        private decimal _yy;
+        private decimal _ty;
+        private decimal _ly;
+        private decimal _lzmyl;
+        private decimal _ljzsl;
+        private decimal _ljzjl;
+        private decimal _zt;
 
         #region Property Getters And Setters
 
@@ -418,7 +462,7 @@ namespace SBTP.Model
         /// <summary>
         /// 年月
         /// </summary>
-        public string NY
+        public DateTime? NY
         {
             get { return _ny; }
             set
@@ -432,7 +476,7 @@ namespace SBTP.Model
         /// <summary>
         /// 生产天数
         /// </summary>
-        public double TS
+        public decimal TS
         {
             get { return _ts; }
             set
@@ -445,7 +489,7 @@ namespace SBTP.Model
         /// <summary>
         /// 注水方式
         /// </summary>
-        public double ZSFS
+        public decimal ZSFS
         {
             get { return _zsfs; }
             set
@@ -458,7 +502,7 @@ namespace SBTP.Model
         /// <summary>
         /// 月注水量
         /// </summary>
-        public double YZSL
+        public decimal YZSL
         {
             get { return _yzsl; }
             set
@@ -471,20 +515,20 @@ namespace SBTP.Model
         /// <summary>
         /// 配注层段数
         /// </summary>
-        public double PCCDS
+        public decimal PZCDS
         {
-            get { return _pccds; }
+            get { return _pzcds; }
             set
             {
-                _pccds = value;
-                NotifyPropertyChanged("PCCDS");
+                _pzcds = value;
+                NotifyPropertyChanged("PZCDS");
             }
         }
 
         /// <summary>
         /// 月注母液量
         /// </summary>
-        public double YZMYL
+        public decimal YZMYL
         {
             get { return _yzmyl; }
             set
@@ -497,7 +541,7 @@ namespace SBTP.Model
         /// <summary>
         /// 油压
         /// </summary>
-        public double YY
+        public decimal YY
         {
             get { return _yy; }
             set
@@ -510,7 +554,7 @@ namespace SBTP.Model
         /// <summary>
         /// 套压
         /// </summary>
-        public double TY
+        public decimal TY
         {
             get { return _ty; }
             set
@@ -523,7 +567,7 @@ namespace SBTP.Model
         /// <summary>
         /// 流压
         /// </summary>
-        public double LY
+        public decimal LY
         {
             get { return _ly; }
             set
@@ -536,7 +580,7 @@ namespace SBTP.Model
         /// <summary>
         /// 累注母液量
         /// </summary>
-        public double LZMYL
+        public decimal LZMYL
         {
             get { return _lzmyl; }
             set
@@ -549,7 +593,7 @@ namespace SBTP.Model
         /// <summary>
         /// 累计注水量
         /// </summary>
-        public double LJZSL
+        public decimal LJZSL
         {
             get { return _ljzsl; }
             set
@@ -562,7 +606,7 @@ namespace SBTP.Model
         /// <summary>
         /// 累计注聚量
         /// </summary>
-        public double LJZJL
+        public decimal LJZJL
         {
             get { return _ljzjl; }
             set
@@ -575,7 +619,7 @@ namespace SBTP.Model
         /// <summary>
         /// 措施状态（0：措施前，1：措施后）
         /// </summary>
-        public double ZT
+        public decimal ZT
         {
             get { return _zt; }
             set

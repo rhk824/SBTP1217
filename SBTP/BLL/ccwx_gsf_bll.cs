@@ -139,7 +139,7 @@ namespace SBTP.BLL
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                oc_csrq.Add(new tpc_xspm_model() { CSRQ = Unity.ToDateTime(dt.Rows[i]["csrq"]) });
+                oc_csrq.Add(new tpc_xspm_model() { CSRQ = Unity.DateTimeToString(dt.Rows[i]["csrq"], "yyyy-MM-dd") });
             }
         }
 
@@ -157,7 +157,7 @@ namespace SBTP.BLL
             {
                 DB_XSPM_MONTH model = new DB_XSPM_MONTH();
                 model.JH = Unity.ToString(dt.Rows[i]["jh"]);
-                model.CSRQ = Unity.ToDateTime(dt.Rows[i]["csrq"]);
+                model.CSRQ = Unity.DateTimeToString(dt.Rows[i]["csrq"], "yyyy-MM-dd");
                 model.YCZ = Unity.ToString(dt.Rows[i]["ycz"]);
                 model.XCH = Unity.ToString(dt.Rows[i]["xch"]);
                 model.JDDS1 = Unity.ToDouble(dt.Rows[i]["jdds1"]);

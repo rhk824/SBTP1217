@@ -115,7 +115,6 @@
             <Frame x:Name="frame" Grid.Column="1" />
 
             <StackPanel Grid.Row="1" Style="{StaticResource StackPanelStyle}">
-                <!--<Button Style="{StaticResource ButtonStyle1}">更新</Button>-->
                 <Button>全文预览</Button>
                 <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
             </StackPanel>
