@@ -235,9 +235,9 @@ namespace SBTP.BLL
                 list_water.Add(new DB_WATER_WELL_MONTH()
                 {
                     JH = Unity.ToString(dt.Rows[i]["jh"]),
-                    NY = Unity.ToString(dt.Rows[i]["ny"]),
-                    LZMYL = Unity.ToDouble(dt.Rows[i]["lzmyl"]),
-                    LJZSL = Unity.ToDouble(dt.Rows[i]["ljzsl"])
+                    NY = Unity.ToDateTime(dt.Rows[i]["NY"]),
+                    LZMYL = Unity.ToDecimal(dt.Rows[i]["lzmyl"]),
+                    LJZSL = Unity.ToDecimal(dt.Rows[i]["ljzsl"])
                 });
             }
             return list_water;

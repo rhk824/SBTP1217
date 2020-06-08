@@ -379,9 +379,63 @@ namespace SBTP.BLL
             return keyValuePairs;
         }
 
-        public void update021()
+        public bool Update000(out string message)
         {
+            message = string.Empty;
+
+            var oilList = DBContext.GetList_OIL_WELL_MONTH();
+            var waterList = DBContext.GetList_WATER_WELL_MONTH();
+
+            if (!oilList.Any() && !waterList.Any())
+            {
+                message = "油水井井史其中至少一个无数据，检查数据管理";
+                return false;
+            }
+
+            var oil_list = oilList.Where(p => p.NY != null).OrderBy(p => p.NY).ToList();
+            if (!oil_list.Any())
+            {
+                message = "油井井史中未检测到最早时间，检查时间字段";
+                return false;
+            }
+
+            var oil_ny = oil_list.First().NY;
+            var water_list = waterList.Where(p => p.NY == oil_ny).ToList();
+            if (!water_list.Any())
+            {
+                message = "水井井史中未检测到相应的油井井史最早时间，检查时间字段";
+                return false;
+            }
+
+            decimal yzsl = water_list.Sum(p=>p.YZSL);
+            decimal yzmyl = water_list.Sum(p=>p.YZMYL);
+            string cy_message = string.Empty;
+            if (yzsl == 0)
+            {
+                cy_message = "一次采油";
+            }
+            else if (yzmyl == 0 && yzsl > 0)
+            {
+                cy_message = "二次采油";
+            }
+            else if (yzmyl > 0)
+            {
+                cy_message = "三次采油";
+            }
+
+            update_tag("前言_油井井史最早时间", Unity.DateTimeToString(oil_ny, "yyyy年MM月"));
+            update_tag("前言_采油次数", cy_message);
+
+            message = "操作成功";
+            return true;
+        }
+
+        public bool update021(out string message)
+        {
+            message = "";
             this.dt021.Clear();
+
+            var xcsj = DBContext.GetList_XCSJ();
 
             #region 数据源
             DataTable xcsj_data = DbHelperOleDb.Query("select * from oil_well_c").Tables[0];
@@ -444,6 +498,9 @@ namespace SBTP.BLL
             update_tag("酸碱度PH", qkcsdata.Ycph.ToString()); 
             this.Tags = replace_empty_tags(this.Tags);
             #endregion
+
+            message = "操作成功";
+            return true;
         }
 
         public void update022()
@@ -454,6 +511,8 @@ namespace SBTP.BLL
             #region 数据源
             DataTable dt_ow = DbHelperOleDb.Query("select * from oil_well_month a, (select jh, max(ny) as max_ny from oil_well_month group by jh) b where a.ZT=0 and a.jh = b.jh and a.ny = b.max_ny").Tables[0];
             DataTable dt_ww = DbHelperOleDb.Query("select * from water_well_month a, (select jh, max(ny) as max_ny from water_well_month group by jh) b where a.ZT=0 and a.jh = b.jh and a.ny = b.max_ny").Tables[0];
+
+            var yymd = 0.92m;   // Todo: 因 rsl0.dat 暂时无法获得原油密度，暂用设置一个固定值
             #endregion
 
             #region 更新表格 0221
@@ -985,10 +1044,5 @@ namespace SBTP.BLL
         }
 
         #endregion
-
-
-
-
-
     }
 }

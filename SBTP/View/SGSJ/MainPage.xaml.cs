@@ -26,6 +26,16 @@ namespace SBTP.View.SGSJ
             NavigatePage("_000"); //初始导航到“设置”页面
         }
 
+        private void Side_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         #region 方法
 
         /// <summary>

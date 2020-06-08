@@ -175,8 +175,8 @@ namespace SBTP.BLL
                     YCZ = dt.Rows[i]["ycz"].ToString(),
                     XCH = dt.Rows[i]["xch"].ToString(),
                     XCXH = Unity.ToString(dt.Rows[i]["xcxh"]),
-                    SYDS = Unity.ToDouble(dt.Rows[i]["syds"]),
-                    KXD = Unity.ToDouble(dt.Rows[i]["kxd"])
+                    SYDS = Unity.ToDecimal(dt.Rows[i]["syds"]),
+                    KXD = Unity.ToDecimal(dt.Rows[i]["kxd"])
                 });
             }
 

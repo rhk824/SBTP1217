@@ -59,7 +59,7 @@ namespace SBTP.BLL
                 oc_csrq.Add(new tpc_xspm_model()
                 {
                     JH = Unity.ToString(dt.Rows[i]["jh"]),
-                    CSRQ = Unity.ToDateTime(dt.Rows[i]["csrq"]),
+                    CSRQ = Unity.DateTimeToString(dt.Rows[i]["csrq"], "yyyy-MM-dd")
                 });
             }
         }

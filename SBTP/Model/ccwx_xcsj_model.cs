@@ -58,7 +58,7 @@ namespace SBTP.Model
         /// </summary>
         public double kh
         {
-            get { return STL * YXHD; }
+            get { return (double)(STL * YXHD); }
         }
 
         /// <summary>
