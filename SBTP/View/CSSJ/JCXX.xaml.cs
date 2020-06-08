@@ -3,6 +3,7 @@ using SBTP.BLL;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,8 +40,8 @@ namespace SBTP.View.CSSJ
 
         private void Btn_right_Click(object sender, RoutedEventArgs e)
         {
-            List<jcxx_tpcxx_model> list = new List<jcxx_tpcxx_model>();
-            foreach (jcxx_tpcxx_model item in lb_tpc.SelectedItems) list.Add(item);
+            List<string> list = new List<string>();
+            foreach (string item in lb_tpc.SelectedItems) list.Add(item);
             if (list != null) _bll.btn_right(list);
         }
 
@@ -59,11 +60,6 @@ namespace SBTP.View.CSSJ
             _bll.btn_tpjxx();
         }
 
-        private void btn_tpcls_Click(object sender, RoutedEventArgs e)
-        {
-            _bll.btn_tpcls();
-        }
-
         private void btn_jgxx_Click(object sender, RoutedEventArgs e)
         {
             _bll.btn_jgxx();
@@ -79,6 +75,26 @@ namespace SBTP.View.CSSJ
         {
             var mainWindow = Unity.GetAncestor<MainWindow>(this);
             mainWindow.Skip(" ");
+        }
+
+        private void btn_pzfa_Click(object sender, RoutedEventArgs e)
+        {
+            var source = qtls.ItemsSource as ObservableCollection<jcxx_tpcls_model>;
+            ObservableCollection<PZFAModel> pZFAModels = new ObservableCollection<PZFAModel>();
+            source.ToList().ForEach(x =>
+            {
+                pZFAModels.Add(new PZFAModel()
+                {
+                    Jh = x.jh,
+                    Date = WaterWellMonth.getMinDate(x.jh)
+                });
+                pZFAModels.Add(new PZFAModel()
+                {
+                    Jh = x.jh,
+                    Date = WaterWellMonth.getMaxDate(x.jh)
+                });
+            });
+            new PZFA(pZFAModels).ShowDialog();
         }
     }
 }

@@ -39,15 +39,31 @@ namespace SBTP.BLL
         /// 地层综合系数
         /// </summary>
         public double b { get; set; }
+        /// <summary>
+        /// 自定义压降时间
+        /// </summary>
+        public string yjDate { set; get; }
+        public static bool? isChecked { set; get; } = null;
         #endregion
 
         public ccwx_lhf_bll(ccwx_tpjing_model tpjing)
         {
             this.tpjing = tpjing;
             oc_yajiang = new ObservableCollection<ccwx_yajiang_model>();
+            qkcs qkcs = readParam();
+            u = qkcs == null ? 10 : qkcs.Qtgn;
         }
 
         #region 对接视图层（公共接口）
+
+        /// <summary>
+        /// 读取区块参数
+        /// </summary>
+        /// <returns></returns>
+        private qkcs readParam()
+        {
+            return Data.DatHelper.readQkcs();
+        }
 
         /// <summary>
         /// 计算 ln 值
@@ -72,14 +88,11 @@ namespace SBTP.BLL
             try
             {
                 ccwx_tpjing_model model = new ccwx_tpjing_model();
-
                 double kh = calculate_kh(k);
-
                 model.jh = tpjing.jh;
                 model.kh = kh;
                 model.k1 = kh / ((tpjing.yxhd - tpjing.zzhd) * (tpjing.zrfs - tpjing.zzrfs));
                 model.k2 = kh / (tpjing.zzhd * tpjing.zzrfs);
-                model.kxd = 0;
                 model.r1 = calculate_r(model.k1);
                 model.r2 = calculate_r(model.k2);
                 model.calculate_type = 1;
@@ -105,7 +118,7 @@ namespace SBTP.BLL
         private double calculate_kh(double k)
         {
             double Q = calculate_q();
-            return 0.11574 * ((Q * u * b) / (2 * Math.PI * k));
+            return 0.011574 * ((Q * u * b) / (2 * Math.PI * k));
         }
         /// <summary>
         /// 计算孔喉半径
@@ -127,9 +140,9 @@ namespace SBTP.BLL
         private double calculate_q()
         {
             if (string.IsNullOrEmpty(tpjing.csrq)) return 0;
+            if (tpjing.IsCustomize)
+                tpjing.csrq = this.yjDate;
             DateTime time = Convert.ToDateTime(tpjing.csrq);
-            int year = time.Year;
-            int month = time.Month;
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * ");
             sql.Append(" from water_well_month ");
@@ -138,9 +151,9 @@ namespace SBTP.BLL
 
             double yzsl = Unity.ToDouble(dt.Rows[0]["yzsl"]);
             double yzmyl = Unity.ToDouble(dt.Rows[0]["yzmyl"]);
-            double days = DateTime.DaysInMonth(year, month);
+            double days = Unity.ToDouble(dt.Rows[0]["ts"]);
 
-            return (yzsl + yzmyl) / days;
+            return days == 0 ? 0 : (yzsl + yzmyl) / days;
         }
         /// <summary>
         /// 孔隙度的均值

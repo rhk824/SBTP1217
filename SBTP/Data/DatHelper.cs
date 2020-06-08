@@ -99,7 +99,7 @@ namespace SBTP.Data
             inputStr += "**COMPLEMENT GROUP\r\n";
             inputStr += "**PROFILE CONTROL WELL\r\n";
             inputStr += "**LAYER CHOICE\r\n";
-            inputStr += "*TPC // 井号 调剖层 有效厚度顶深 有效厚度 注入分数 增注厚度 增注比例 增注入分数 连通数量 标识 测试日期\r\n";
+            inputStr += "*TPC // 井号 调剖层 有效厚度顶深 有效厚度 注入分数 增注厚度 增注比例 增注入分数 连通数量 方法 测试日期 标识\r\n";
             inputStr += "*JZLT // 水井 油井 层位 砂岩厚度 有效厚度 渗透率\r\n";
             inputStr += "*TPC1 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段\r\n";
             inputStr += "*TPC2 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段\r\n";
@@ -121,7 +121,7 @@ namespace SBTP.Data
         private static void CheckRLS2()
         {
             string inputStr = "**CCWXJS\r\n";
-            inputStr += "*CPERM // 井号 增注入分数 计算方法类别 封堵段渗透率 增注段渗透率 封堵段孔喉半径 增注段孔喉半径\r\n";
+            inputStr += "*CPERM // 井号 层号 有效厚度 注入分数 增注厚度 增注分数 油饱和度 封堵段渗透率 增注段渗透率 封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径 算法标识\r\n";
             inputStr += "/CCWXJS\r\n";
             inputStr += "**NHQXCS 函数名称 a值 b值 c值\r\n";
             inputStr += "/NHQXCS\r\n";
@@ -225,60 +225,6 @@ namespace SBTP.Data
 
             return true;
         }
-
-        //#region 工程配置文件
-        ///// <summary>
-        ///// 写入工程配置文件
-        ///// </summary>
-        ///// <param name="name"></param>
-        ///// <param name="directory"></param>
-        ///// <returns></returns>
-        //public static bool WriteProjectConfig(string name, string directory)
-        //{
-        //    bool isOK = false;
-        //    string path = Environment.CurrentDirectory + @"\Project\project.txt";
-        //    using (FileStream fs = new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-        //    using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
-        //    {
-        //        string inputStr = name + "\t" + directory + "\r\n";
-        //        try
-        //        {
-        //            sw.Write(inputStr);
-        //            isOK = true;
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            System.Windows.MessageBox.Show(e.Message);
-        //            throw e;
-        //        }
-        //    }
-        //    return isOK;
-        //}
-
-        ///// <summary>
-        ///// 判断工程是否存在
-        ///// </summary>
-        ///// <param name="name"></param>
-        ///// <returns></returns>
-        //public static bool IsProjectExist(string name)
-        //{
-        //    string path = Environment.CurrentDirectory + @"\Project\project.txt";
-        //    bool exist = false;
-        //    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
-        //    using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
-        //    {
-        //        //string ReadStr = " ";
-        //        if (fs.Length != 0)
-        //        {
-        //            while (sr.ReadLine().Contains(name))
-        //            {
-        //                return exist = true;
-        //            }
-        //        }
-        //    }
-        //    return exist;
-        //}
-        //#endregion
 
         #region 区块参数
         /// <summary>
@@ -641,7 +587,7 @@ namespace SBTP.Data
                 List<string> newData = new List<string>();
                 newData.Add("*TIME\t" + start + "\t" + end + "\t\r\n");
                 newData.Add("*TPARA\t" + zhhs + "\t" + zhhs_float + "\t" + cbl + "\t" + awi + "\t" + bawi + "\t" + bawi_float + "\r\n");
-                newData.Add("*TWELL // 水井井号 配注管柱 视吸水指数 比视吸水指数 综合含水 超标率 选井结果\r\n");
+                newData.Add("*TWELL // 水井井号 视吸水指数 比视吸水指数 综合含水 超标率 选井结果\r\n");
 
                 foreach (DataRow dr in TPJ_data.Rows)
                 {
@@ -770,7 +716,7 @@ namespace SBTP.Data
             if (drs.Length == 0) return null;
             DataRow dr = drs[0];
             model.JH = dr["JH"].ToString();
-            model.PZGZ = (SBTP.View.JCXZ.PZGZEnum)Enum.Parse(typeof(SBTP.View.JCXZ.PZGZEnum), dr["PZGZ"].ToString());
+            //model.PZGZ = (SBTP.View.JCXZ.PZGZEnum)Enum.Parse(typeof(SBTP.View.JCXZ.PZGZEnum), dr["PZGZ"].ToString());
             model.AWI = double.Parse(dr["AWI"].ToString());
             model.BAWI = double.Parse(dr["BAWI"].ToString());
             model.ZHHS = double.Parse(dr["ZHHS"].ToString());
@@ -818,7 +764,7 @@ namespace SBTP.Data
             {
                 List<string> newLines = new List<string>();
                 //读取RLS1.DAT，提取文件结构，保存在数组
-                int startIndex = lines.IndexOf("*TPC // 井号 调剖层 有效厚度顶深 有效厚度 注入分数 增注厚度 增注比例 增注入分数 连通数量 标识 测试日期");
+                int startIndex = lines.IndexOf("*TPC // 井号 调剖层 有效厚度顶深 有效厚度 注入分数 增注厚度 增注比例 增注入分数 连通数量 方法 测试日期 标识");
                 int endIndex = lines.IndexOf("*JZLT // 水井 油井 层位 砂岩厚度 有效厚度 渗透率");
                 //移除相关数据
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
@@ -837,7 +783,8 @@ namespace SBTP.Data
                     row_str.AppendFormat("{0}\t", item.zzrfs);
                     row_str.AppendFormat("{0}\t", item.ltsl);
                     row_str.AppendFormat("{0}\t", item.bs_string);
-                    row_str.AppendFormat("{0}\r\n", item.csrq);
+                    row_str.AppendFormat("{0}\t", item.csrq);
+                    row_str.AppendFormat("{0}\r\n", item.bs_c);
                     newData.Add(row_str.ToString());
                 }
                 newData.Add("/TPC\r\n");
@@ -992,7 +939,7 @@ namespace SBTP.Data
             {
                 while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
                 {
-                    if (readStr.Contains("*TPC // 井号 调剖层 有效厚度顶深 有效厚度 注入分数 增注厚度 增注比例 增注入分数 连通数量 标识 测试日期"))
+                    if (readStr.Contains("*TPC // 井号 调剖层 有效厚度顶深 有效厚度 注入分数 增注厚度 增注比例 增注入分数 连通数量 方法 测试日期 标识"))
                     {
                         while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
                         {
@@ -1028,7 +975,8 @@ namespace SBTP.Data
                     zzrfs = Unity.ToDouble(newArry[7]),
                     ltsl = Unity.ToInt(newArry[8]),
                     bs_string = Unity.ToString(newArry[9]),
-                    csrq = Unity.ToString(newArry[10])
+                    csrq = Unity.ToString(newArry[10]),
+                    bs_c = Unity.ToString(newArry[11])
                 });
             }
             return list;
@@ -1196,7 +1144,7 @@ namespace SBTP.Data
             CheckRLS2();
             string fileStr = "";
             string readStr = " ";
-            List<string[]> tpc_list = new List<string[]>();
+            //List<string[]> tpc_list = new List<string[]>();
             if (!File.Exists(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT")) { return null; }
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -1233,7 +1181,8 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*CPERM // 井号 增注入分数 计算方法类别 封堵段渗透率 增注段渗透率 封堵段孔喉半径 增注段孔喉半径");
+                int startIndex = lines.IndexOf("*CPERM // 井号 层号 有效厚度 注入分数 增注厚度 增注分数 油饱和度 封堵段渗透率 增注段渗透率 " +
+                    "封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径 算法标识");
                 int endIndex = lines.IndexOf("/CCWXJS");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -1241,12 +1190,19 @@ namespace SBTP.Data
                 foreach (ccwx_tpjing_model item in list)
                 {
                     data_str.AppendFormat("{0}\t", item.jh);
+                    data_str.AppendFormat("{0}\t", item.cd);
+                    data_str.AppendFormat("{0}\t", item.yxhd);
+                    data_str.AppendFormat("{0}\t", item.zrfs);
+                    data_str.AppendFormat("{0}\t", item.zzhd);
                     data_str.AppendFormat("{0}\t", item.zzrfs);
-                    data_str.AppendFormat("{0}\t", item.calculate_type);
+                    data_str.AppendFormat("{0}\t", item.ybhd);                    
                     data_str.AppendFormat("{0}\t", item.k1);
                     data_str.AppendFormat("{0}\t", item.k2);
+                    data_str.AppendFormat("{0}\t", item.fddkxd);
+                    data_str.AppendFormat("{0}\t", item.zzdkxd);
                     data_str.AppendFormat("{0}\t", item.r1);
-                    data_str.AppendFormat("{0}\r\n", item.r2);
+                    data_str.AppendFormat("{0}\t", item.r2);
+                    data_str.AppendFormat("{0}\r\n", item.calculate_type);
                 }
                 newLines.Insert(startIndex + 1, data_str.ToString());
                 sw.Write(string.Join("", newLines.ToArray()));
@@ -1281,7 +1237,6 @@ namespace SBTP.Data
                     }
                 }
             }
-
             //调剖井数据
             if (fileStr.Length == 0) return null;
             string[] table = fileStr.Substring(0, fileStr.Length - 1).Split(',');
@@ -1291,10 +1246,19 @@ namespace SBTP.Data
                 data.Add(new ccwx_tpjing_model
                 {
                     jh = arr[0],
-                    zzrfs = Unity.ToDouble(arr[1]),
-                    calculate_type = Unity.ToInt(arr[2]),
-                    k1 = Unity.ToDouble(arr[3]),
-                    k2 = Unity.ToDouble(arr[4])
+                    cd = arr[1],
+                    yxhd = Unity.ToDouble(arr[2]),
+                    zrfs = Unity.ToDouble(arr[3]),
+                    zzhd = Unity.ToDouble(arr[4]),
+                    zzrfs = Unity.ToDouble(arr[5]),
+                    ybhd = Unity.ToDouble(arr[6]),
+                    k1 = Unity.ToDouble(arr[7]),
+                    k2 = Unity.ToDouble(arr[8]),
+                    fddkxd = Unity.ToDouble(arr[9]),
+                    zzdkxd = Unity.ToDouble(arr[10]),
+                    r1 = Unity.ToDouble(arr[11]),
+                    r2 = Unity.ToDouble(arr[12]),                    
+                    calculate_type = Unity.ToInt(arr[13])
                 });
             }
             return data;
@@ -1317,9 +1281,7 @@ namespace SBTP.Data
                     startIndex = lines.IndexOf("**NHQXCS 函数名称 a值 b值 c值") + 1;
                 else
                     lines.RemoveAt(startIndex);
-                //int startIndex = lines.IndexOf("**NHQXCS 函数名称 a值 b值 c值");
-                //int endIndex = lines.IndexOf("/NHQXCS");
-                //lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
+
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
                 StringBuilder data_str = new StringBuilder();
                 data_str.AppendFormat("{0}\t", function.Name);
@@ -1373,8 +1335,7 @@ namespace SBTP.Data
                 int endIndex = lines.IndexOf("/TPJND");
                 //lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
-                string dataStr = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t\r\n", jh, ytnd, klnd, kllj, ytmc, klmc);
-
+                string dataStr = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\r\n", jh, ytnd, klnd, kllj, ytmc, klmc);
                 newLines.Insert(startIndex + 1, dataStr);
                 sw.Write(string.Join("", newLines.ToArray()));
             }
@@ -1405,12 +1366,12 @@ namespace SBTP.Data
                     }
                 }
             }
-
             //调剖井数据
             if (fileStr.Length == 0) return null;
-            string[] table = fileStr.Substring(0, fileStr.Length - 1).Split(',');
+            string[] table = fileStr.Split(',');
             for (int i = 0; i < table.Length; i++)
             {
+                if (string.IsNullOrWhiteSpace(table[i])) continue;
                 string[] arr = table[i].Split('\t');
                 data.Add(new TPJND_Model
                 {
@@ -1638,7 +1599,7 @@ namespace SBTP.Data
         public static List<string> read_jcxx_tpcjh()
         {
             List<string> list = new List<string>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
+            if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;

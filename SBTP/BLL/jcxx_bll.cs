@@ -5,6 +5,7 @@ using SBTP.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -12,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace SBTP.BLL
 {
-    public class jcxx_bll
+    public class jcxx_bll : INotifyPropertyChanged
     {
-
+        private ObservableCollection<string> oc_tpc_;
         /// <summary>
         /// 调剖层（井号）
         /// </summary>
-        public ObservableCollection<string> oc_tpc { get; set; }
+        public ObservableCollection<string> oc_tpc { get=> oc_tpc_; set { oc_tpc_ = value; NotifyPropertyChanged("oc_tpc"); } } 
         /// <summary>
         /// 调剖井信息
         /// </summary>
@@ -30,32 +31,38 @@ namespace SBTP.BLL
         /// <summary>
         /// 调讴层驱替历史信息
         /// </summary>
-        public ObservableCollection<jcxx_tpcls_model> oc_tpcls { get; set; }
+        public static ObservableCollection<jcxx_tpcls_model> oc_tpcls { get; set; }
         /// <summary>
         /// 费用信息
         /// </summary>
         public ObservableCollection<jcxx_jgxx_model> oc_jgxx { get; set; }
+        #region
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void NotifyPropertyChanged(String info)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+        }
+        #endregion
 
         public jcxx_bll()
         {
-            oc_tpc = new ObservableCollection<string>(Data.DatHelper.read_jcxx_tpcjh());
-            oc_tpcxx = new ObservableCollection<jcxx_tpcxx_model>(Data.DatHelper.read_jcxx_tpcxx());
-            oc_tpjxx = new ObservableCollection<jcxx_tpjxx_model>(Data.DatHelper.read_jcxx_tpjxx());
-            oc_tpcls = new ObservableCollection<jcxx_tpcls_model>(Data.DatHelper.read_jcxx_tpcls());
-            oc_jgxx = new ObservableCollection<jcxx_jgxx_model>(Data.DatHelper.read_jcxx_jgxx());
+            oc_tpc = new ObservableCollection<string>(DatHelper.read_jcxx_tpcjh());
+            oc_tpcxx = new ObservableCollection<jcxx_tpcxx_model>(DatHelper.read_jcxx_tpcxx());
+            oc_tpjxx = new ObservableCollection<jcxx_tpjxx_model>(DatHelper.read_jcxx_tpjxx());
+            oc_tpcls = new ObservableCollection<jcxx_tpcls_model>(DatHelper.read_jcxx_tpcls());
+            oc_jgxx = new ObservableCollection<jcxx_jgxx_model>(DatHelper.read_jcxx_jgxx());
 
             if (oc_tpc.Count == 0 && oc_tpcxx.Count > 0)
             {
                 return;
             }
-
-            if (oc_tpc.Count == 0)
+            else if (oc_tpc.Count == 0)
             {
-                List<tpc_model> list_tpc = Data.DatHelper.read_tpc();
+                List<ccwx_tpjing_model> list_tpc = DatHelper.read_ccwx();
 
                 if (list_tpc != null)
                 {
-                    foreach (tpc_model item in list_tpc)
+                    foreach (ccwx_tpjing_model item in list_tpc)
                     {
                         oc_tpc.Add(item.jh);
                     }
@@ -63,20 +70,23 @@ namespace SBTP.BLL
             }
         }
 
+
+
+
         #region 对接视图层（公共接口）
 
         /// <summary>
         /// “→”按钮
         /// </summary>
         /// <param name="list"></param>
-        public void btn_right(List<jcxx_tpcxx_model> list)
+        public void btn_right(List<string> list)
         {
-            foreach (jcxx_tpcxx_model item in list)
+            foreach (string item in list)
             {
-                oc_tpc.Remove(item.jh);
-                oc_tpcxx.Add(new jcxx_tpcxx_model() { jh = item.jh });
-                oc_tpjxx.Add(new jcxx_tpjxx_model() { jh = item.jh });
-                oc_tpcls.Add(new jcxx_tpcls_model() { jh = item.jh });
+                oc_tpc.Remove(item);
+                oc_tpcxx.Add(new jcxx_tpcxx_model() { jh = item });
+                oc_tpjxx.Add(new jcxx_tpjxx_model() { jh = item });
+                oc_tpcls.Add(new jcxx_tpcls_model() { jh = item });
             }
         }
 
@@ -105,8 +115,8 @@ namespace SBTP.BLL
         public bool btn_tpcxx(out string message)
         {
             message = string.Empty;
-            List<tpc_model> list_tpc = Data.DatHelper.read_tpc();
-            List<ccwx_tpjing_model> list_ccwx = Data.DatHelper.read_ccwx();
+            List<tpc_model> list_tpc = DatHelper.read_tpc();
+            List<ccwx_tpjing_model> list_ccwx = DatHelper.read_ccwx();
             //if (list_tpc == null || list_ccwx == null) return;
             if (list_ccwx == null)
             {
@@ -120,11 +130,6 @@ namespace SBTP.BLL
                 {
                     if (item.jh == tpc.jh)
                     {
-                        item.cd = tpc.cd;
-                        item.yxhd = tpc.yxhd;
-                        item.zrfs = tpc.zrfs;
-                        item.zzhd = tpc.zzhd;
-                        item.zzrfs = tpc.zzrfs;
                         item.ltfs = tpc.ltsl;
                     }
                 }
@@ -133,8 +138,18 @@ namespace SBTP.BLL
                 {
                     if (item.jh == ccwx.jh)
                     {
+                        item.cd = ccwx.cd;
+                        item.yxhd = ccwx.yxhd;
+                        item.ybhd = ccwx.ybhd;
+                        item.zrfs = ccwx.zrfs;
+                        item.zzhd = ccwx.zzhd;
+                        item.zzrfs = ccwx.zzrfs;
                         item.k1 = ccwx.k1;
                         item.k2 = ccwx.k2;
+                        item.R1 = ccwx.r1;
+                        item.R2 = ccwx.r2;
+                        item.Fkxd = ccwx.fddkxd;
+                        item.Zkxd = ccwx.zzdkxd;
                     }
                 }
             }
@@ -163,30 +178,6 @@ namespace SBTP.BLL
                         item.klmc = tpjnd.KLMC;
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// “提取”按钮（调剖层历史）
-        /// </summary>
-        public void btn_tpcls()
-        {
-            string[] tpjpara = Data.DatHelper.TPJParaRead();
-            DateTime t1 = DateTime.Parse(tpjpara[1].ToString());
-            DateTime t2 = DateTime.Parse(tpjpara[2].ToString());
-            TimeSpan ts = t2.Subtract(t1); // 求评价时间范围的总天数
-
-            foreach (jcxx_tpcls_model item in oc_tpcls)
-            {
-                List<DB_WATER_WELL_MONTH> list_water = get_water_month(item.jh, t1, t2);
-                DB_WATER_WELL_MONTH t1_model = list_water.First();
-                DB_WATER_WELL_MONTH t2_model = list_water.Last();
-                var dqrzl = ((t2_model.LZMYL + t2_model.LJZSL - t1_model.LZMYL - t1_model.LJZSL) * 10000) / ts.Days;
-                var ljzjl = t2_model.LZMYL + t2_model.LJZSL;
-                item.dqrzl = (double)dqrzl;
-                item.ysybhd = 0;
-                item.ljzsl = (double)t2_model.LJZSL;
-                item.ljzjl = (double)ljzjl;
             }
         }
 

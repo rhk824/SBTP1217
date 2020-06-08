@@ -76,7 +76,7 @@ namespace SBTP.BLL
 
         public static Waterwell_monthModel Select(string sjh, string yearmonth)
         {
-            string sql = "Select * from WATER_WELL_MONTH Where JH=@JH And NY=@NY";
+            string sql = "Select * from WATER_WELL_MONTH Where JH=@JH And NY=@NY and zt=0";
             OleDbParameter[] parameters = new OleDbParameter[2];
             parameters[0] = new OleDbParameter("@JH", sjh);
             parameters[1] = new OleDbParameter("@NY", yearmonth);
@@ -92,19 +92,30 @@ namespace SBTP.BLL
             reader.Close();
             reader.Dispose();
             return data;
-
         }
 
         public static string getMinDate()
         {
-            string sql = "Select Min(NY) from WATER_WELL_MONTH";
+            string sql = "Select Min(NY) from WATER_WELL_MONTH where zt=0";
             return DbHelperOleDb.GetSingle(sql).ToString();
         }
 
         public static string getMaxDate()
         {
-            string sql = "Select Max(NY) from WATER_WELL_MONTH";
+            string sql = "Select Max(NY) from WATER_WELL_MONTH where zt=0";
             return DbHelperOleDb.GetSingle(sql).ToString();
         }
+        public static string getMinDate(string jh)
+        {
+            string sql = "Select Min(NY) from WATER_WELL_MONTH where zt=0 and jh='" + jh + "'";
+            return DbHelperOleDb.GetSingle(sql).ToString();
+        }
+
+        public static string getMaxDate(string jh)
+        {
+            string sql = "Select Max(NY) from WATER_WELL_MONTH where zt=0 and jh='" + jh + "'";
+            return DbHelperOleDb.GetSingle(sql).ToString();
+        }
+
     }
 }

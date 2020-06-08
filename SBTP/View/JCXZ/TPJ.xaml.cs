@@ -13,7 +13,7 @@ using System.Windows.Threading;
 
 namespace SBTP.View.JCXZ
 {
-    public enum PZGZEnum { 普通水嘴 = 1, 偏心水嘴, 同心水嘴, 笼统注入井 };
+    //public enum PZGZEnum { 普通水嘴 = 1, 偏心水嘴, 同心水嘴, 笼统注入井 };
 
     /// <summary>
     /// TPJ.xaml 的交互逻辑
@@ -95,7 +95,7 @@ namespace SBTP.View.JCXZ
             {
                 TPJData tPJData = new TPJData();
                 tPJData.JH = dr["JH"].ToString();
-                tPJData.PZGZ = (PZGZEnum)Enum.Parse(typeof(PZGZEnum), dr["PZGZ"].ToString());
+                //tPJData.PZGZ = (PZGZEnum)Enum.Parse(typeof(PZGZEnum), dr["PZGZ"].ToString());
                 tPJData.AWI = double.Parse(dr["AWI"].ToString());
                 tPJData.BAWI = double.Parse(dr["BAWI"].ToString());
                 tPJData.ZHHS = double.Parse(dr["ZHHS"].ToString());
@@ -180,7 +180,6 @@ namespace SBTP.View.JCXZ
                 well_list.Add("'" + oil_well_group.Split(',')[i] + "'");
             }
             StringBuilder sqlStr = new StringBuilder();
-            //sqlStr.Append("select JH,[YEAR],YCYL,YCSL from OIL_WELL_MONTH where JH IN (" + string.Join(",", well_list.ToArray()) + ") AND [YEAR]<='" + end + "' AND [YEAR]>='" + start + "'");
             DataTable dt = new DataTable();
             dt.Columns.Add("JH", Type.GetType("System.String"));
             dt.Columns.Add("NY", Type.GetType("System.String"));
@@ -193,7 +192,6 @@ namespace SBTP.View.JCXZ
             {
                 grouptable.ImportRow(row);
             }
-            //DataTable grouptable = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             group = grouptable;
             DataView newtable_view = grouptable.DefaultView;
             DataTable distinctNY = newtable_view.ToTable(true, "NY");
@@ -260,24 +258,21 @@ namespace SBTP.View.JCXZ
         {
             StringBuilder sqlStr = new StringBuilder();
             //水井井史查询
-            sqlStr.Append("select JH,NY,iif( IsNull(YY), 0, YY ) as YY_,TS,YZSL,PZCDS from WATER_WELL_MONTH where ZT=0 and PZCDS='1' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0");
-            DataTable pzcds_eq1 = new DataTable("PZCDS1");
-            pzcds_eq1 = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
-            ltzrj = pzcds_eq1;
+            sqlStr.Append("select JH,NY,iif( IsNull(YY), 0, YY ) as YY_,TS,YZSL,PZCDS from WATER_WELL_MONTH " +
+                "where ZT=0 and PZCDS='1' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0");
+            ltzrj = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             sqlStr.Clear();
             //分注井水井井史联查
-            sqlStr.Append("select a.JH,a.NY,b.TS,a.CDXH,a.CDYZMYL,a.CDYZSL,a.CDSZ,b.YY,1 as SZLX from FZJ_MONTH a left join WATER_WELL_MONTH b ON a.JH=b.JH AND a.NY=b.NY where a.ZT=0 and b.PZCDS<>'1' AND DateDiff('m',a.NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',a.NY)>=0 ");
-            DataTable pzcds_gt1 = new DataTable("PZCDS2");
-            pzcds_gt1 = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
-            fzj = pzcds_gt1;
+            sqlStr.Append("select a.JH,a.NY,b.TS,a.CDXH,a.CDYZMYL,a.CDYZSL,a.CDSZ,b.YY,b.ZSFS from FZJ_MONTH a left join WATER_WELL_MONTH b ON a.JH=b.JH AND a.NY=b.NY " +
+                "where a.ZT=0 and b.PZCDS<>'1' AND DateDiff('m',a.NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',a.NY)>=0 ");
+            fzj = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
 
             result = new DataTable("result");
             result.Columns.Add("JH", Type.GetType("System.String"));
             result.Columns.Add("NY", Type.GetType("System.String"));
             result.Columns.Add("AWI", Type.GetType("System.Double"));
             result.Columns.Add("TS", Type.GetType("System.Double"));
-            result.Columns.Add("SZLX", Type.GetType("System.Int16"));
-
+            //result.Columns.Add("SZLX", Type.GetType("System.Int16"));
         }
 
         /// <summary>
@@ -285,6 +280,11 @@ namespace SBTP.View.JCXZ
         /// </summary>
         private void Ltzrj_Awi_cal()
         {
+            if (ltzrj == null)
+            {
+                MessageBox.Show("无数据源！");
+                return;
+            }
             //PZCDS=1 的情况
             foreach (DataRow dr in ltzrj.Rows)
             {
@@ -311,6 +311,12 @@ namespace SBTP.View.JCXZ
         /// </summary>
         private void Fzj_Awi_cal()
         {
+            if (fzj == null)
+            {
+                MessageBox.Show("无数据源！");
+                return;
+            }
+            //默认类型为0  普通水嘴
             double coefficient = 5.585695;
             DataView dv = fzj.DefaultView;
             DataTable distinctJH = dv.ToTable(true, "JH");
@@ -330,28 +336,41 @@ namespace SBTP.View.JCXZ
                         dr_["TS"] = double.Parse(drr[0]["TS"].ToString());
                         for (int i = 0; i < drr.Length; i++)
                         {
-                            double Q = drr[i]["TS"].ToString().Equals("0") ? 0 : (double.Parse(drr[i]["CDYZMYL"].ToString()) + double.Parse(drr[i]["CDYZSL"].ToString())) / double.Parse(drr[i]["TS"].ToString());
+                            //层段月注水量为空或者0时，该井本月不参与计算
+                            if (drr[i]["CDYZSL"] == null || double.Parse(drr[i]["CDYZSL"].ToString()) == 0) continue;
+                            //层段月注水量
+                            double cdyzsl = double.Parse(drr[i]["CDYZSL"].ToString());
+                            double Q = drr[i]["TS"].ToString().Equals("0") ? 0 : (double.Parse(drr[i]["CDYZMYL"].ToString()) + cdyzsl) / double.Parse(drr[i]["TS"].ToString());
                             double yy = 0;
-                            int szlx = int.Parse(drr[i]["SZLX"].ToString());
-                            switch (szlx)
-                            {
-                                case 2:
-                                    coefficient = 2.456877; break;
-                                case 3:
-                                    coefficient = 3.474024; break;
-                            }
-                            var cdsz_ = drr[i]["CDSZ"];
-                            if (cdsz_ == null)
-                                cdsz_ = 0;
-                            else
-                                cdsz_ = cdsz_.ToString().Contains("Φ") ? double.Parse(drr[i]["CDSZ"].ToString().Replace("Φ", "").Trim()) : double.Parse(drr[i]["CDSZ"].ToString());
-                            double cdsz = double.Parse(cdsz_.ToString());
                             if (!string.IsNullOrEmpty(drr[i]["YY"].ToString())) { yy = double.Parse(drr[i]["YY"].ToString()); }
-                            double awi = Q / (yy - Math.Pow((Q / (coefficient * Math.Pow(cdsz, 2))), 2));
+                            //水嘴类型 0普通12偏心11同心
+                            string zsfs = drr[i]["ZSFS"].ToString().Trim();
+                            if (string.IsNullOrWhiteSpace(zsfs)) continue;
+                            if (!zsfs.Contains("0") && zsfs.Contains("2"))
+                                coefficient = 2.456877;
+                            if (!zsfs.Contains("0") && !zsfs.Contains("2"))
+                                coefficient = 3.474024;
+
+                            var cdsz_ = drr[i]["CDSZ"];
+                            //水嘴压力损耗,默认无水嘴
+                            double sz_loss = 0;
+                            if (cdsz_ == null)
+                                cdsz_ = string.Empty;
+                            else if (cdsz_.ToString().IndexOf("k", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                cdsz_.ToString().IndexOf("g", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                cdsz_.ToString().IndexOf("d", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                cdsz_.ToString().IndexOf("q", StringComparison.OrdinalIgnoreCase) >= 0)
+                                cdsz_ = string.Empty;
+                            else
+                                cdsz_ = Unity.KeepNumber(cdsz_.ToString());
+                            //根据水嘴类型计算压力损耗
+                            if (!string.IsNullOrEmpty(cdsz_.ToString()) && !cdsz_.ToString().Equals("0"))
+                                sz_loss = Math.Pow(Q / (coefficient * Math.Pow(double.Parse(cdsz_.ToString()), 2)), 2);
+                            double awi = Q / (yy - sz_loss);
                             awi_sum += double.IsNaN(awi) ? 0 : awi;
                         }
                         dr_["AWI"] = awi_sum;
-                        dr_["SZLX"] = drr[0]["SZLX"];
+                        //dr_["SZLX"] = drr[0]["SZLX"];
                         result.Rows.Add(dr_);
                     }
                     else
@@ -392,7 +411,6 @@ namespace SBTP.View.JCXZ
             DataTable grid_data = new DataTable("grid_data");
             grid_data.Columns.Add("JH", Type.GetType("System.String"));
             grid_data.Columns.Add("BAWI", Type.GetType("System.Double"));
-
 
             if (ws_well_group.Rows.Count != 0)
             {
@@ -441,7 +459,7 @@ namespace SBTP.View.JCXZ
         {
             if (string.IsNullOrWhiteSpace(StartTime.Text) || string.IsNullOrWhiteSpace(EndTime.Text)) { MessageBox.Show("请输入起止时间！"); return; }
             if (DateTime.Compare(DateTime.Parse(StartTime.Text), DateTime.Parse(EndTime.Text)) > 0) { MessageBox.Show("开始时间不能大于结束时间！"); return; }
-            if (string.IsNullOrWhiteSpace(ZHHS.Text) || string.IsNullOrWhiteSpace(SXSZS.Text)) { MessageBox.Show("请先进行均值计算！"); return; }
+            if (result == null) { MessageBox.Show("请先进行均值计算！"); return; }
             datacollection = new ObservableCollection<TPJData>();
 
             StringBuilder sqlStr = new StringBuilder();
@@ -477,16 +495,9 @@ namespace SBTP.View.JCXZ
                         double b_awi = (awi_sum / length) / double.Parse(yxhd_);
                         dm.BAWI = b_awi;
                     }
-
                     dm.JH = dr[0].ToString();
                     dm.AWI = awi_sum / length;
                     dm.ZHHS = WellGroup_MoistureContent_E(oilwellstr);
-
-                    if (!string.IsNullOrWhiteSpace(well_months[0]["SZLX"].ToString()))
-                    {
-                        enumValue = int.Parse(well_months[0]["SZLX"].ToString());
-                    }
-                    dm.PZGZ = (PZGZEnum)Enum.Parse(typeof(PZGZEnum), Enum.GetName(typeof(PZGZEnum), enumValue));
                     List<double> hs_list = OilWellMoistureContentCal(group, oilwellstr);
                     List<double> over_hs_list = new List<double>();
                     hs_list.ForEach(x =>
@@ -503,7 +514,6 @@ namespace SBTP.View.JCXZ
 
                     datacollection.Add(dm);
                 }
-
                 this.dataGrid.DataContext = datacollection;
                 Dispatcher.BeginInvoke(DispatcherPriority.ApplicationIdle, new Action(ChangeColor));
             }
@@ -530,28 +540,27 @@ namespace SBTP.View.JCXZ
                 //超标率 浅灰
                 if (cbl >= double.Parse(this.CBL.Text))
                 {
-                    TextBlock current_cell = dataGrid.Columns[5].GetCellContent(dataGrid.Items[i]) as TextBlock;
+                    TextBlock current_cell = dataGrid.Columns[4].GetCellContent(dataGrid.Items[i]) as TextBlock;
                     current_cell.Background = new SolidColorBrush(Colors.LightGray);
                 }
                 //视吸水指数 浅蓝
                 if (awi >= double.Parse(this.SXSZS.Text))
                 {
-                    TextBlock current_cell = dataGrid.Columns[2].GetCellContent(dataGrid.Items[i]) as TextBlock;
+                    TextBlock current_cell = dataGrid.Columns[1].GetCellContent(dataGrid.Items[i]) as TextBlock;
                     current_cell.Background = new SolidColorBrush(Colors.LightBlue);
                 }
                 //含水量 橙色
                 if (hsl >= double.Parse(this.ZHHS.Text) + double.Parse(this.Floating_Value.Text))
                 {
-                    TextBlock current_cell = dataGrid.Columns[4].GetCellContent(dataGrid.Items[i]) as TextBlock;
+                    TextBlock current_cell = dataGrid.Columns[3].GetCellContent(dataGrid.Items[i]) as TextBlock;
                     current_cell.Background = new SolidColorBrush(Colors.Orange);
                 }
                 //比视吸水指数 浅绿
                 if (bawi >= double.Parse(this.BAWI.Text) + double.Parse(this.Floating_Value1.Text))
                 {
-                    TextBlock current_cell = dataGrid.Columns[3].GetCellContent(dataGrid.Items[i]) as TextBlock;
+                    TextBlock current_cell = dataGrid.Columns[2].GetCellContent(dataGrid.Items[i]) as TextBlock;
                     current_cell.Background = new SolidColorBrush(Colors.LightGreen);
                 }
-
             }
         }
 
@@ -569,10 +578,9 @@ namespace SBTP.View.JCXZ
             for (int i = 0; i < this.dataGrid.Items.Count; i++)
             {
                 DataRow dr = tpj_table.NewRow();
-                TPJData dm = dataGrid.Items[i] as TPJData;
-                if (dm == null) continue;
+                if (!(dataGrid.Items[i] is TPJData dm)) continue;
                 dr["JH"] = dm.JH;
-                dr["PZGZ"] = dm.PZGZ;
+                //dr["PZGZ"] = dm.PZGZ;
                 dr["AWI"] = dm.AWI;
                 dr["BAWI"] = dm.BAWI;
                 dr["ZHHS"] = dm.ZHHS;
@@ -587,70 +595,34 @@ namespace SBTP.View.JCXZ
         }
 
         /// <summary>
-        /// 含水量等值图显示
+        /// 图像生成
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HSL_Click(object sender, RoutedEventArgs e)
+        private void GenerateClick(object sender, RoutedEventArgs e)
         {
             iso.Children.Clear();
+            string name = (e.Source as Button).Content.ToString();
             List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPoints = new List<KeyValuePair<string, KeyValuePair<double, Point>>>();
             for (int i = 0; i < this.dataGrid.Items.Count; i++)
             {
-                TPJData dm = dataGrid.Items[i] as TPJData;
-                if (dm == null) continue;
+                if (!(dataGrid.Items[i] is TPJData dm)) continue;
                 string zb_x = wells_ZB.Select("JH='" + dm.JH.ToString() + "'")[0]["ZB_X"].ToString();
                 string zb_y = wells_ZB.Select("JH='" + dm.JH.ToString() + "'")[0]["ZB_Y"].ToString();
-                targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(dm.JH.ToString(), new KeyValuePair<double, Point>(double.Parse(dm.ZHHS.ToString("0.###")), new Point(double.Parse(zb_x), double.Parse(zb_y)))));
-
+                targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(dm.JH.ToString(),
+                    new KeyValuePair<double, Point>(double.Parse(dm.AWI.ToString("0.###")),
+                    new Point(double.Parse(zb_x), double.Parse(zb_y)))));
             }
-
-            Graphic.Isogram isogram = new Graphic.Isogram("含水量");
-            isogram.TargetPoints = targetPoints;
-            iso.Children.Add(isogram as UIElement);
-        }
-
-        /// <summary>
-        /// 视吸水指数等值图显示
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void XSZS_Click(object sender, RoutedEventArgs e)
-        {
-            iso.Children.Clear();
-            List<KeyValuePair<string, KeyValuePair<double, Point>>> targetPoints = new List<KeyValuePair<string, KeyValuePair<double, Point>>>();
-            for (int i = 0; i < this.dataGrid.Items.Count; i++)
+            Graphic.Isogram isogram = new Graphic.Isogram(name, 25)
             {
-                TPJData dm = dataGrid.Items[i] as TPJData;
-                if (dm == null) continue;
-                string zb_x = wells_ZB.Select("JH='" + dm.JH.ToString() + "'")[0]["ZB_X"].ToString();
-                string zb_y = wells_ZB.Select("JH='" + dm.JH.ToString() + "'")[0]["ZB_Y"].ToString();
-                targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(dm.JH.ToString(), new KeyValuePair<double, Point>(double.Parse(dm.AWI.ToString("0.###")), new Point(double.Parse(zb_x), double.Parse(zb_y)))));
-
-            }
-            Graphic.Isogram isogram = new Graphic.Isogram("视吸水指数");
-            isogram.TargetPoints = targetPoints;
-            iso.Children.Add(isogram as UIElement);
-        }
-
-        private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {
-            int column_index = e.Column.DisplayIndex;
-            if (column_index == 1)
-            {
-                //下拉菜单获取配注管柱类型
-                ComboBox current_cell = dataGrid.Columns[1].GetCellContent(e.Row) as ComboBox;
-                string szlx = current_cell.Text;
-                //获取井号
-                TextBlock well_cell = dataGrid.Columns[0].GetCellContent(e.Row) as TextBlock;
-                string well_name = well_cell.Text;
-                foreach (DataRow dr in fzj.Rows)
-                {
-                    if (dr["JH"].ToString().Equals(well_name.Trim()))
-                        dr["SZLX"] = (PZGZEnum)Enum.Parse(typeof(PZGZEnum), szlx);
-                }
-            }
-
+                TargetPoints = targetPoints
+            };
+            scaleTimes.DataContext = isogram;
+            KeyValuePair<double, double> range = isogram.GraphicGeneration(out double step);
+            value_min.Content = range.Value;
+            value_max.Content = range.Key;
+            iso_step.Content = Math.Round(step, 5);
+            iso.Children.Add(isogram);
         }
 
         private void btn_next_Click(object sender, RoutedEventArgs e)

@@ -4,6 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SBTP.View.TPJ"
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:date="clr-namespace:SBTP.View.JCXZ"      
       xmlns:wfc="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
       mc:Ignorable="d" Background="#eee"
       Title="CCWX_LHF">
@@ -40,16 +42,24 @@
                 </DataGrid>
 
                 <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Top">
+                    <CheckBox Name="isEnabled" IsChecked="{Binding isChecked}">
+                        <CheckBox.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="自定义压降测试日期"/>
+                                <DatePicker Name="yjDate" SelectedDate="{x:Static sys:DateTime.Now}" date:DatePickerCalendar.IsMonthYear="true" date:DatePickerDateFormat.DateFormat="yyyy/MM" IsEnabled="{Binding ElementName=isEnabled,Path=IsChecked,Mode=OneWay}"/>
+                            </StackPanel>
+                        </CheckBox.Content>
+                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="10">时间(h)</TextBlock>
                         <TextBox Name="tb_t" Text="3600" Width="40" Height="20" FontSize="10"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="10">粘度(mPa·s)</TextBlock>
-                        <TextBox Name="tb_u" Text="10" Width="40" Height="20" FontSize="10"/>
+                        <TextBox Name="tb_u" Text="{Binding u}" Width="40" Height="20" FontSize="10"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontSize="10">地层综合系数</TextBlock>
+                        <TextBlock FontSize="10">体积系数</TextBlock>
                         <TextBox Name="tb_b" Text="1" Width="40" Height="20" FontSize="10"/>
                     </StackPanel>
                 </StackPanel>
@@ -63,7 +73,7 @@
 
         <GroupBox Name="gb_right" Grid.Column="1" Header="** 井 压降曲线图">
             <WindowsFormsHost Name="wfh">
-                <wfc:Chart Click="Chart_Click"/>
+                <wfc:Chart/>
             </WindowsFormsHost>
         </GroupBox>
         

@@ -1,0 +1,67 @@
+﻿<Window x:Class="SBTP.View.CSSJ.PZFA"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:core="clr-namespace:System;assembly=mscorlib"
+        xmlns:calender="clr-namespace:SBTP.View.JCXZ"
+        xmlns:local="clr-namespace:SBTP.View.CSSJ"
+        mc:Ignorable="d"
+        Title="配注方案" Height="400" Width="500" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="LXEnumKey" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+                <ObjectDataProvider.MethodParameters>               
+                    <x:Type Type="local:LXEnum"/>  
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate x:Key="fasj">
+                <TextBlock Text="{Binding Path= Date, StringFormat=\{0:d\}}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
+            </DataTemplate>
+            <DataTemplate x:Key="fasjForEdite">
+                <DatePicker Text="{Binding Date, Mode=TwoWay,ValidatesOnExceptions=true, NotifyOnValidationError=true,UpdateSourceTrigger=PropertyChanged}" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
+            </DataTemplate>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="自定义评价起止时间"/>
+                <CheckBox Name="isEnabled" IsChecked="False">
+                    <CheckBox.Content>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <DatePicker Name="startDate" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM" IsEnabled="{Binding ElementName=isEnabled,Path=IsChecked,Mode=OneWay}"/>
+                            <TextBlock Text="-"/>
+                            <DatePicker Name="endDate" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM" IsEnabled="{Binding ElementName=isEnabled,Path=IsChecked,Mode=OneWay}"/>
+                        </StackPanel>
+                    </CheckBox.Content>
+                </CheckBox>
+            </StackPanel>
+            <DataGrid Name="pzfa_grid" ItemsSource="{Binding DataSource}" LoadingRow="pzfa_grid_LoadingRow" CanUserSortColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="井号" IsReadOnly="True" Binding="{Binding Jh}"/>
+                    <DataGridTemplateColumn Header="方案时间" CellTemplate="{StaticResource fasj}" CellEditingTemplate="{StaticResource fasjForEdite}"/>
+                    <DataGridTextColumn Header="配注层段号" Binding="{Binding Pzcdh}"/>
+                    <DataGridTextColumn Header="分注比例" Binding="{Binding Blxs}"/>
+                    <DataGridComboBoxColumn Header="驱油方式" SelectedItemBinding="{Binding Qyfs}" ItemsSource="{Binding Source={StaticResource LXEnumKey}}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        
+        <GroupBox Grid.Row="1" Header="操作">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Name="save_btn" Content="保存" Click="save_btn_Click"/>
+                <Button Name="quit_btn" Content="退出" Click="quit_btn_Click"/>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</Window>

@@ -61,8 +61,8 @@ namespace SBTP.View.TPJ
                 DataPoint point = new DataPoint
                 {
                     XValue = i,
-                    YValues = new double[] { (double)list[i].STL },
-                    AxisLabel = string.Format("{0}{1}{2}({3})", list[i].YCZ, list[i].XCH, list[i].XCXH, list[i].YXHD),
+                    YValues = new double[] { list[i].STL },
+                    AxisLabel = string.Format("{0}_{1}_{2}({3})", list[i].YCZ, list[i].XCH, list[i].XCXH, list[i].YXHD),
                     Label = list[i].STL.ToString()
                 };
                 series.Points.Add(point);

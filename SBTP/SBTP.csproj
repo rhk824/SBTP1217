@@ -141,6 +141,7 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Controls.DataVisualization.Toolkit, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Controls.DataVisualization.Toolkit.4.0.0.0\lib\net40-Client\System.Windows.Controls.DataVisualization.Toolkit.dll</HintPath>
@@ -182,7 +183,6 @@
     <Compile Include="BLL\FzjMonth.cs" />
     <Compile Include="BLL\jcxx_bll.cs" />
     <Compile Include="BLL\Loading.cs" />
-    <Compile Include="BLL\NewDataPoint.cs" />
     <Compile Include="BLL\OilWellC.cs" />
     <Compile Include="BLL\OilWellMonth.cs" />
     <Compile Include="BLL\RoundButton.cs" />
@@ -255,6 +255,9 @@
     </Compile>
     <Compile Include="View\CSSJ\KSJS.xaml.cs">
       <DependentUpon>KSJS.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CSSJ\PZFA.xaml.cs">
+      <DependentUpon>PZFA.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\CSSJ\TPYLYH.xaml.cs">
       <DependentUpon>TPYLYH.xaml</DependentUpon>
@@ -409,6 +412,9 @@
     <Compile Include="View\TPJ\CCWX_LHF.xaml.cs">
       <DependentUpon>CCWX_LHF.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\TPJ\ChooseWell.xaml.cs">
+      <DependentUpon>ChooseWell.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TPJ\LXXZ.xaml.cs">
       <DependentUpon>LXXZ.xaml</DependentUpon>
     </Compile>
@@ -486,6 +492,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\CSSJ\KSJS.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CSSJ\PZFA.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -692,6 +702,10 @@
     <Page Include="View\TPJ\CCWX_LHF.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\TPJ\ChooseWell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\TPJ\LXXZ.xaml">
       <SubType>Designer</SubType>

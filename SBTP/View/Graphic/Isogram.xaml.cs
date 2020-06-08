@@ -74,10 +74,7 @@ namespace SBTP.View.Graphic
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(String info)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
         }
         #endregion
         private Path HighValues { set; get; } = CreatPath(Brushes.White);
@@ -285,17 +282,17 @@ namespace SBTP.View.Graphic
         {
             Point scaleCenter = e.GetPosition(outside);
             //放缩抽稀的倍数
-            int scaleTimes = 4;
+            int scaleTimes = 8;
             //放缩抽稀到无图层时的总倍数
             int totalScaleTimes = this.ValuesCount * scaleTimes;
-            
+
             if (e.Delta < 0)
             {
                 scaleLevel /= 1.08;
                 this.ScaleTimes = (int)(Math.Log10(scaleLevel) / Math.Log10(1.08));
                 if (1 > scaleLevel && scaleLevel >= Math.Pow(1.08, -totalScaleTimes))
                 {
-                    if (ScaleTimes % 4 == 0)
+                    if (ScaleTimes % scaleTimes == 0 && ScaleTimes != 0)
                     {
                         if (DistinctHightValues.Count > 0)
                         {
@@ -330,7 +327,7 @@ namespace SBTP.View.Graphic
                 this.ScaleTimes = (int)(Math.Log10(scaleLevel) / Math.Log10(1.08));
                 if (1 > scaleLevel && scaleLevel >= Math.Pow(1.08, -totalScaleTimes))
                 {
-                    if (ScaleTimes % 4 == 0)
+                    if (ScaleTimes % scaleTimes == 0 && ScaleTimes != 0)
                     {
                         if (tempHigh.Count > 0)
                         {

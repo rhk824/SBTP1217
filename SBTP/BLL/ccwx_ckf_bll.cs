@@ -24,6 +24,7 @@ namespace SBTP.BLL
         /// 小层数据
         /// </summary>
         public ObservableCollection<ccwx_xcsj_model> oc_xcsj { get; set; }
+        public static bool? isCalculateStl { set; get; } = true;
 
         public ccwx_ckf_bll(ccwx_tpjing_model tpjing)
         {
@@ -53,9 +54,9 @@ namespace SBTP.BLL
                 return new ccwx_tpjing_model()
                 {
                     jh = tpjing.jh,
-                    k1 = calculate_stl(list_fdd), // 计算 k1
-                    k2 = calculate_stl(list_zzd), // 计算 k2
-                    ybhd = Math.Round(calculate_ybhd(list_fddAndzzd_hybhd),3),//计算油饱和度
+                    k1 = isCalculateStl == true ? calculate_stl(list_fdd) : calculate_k(list_fdd), // 计算 k1
+                    k2 = isCalculateStl == true ? calculate_stl(list_zzd) : calculate_k(list_zzd), // 计算 k2
+                    ybhd = Math.Round(calculate_ybhd(list_fddAndzzd_hybhd), 3),//计算油饱和度
                     calculate_type = 3
                 };
             }
@@ -114,6 +115,31 @@ namespace SBTP.BLL
             kd = (double)list.Sum(d => d.YXHD); // kd = h1 + h2 + ... + hn
             k = ku / kd;
             return k;
+        }
+
+        /// <summary>
+        /// 不计算渗透率，估算法
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        private double calculate_k(List<ccwx_xcsj_model> list)
+        {
+            if (list.Count == 0) return 0;
+            double k_plus_hd, hd_sum, result;
+            k_plus_hd = list.Sum(x => x.YXHD * x.STL);
+            hd_sum = list.Sum(x => x.YXHD);
+            result = hd_sum == 0 ? 0 : k_plus_hd / hd_sum;
+            if (result >= 0.5)
+                result *= 1.44;
+            if (result >= 0.2 && result < 0.5)
+                result *= 1.325;
+            if (result >= 0.1 && result < 0.2)
+                result *= 1.225;
+            if (result >= 0.01 && result < 0.1)
+                result *= 1.17;
+            else
+                result *= 1.08;
+            return result;
         }
 
         /// <summary>

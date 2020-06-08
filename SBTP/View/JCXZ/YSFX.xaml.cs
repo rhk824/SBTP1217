@@ -11,14 +11,27 @@ using SBTP.BLL;
 using Maticsoft.DBUtility;
 using System.Windows.Forms.DataVisualization.Charting;
 using Common;
+using System.Windows.Input;
 
-namespace SBTP.View.Well
+namespace SBTP.View.JCXZ
 {
     /// <summary>
     /// YSFX.xaml 的交互逻辑
     /// </summary>
     public partial class YSFX : Page
     {
+        //移动标志
+        bool isMoving = false;
+        //鼠标按下去的位置
+        Point startMovePosition;
+        //平移总量
+        TranslateTransform totalTranslate = new TranslateTransform();
+        //平移量
+        TranslateTransform tempTranslate = new TranslateTransform();
+        //缩放量
+        ScaleTransform totalScale = new ScaleTransform();
+        //缩放比例
+        Double scaleLevel = 1;
         //从RLS1.DAT文件读取数据，包含水井和油井分组
         private DataTable dtable;
         //从Access数据库中读取所有井的地理位置
@@ -122,11 +135,13 @@ namespace SBTP.View.Well
                 {
                     FenXi_BLL bll = FenXi_BLL.Init(sjh, yjh, list_month);
                     bll.fenxi(canshu, qsz);
-                    FenXiModel data = new FenXiModel();
-                    data.SJH = sjh;
-                    data.YJH = yjh;
-                    data.XGXS = bll.XGXS;
-                    data.GLD = bll.GLD;
+                    FenXiModel data = new FenXiModel
+                    {
+                        SJH = sjh,
+                        YJH = yjh,
+                        XGXS = bll.XGXS,
+                        GLD = bll.GLD
+                    };
                     list.Add(data);
 
                     addWell(yjh);
@@ -134,10 +149,8 @@ namespace SBTP.View.Well
                     addWell_YL(yjh,"YJ", bll.TJL_yj);
                 }
             }
-
             //this.DataGrid1.ItemsSource = list;
-            
-
+            outContainer.Visibility = Visibility.Visible;
             drawConvas();            
             setListBox2();
             selectListBox2();
@@ -186,8 +199,8 @@ namespace SBTP.View.Well
             chartArea.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
             if (rb_tj.IsChecked == true)
             {
-                chartArea.AxisY.Title = "水井体积（m³.Mpa）";
-                chartArea.AxisY2.Title = "油井体积（m³.Mpa）";
+                chartArea.AxisY.Title = "水井能量（m³.Mpa）";
+                chartArea.AxisY2.Title = "油井能量（m³.Mpa）";
             }
             else
             {
@@ -462,6 +475,103 @@ namespace SBTP.View.Well
                     ser.BorderWidth = 3;
                 }
             }
+        }
+        #region 拖拽放缩
+        /// <summary>
+        /// 左键按下事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MyConvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            //startMovePosition = e.GetPosition((Canvas)sender);
+            startMovePosition = e.GetPosition(outContainer);
+            isMoving = true;
+        }
+
+        /// <summary>
+        /// 左键抬起完成拖动
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MyConvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            isMoving = false;
+            //Point endMovePosition = e.GetPosition((Canvas)sender);
+            Point endMovePosition = e.GetPosition(outContainer);
+
+            //为了避免跳跃式的变换，单次有效变化 累加入 totalTranslate中。           
+            totalTranslate.X += (endMovePosition.X - startMovePosition.X) / scaleLevel;
+            totalTranslate.Y += (endMovePosition.Y - startMovePosition.Y) / scaleLevel;
+        }
+
+        /// <summary>
+        /// 鼠标拖动事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MyConvas_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isMoving)
+            {
+                //Point currentMousePosition = e.GetPosition((Canvas)sender);//当前鼠标位置
+                Point currentMousePosition = e.GetPosition(outContainer);
+
+                Point deltaPt = new Point(0, 0);
+                deltaPt.X = (currentMousePosition.X - startMovePosition.X) / scaleLevel;
+                deltaPt.Y = (currentMousePosition.Y - startMovePosition.Y) / scaleLevel;
+
+                tempTranslate.X = totalTranslate.X + deltaPt.X;
+                tempTranslate.Y = totalTranslate.Y + deltaPt.Y;
+
+                adjustGraph();
+            }
+        }
+
+        /// <summary>
+        /// 滚轮放大缩小事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MyConvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            //Point scaleCenter = e.GetPosition((Canvas)sender);
+            Point scaleCenter = e.GetPosition(outContainer);
+
+            if (e.Delta > 0)
+            {
+                scaleLevel *= 1.08;
+            }
+            else
+            {
+                scaleLevel /= 1.08;
+            }
+            totalScale.ScaleX = scaleLevel;
+            totalScale.ScaleY = scaleLevel;
+            totalScale.CenterX = scaleCenter.X;
+            totalScale.CenterY = scaleCenter.Y;
+            adjustGraph();
+        }
+
+        /// <summary>
+        /// 图像调整
+        /// </summary>
+        private void adjustGraph()
+        {
+            TransformGroup tfGroup = new TransformGroup();
+            tfGroup.Children.Add(tempTranslate);
+            myConvas.RenderTransform = totalScale;
+            //tfGroup.Children.Add(totalScale);
+
+            foreach (UIElement ue in myConvas.Children)
+            {
+                ue.RenderTransform = tfGroup;
+            }
+        }
+        #endregion
+        private void outContainer_Loaded(object sender, RoutedEventArgs e)
+        {
+            outContainer.Background = Unity.NetGridBg(Colors.LightGray, Colors.DarkGray);
         }
     }
 
