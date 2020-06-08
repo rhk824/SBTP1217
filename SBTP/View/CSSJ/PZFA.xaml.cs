@@ -1,6 +1,7 @@
 ﻿using Common;
 using Maticsoft.DBUtility;
 using SBTP.BLL;
+using SBTP.Data;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
@@ -75,7 +76,20 @@ namespace SBTP.View.CSSJ
         }
 
         private void save_btn_Click(object sender, RoutedEventArgs e)
-        {                      
+        {
+            string tqStart, tqEnd;
+            if (isEnabled.IsChecked == true)
+            {
+                tqStart = startDate.Text.ToString();
+                tqEnd = endDate.Text.ToString();
+            }
+            else
+            {
+                string[] tpjpara = DatHelper.TPJParaRead();
+                tqStart = tpjpara[1];
+                tqEnd = tpjpara[2];
+            }
+           
             DataSource.Select(x => x.Jh).Distinct().ToList().ForEach(x =>
             {
                 //累计注水、注聚
@@ -97,6 +111,8 @@ namespace SBTP.View.CSSJ
                             case "聚驱": ljzj += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Date, cdModels[i + 1].Date); break;
                         }
                     }
+                double tqrzl = getMonthData(x, tqStart, tqEnd);
+                jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).dqrzl = Math.Round(tqrzl, 1);
                 jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ljzjl = Math.Round(ljzj, 4);
                 jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ljzsl = Math.Round(ljzs, 4);
             });
@@ -113,6 +129,7 @@ namespace SBTP.View.CSSJ
             double ljzsl, ljzjl, result = 0;
             string sql = $"select * from water_well_month where ZT=0 and jh=\"{jh}\" and ny >= #{Convert.ToDateTime(start).ToString("yyyy/MM")}# and ny< #{Convert.ToDateTime(end).ToString("yyyy/MM")}# order by ny";
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
+            if (dt.Rows.Count == 0) return 0;
             ljzsl = double.Parse(dt.Compute("Sum(YZSL)", "").ToString()) * bl / 10000;
             ljzjl = (double.Parse(dt.Compute("Sum(YZMYL)", "").ToString()) + double.Parse(dt.Compute("Sum(YZSL)", "").ToString())) * bl / 10000;
 
@@ -122,6 +139,23 @@ namespace SBTP.View.CSSJ
                 case "聚驱": result = ljzjl; break;
             }
             return result;
+        }
+
+        private double getMonthData(string jh, string start, string end)
+        {
+            double sum_yzsl = 0, ts = 0, sum_yzmyl = 0;
+            string sql = $"select * from water_well_month " +
+                $"where ZT=0 and jh=\"{jh}\" and ny between #{Convert.ToDateTime(start).ToString("yyyy/MM")}# and  #{Convert.ToDateTime(end).ToString("yyyy/MM")}# " +
+                $"order by ny";
+            DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
+            if (dt.Rows.Count == 0) return 0;
+            foreach (DataRow item in dt.Rows)
+            {
+                sum_yzsl += double.Parse(item["YZSL"].ToString());
+                sum_yzmyl += double.Parse(item["YZMYL"].ToString());
+                ts += double.Parse(item["TS"].ToString());
+            }
+            return (sum_yzsl + sum_yzmyl) / ts;
         }
 
     }

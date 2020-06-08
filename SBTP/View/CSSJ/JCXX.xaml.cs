@@ -60,11 +60,6 @@ namespace SBTP.View.CSSJ
             _bll.btn_tpjxx();
         }
 
-        private void btn_tpcls_Click(object sender, RoutedEventArgs e)
-        {
-            _bll.btn_tpcls();
-        }
-
         private void btn_jgxx_Click(object sender, RoutedEventArgs e)
         {
             _bll.btn_jgxx();

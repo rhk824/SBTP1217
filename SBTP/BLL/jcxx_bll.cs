@@ -182,28 +182,6 @@ namespace SBTP.BLL
         }
 
         /// <summary>
-        /// “提取”按钮（调剖层历史）
-        /// </summary>
-        public void btn_tpcls()
-        {
-            string[] tpjpara = DatHelper.TPJParaRead();
-            DateTime t1 = DateTime.Parse(tpjpara[1].ToString());
-            DateTime t2 = DateTime.Parse(tpjpara[2].ToString());
-            TimeSpan ts = t2.Subtract(t1); // 求评价时间范围的总天数
-
-            foreach (jcxx_tpcls_model item in oc_tpcls)
-            {
-                List<DB_WATER_WELL_MONTH> list_water = get_water_month(item.jh, t1, t2);
-                DB_WATER_WELL_MONTH t1_model = list_water.First();
-                DB_WATER_WELL_MONTH t2_model = list_water.Last();
-                item.dqrzl = (t2_model.LZMYL + t2_model.LJZSL - t1_model.LZMYL - t1_model.LJZSL) / ts.Days;
-                item.ysybhd = 0;
-                item.ljzsl = t2_model.LJZSL;
-                item.ljzjl = t2_model.LZMYL + t2_model.LJZSL;
-            }
-        }
-
-        /// <summary>
         /// “提取”按钮（价格信息）
         /// </summary>
         public void btn_jgxx()

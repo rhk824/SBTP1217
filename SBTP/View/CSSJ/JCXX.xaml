@@ -158,7 +158,6 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Name="btn_pzfa" Content="配注方案" Click="btn_pzfa_Click" />
-                    <Button Name="btn_tpcls" Content="提取" Click="btn_tpcls_Click" IsEnabled="False"/>
                 </StackPanel>
                 <DataGrid Name="qtls" Grid.Row="1" ItemsSource="{Binding oc_tpcls}">
                     <DataGrid.Columns>
