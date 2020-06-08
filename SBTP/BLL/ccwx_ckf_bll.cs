@@ -126,8 +126,8 @@ namespace SBTP.BLL
         {
             if (list.Count == 0) return 0;
             double k_plus_hd, hd_sum, result;
-            k_plus_hd = list.Sum(x => x.YXHD * x.STL);
-            hd_sum = list.Sum(x => x.YXHD);
+            k_plus_hd = double.Parse(list.Sum(x => x.YXHD * x.STL).ToString());
+            hd_sum = double.Parse(list.Sum(x => x.YXHD).ToString());
             result = hd_sum == 0 ? 0 : k_plus_hd / hd_sum;
             if (result >= 0.5)
                 result *= 1.44;
