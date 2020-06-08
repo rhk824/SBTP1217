@@ -69,16 +69,16 @@ namespace SBTP.Model
         private string _ycz;
         private string _xch;
         private string _xcxh;
-        private double _syds;
-        private double _syhd;
-        private double _yxhd;
-        private double _stl;
+        private decimal _syds;
+        private decimal _syhd;
+        private decimal _yxhd;
+        private decimal _stl;
         private string _skqk;
-        private double _hybhd;
-        private double _kxd;
+        private decimal _hybhd;
+        private decimal _kxd;
+        private int _zt;
 
         #region Property Getters And Setters
-
 
         /// <summary>
         /// 井号
@@ -92,7 +92,6 @@ namespace SBTP.Model
                 NotifyPropertyChanged("JH");
             }
         }
-
         /// <summary>
         /// 油层组
         /// </summary>
@@ -105,7 +104,6 @@ namespace SBTP.Model
                 NotifyPropertyChanged("YCZ");
             }
         }
-
         /// <summary>
         /// 小层号
         /// </summary>
@@ -118,7 +116,6 @@ namespace SBTP.Model
                 NotifyPropertyChanged("XCH");
             }
         }
-
         /// <summary>
         /// 小层序号
         /// </summary>
@@ -131,11 +128,10 @@ namespace SBTP.Model
                 NotifyPropertyChanged("XCXH");
             }
         }
-
         /// <summary>
         /// 砂岩顶深
         /// </summary>
-        public double SYDS
+        public decimal SYDS
         {
             get { return _syds; }
             set
@@ -144,11 +140,10 @@ namespace SBTP.Model
                 NotifyPropertyChanged("SYDS");
             }
         }
-
         /// <summary>
         /// 砂岩厚度
         /// </summary>
-        public double SYHD
+        public decimal SYHD
         {
             get { return _syhd; }
             set
@@ -157,11 +152,10 @@ namespace SBTP.Model
                 NotifyPropertyChanged("SYHD");
             }
         }
-
         /// <summary>
         /// 有效厚度
         /// </summary>
-        public double YXHD
+        public decimal YXHD
         {
             get { return _yxhd; }
             set
@@ -170,11 +164,10 @@ namespace SBTP.Model
                 NotifyPropertyChanged("YXHD");
             }
         }
-
         /// <summary>
         /// 渗透率
         /// </summary>
-        public double STL
+        public decimal STL
         {
             get { return _stl; }
             set
@@ -183,7 +176,6 @@ namespace SBTP.Model
                 NotifyPropertyChanged("STL");
             }
         }
-
         /// <summary>
         /// 射孔
         /// </summary>
@@ -196,11 +188,10 @@ namespace SBTP.Model
                 NotifyPropertyChanged("SKQK");
             }
         }
-
         /// <summary>
         /// 含油饱和度
         /// </summary>
-        public double HYBHD
+        public decimal HYBHD
         {
             get { return _hybhd; }
             set
@@ -212,13 +203,23 @@ namespace SBTP.Model
         /// <summary>
         /// 孔隙度
         /// </summary>
-        public double KXD
+        public decimal KXD
         {
             get { return _kxd; }
             set
             {
                 _kxd = value;
                 NotifyPropertyChanged("KXD");
+            }
+        }
+
+        public int ZT
+        {
+            get { return _zt; }
+            set
+            {
+                _zt = value;
+                NotifyPropertyChanged("ZT");
             }
         }
 

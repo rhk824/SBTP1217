@@ -58,10 +58,10 @@ namespace SBTP.BLL
                 model.YCZ = Unity.ToString(dt.Rows[i]["ycz"]);
                 model.XCH = Unity.ToString(dt.Rows[i]["xch"]);
                 model.XCXH = Unity.ToString(dt.Rows[i]["xcxh"]);
-                model.SYDS = Unity.ToDouble(dt.Rows[i]["syds"]);
-                model.YXHD = Unity.ToDouble(dt.Rows[i]["yxhd"]);
-                model.STL = Unity.ToDouble(dt.Rows[i]["stl"]);
-                model.dcxs = model.YXHD * model.STL;
+                model.SYDS = Unity.ToDecimal(dt.Rows[i]["syds"]);
+                model.YXHD = Unity.ToDecimal(dt.Rows[i]["yxhd"]);
+                model.STL = Unity.ToDecimal(dt.Rows[i]["stl"]);
+                model.dcxs = (double)(model.YXHD * model.STL);
                 oc_xcsj.Add(model);
             }
         }
@@ -76,13 +76,13 @@ namespace SBTP.BLL
             List<tpc_xcsj_model> list = oc_xcsj.Where(p => p.ntc == 1).ToList();
             tpc_xcsj_model first_model = list.First();
             tpc_xcsj_model last_model = list.Last();
-            double yxhd = list.Sum(p => p.YXHD);
-            double dcxs = list.Sum(p => p.dcxs);
+            double yxhd = (double)list.Sum(p => p.YXHD);
+            double dcxs = (double)list.Sum(p => p.dcxs);
 
             // 拟堵段数据（条件查询：拟调层和拟堵段）
             List<tpc_xcsj_model> list_ndd = oc_xcsj.Where(p => p.ntc == 1 && p.ndd == 1).ToList();
             double dcxs_ndd = list_ndd.Sum(p => p.dcxs);
-            double yxhd_ndd = list_ndd.Sum(p => p.YXHD);
+            double yxhd_ndd = (double)list_ndd.Sum(p => p.YXHD);
 
             // 返回调剖层实体
             return new tpc_model()
@@ -90,7 +90,7 @@ namespace SBTP.BLL
                 jh = tpc.jh,
                 cd = first_model.YCZ + first_model.XCH + first_model.XCXH + "~" + last_model.YCZ + last_model.XCH + last_model.XCXH,
                 yxhd = yxhd,
-                yxhd_ds = first_model.SYDS,
+                yxhd_ds = (double)first_model.SYDS,
                 zrfs = (dcxs_ndd / dcxs) * 100,
                 zzhd = yxhd - yxhd_ndd,
                 zzbl = yxhd == 0 ? 0 : (yxhd - yxhd_ndd) / yxhd,

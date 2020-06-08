@@ -89,10 +89,10 @@ namespace SBTP.BLL
                 model.JH = Unity.ToString(dt.Rows[i]["jh"]);
                 model.YCZ = Unity.ToString(dt.Rows[i]["ycz"]);
                 model.XCH = Unity.ToString(dt.Rows[i]["xch"]);
-                model.SYHD = Unity.ToDouble(dt.Rows[i]["syhd"]);
-                model.YXHD = Unity.ToDouble(dt.Rows[i]["yxhd"]);
-                model.STL = Unity.ToDouble(dt.Rows[i]["stl"]);
-                model.HYBHD = Unity.ToDouble(dt.Rows[i]["hybhd"]);
+                model.SYHD  = Unity.ToDecimal(dt.Rows[i]["syhd"]);
+                model.YXHD  = Unity.ToDecimal(dt.Rows[i]["yxhd"]);
+                model.STL   = Unity.ToDecimal(dt.Rows[i]["stl"]);
+                model.HYBHD = Unity.ToDecimal(dt.Rows[i]["hybhd"]);
                 model.fdd = false;
                 model.zzd = false;
                 oc_xcsj.Add(model);
@@ -107,11 +107,11 @@ namespace SBTP.BLL
         private double calculate_stl(List<ccwx_xcsj_model> list)
         {
             if (list.Count == 0) return 0;
-            if (list.Count == 1) return list.First().STL;    // 如果项数量为1，k = xcsj.stl
+            if (list.Count == 1) return (double)list.First().STL;    // 如果项数量为1，k = xcsj.stl
 
             double k, ku, kd;
             ku = list.Sum(d => d.kh);   // ku = k1h1 + k2h2 + ... + knhn
-            kd = list.Sum(d => d.YXHD); // kd = h1 + h2 + ... + hn
+            kd = (double)list.Sum(d => d.YXHD); // kd = h1 + h2 + ... + hn
             k = ku / kd;
             return k;
         }
@@ -125,8 +125,8 @@ namespace SBTP.BLL
         {
             if (list.Count == 0) return 0;
             double a,b,result;
-            b = list.Sum(x => x.YXHD);
-            a = list.Sum(x => x.YXHD * x.HYBHD);
+            b = (double)list.Sum(x => x.YXHD);
+            a = (double)list.Sum(x => x.YXHD * x.HYBHD);
             result = b == 0 ? 0 : a / b;
             return result;
         }

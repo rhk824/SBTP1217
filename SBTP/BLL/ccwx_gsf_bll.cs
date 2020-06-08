@@ -68,22 +68,22 @@ namespace SBTP.BLL
                 if ((tpjing.yxhd - tpjing.zzhd) == 0 || tpjing.zzhd == 0)
                     return null;
 
-                double k1, k1u, k1d;
-                double k2, k2u, k2d;
+                decimal k1, k1u, k1d;
+                decimal k2, k2u, k2d;
 
-                k1u = (tpjing.zrfs - tpjing.zzrfs) * xcsj.STL * xcsj.YXHD;  // k1u = (zrfs - zzrfs) * kh
-                k1d = xcsj.zrfs * (tpjing.yxhd - tpjing.zzhd);              // k1d = zrfs * (yxhd - zzhd)
+                k1u = ((decimal)tpjing.zrfs - (decimal)tpjing.zzrfs) * xcsj.STL * xcsj.YXHD;  // k1u = (zrfs - zzrfs) * kh
+                k1d = (decimal)xcsj.zrfs * ((decimal)tpjing.yxhd - (decimal)tpjing.zzhd);              // k1d = zrfs * (yxhd - zzhd)
                 k1 = k1u / k1d;                                             // k1  = ((zrfs - zzrfs) * kh) / (zrfs * (yxhd - zzhd))
 
-                k2u = tpjing.zzrfs * xcsj.STL * xcsj.YXHD;  // k2u = zzrfs * kh
-                k2d = xcsj.zrfs * tpjing.zzhd;              // k2d = zrfs * zzhd
+                k2u = (decimal)tpjing.zzrfs * xcsj.STL * xcsj.YXHD;  // k2u = zzrfs * kh
+                k2d = (decimal)xcsj.zrfs * (decimal)tpjing.zzhd;              // k2d = zrfs * zzhd
                 k2 = k2u / k2d;                             // k2  = (zzrfs * kh) / (zrfs * zzhd)
 
                 return new ccwx_tpjing_model()
                 {
                     jh = tpjing.jh,
-                    k1 = k1,
-                    k2 = k2,
+                    k1 = (double)k1,
+                    k2 = (double)k2,
                     calculate_type = 2
                 };
             }
@@ -115,9 +115,9 @@ namespace SBTP.BLL
                 model.JH = Unity.ToString(dt.Rows[i]["jh"]);
                 model.YCZ = Unity.ToString(dt.Rows[i]["ycz"]);
                 model.XCH = Unity.ToString(dt.Rows[i]["xch"]);
-                model.SYHD = Unity.ToDouble(dt.Rows[i]["syhd"]);
-                model.YXHD = Unity.ToDouble(dt.Rows[i]["yxhd"]);
-                model.STL = Unity.ToDouble(dt.Rows[i]["stl"]);
+                model.SYHD = Unity.ToDecimal(dt.Rows[i]["syhd"]);
+                model.YXHD = Unity.ToDecimal(dt.Rows[i]["yxhd"]);
+                model.STL = Unity.ToDecimal(dt.Rows[i]["stl"]);
                 model.zrfs = 0;
                 model.fdd = false;
                 model.zzd = false;

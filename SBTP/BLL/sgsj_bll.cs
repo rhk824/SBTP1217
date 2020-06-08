@@ -383,8 +383,8 @@ namespace SBTP.BLL
         {
             message = string.Empty;
 
-            var oilList = DBContext.getList_OIL_WELL_MONTH();
-            var waterList = DBContext.getList_WATER_WELL_MONTH();
+            var oilList = DBContext.GetList_OIL_WELL_MONTH();
+            var waterList = DBContext.GetList_WATER_WELL_MONTH();
 
             if (!oilList.Any() && !waterList.Any())
             {
@@ -430,9 +430,12 @@ namespace SBTP.BLL
             return true;
         }
 
-        public void update021()
+        public bool update021(out string message)
         {
+            message = "";
             this.dt021.Clear();
+
+            var xcsj = DBContext.GetList_XCSJ();
 
             #region 数据源
             DataTable xcsj_data = DbHelperOleDb.Query("select * from oil_well_c").Tables[0];
@@ -495,6 +498,9 @@ namespace SBTP.BLL
             update_tag("酸碱度PH", qkcsdata.Ycph.ToString()); 
             this.Tags = replace_empty_tags(this.Tags);
             #endregion
+
+            message = "操作成功";
+            return true;
         }
 
         public void update022()
@@ -505,6 +511,8 @@ namespace SBTP.BLL
             #region 数据源
             DataTable dt_ow = DbHelperOleDb.Query("select * from oil_well_month a, (select jh, max(ny) as max_ny from oil_well_month group by jh) b where a.ZT=0 and a.jh = b.jh and a.ny = b.max_ny").Tables[0];
             DataTable dt_ww = DbHelperOleDb.Query("select * from water_well_month a, (select jh, max(ny) as max_ny from water_well_month group by jh) b where a.ZT=0 and a.jh = b.jh and a.ny = b.max_ny").Tables[0];
+
+            var yymd = 0.92m;   // Todo: 因 rsl0.dat 暂时无法获得原油密度，暂用设置一个固定值
             #endregion
 
             #region 更新表格 0221

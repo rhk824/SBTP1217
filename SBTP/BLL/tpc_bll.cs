@@ -137,12 +137,12 @@ namespace SBTP.BLL
                     YCZ = Unity.ToString(dt.Rows[i]["ycz"]),
                     XCH = Unity.ToString(dt.Rows[i]["xch"]),
                     XCXH = Unity.ToString(dt.Rows[i]["xcxh"]),
-                    SYDS = Unity.ToDouble(dt.Rows[i]["syds"]),
-                    SYHD = Unity.ToDouble(dt.Rows[i]["syhd"]),
-                    YXHD = Unity.ToDouble(dt.Rows[i]["yxhd"]),
-                    STL = Unity.ToDouble(dt.Rows[i]["stl"]),
+                    SYDS = Unity.ToDecimal(dt.Rows[i]["syds"]),
+                    SYHD = Unity.ToDecimal(dt.Rows[i]["syhd"]),
+                    YXHD = Unity.ToDecimal(dt.Rows[i]["yxhd"]),
+                    STL = Unity.ToDecimal(dt.Rows[i]["stl"]),
                     SKQK = Unity.ToString(dt.Rows[i]["skqk"]),
-                    HYBHD = Unity.ToDouble(dt.Rows[i]["hybhd"]),
+                    HYBHD = Unity.ToDecimal(dt.Rows[i]["hybhd"]),
                 });
             }
         }
@@ -161,9 +161,9 @@ namespace SBTP.BLL
                 if (item.sj.Equals(jzlt.sj) && item.yj.Equals(jzlt.yj))
                 {
                     item.cw = get_jzlt_cw(list);
-                    item.syhd = list.Sum(p => p.SYHD);
-                    item.yxhd = list.Sum(p => p.YXHD);
-                    item.stl = list.Sum(p => p.STL) / list.Count;
+                    item.syhd = (double)list.Sum(p => p.SYHD);
+                    item.yxhd = (double)list.Sum(p => p.YXHD);
+                    item.stl = (double)list.Sum(p => p.STL) / list.Count;
                     set_tpc_ltsl(item);
                 }
             }
