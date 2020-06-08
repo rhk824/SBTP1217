@@ -16,6 +16,7 @@ namespace SBTP.Common
         {
             DataTable dt = DbHelperOleDb.Query("select * from oil_well_month").Tables[0];
             List<DB_OIL_WELL_MONTH> list = new List<DB_OIL_WELL_MONTH>();
+
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 list.Add(new DB_OIL_WELL_MONTH()
