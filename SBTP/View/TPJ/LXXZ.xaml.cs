@@ -249,6 +249,7 @@ namespace SBTP.View.TPJ
         private void L_Grid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             DataRowView selectedItem = L_Grid.SelectedItem as DataRowView;
+            if (selectedItem == null) return;
             string name = selectedItem.Row.ItemArray[1].ToString();
             DataRow[] matched_data = y_table.Select("YMC='" + name + "'");
             foreach (DataRowView item in S_Grid.Items)
@@ -268,6 +269,7 @@ namespace SBTP.View.TPJ
         private void S_Grid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             DataRowView selectedItem = S_Grid.SelectedItem as DataRowView;
+            if (selectedItem == null) return;
             string name = selectedItem.Row.ItemArray[1].ToString();
             DataRow[] matched_data = y_table.Select("GMC='" + name + "'");
             foreach (DataRowView item in L_Grid.Items)

@@ -101,7 +101,9 @@
                         <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="1" />
 
                         <!--名称设置-->
-                        <TextBlock Text="孔吼半径" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
+                        <TextBlock Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2">
+                            <Run Text="孔喉半径（μm" /><Run Text="2" BaselineAlignment="TextTop" FontSize="8" /><Run Text="）" />
+                        </TextBlock>
                         <TextBlock Text="封堵段" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
                         <TextBlock Text="增注段" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1" />
 

@@ -62,7 +62,6 @@ namespace SBTP.View.SGSJ
                 $"日产油{bll.Tags["油井日产油量"]}t。";
             dg_ow.DataContext = bll.dt0221;
             dg_ww.DataContext = bll.dt0222;
-
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)

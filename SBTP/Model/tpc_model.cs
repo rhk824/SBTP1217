@@ -20,9 +20,9 @@ namespace SBTP.Model
         private double _zzbl;
         private double _zzrfs;
         private int _ltsl;
-        private int _bs;
         private string _bs_string;
         private string _csrq;
+        private string _bs_c;
 
         #region Property Getters And Setters
 
@@ -144,19 +144,6 @@ namespace SBTP.Model
         }
 
         /// <summary>
-        /// 标识
-        /// </summary>
-        public int bs
-        {
-            get { return _bs; }
-            set
-            {
-                _bs = value;
-                NotifyPropertyChanged("bs");
-            }
-        }
-
-        /// <summary>
         /// 标识（文本）
         /// </summary>
         public string bs_string
@@ -181,6 +168,10 @@ namespace SBTP.Model
                 NotifyPropertyChanged("csrq");
             }
         }
+        /// <summary>
+        /// 调剖层标识
+        /// </summary>
+        public string bs_c { get => _bs_c; set { _bs_c = value; NotifyPropertyChanged("bs_c"); } }
 
         #endregion
     }

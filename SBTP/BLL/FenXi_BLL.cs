@@ -79,12 +79,17 @@ namespace SBTP.BLL
             //计算水井体积量，水井体积量=月注水量
             TJL_sj = new double[List_sj.Count];
             for (int i = 0; i < List_sj.Count; i++)
-            { TJL_sj[i] = Convert.ToDouble(List_sj[i].YZSL); }
-
+            {
+                TJL_sj[i] = Convert.ToDouble(string.IsNullOrEmpty(List_sj[i].YZSL) ? "0" : List_sj[i].YZSL) +
+                      Convert.ToDouble(string.IsNullOrEmpty(List_sj[i].YZMYL) ? "0" : List_sj[i].YZMYL);
+            }
             //计算油井体积量，油井体积量=月产液量，月产液量=月产油量+月产水量
             TJL_yj = new double[List_yj.Count];
             for (int i = 0; i < List_yj.Count; i++)
-            { TJL_yj[i] = Convert.ToDouble(List_yj[i].YCYL) + Convert.ToDouble(List_yj[i].YCSL); }
+            {
+                TJL_yj[i] = Convert.ToDouble(string.IsNullOrEmpty(List_yj[i].YCYL) ? "0" : List_yj[i].YCYL) +
+                      Convert.ToDouble(string.IsNullOrEmpty(List_yj[i].YCSL) ? "0" : List_yj[i].YCSL);
+            }
         }
 
         //计算关联度

@@ -9,6 +9,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SBTP.BLL
 {
@@ -137,12 +138,12 @@ namespace SBTP.BLL
                     YCZ = Unity.ToString(dt.Rows[i]["ycz"]),
                     XCH = Unity.ToString(dt.Rows[i]["xch"]),
                     XCXH = Unity.ToString(dt.Rows[i]["xcxh"]),
-                    SYDS = Unity.ToDouble(dt.Rows[i]["syds"]),
-                    SYHD = Unity.ToDouble(dt.Rows[i]["syhd"]),
-                    YXHD = Unity.ToDouble(dt.Rows[i]["yxhd"]),
-                    STL = Unity.ToDouble(dt.Rows[i]["stl"]),
+                    SYDS = Unity.ToDecimal(dt.Rows[i]["syds"]),
+                    SYHD = Unity.ToDecimal(dt.Rows[i]["syhd"]),
+                    YXHD = Unity.ToDecimal(dt.Rows[i]["yxhd"]),
+                    STL = Unity.ToDecimal(dt.Rows[i]["stl"]),
                     SKQK = Unity.ToString(dt.Rows[i]["skqk"]),
-                    HYBHD = Unity.ToDouble(dt.Rows[i]["hybhd"]),
+                    HYBHD = Unity.ToDecimal(dt.Rows[i]["hybhd"]),
                 });
             }
         }
@@ -152,6 +153,11 @@ namespace SBTP.BLL
         /// </summary>
         public void btn_load(tpc_jzlt_model jzlt)
         {
+            if (jzlt == null)
+            {
+                MessageBox.Show("请在井组连通中选择一口井");
+                return;
+            }
             List<DB_XCSJ> list = new List<DB_XCSJ>(); // 获取被选中井组连通项油井的小层数据
             foreach (DB_XCSJ item in oc_xcsj.Where(p => p.Selected == true)) list.Add(item);
 
@@ -161,9 +167,9 @@ namespace SBTP.BLL
                 if (item.sj.Equals(jzlt.sj) && item.yj.Equals(jzlt.yj))
                 {
                     item.cw = get_jzlt_cw(list);
-                    item.syhd = list.Sum(p => p.SYHD);
-                    item.yxhd = list.Sum(p => p.YXHD);
-                    item.stl = list.Sum(p => p.STL) / list.Count;
+                    item.syhd = (double)list.Sum(p => p.SYHD);
+                    item.yxhd = (double)list.Sum(p => p.YXHD);
+                    item.stl = (double)list.Sum(p => p.STL) / list.Count;
                     set_tpc_ltsl(item);
                 }
             }

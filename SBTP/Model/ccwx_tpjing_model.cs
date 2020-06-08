@@ -22,10 +22,11 @@ namespace SBTP.Model
         private double _r2;
         private double _fddkxd;
         private double _zzdkxd;
-        private double _ybhd;
+        private double _ybhd = Data.DatHelper.readQkcs().Cyybhd;
         private int _calculate_type;
         private string _csrq;
-        private double _kxd;
+        private int _bs;
+        private bool isCustomize = false;
 
         #region Property Getters And Setters
 
@@ -76,7 +77,7 @@ namespace SBTP.Model
             get { return _yxhd; }
             set
             {
-                _yxhd = value;
+                _yxhd = Math.Round(value, 1);
                 NotifyPropertyChanged("yxhd");
             }
         }
@@ -89,7 +90,7 @@ namespace SBTP.Model
             get { return _zrfs; }
             set
             {
-                _zrfs = value;
+                _zrfs = Math.Round(value, 1);
                 NotifyPropertyChanged("zrfs");
             }
         }
@@ -102,7 +103,7 @@ namespace SBTP.Model
             get { return _zzhd; }
             set
             {
-                _zzhd = value;
+                _zzhd = Math.Round(value, 1);
                 NotifyPropertyChanged("zzhd");
             }
         }
@@ -115,7 +116,7 @@ namespace SBTP.Model
             get { return _zzrfs; }
             set
             {
-                _zzrfs = value;
+                _zzrfs = Math.Round(value, 1);
                 NotifyPropertyChanged("zzrfs");
             }
         }
@@ -140,7 +141,7 @@ namespace SBTP.Model
             get { return _k1; }
             set
             {
-                _k1 = value;
+                _k1 = Math.Round(value, 3);
                 NotifyPropertyChanged("k1");
             }
         }
@@ -153,7 +154,7 @@ namespace SBTP.Model
             get { return _k2; }
             set
             {
-                _k2 = value;
+                _k2 = Math.Round(value, 3);
                 NotifyPropertyChanged("k2");
             }
         }
@@ -166,7 +167,7 @@ namespace SBTP.Model
             get { return _r1; }
             set
             {
-                _r1 = value;
+                _r1 = Math.Round(value, 3);
                 NotifyPropertyChanged("r1");
             }
         }
@@ -179,7 +180,7 @@ namespace SBTP.Model
             get { return _r2; }
             set
             {
-                _r2 = value;
+                _r2 = Math.Round(value, 3);
                 NotifyPropertyChanged("r2");
             }
         }
@@ -208,33 +209,26 @@ namespace SBTP.Model
                 NotifyPropertyChanged("csrq");
             }
         }
-
-        /// <summary>
-        /// 孔隙度
-        /// </summary>
-        public double kxd
-        {
-            get { return _kxd; }
-            set
-            {
-                _kxd = value;
-                NotifyPropertyChanged("kxd");
-            }
-        }
         /// <summary>
         /// 封堵段孔隙度
         /// </summary>
-        public double fddkxd { get => _fddkxd; set { _fddkxd = value; NotifyPropertyChanged("fddkxd"); } }
+        public double fddkxd { get => _fddkxd; set { _fddkxd = Math.Round(value, 1); NotifyPropertyChanged("fddkxd"); } }
         /// <summary>
         /// 增注段孔隙度
         /// </summary>
-        public double zzdkxd { get => _zzdkxd; set { _zzdkxd = value; NotifyPropertyChanged("zzdkxd"); } }
+        public double zzdkxd { get => _zzdkxd; set { _zzdkxd = Math.Round(value, 1); NotifyPropertyChanged("zzdkxd"); } }
         /// <summary>
         /// 油饱和度
         /// </summary>
         public double ybhd { get => _ybhd; set { _ybhd = value; NotifyPropertyChanged("ybhd"); } }
-
-
+        /// <summary>
+        /// 标识
+        /// </summary>
+        public int bs { get => _bs; set { _bs = value; NotifyPropertyChanged("bs"); } }
+        /// <summary>
+        /// 是否为自定义添加的井,默认为false
+        /// </summary>
+        public bool IsCustomize { get => isCustomize; set { isCustomize = value; NotifyPropertyChanged("IsCustomize"); } }
 
         #endregion
     }

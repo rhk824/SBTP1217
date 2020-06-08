@@ -40,8 +40,9 @@ namespace SBTP.View.SGSJ
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            bll.update021();
-            tb1.Text = 
+            if (bll.update021(out string message))
+            {
+                tb1.Text =
                 $"目标设计区域油层埋藏深度{bll.Tags["埋藏深度"]}，" +
                 $"砂岩厚度{bll.Tags["砂岩厚度"]}，" +
                 $"有效厚度{bll.Tags["有效厚度"]}，" +
@@ -50,7 +51,9 @@ namespace SBTP.View.SGSJ
                 $"油层温度{bll.Tags["油层温度"]}，" +
                 $"地层水矿化度{bll.Tags["地层水矿化度"]}，" +
                 $"油层水PH值{bll.Tags["酸碱度PH"]}。";
-            dg.DataContext = bll.dt021;
+                dg.DataContext = bll.dt021;
+            }
+            MessageBox.Show(message);
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)

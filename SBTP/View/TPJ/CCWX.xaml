@@ -36,9 +36,14 @@
         </GroupBox>
 
         <Grid Grid.Column="1" Grid.RowSpan="4">
-            <StackPanel VerticalAlignment="Center">
-                <Button Name="btn_right" Content="→" Click="Btn_right_Click" />
-                <Button Name="btn_left" Content="←" Click="Btn_left_Click" />
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left">
+                <Button Name="btn_right" Content="→" Click="Btn_right_Click"  Margin="0,0,0,5"/>
+                <Button Name="diy" Margin="0,0,0,0" Click="diy_Click">
+                    <Button.Content>
+                        <TextBlock Text="自定义添加＞" FontSize="10" Margin="0,0,0,0"/>
+                    </Button.Content>
+                </Button>
+                <Button Name="btn_left" Content="←" Click="Btn_left_Click"  Margin="0,5,0,0"/>
             </StackPanel>
         </Grid>
 
@@ -63,7 +68,7 @@
                         <TextBlock Name="Value_b" Text="**" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     </StackPanel>
                 </StackPanel>
-                <DataGrid Name="dg_tpjing_info" ItemsSource="{Binding oc_tpjing_info}" SelectionMode="Single" SelectedCellsChanged="Dg_tpjing_info_SelectedCellsChanged" Grid.Row="1">
+                <DataGrid Name="dg_tpjing_info" ItemsSource="{Binding oc_tpjing_info}" SelectionMode="Single" Grid.Row="1" LoadingRow="dg_tpjing_info_LoadingRow">
                     <DataGrid.Columns>
                         <DataGridCheckBoxColumn Binding="{Binding Selected, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Width="20" />
                         <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
@@ -73,8 +78,6 @@
                         <DataGridTextColumn Header="增注厚度（m）" Binding="{Binding zzhd}"/>
                         <DataGridTextColumn Header="增注入分数（%）" Binding="{Binding zzrfs, StringFormat={}{0:F2}}"/>
                         <DataGridTextColumn Header="油饱和度" Binding="{Binding ybhd}"/>
-                        <!--<DataGridTextColumn Header="封堵段渗透率（μm^2）" Binding="{Binding k1, StringFormat={}{0:F2}}"/>-->
-                        <!--<DataGridTextColumn Header="增注段渗透率" Binding="{Binding k2, StringFormat={}{0:F2}}"/>-->
                         <DataGridTemplateColumn HeaderStyle="{StaticResource header_k_style}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -109,8 +112,6 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTextColumn Header="算法标识" Binding="{Binding calculate_type}"/>
-                        <!--<DataGridTextColumn Header="封堵段孔喉半径" Binding="{Binding r1, StringFormat={}{0:F2}}"/>-->
-                        <!--<DataGridTextColumn Header="增注段孔喉半径" Binding="{Binding r2, StringFormat={}{0:F2}}"/>-->
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

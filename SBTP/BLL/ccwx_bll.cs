@@ -26,12 +26,11 @@ namespace SBTP.BLL
         /// <summary>
         /// 调剖井数据
         /// </summary>
-        public ObservableCollection<ccwx_tpjing_model> oc_tpjing_info { get; set; }
+        public static ObservableCollection<ccwx_tpjing_model> oc_tpjing_info { get; set; } = new ObservableCollection<ccwx_tpjing_model>();
 
         public ccwx_bll()
         {
             oc_tpjing = new ObservableCollection<ccwx_tpjing_model>();
-            oc_tpjing_info = new ObservableCollection<ccwx_tpjing_model>();
             //tpjing = new ccwx_tpjing_model();
             try
             {
@@ -143,24 +142,28 @@ namespace SBTP.BLL
             {
                 throw new Exception("无数据源！");
             }
+            var tpj_info = Data.DatHelper.read_ccwx();
+            var Jh = from i in tpj_info select i.jh;
+            if (tpj_info != null)
+                tpj_info.ForEach(x => oc_tpjing_info.Add(x));
             // 调剖井列表加载
             foreach (tpc_model item in Data.DatHelper.read_tpc())
             {
-                oc_tpjing.Add(new ccwx_tpjing_model()
-                {
-                    jh = item.jh,
-                    cd = item.cd,
-                    yxhd = item.yxhd,
-                    zrfs = item.zrfs,
-                    zzhd = item.zzhd,
-                    zzrfs = item.zzrfs,
-                    csrq = item.csrq,
-                    ybhd = 0,
-                    k1 = 0,
-                    k2 = 0,
-                    r1 = 0,
-                    r2 = 0
-                });
+                if (!Jh.Contains(item.jh))
+                    oc_tpjing.Add(new ccwx_tpjing_model()
+                    {
+                        jh = item.jh,
+                        cd = item.cd,
+                        yxhd = item.yxhd,
+                        zrfs = item.zrfs,
+                        zzhd = item.zzhd,
+                        zzrfs = item.zzrfs,
+                        csrq = item.csrq,
+                        k1 = 0,
+                        k2 = 0,
+                        r1 = 0,
+                        r2 = 0
+                    });
             }
         }
 

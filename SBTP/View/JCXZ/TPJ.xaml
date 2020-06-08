@@ -10,11 +10,11 @@
       Title="tpj">
     <Page.Resources>
         <ResourceDictionary>
-            <ObjectDataProvider x:Key="PZGZEnumKey" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
+            <!--<ObjectDataProvider x:Key="PZGZEnumKey" MethodName="GetValues" ObjectType="{x:Type core:Enum}">
                 <ObjectDataProvider.MethodParameters>
                     <x:Type Type="local:PZGZEnum"/>
                 </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
+            </ObjectDataProvider>-->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -81,10 +81,9 @@
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="数据">
-            <DataGrid x:Name="dataGrid" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" VirtualizingStackPanel.IsVirtualizing="False" CellEditEnding="DataGrid_CellEditEnding">
+            <DataGrid x:Name="dataGrid" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" VirtualizingStackPanel.IsVirtualizing="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="水井" Width="80" Binding="{Binding JH}"/>
-                    <DataGridComboBoxColumn Header="配注管柱"  Width="80"  SelectedItemBinding="{Binding PZGZ,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Source={StaticResource PZGZEnumKey}}"/>
                     <DataGridTextColumn Header="视吸水指数" Width="100" Binding="{Binding AWI, StringFormat={}{0:F2}}"/>
                     <DataGridTextColumn Header="比视吸水指数" Width="100" Binding="{Binding BAWI, StringFormat={}{0:F2}}"/>
                     <DataGridTextColumn Header="综合含水" Width="100" Binding="{Binding ZHHS, StringFormat={}{0:F2}}"/>
@@ -95,20 +94,44 @@
         </GroupBox>
         <GroupBox Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="1" BorderThickness="2" Margin="2" Header="等值图">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
                 <!--<Mask:Loading x:Name="_loading"  Visibility="Collapsed"/>-->
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Grid.Row="0">
                     <StackPanel Name="iso" Orientation="Horizontal"   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                 </ScrollViewer>
+                <GroupBox Grid.Row="1" BorderThickness="2" Margin="2" Header="操作">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,2,0">
+                            <Label VerticalAlignment="Center" Content="线条数:"/>
+                            <TextBox Width="30" Name="line_count" Text="25"/>
+                            <Label Content="放缩倍数:"/>
+                            <Label Content="{Binding Path=ScaleTimes, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Name="scaleTimes"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,5,0">
+                            <Label VerticalAlignment="Center" Content="范围:"/>
+                            <Label  Name="value_min" Content="___"/>
+                            <Label VerticalAlignment="Center" Content="-"/>
+                            <Label Name="value_max" Content="___"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                            <Label Content="步长:"/>
+                            <Label Name="iso_step" Content="___"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                            <Button Content="综合含水" Click="GenerateClick"/>
+                            <Button Content="视吸水指数" Click="GenerateClick"/>
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="3" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="3" BorderThickness="2" Margin="2" Header="操作">
             <Grid VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <Button x:Name="HSL" Content="综合含水" VerticalAlignment="Center" HorizontalAlignment="Left" Click="HSL_Click"/>
-                    <Button x:Name="XSZS" Content="视吸水指数" VerticalAlignment="Center"  HorizontalAlignment="Left" Click="XSZS_Click"/>
-                </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="Save" Content="保存" VerticalAlignment="Center" HorizontalAlignment="Right" Click="Save_Click"/>
+                    <Button x:Name="Save" Content="保存" Click="Save_Click"/>
                     <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
                     <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
                 </StackPanel>
