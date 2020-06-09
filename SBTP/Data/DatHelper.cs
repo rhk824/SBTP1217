@@ -27,7 +27,7 @@ namespace SBTP.Data
             "**JCXX",
             "*TPCJH // 井号",
             "/TPCJH",
-            "*TPCXX // 井号 层号 有效厚度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率",
+            "*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率",
             "/TPCXX",
             "*TPJXX // 井号 液体剂名称 液体剂浓度 颗粒剂名称 颗粒剂粒径 颗粒剂浓度 携带液浓度",
             "/TPJXX",
@@ -1458,7 +1458,7 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*TPCXX // 井号 层号 有效厚度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率");
+                int startIndex = lines.IndexOf("*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率");
                 int endIndex = lines.IndexOf("/TPCXX");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -1470,6 +1470,7 @@ namespace SBTP.Data
                     sb.Append($"{item.jh}\t");
                     sb.Append($"{item.cd}\t");
                     sb.Append($"{item.yxhd}\t");
+                    sb.Append($"{item.ybhd}\t");
                     sb.Append($"{item.zrfs}\t");
                     sb.Append($"{item.zzhd}\t");
                     sb.Append($"{item.zzrfs}\t");
@@ -1638,12 +1639,13 @@ namespace SBTP.Data
                         jh = Unity.ToString(vs[0]),
                         cd = Unity.ToString(vs[1]),
                         yxhd = Unity.ToDouble(vs[2]),
-                        zrfs = Unity.ToDouble(vs[3]),
-                        zzhd = Unity.ToDouble(vs[4]),
-                        zzrfs = Unity.ToDouble(vs[5]),
-                        ltfs = Unity.ToInt(vs[6]),
-                        k1 = Unity.ToDouble(vs[7]),
-                        k2 = Unity.ToDouble(vs[8]),
+                        ybhd = Unity.ToDouble(vs[3]),
+                        zrfs = Unity.ToDouble(vs[4]),
+                        zzhd = Unity.ToDouble(vs[5]),
+                        zzrfs = Unity.ToDouble(vs[6]),
+                        ltfs = Unity.ToInt(vs[7]),
+                        k1 = Unity.ToDouble(vs[8]),
+                        k2 = Unity.ToDouble(vs[9]),
                     });
                 }
                 if (line.Contains("**JCXX")) flag1 = true;

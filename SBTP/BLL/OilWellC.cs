@@ -1,8 +1,10 @@
-﻿using Maticsoft.DBUtility;
+﻿
+using Maticsoft.DBUtility;
 using SBTP.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
@@ -63,6 +65,25 @@ namespace SBTP.BLL
 
             try { return DbHelperOleDb.ExecuteSqlTran(SQLStringList, TableName); }
             catch { throw; }
+        }
+
+
+        public static List<DB_XCSJ> YbhdCalculate(string jh, string ycz, string xch)
+        {
+            StringBuilder sqlStr = new StringBuilder("Select * from OIL_WELL_C where JH='{0}' and YCZ = '{1}' and XCH='{2}'");
+            DataTable dt = DbHelperOleDb.Query(string.Format(sqlStr.ToString(), jh, ycz, xch)).Tables[0];
+            List<DB_XCSJ> list = new List<DB_XCSJ>();
+            foreach (DataRow item in dt.Rows)
+            {
+                DB_XCSJ dB_XCSJ = new DB_XCSJ
+                {
+                    JH = item["JH"].ToString(),
+                    YXHD =decimal.Parse(item["YXHD"].ToString()),
+                    HYBHD = decimal.Parse(item["HYBHD"].ToString())
+                };
+                list.Add(dB_XCSJ);
+            }
+            return list;
         }
     }
 }

@@ -131,7 +131,7 @@ namespace SBTP.BLL
 
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                oc_xcsj.Add(new Model.DB_XCSJ()
+                oc_xcsj.Add(new DB_XCSJ()
                 {
                     Selected = false,
                     JH = Unity.ToString(dt.Rows[i]["jh"]),

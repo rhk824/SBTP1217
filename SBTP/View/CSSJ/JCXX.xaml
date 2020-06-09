@@ -62,6 +62,7 @@
                         <DataGridTextColumn Header="井号" Binding="{Binding jh}" />
                         <DataGridTextColumn Header="层段" Binding="{Binding cd}" />
                         <DataGridTextColumn Header="有效厚度（m）" Binding="{Binding yxhd}" />
+                        <DataGridTextColumn Header="含油饱和度" Binding="{Binding ybhd}" />
                         <DataGridTextColumn Header="注入分数（%）" Binding="{Binding zrfs, StringFormat={}{0:F2}}" />
                         <DataGridTextColumn Header="增注厚度（m）" Binding="{Binding zzhd}" />
                         <DataGridTextColumn Header="增注入分数（%）" Binding="{Binding zzrfs, StringFormat={}{0:F2}}" />

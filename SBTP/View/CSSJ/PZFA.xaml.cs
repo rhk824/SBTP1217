@@ -112,9 +112,20 @@ namespace SBTP.View.CSSJ
                         }
                     }
                 double tqrzl = getMonthData(x, tqStart, tqEnd);
+                string cd = DatHelper.read_ccwx().Find(a => a.jh.Equals(x)).cd;
+                List<DB_XCSJ> xcCollection = new List<DB_XCSJ>();
+                cd.Split('~').ToList().ForEach(b =>
+                {
+                    string[] cdArray = b.Replace(' ', ',').Split(',');
+                    string ycz = cdArray[0];
+                    string xch = cdArray[1];
+                    xcCollection.AddRange(OilWellC.YbhdCalculate(x, ycz, xch));
+                });
+                decimal yxhd_sum = xcCollection.Sum(x => x.YXHD);
                 jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).dqrzl = Math.Round(tqrzl, 1);
                 jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ljzjl = Math.Round(ljzj, 4);
                 jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ljzsl = Math.Round(ljzs, 4);
+                jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ysybhd = yxhd_sum == 0 ? 0 : Math.Round((double)(xcCollection.Sum(x => x.YXHD * x.HYBHD) / yxhd_sum), 4);
             });
             this.Close();
         }

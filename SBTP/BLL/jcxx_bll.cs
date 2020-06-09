@@ -23,7 +23,7 @@ namespace SBTP.BLL
         /// <summary>
         /// 调剖井信息
         /// </summary>
-        public ObservableCollection<jcxx_tpcxx_model> oc_tpcxx { get; set; }
+        public static ObservableCollection<jcxx_tpcxx_model> oc_tpcxx { get; set; }
         /// <summary>
         /// 调剖剂信息
         /// </summary>
@@ -162,7 +162,7 @@ namespace SBTP.BLL
         /// </summary>
         public void btn_tpjxx()
         {
-            List<TPJND_Model> list_tpjnd = Data.DatHelper.TPJND_Read();
+            List<TPJND_Model> list_tpjnd = DatHelper.TPJND_Read();
             if (list_tpjnd == null) return;
 
             foreach (jcxx_tpjxx_model item in oc_tpjxx)

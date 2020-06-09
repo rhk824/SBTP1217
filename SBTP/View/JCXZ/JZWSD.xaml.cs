@@ -188,7 +188,7 @@ namespace SBTP.View.JCXZ
             double cosa = (vector_first * vector_second) / (vector_first.Length * vector_second.Length);
             double angle = (Math.Acos(cosa) * 180) / Math.PI;
             //角度大于180
-            if ((vector_first.X * vector_second.Y - vector_first.Y * vector_second.X) > 0)
+            if ((vector_first.X * vector_second.Y - vector_first.Y * vector_second.X) < 0)
                 return 360 - angle;
             return angle;
         }
