@@ -68,7 +68,8 @@ namespace SBTP.Common.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            double h = (double)value;
+            if (value == null) return 1;
+            double h = double.Parse(value.ToString());
             if (h == 0) return 1;
             return h * 20;
         }

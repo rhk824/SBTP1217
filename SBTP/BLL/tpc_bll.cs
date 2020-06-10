@@ -124,7 +124,7 @@ namespace SBTP.BLL
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * ");
             sql.Append(" from oil_well_c ");
-            sql.AppendFormat(" where jh=\"{0}\" and syds <> 0 and stl <> 0", jzlt.yj);
+            sql.AppendFormat(" where zt=0 and jh=\"{0}\" and syds <> 0 and stl <> 0", jzlt.yj);
             sql.Append(" order by syds ");
 
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];

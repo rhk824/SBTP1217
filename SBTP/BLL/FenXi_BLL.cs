@@ -76,7 +76,7 @@ namespace SBTP.BLL
 
         private void Compute_YL()
         {
-            //计算水井体积量，水井体积量=月注水量
+            //计算水井体积量，水井体积量=月注水量+月注母液量
             TJL_sj = new double[List_sj.Count];
             for (int i = 0; i < List_sj.Count; i++)
             {

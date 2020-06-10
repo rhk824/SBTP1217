@@ -94,6 +94,10 @@ namespace SBTP.View.CSSJ
             {
                 //累计注水、注聚
                 double ljzs = 0, ljzj = 0;
+                //累计水驱聚驱天数
+                double Ljsqts = 0,Ljjqts = 0;
+                //累计水驱聚驱月数
+                double Ljsqys = 0, Ljjqys = 0;
                 List<PZFAModel> cdModels = DataSource.ToList().FindAll(y => y.Jh.Equals(x));
                 List<PZFAModel> qyfsMod = cdModels.FindAll(x => !string.IsNullOrEmpty(x.Qyfs));
                 if (qyfsMod.Count == 0)
@@ -107,8 +111,8 @@ namespace SBTP.View.CSSJ
                         if (i == cdModels.Count - 1) continue;
                         switch (cdModels[i].Qyfs)
                         {
-                            case "水驱": ljzs += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Date, cdModels[i + 1].Date); break;
-                            case "聚驱": ljzj += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Date, cdModels[i + 1].Date); break;
+                            case "水驱": ljzs += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Date, cdModels[i + 1].Date,out double sqts); Ljsqts += sqts; Ljsqys += (DateTime.Parse(cdModels[i + 1].Date) - DateTime.Parse(cdModels[i].Date)).TotalDays / 30;  break;
+                            case "聚驱": ljzj += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Date, cdModels[i + 1].Date,out double jqts); Ljjqts += jqts; Ljjqys += (DateTime.Parse(cdModels[i + 1].Date) - DateTime.Parse(cdModels[i].Date)).TotalDays / 30; break;
                         }
                     }
                 double tqrzl = getMonthData(x, tqStart, tqEnd);
@@ -126,6 +130,10 @@ namespace SBTP.View.CSSJ
                 jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ljzjl = Math.Round(ljzj, 4);
                 jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ljzsl = Math.Round(ljzs, 4);
                 jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).ysybhd = yxhd_sum == 0 ? 0 : Math.Round((double)(xcCollection.Sum(x => x.YXHD * x.HYBHD) / yxhd_sum), 4);
+                jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).Sqts = Math.Round(Ljsqts, 4);
+                jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).Sqys = Math.Round(Ljsqys, 4);
+                jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).Jqts = Math.Round(Ljjqts, 4);
+                jcxx_bll.oc_tpcls.ToList().Find(z => z.jh.Equals(x)).Jqys = Math.Round(Ljjqys, 4);
             });
             this.Close();
         }
@@ -135,20 +143,26 @@ namespace SBTP.View.CSSJ
             this.Close();
         }
 
-        private double getMonthData(string qylx, string jh, double bl, string start, string end)
+        private double getMonthData(string qylx, string jh, double bl, string start, string end, out double ts)
         {
-            double ljzsl, ljzjl, result = 0;
+            double ljzsl, ljzjl, ljts = 0, result = 0;
             string sql = $"select * from water_well_month where ZT=0 and jh=\"{jh}\" and ny >= #{Convert.ToDateTime(start).ToString("yyyy/MM")}# and ny< #{Convert.ToDateTime(end).ToString("yyyy/MM")}# order by ny";
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
-            if (dt.Rows.Count == 0) return 0;
+            if (dt.Rows.Count == 0)
+            {
+                ts = 0;
+                return 0;
+            }
             ljzsl = double.Parse(dt.Compute("Sum(YZSL)", "").ToString()) * bl / 10000;
             ljzjl = (double.Parse(dt.Compute("Sum(YZMYL)", "").ToString()) + double.Parse(dt.Compute("Sum(YZSL)", "").ToString())) * bl / 10000;
+            dt.Rows.OfType<DataRow>().ToList().ForEach(x => ljts += double.Parse(x["TS"].ToString()));
 
             switch (qylx)
             {
                 case "水驱": result = ljzsl; break;
                 case "聚驱": result = ljzjl; break;
             }
+            ts = ljts;
             return result;
         }
 

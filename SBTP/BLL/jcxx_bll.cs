@@ -219,31 +219,6 @@ namespace SBTP.BLL
         #region 本类内部的方法，为公共接口做辅助服务
 
         /// <summary>
-        /// 获取某水井的水井井史
-        /// </summary>
-        /// <param name="jh">某水井</param>
-        /// <param name="t1">评价时间的起始时间</param>
-        /// <param name="t2">评价时间的结束时间</param>
-        /// <returns></returns>
-        private List<DB_WATER_WELL_MONTH> get_water_month(string jh, DateTime t1, DateTime t2)
-        {
-            string sql = $"select * from water_well_month where ZT=0 and jh=\"{jh}\" and ny between #{t1.ToString("yyyy/MM")}# and #{t2.ToString("yyyy/MM")}# order by ny";
-            DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
-            List<DB_WATER_WELL_MONTH> list_water = new List<DB_WATER_WELL_MONTH>();
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                list_water.Add(new DB_WATER_WELL_MONTH()
-                {
-                    JH = Unity.ToString(dt.Rows[i]["jh"]),
-                    NY = Unity.ToDateTime(dt.Rows[i]["NY"]),
-                    LZMYL = Unity.ToDecimal(dt.Rows[i]["lzmyl"]),
-                    LJZSL = Unity.ToDecimal(dt.Rows[i]["ljzsl"])
-                });
-            }
-            return list_water;
-        }
-
-        /// <summary>
         /// 获取液体调剖剂价格
         /// </summary>
         /// <param name="mc">名称</param>

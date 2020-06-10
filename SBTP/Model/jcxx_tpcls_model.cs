@@ -13,6 +13,10 @@ namespace SBTP.Model
         private double _ysybhd;
         private double _ljzsl;
         private double _ljzjl;
+        private double _sqts;
+        private double _jqts;
+        private double _sqys;
+        private double _jqys;
 
         #region Property Getters And Setters
 
@@ -80,6 +84,22 @@ namespace SBTP.Model
                 NotifyPropertyChanged("ljzjl");
             }
         }
+        /// <summary>
+        /// 水驱天数
+        /// </summary>
+        public double Sqts { get => _sqts; set { _sqts = value; NotifyPropertyChanged("Sqts"); } }
+        /// <summary>
+        /// 聚驱天数
+        /// </summary>
+        public double Jqts { get => _jqts; set { _jqts = value; NotifyPropertyChanged("Jqts"); } }
+        /// <summary>
+        /// 水驱月数
+        /// </summary>
+        public double Sqys { get => _sqys; set { _sqys = value; NotifyPropertyChanged("Sqys"); } }
+        /// <summary>
+        /// 聚驱月数
+        /// </summary>
+        public double Jqys { get => _jqys; set { _jqys = value; NotifyPropertyChanged("Jqys"); } }
 
         #endregion
     }

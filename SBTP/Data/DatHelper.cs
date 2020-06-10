@@ -31,7 +31,7 @@ namespace SBTP.Data
             "/TPCXX",
             "*TPJXX // 井号 液体剂名称 液体剂浓度 颗粒剂名称 颗粒剂粒径 颗粒剂浓度 携带液浓度",
             "/TPJXX",
-            "*TPCLS // 井号 日注液量 初始油饱和度 累计注入水量 累计注聚量",
+            "*TPCLS // 井号 日注液量 初始油饱和度 累计注入水量 累计注聚量 累计水驱天数 累计水驱月数 累计聚驱天数 累计聚驱月数",
             "/TPCLS",
             "*JGXX // 液体剂价格 固体剂价格 携带剂价格 原油价格 施工价格 其他费用",
             "/JGXX",
@@ -52,7 +52,7 @@ namespace SBTP.Data
         /// </summary>
         private static void CheckRLS3()
         {
-            StringBuilder inputStr = new StringBuilder();           
+            StringBuilder inputStr = new StringBuilder();
             // 基础信息
             inputStr.Append("**JCXX\r\n");
             inputStr.Append("*TPCJH // 井号\r\n");
@@ -141,7 +141,7 @@ namespace SBTP.Data
                 }
             }
         }
- 
+
         /// <summary>
         /// dat6
         /// </summary>
@@ -245,7 +245,7 @@ namespace SBTP.Data
                 inputStr += qkcs.Fs + "\t" + qkcs.Qtn + "\t" + qkcs.Qtgn + "\r\n";
                 inputStr += "/QTFS\r\n";
                 inputStr += "*QTLB // 最小剪切流速 最大剪切流速 流变指数 恢复系数 剪切系数\r\n";
-                inputStr += qkcs.Jlmin + "\t" + qkcs.Jlmax + "\t" + qkcs.Lb + "\t" + qkcs.Hf + "\t"+ qkcs.Jq + "\r\n";
+                inputStr += qkcs.Jlmin + "\t" + qkcs.Jlmax + "\t" + qkcs.Lb + "\t" + qkcs.Hf + "\t" + qkcs.Jq + "\r\n";
                 inputStr += "/QTLB\r\n";
                 inputStr += "*QTXS // 残余油饱和度  水相相渗端点值\r\n";
                 inputStr += qkcs.Cyybhd + "\t" + qkcs.Sxxsddz + "\r\n";
@@ -259,14 +259,14 @@ namespace SBTP.Data
         /// <returns></returns>
         public static qkcs readQkcs()
         {
-            CheckRLS0();            
+            CheckRLS0();
             List<object> data = new List<object>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS0.DAT"));
             int qkxz_index = data.FindIndex(x => x.ToString().Contains("*QKXZ"));
             int qtfs_index = data.FindIndex(x => x.ToString().Contains("*QTFS"));
             int qtlb_index = data.FindIndex(x => x.ToString().Contains("*QTLB"));
             int qtxs_index = data.FindIndex(x => x.ToString().Contains("*QTXS"));
             qkcs qkcs = new qkcs();
-            if(!data[qkxz_index+1].ToString().Contains("/QKXZ"))
+            if (!data[qkxz_index + 1].ToString().Contains("/QKXZ"))
             {
                 qkcs.Ycwd = double.Parse(data[qkxz_index + 1].ToString().Split('\t')[0]);
                 qkcs.Yckhd = double.Parse(data[qkxz_index + 1].ToString().Split('\t')[1]);
@@ -275,7 +275,7 @@ namespace SBTP.Data
             }
             if (!data[qtfs_index + 1].ToString().Contains("/QTFS"))
             {
-                qkcs.Fs =data[qtfs_index + 1].ToString().Split('\t')[0];
+                qkcs.Fs = data[qtfs_index + 1].ToString().Split('\t')[0];
                 qkcs.Qtn = double.Parse(data[qtfs_index + 1].ToString().Split('\t')[1]);
                 qkcs.Qtgn = double.Parse(data[qtfs_index + 1].ToString().Split('\t')[2]);
             }
@@ -1195,7 +1195,7 @@ namespace SBTP.Data
                     data_str.AppendFormat("{0}\t", item.zrfs);
                     data_str.AppendFormat("{0}\t", item.zzhd);
                     data_str.AppendFormat("{0}\t", item.zzrfs);
-                    data_str.AppendFormat("{0}\t", item.ybhd);                    
+                    data_str.AppendFormat("{0}\t", item.ybhd);
                     data_str.AppendFormat("{0}\t", item.k1);
                     data_str.AppendFormat("{0}\t", item.k2);
                     data_str.AppendFormat("{0}\t", item.fddkxd);
@@ -1257,7 +1257,7 @@ namespace SBTP.Data
                     fddkxd = Unity.ToDouble(arr[9]),
                     zzdkxd = Unity.ToDouble(arr[10]),
                     r1 = Unity.ToDouble(arr[11]),
-                    r2 = Unity.ToDouble(arr[12]),                    
+                    r2 = Unity.ToDouble(arr[12]),
                     calculate_type = Unity.ToInt(arr[13])
                 });
             }
@@ -1304,18 +1304,18 @@ namespace SBTP.Data
             List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT"));
             int startIndex = lines.FindIndex(x => x.Contains("**NHQXCS 函数名称 a值 b值 c值"));
             Function function = new Function();
-            for (int i = startIndex+1; i < lines.Count; i++)
+            for (int i = startIndex + 1; i < lines.Count; i++)
             {
                 if (lines[i].Contains("/NHQXCS")) break;
                 string[] vs = lines[i].Split('\t');
-                if (vs[0].Equals(funcName.Trim())) 
+                if (vs[0].Equals(funcName.Trim()))
                 {
                     function.Name = funcName;
-                    function.Value_a =double.Parse(vs[1]);
-                    function.Value_b =double.Parse(vs[2]);
+                    function.Value_a = double.Parse(vs[1]);
+                    function.Value_b = double.Parse(vs[2]);
                     function.Value_c = double.Parse(vs[3]);
-                    break; 
-                }              
+                    break;
+                }
             }
             return function;
         }
@@ -1534,7 +1534,7 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(path_string, false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*TPCLS // 井号 日注液量 初始油饱和度 累计注入水量 累计注聚量");
+                int startIndex = lines.IndexOf("*TPCLS // 井号 日注液量 初始油饱和度 累计注入水量 累计注聚量 累计水驱天数 累计水驱月数 累计聚驱天数 累计聚驱月数");
                 int endIndex = lines.IndexOf("/TPCLS");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -1547,7 +1547,11 @@ namespace SBTP.Data
                     sb.Append($"{item.dqrzl}\t");
                     sb.Append($"{item.ysybhd}\t");
                     sb.Append($"{item.ljzsl}\t");
-                    sb.Append($"{item.ljzjl}\r\n");
+                    sb.Append($"{item.ljzjl}\t");
+                    sb.Append($"{item.Sqts}\t");
+                    sb.Append($"{item.Sqys}\t");
+                    sb.Append($"{item.Jqts}\t");
+                    sb.Append($"{item.Jqys}\r\n");
                     newData.Add(sb.ToString());
                 }
                 newLines.InsertRange(startIndex + 1, newData);
@@ -1712,6 +1716,10 @@ namespace SBTP.Data
                         ysybhd = Unity.ToDouble(vs[2]),
                         ljzsl = Unity.ToDouble(vs[3]),
                         ljzjl = Unity.ToDouble(vs[4]),
+                        Sqts = Unity.ToDouble(vs[5]),
+                        Sqys = Unity.ToDouble(vs[6]),
+                        Jqts = Unity.ToDouble(vs[7]),
+                        Jqys = Unity.ToDouble(vs[8])
                     });
                 }
                 if (line.Contains("**JCXX")) flag1 = true;
@@ -1732,25 +1740,25 @@ namespace SBTP.Data
             //bool flag2 = false;
             //foreach (string line in lines)
             //{
-                //if (flag1 == true && flag2 == true)
-                //{
-                    //if (line.Contains("/JGXX")) break;
-                    //string[] vs = line.Split('\t');
-                    //list.Add(new jcxx_jgxx_model()
-                    //{
-                    //    yttpj = Unity.ToDouble(vs[0]),
-                    //    kltpj = Unity.ToDouble(vs[1]),
-                    //    xdyfj = Unity.ToDouble(vs[2]),
-                    //    yy = Unity.ToDouble(vs[3]),
-                    //    sg = Unity.ToDouble(vs[4]),
-                    //    qt = Unity.ToDouble(vs[5]),
-                    //});
-                //}
-                //if (line.Contains("**JCXX")) flag1 = true;
-                //if (line.Contains("*JGXX")) flag2 = true;
+            //if (flag1 == true && flag2 == true)
+            //{
+            //if (line.Contains("/JGXX")) break;
+            //string[] vs = line.Split('\t');
+            //list.Add(new jcxx_jgxx_model()
+            //{
+            //    yttpj = Unity.ToDouble(vs[0]),
+            //    kltpj = Unity.ToDouble(vs[1]),
+            //    xdyfj = Unity.ToDouble(vs[2]),
+            //    yy = Unity.ToDouble(vs[3]),
+            //    sg = Unity.ToDouble(vs[4]),
+            //    qt = Unity.ToDouble(vs[5]),
+            //});
+            //}
+            //if (line.Contains("**JCXX")) flag1 = true;
+            //if (line.Contains("*JGXX")) flag2 = true;
             //}
             int startIndex = lines.FindIndex(x => x.Contains("*JGXX"));
-            for (int i = startIndex+1; i < lines.Count; i++)
+            for (int i = startIndex + 1; i < lines.Count; i++)
             {
                 if (lines[i].Contains("/JGXX")) break;
                 string[] vs = lines[i].Split('\t');
@@ -1794,7 +1802,7 @@ namespace SBTP.Data
         /// <summary>
         ///工序设计保存
         /// </summary>
-        public static void SaveToGXSJ(string jh,string para, List<DssjModel> dssjModels)
+        public static void SaveToGXSJ(string jh, string para, List<DssjModel> dssjModels)
         {
             CheckRLS3();
             List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS3.DAT"));
@@ -1810,8 +1818,8 @@ namespace SBTP.Data
                         if (startIndex < 0)
                             item = "*GXSJ " + (int.Parse(item.Trim("*GXSJ ".ToCharArray())) + 1).ToString();
                     }
-                    if(item.Contains("*TQZRYND"))
-                        item = "*TQZRYND "+ para;
+                    if (item.Contains("*TQZRYND"))
+                        item = "*TQZRYND " + para;
                     newLines.Add(string.Format("{0}{1}", item, "\r\n"));
                 });
                 //判断井号是否存在
@@ -1846,16 +1854,16 @@ namespace SBTP.Data
             List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS3.DAT"));
             List<DssjModel> dssjModels = new List<DssjModel>();
             if (lines.Contains("WELL " + jh))
-            {                
+            {
                 int startIndex = lines.FindIndex((x) => x.Contains("WELL " + jh));
                 for (int i = startIndex + 1; i < lines.Count; i++)
                 {
                     DssjModel dssjModel = new DssjModel();
                     string line = lines[i];
-                    if (line.Contains("WELL")|| line.Contains("/GXSJ")) break;
+                    if (line.Contains("WELL") || line.Contains("/GXSJ")) break;
                     string[] items = line.Split('\t');
                     dssjModel.GX_NAME = items[0];
-                    dssjModel.YL =double.Parse(items[1]);
+                    dssjModel.YL = double.Parse(items[1]);
                     dssjModel.BL = double.Parse(items[2]);
                     dssjModel.YN = double.Parse(items[3]);
                     dssjModel.KN = double.Parse(items[4]);
@@ -1915,7 +1923,7 @@ namespace SBTP.Data
                 if (item.Contains("*TQZRYND"))
                 {
                     return item.Replace(" ", ",").Split(',')[1];
-                }                  
+                }
             }
             return null;
         }
@@ -2018,7 +2026,7 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<TpxgModel> TpjpjRead()
         {
-            
+
             CheckRLS6();
             string fileStr = "";
             string readStr = " ";

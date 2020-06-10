@@ -34,7 +34,7 @@
                 <MenuItem Header="井组完善度" Name="JCXZ_JZWSD" />
                 <MenuItem Header="调剖井选择" Name="JCXZ_TPJ" />
                 <MenuItem Header="调剖层选择" Name="JCXZ_TPC" />
-                <MenuItem Header="优势方向评价" Name="Well_YSFX" />
+                <MenuItem Header="优势方向评价" Name="JCXZ_YSFX" />
             </MenuItem>
             <MenuItem Header="调剖剂选择" MenuItem.Click="Menu_Click">
                 <MenuItem Header="储层物性动态计算" Name="TPJ_CCWX" />

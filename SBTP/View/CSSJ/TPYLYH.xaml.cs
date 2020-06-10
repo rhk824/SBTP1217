@@ -98,6 +98,7 @@ namespace SBTP.View.CSSJ
         List<jcxx_jgxx_model> tpjJg;
         //储层物性
         List<ccwx_tpjing_model> ccwxInfos;
+        List<zcjz_well_model> zcjzs;
 
         public TPYLYH()
         {
@@ -114,6 +115,7 @@ namespace SBTP.View.CSSJ
             tpjInfo = Data.DatHelper.read_jcxx_tpjxx();
             tpjJg = Data.DatHelper.read_jcxx_jgxx();
             ccwxInfos = Data.DatHelper.read_ccwx();
+            zcjzs = Data.DatHelper.read_zcjz();
             //if (Data.DatHelper.TpjpjRead() != null)
             //{
             //    List<string> names = new List<string>();
@@ -184,60 +186,88 @@ namespace SBTP.View.CSSJ
                 else
                     tpbj += "," + radius.ToString();
             }
+            List<string> tpbj_collection = tpbj.Split(',').ToList();
             foreach (JqxxyhModel item in jqxxyhModels)
             {
                 this.loading.Visibility = Visibility.Visible;
-                //累计母液量为0时的累计注水量
-                double LJZSL;
-                DataRow[] dataRowsLjmylEq0 = waterwellmonth.Select("JH='" + item.JH + "' and LZMYL=0", "NY Asc");
-                if (dataRowsLjmylEq0.Length == 0)
-                    LJZSL = double.Parse(waterwellmonth.Select("JH='" + item.JH + "'", "NY Asc")[0]["LJZSL"].ToString());
-                else
-                    LJZSL = double.Parse(dataRowsLjmylEq0[dataRowsLjmylEq0.Length - 1]["LJZSL"].ToString());
-                DataRow[] dataRowsForCSQ = waterwellmonth.Select("JH='" + item.JH + "'");
-                //措施前累计母液量
-                double LJMYL = dataRowsForCSQ.Length == 0 ? 0 : double.Parse(dataRowsForCSQ[dataRowsForCSQ.Length - 1]["LZMYL"].ToString());
-                //措施前累计注水量
-                double CSQLJZSL = dataRowsForCSQ.Length == 0 ? 0 : double.Parse(dataRowsForCSQ[dataRowsForCSQ.Length - 1]["LJZSL"].ToString());
-                double RZL = double.Parse(tpcHistory.Find(x => x.jh == item.JH).dqrzl.ToString());
-                double YXHD = double.Parse(baseData.Find(x => x.jh == item.JH).yxhd.ToString());
-                double ZZRFS = double.Parse(baseData.Find(x => x.jh == item.JH).zzrfs.ToString());
-                double ZRFS = double.Parse(baseData.Find(x => x.jh == item.JH).zrfs.ToString());
-                double FDDSTL = double.Parse(baseData.Find(x => x.jh == item.JH).k1.ToString());
-                double ZZDSTL = double.Parse(baseData.Find(x => x.jh == item.JH).k2.ToString());
-                double ZZHD = double.Parse(baseData.Find(x => x.jh == item.JH).zzhd.ToString());
+                //吸液强度集合
+                List<KeyValuePair<string, double>> XYQDs = new List<KeyValuePair<string, double>>();
+                ccwx_tpjing_model tpcinfo = ccwxInfos.Find(x => x.jh.Equals(item.JH));
+                jcxx_tpcls_model tpcls = tpcHistory.Find(x => x.jh.Equals(item.JH));
+                zcjz_well_model jz = zcjzs.Find(x => x.JH.Equals(item.JH));
+                //高低渗透层厚度比1:1折算
+                double para = (tpcinfo.k1 + tpcinfo.k2) * tpcinfo.zzhd / (tpcinfo.zzhd * tpcinfo.k2 + tpcinfo.k1 * (tpcinfo.yxhd - tpcinfo.zzhd));
                 //调剖剂名称
                 string TPJMC = tpjInfo.Find(x => x.jh == item.JH).ytmc;
                 DataTable tpj_table = getTpjInfoTable(TPJMC);
+                //调剖剂有效期
                 double YXQ = tpj_table.Rows.Count == 0 ? 365 : double.Parse(tpj_table.Rows[0]["SXQ"].ToString()) * 365;
+                
+                foreach (string i in tpbj_collection)
+                {
+                    //调后增注段日吸水量
+                    double Q_thzzxs = tpcls.dqrzl / (100 - tpcinfo.zrfs) * Math.Log(jz.AverageDistance / 0.2) / (Math.Log(double.Parse(i) / 0.1) / tpcinfo.zzrfs + Math.Log(jz.AverageDistance / double.Parse(i)) / tpcinfo.zrfs + Math.Log(jz.AverageDistance / 0.1) / (100 - tpcinfo.zzrfs));
+                    //吸液强度
+                    double xyqd = Q_thzzxs / tpcinfo.zzhd * YXQ / 2;
+                    XYQDs.Add(new KeyValuePair<string, double>(i, xyqd));
+                }
+                //注水总量
+                double Qsl_sum = tpcls.ljzsl;
+                //注聚总量
+                double Qjl_sum = tpcls.ljzjl;
+                //注水天数
+                double T_sqts = tpcls.Sqts;
+                //注聚天数
+                double T_jqts = tpcls.Jqts;
+                //注水月数
+                double T_sqys = tpcls.Sqys;
+                //注聚月数
+                double T_jqys = tpcls.Jqys;
+                double FDDSTL = baseData.Find(x => x.jh == item.JH).k1;
+                double ZZDSTL = baseData.Find(x => x.jh == item.JH).k2;
 
                 //计算机器学习参数
                 //过水倍数
-                double GSBS = LJZSL / RZL / 365 * 10000;
+                double GSBS = para * (T_sqys / 12) * 10000 / (2 * T_sqts * tpcinfo.zzhd);
                 //油饱和度
                 double YBHD = double.Parse(tpcHistory.Find(x => x.jh == item.JH).ysybhd.ToString());
                 //渗透率极差
                 double STLJC = FDDSTL / ZZDSTL;
                 //过聚倍数
-                double GJBS = (LJMYL + CSQLJZSL - LJZSL) / RZL / 365 * 10000;
-                //注入强度
-                double ZRQD = RZL * ZRFS / (YXHD * YXQ / 2);
-
-                String cmd = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}", GSBS, YBHD, STLJC, GJBS, ZRQD, radius_start.Text, radius_end.Text, step.Text);
+                double GJBS = para * (T_jqys / 12) * 10000 / (2 * T_jqts * tpcinfo.zzhd);
                 Task<string> runPython = Task.Run(() =>
                 {
-                    return RunCMD.run_python(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"py\deliverables\demo.py"), cmd);
+                    string result = string.Empty;
+                    for (int i = 0; i < XYQDs.Count; i++)
+                    {
+                        string cmd = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}", GSBS, YBHD, STLJC, GJBS, XYQDs[i].Value.ToString(), radius_start.Text, radius_end.Text, step.Text);
+                        string cmdResult = RunCMD.run_python(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"py\deliverables\demo.py"), cmd);
+                        if (i == XYQDs.Count - 1)
+                            result += cmdResult;
+                        else
+                            result += cmdResult + "*";
+                    }
+                    return result;
                 });
                 Task closeLoading = runPython.ContinueWith(t => { this.Dispatcher.Invoke(() => { loading.Visibility = Visibility.Collapsed; }); return ""; });
                 await runPython;
 
                 ObservableCollection<string> comboboxDatasource = new ObservableCollection<string>();
+                //半径-增油量结果集
                 List<Point> zyList = new List<Point>();
-                List<string> resultArray = runPython.Result.Trim().Replace('(', ',').Replace(')', ',').Replace('[', ',').Replace(']', ',').Replace(' ', ',').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-
-                for (int i = 0; i < resultArray.Count; i += 2)
-                {                    
-                    zyList.Add(new Point(double.Parse(resultArray[i]), Math.Round(double.Parse(resultArray[i + 1]), 3)));
+                //python结果集
+                List<string> cmdresults = runPython.Result.Trim().Split('*').ToList();
+                foreach (KeyValuePair<string, double> z in XYQDs)
+                {
+                    foreach (string j in cmdresults)
+                    {
+                        List<string> resultArray = j.Trim().Replace('(', ',').Replace(')', ',').Replace('[', ',').Replace(']', ',').Replace(' ', ',').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        for (int i = 0; i < resultArray.Count; i += 2)
+                        {
+                            if (z.Key.Equals(resultArray[i]))
+                                zyList.Add(new Point(double.Parse(resultArray[i]), Math.Round(double.Parse(resultArray[i + 1]), 3)));
+                        }
+                    }
                 }
 
                 tpbj.Split(',').ToList().ForEach(x => comboboxDatasource.Add(double.Parse(x).ToString()));
