@@ -40,7 +40,6 @@ namespace SBTP.View.TPJ
         /// <returns></returns>
         public ccwx_tpjing_model calculate()
         {
-            var chart = (Chart)wfh.Child;
             ccwx_tpjing_model ccwx_Tpjing_Model;
             try
             {
