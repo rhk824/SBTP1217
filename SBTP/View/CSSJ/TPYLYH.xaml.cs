@@ -30,6 +30,7 @@ namespace SBTP.View.CSSJ
         private string yHZY;
         private string tPJYL;
         private ObservableCollection<string> bjs;
+        private List<Point> bjandzy;
 
         //井号
         public string JH { get => jH; set { jH = value; Changed("JH"); } }
@@ -46,26 +47,52 @@ namespace SBTP.View.CSSJ
             set
             {
                 yHBJ = value;
-                if (Bjandzy!= null)
-                    YHZY = Bjandzy.Find(x => x.X == double.Parse(yHBJ)).Y.ToString();
-                //if (GXSJ != null)
-                //    TCB = (double.Parse(YHZY) * JG.yy * 0.81 / (GXSJ.Sum(x => x.YL * x.YN * JG.yttpj) + GXSJ.Sum(x => x.YL * x.KN * JG.kltpj) + GXSJ.Sum(x => x.YL * x.XN * JG.xdyfj) + JG.qt + JG.sg)).ToString();
-                if (Bjandtcb!= null)
-                    TCB = Bjandtcb.Find(x => x.X == double.Parse(YHBJ)).Y.ToString();
-                if (TPCInfo != null && NHHS != null && CCWXInfo != null)
-                    TPJYL = (double.Parse(yHBJ) * (TPCInfo.yxhd - TPCInfo.zzhd) * Math.PI * (NHHS.Value_a * Math.Pow(CCWXInfo.k1, NHHS.Value_b) - NHHS.Value_c)).ToString();
+                if (TPCInfo != null)
+                {
+                    TPJYL = Bjtpjyl.Find(x => x.X.Equals(double.Parse(value))).Y.ToString();
+                    if (Bjandzy != null)
+                    {
+                        YHZY = Bjandzy.Find(x => x.X.Equals(double.Parse(value))).Y.ToString();
+                        TCB = Bjandtcb.Find(x => x.X.Equals(double.Parse(value))).Y.ToString();
+                    }
+                }
                 Changed("YHBJ");
             }
         }
         //优化增油
         public string YHZY { get => yHZY; set { yHZY = value; Changed("YHZY"); } }
         //调剖剂用量
-        public string TPJYL { get => tPJYL; set { tPJYL = value; Changed("TPJYL"); } }
+        public string TPJYL { get => tPJYL; set { tPJYL = value;Changed("TPJYL"); } }
         //调剖半径集合
         public ObservableCollection<string> BJS { get => bjs; set { bjs = value; Changed("BJS"); } }
 
-        //半径增油量
-        public List<Point> Bjandzy { get; set; }
+        public List<Point> Bjtpjyl { set; get; }
+
+        //半径增油量集合
+        public List<Point> Bjandzy { get=>bjandzy; set {
+                bjandzy = value;
+                List<Point> Bj_tcb = new List<Point>();
+                List<Point> Bj_tpjyl = new List<Point>();
+                int ltsl = TPCInfo.ltfs;
+                double a = 0;
+                switch (ltsl)
+                {
+                    case 1: a = 0.99; break;
+                    case 2: a = 0.95; break;
+                    case 3: a = 0.89; break;
+                    case 4: a = 0.86; break;
+                }
+                foreach (Point i in value)
+                {
+                    double yl = i.X * (TPCInfo.yxhd - TPCInfo.zzhd) * Math.PI * TPCInfo.Fkxd * TPCInfo.ltfs * a / 4;
+                    double tcb = (yl * (tpjnd.YTND * tpjjg.yttpj / 100000 + (100 - tpjnd.YTND) * tpjnd.KLND * tpjjg.kltpj / 100000000 + (100 - tpjnd.YTND) * tpjnd.XDYND * tpjjg.xdyfj / 100000000) + tpjjg.qt + tpjjg.sg) / (i.Y * tpjjg.yy);
+                    Bj_tcb.Add(new Point(i.X, Math.Round(tcb, 2)));
+                    Bj_tpjyl.Add(new Point(i.X, yl));
+                }
+                Bjandtcb = Bj_tcb;
+                Bjtpjyl = Bj_tpjyl;
+                Changed("Bjandzy");
+            } }
         //半径投产比
         public List<Point> Bjandtcb { get; set; }
         //public jcxx_jgxx_model JG { get; set; }
@@ -76,6 +103,10 @@ namespace SBTP.View.CSSJ
         public Function NHHS { set; get; }
         //储层物性信息
         public ccwx_tpjing_model CCWXInfo { set; get; }
+        //调剖剂价格
+        public jcxx_jgxx_model tpjjg { set; get; }
+        //调剖剂浓度
+        public TPJND_Model tpjnd { set; get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void Changed(string PropertyName)
@@ -98,6 +129,8 @@ namespace SBTP.View.CSSJ
         List<jcxx_jgxx_model> tpjJg;
         //储层物性
         List<ccwx_tpjing_model> ccwxInfos;
+        //调剖剂浓度读取
+        List<TPJND_Model> tpjnd; 
         List<zcjz_well_model> zcjzs;
 
         public TPYLYH()
@@ -115,14 +148,9 @@ namespace SBTP.View.CSSJ
             tpjInfo = Data.DatHelper.read_jcxx_tpjxx();
             tpjJg = Data.DatHelper.read_jcxx_jgxx();
             ccwxInfos = Data.DatHelper.read_ccwx();
+            tpjnd = Data.DatHelper.TPJND_Read();
             zcjzs = Data.DatHelper.read_zcjz();
-            //if (Data.DatHelper.TpjpjRead() != null)
-            //{
-            //    List<string> names = new List<string>();
-            //    Data.DatHelper.TpjpjRead().ForEach(x => { jcxx_Tpcxx_Models.Add(x); names.Add(x.JH); });
-            //    if (Data.DatHelper.Read_GXSJ() != null)
-            //        Data.DatHelper.Read_GXSJ().ForEach(x => { if (!names.Contains(x)) dataSource.Add(x); });
-            //}
+
             if (baseData != null)
             {
                 baseData.ForEach(x => dataSource.Add(x.jh));
@@ -194,6 +222,9 @@ namespace SBTP.View.CSSJ
                 List<KeyValuePair<string, double>> XYQDs = new List<KeyValuePair<string, double>>();
                 ccwx_tpjing_model tpcinfo = ccwxInfos.Find(x => x.jh.Equals(item.JH));
                 jcxx_tpcls_model tpcls = tpcHistory.Find(x => x.jh.Equals(item.JH));
+                jcxx_tpcxx_model tpcxx = baseData.Find(x => x.jh.Equals(item.JH));
+                tpcxx.Fkxd = tpcinfo.fddkxd;
+                tpcxx.Zkxd = tpcinfo.zzdkxd;
                 zcjz_well_model jz = zcjzs.Find(x => x.JH.Equals(item.JH));
                 //高低渗透层厚度比1:1折算
                 double para = (tpcinfo.k1 + tpcinfo.k2) * tpcinfo.zzhd / (tpcinfo.zzhd * tpcinfo.k2 + tpcinfo.k1 * (tpcinfo.yxhd - tpcinfo.zzhd));
@@ -206,7 +237,8 @@ namespace SBTP.View.CSSJ
                 foreach (string i in tpbj_collection)
                 {
                     //调后增注段日吸水量
-                    double Q_thzzxs = tpcls.dqrzl / (100 - tpcinfo.zrfs) * Math.Log(jz.AverageDistance / 0.2) / (Math.Log(double.Parse(i) / 0.1) / tpcinfo.zzrfs + Math.Log(jz.AverageDistance / double.Parse(i)) / tpcinfo.zrfs + Math.Log(jz.AverageDistance / 0.1) / (100 - tpcinfo.zzrfs));
+                    double Q_thzzxs = tpcls.dqrzl / (100 - tpcinfo.zrfs) * Math.Log(jz.AverageDistance / 0.2) / (Math.Log(double.Parse(i) / 0.1) / tpcinfo.zzrfs +
+                        Math.Log(jz.AverageDistance / double.Parse(i)) / tpcinfo.zrfs + Math.Log(jz.AverageDistance / 0.1) / (100 - tpcinfo.zzrfs));
                     //吸液强度
                     double xyqd = Q_thzzxs / tpcinfo.zzhd * YXQ / 2;
                     XYQDs.Add(new KeyValuePair<string, double>(i, xyqd));
@@ -223,8 +255,8 @@ namespace SBTP.View.CSSJ
                 double T_sqys = tpcls.Sqys;
                 //注聚月数
                 double T_jqys = tpcls.Jqys;
-                double FDDSTL = baseData.Find(x => x.jh == item.JH).k1;
-                double ZZDSTL = baseData.Find(x => x.jh == item.JH).k2;
+                double FDDSTL = tpcxx.k1;
+                double ZZDSTL = tpcxx.k2;
 
                 //计算机器学习参数
                 //过水倍数
@@ -235,13 +267,31 @@ namespace SBTP.View.CSSJ
                 double STLJC = FDDSTL / ZZDSTL;
                 //过聚倍数
                 double GJBS = para * (T_jqys / 12) * 10000 / (2 * T_jqts * tpcinfo.zzhd);
+
+                string bj_min = radius_start.Text;
+                string bj_max = radius_end.Text;
+                string bj_step = step.Text;
+                ////过水倍数
+                //double GSBS = 0.41;
+                ////油饱和度
+                //double YBHD = 0.508;
+                ////渗透率极差
+                //double STLJC = 1.5;
+                ////过聚倍数
+                //double GJBS = 7.17;
+
+                //string bj_min = "60";
+                //string bj_max = "80";
+                //string bj_step = "10";
                 Task<string> runPython = Task.Run(() =>
                 {
                     string result = string.Empty;
                     for (int i = 0; i < XYQDs.Count; i++)
                     {
-                        string cmd = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}", GSBS, YBHD, STLJC, GJBS, XYQDs[i].Value.ToString(), radius_start.Text, radius_end.Text, step.Text);
-                        string cmdResult = RunCMD.run_python(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"py\deliverables\demo.py"), cmd);
+                        double xyqd = XYQDs[i].Value;
+                        //double xyqd = 10;
+                        string cmd = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}", GSBS, YBHD, STLJC, GJBS, xyqd.ToString(), bj_min, bj_max, bj_step);
+                        string cmdResult = RunCMD.run_python(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"py\deliverables\demo.py"), cmd).Trim();
                         if (i == XYQDs.Count - 1)
                             result += cmdResult;
                         else
@@ -257,41 +307,26 @@ namespace SBTP.View.CSSJ
                 List<Point> zyList = new List<Point>();
                 //python结果集
                 List<string> cmdresults = runPython.Result.Trim().Split('*').ToList();
-                foreach (KeyValuePair<string, double> z in XYQDs)
+                for (int k = 0; k < XYQDs.Count; k++)
                 {
-                    foreach (string j in cmdresults)
+                    List<string> resultArray = cmdresults[k].Trim().Replace('(', ',').Replace(')', ',').Replace('[', ',').Replace(']', ',').Replace(' ', ',').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    for (int i = 0; i < resultArray.Count; i += 2)
                     {
-                        List<string> resultArray = j.Trim().Replace('(', ',').Replace(')', ',').Replace('[', ',').Replace(']', ',').Replace(' ', ',').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        for (int i = 0; i < resultArray.Count; i += 2)
-                        {
-                            if (z.Key.Equals(resultArray[i]))
-                                zyList.Add(new Point(double.Parse(resultArray[i]), Math.Round(double.Parse(resultArray[i + 1]), 3)));
-                        }
+                        if (double.Parse(XYQDs[k].Key).Equals(double.Parse(resultArray[i])))
+                            zyList.Add(new Point(double.Parse(resultArray[i]), Math.Round(double.Parse(resultArray[i + 1]), 3)));
                     }
                 }
-
                 tpbj.Split(',').ToList().ForEach(x => comboboxDatasource.Add(double.Parse(x).ToString()));
+                item.BJS = comboboxDatasource;
+                item.TPCInfo = tpcxx;
+                //item.NHHS = Data.DatHelper.GetFunctionParam("指数函数");
+                item.tpjjg = tpjJg.First();
+                item.CCWXInfo = ccwxInfos.Find(x => x.jh.Equals(item.JH));
+                item.tpjnd = tpjnd.Find(x => x.JH.Equals(item.JH));
+                item.Bjandzy = zyList;
                 item.TPBJ = "(" + tpbj + ")";
                 item.ZY = PointToString(zyList);
-                //优化半径下的增油量集合
-                item.Bjandzy = zyList;
-                item.BJS = comboboxDatasource;
-                //计算半径投产比关系
-                //提取工序设计
-                var GXSJ = Data.DatHelper.ReadGXSJ(item.JH);
-                var JG = tpjJg[0];
-                List<Point> Bjandtcb = new List<Point>();
-                if (GXSJ != null)
-                {
-                    foreach (Point i in zyList)
-                    {
-                        Bjandtcb.Add(new Point(i.X, Math.Round((i.Y * JG.yy * 0.81 / (GXSJ.Sum(x => x.YL * x.YN * JG.yttpj) + GXSJ.Sum(x => x.YL * x.KN * JG.kltpj) + GXSJ.Sum(x => x.YL * x.XN * JG.xdyfj) + JG.qt + JG.sg)), 3)));
-                    }
-                }
-                item.Bjandtcb = Bjandtcb;
-                item.TPCInfo = baseData.Find(x => x.jh.Equals(item.JH));
-                item.NHHS = Data.DatHelper.GetFunctionParam("指数函数");
-                item.CCWXInfo = ccwxInfos.Find(x => x.jh.Equals(item.JH));
+                //优化半径下的增油量集合                             
             }
         }
         /// <summary>
@@ -373,7 +408,7 @@ namespace SBTP.View.CSSJ
                 DependentRangeAxis = new LinearAxis()
                 {
                     Orientation = AxisOrientation.Y,
-                    Interval = 20,
+                    Interval = 10000,
                     Title = "增油量"
                 }
             };

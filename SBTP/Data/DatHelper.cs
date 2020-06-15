@@ -129,7 +129,7 @@ namespace SBTP.Data
             inputStr += "*TPJ // 液体调剖剂名称  颗粒调剖剂名称\r\n";
             inputStr += "/TPJXZ\r\n";
             inputStr += "**TPJND\r\n";
-            inputStr += "*TPJND // 井号 液体浓度 颗粒浓度 颗粒粒径 液体调剖剂名称 颗粒调剖剂名称\r\n";
+            inputStr += "*TPJND // 井号 液体浓度 颗粒浓度 颗粒粒径 液体调剖剂名称 颗粒调剖剂名称 携带液浓度 液体用量分数\r\n";
             inputStr += "/TPJND";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -1324,18 +1324,18 @@ namespace SBTP.Data
         /// 保存调剖剂浓度
         /// </summary>
         /// <param name="data"></param>
-        public static void TPJND_Save(string jh, double ytnd, double klnd, double kllj, string ytmc, string klmc)
+        public static void TPJND_Save(string jh, double ytnd, double klnd, double kllj, string ytmc, string klmc,double xdynd,double ytylfs)
         {
             CheckRLS2();
             List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT"));
             using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS2.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*TPJND // 井号 液体浓度 颗粒浓度 颗粒粒径 液体调剖剂名称 颗粒调剖剂名称");
+                int startIndex = lines.IndexOf("*TPJND // 井号 液体浓度 颗粒浓度 颗粒粒径 液体调剖剂名称 颗粒调剖剂名称 携带液浓度 液体用量分数");
                 int endIndex = lines.IndexOf("/TPJND");
                 //lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
-                string dataStr = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\r\n", jh, ytnd, klnd, kllj, ytmc, klmc);
+                string dataStr = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\r\n", jh, ytnd, klnd, kllj, ytmc, klmc, xdynd, ytylfs);
                 newLines.Insert(startIndex + 1, dataStr);
                 sw.Write(string.Join("", newLines.ToArray()));
             }
@@ -1380,7 +1380,9 @@ namespace SBTP.Data
                     KLND = Unity.ToDouble(arr[2]),
                     KLLJ = Unity.ToDouble(arr[3]),
                     YTMC = Unity.ToString(arr[4]),
-                    KLMC = Unity.ToString(arr[5])
+                    KLMC = Unity.ToString(arr[5]),
+                    XDYND = Unity.ToDouble(arr[6]),
+                    YTYLFS = Unity.ToDouble(arr[7])
                 });
             }
             return data;
@@ -1394,7 +1396,7 @@ namespace SBTP.Data
             bool flag = false;
             foreach (string temp in lines)
             {
-                if (temp.Contains("*TPJND // 井号 液体浓度 颗粒浓度 颗粒粒径 液体调剖剂名称 颗粒调剖剂名称")) { flag = true; i++; continue; }
+                if (temp.Contains("*TPJND // 井号 液体浓度 颗粒浓度 颗粒粒径 液体调剖剂名称 颗粒调剖剂名称 携带液浓度 液体用量分数")) { flag = true; i++; continue; }
 
                 if (temp.Contains(jh))
                 {
@@ -1585,7 +1587,6 @@ namespace SBTP.Data
                     sb.Append($"{item.yttpj}\t");
                     sb.Append($"{item.kltpj}\t");
                     sb.Append($"{item.xdyfj}\t");
-                    sb.Append($"{item.yy}\t");
                     sb.Append($"{item.yy}\t");
                     sb.Append($"{item.sg}\t");
                     sb.Append($"{item.qt}\r\n");

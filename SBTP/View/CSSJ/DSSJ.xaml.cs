@@ -182,11 +182,17 @@ namespace SBTP.View.CSSJ
         ObservableCollection<tpc_model> DSJListSource;
         ObservableCollection<string> YSJListSource;
         ObservableCollection<DssjModel> GetdssjModel;
+        //调剖层信息
+        List<jcxx_tpcxx_model> jcxx_Tpcxx_Models;
+        //调剖历史信息
+        List<jcxx_tpcls_model> jcxx_Tpcls_Models;
 
         public DSSJ()
         {
             InitializeComponent();
             this.Loaded += new RoutedEventHandler(BindingList);
+            jcxx_Tpcxx_Models = DatHelper.read_jcxx_tpcxx();
+            jcxx_Tpcls_Models = DatHelper.read_jcxx_tpcls();
         }
 
         private void BindingList(object sender, RoutedEventArgs e)
@@ -381,7 +387,7 @@ namespace SBTP.View.CSSJ
                 List<TextBox> textBoxes = FindVisualChild<TextBox>(e.EditingElement);
                 if (gxmc.Equals("凝胶段塞"))
                 {
-                    if ((textBoxes != null || textBoxes.Count != 0) && (e.Column.Header.Equals("颗粒调剖剂粒径（mg/L）") || e.Column.Header.Equals("携液浓度（mg/L）") || e.Column.Header.Equals("颗粒调剖剂浓度（mm）")))
+                    if ((textBoxes != null || textBoxes.Count != 0) && (e.Column.Header.Equals("颗粒目数（mg/L）") || e.Column.Header.Equals("携液浓度（mg/L）") || e.Column.Header.Equals("颗粒调剖剂浓度（mm）")))
                     {
                         Dispatcher.Invoke(new Action(() =>
                         {
@@ -650,6 +656,21 @@ namespace SBTP.View.CSSJ
                 pressure = 0.01157 * q_1_n_sum * Math.Log(Math.Sqrt(Math.PI * hd * q_k_n_sum) / (rw + Math.Sqrt(Math.PI * hd * q_k1_n_sum))) / (2 * Math.PI * kd * hd) + (q1 - q0) * tqzrnd * Math.Log(re / (rw + Math.Sqrt(Math.PI * hd * q_1_n))) / (2 * Math.PI * hd * kd); ;
             }
             return pressure;
+        }
+
+        private double PressureValBefore(string jh)
+        {
+            qkcs qkcs = DatHelper.readQkcs();
+            //最小剪流速
+            double v_min = qkcs.Jlmin;
+            //吸液分数
+            double tpcxyfs = jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh)).zrfs/100;
+            //日注液量
+            double tpcrzl = jcxx_Tpcls_Models.Find(x => x.jh.Equals(jh)).dqrzl;
+            //厚度
+            double tpchd = jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh)).yxhd;
+
+            return 0;
         }
 
         private void PressureCalcu_Click(object sender, RoutedEventArgs e)

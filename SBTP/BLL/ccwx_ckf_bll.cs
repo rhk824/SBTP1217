@@ -54,8 +54,8 @@ namespace SBTP.BLL
                 return new ccwx_tpjing_model()
                 {
                     jh = tpjing.jh,
-                    k1 = isCalculateStl == true ? calculate_stl(list_fdd) : calculate_k(list_fdd), // 计算 k1
-                    k2 = isCalculateStl == true ? calculate_stl(list_zzd) : calculate_k(list_zzd), // 计算 k2
+                    k1 = isCalculateStl == true ? calculate_stl(list_fdd) : calculate_k(oc_xcsj.ToList()), // 计算 k1
+                    k2 = isCalculateStl == true ? calculate_stl(list_zzd) : calculate_k(oc_xcsj.ToList()), // 计算 k2
                     ybhd = Math.Round(calculate_ybhd(list_fddAndzzd_hybhd), 3),//计算油饱和度
                     calculate_type = 3
                 };
@@ -126,7 +126,7 @@ namespace SBTP.BLL
         {
             if (list.Count == 0) return 0;
             double k_plus_hd, hd_sum, result;
-            k_plus_hd = double.Parse(list.Sum(x => x.YXHD * x.STL).ToString());
+            k_plus_hd = double.Parse(list.Sum(x => x.kh).ToString());
             hd_sum = double.Parse(list.Sum(x => x.YXHD).ToString());
             result = hd_sum == 0 ? 0 : k_plus_hd / hd_sum;
             if (result >= 0.5)
