@@ -31,7 +31,7 @@ namespace SBTP.Data
             "/TPCXX",
             "*TPJXX // 井号 液体剂名称 液体剂浓度 颗粒剂名称 颗粒剂粒径 颗粒剂浓度 携带液浓度",
             "/TPJXX",
-            "*TPCLS // 井号 日注液量 初始油饱和度 累计注入水量 累计注聚量 累计水驱天数 累计水驱月数 累计聚驱天数 累计聚驱月数",
+            "*TPCLS // 井号 井径 注采井距 日注液量 累计注入水量 累计注聚量 累计水驱天数 累计水驱年数 累计聚驱天数 累计聚驱年数",
             "/TPCLS",
             "*JGXX // 液体剂价格 固体剂价格 携带剂价格 原油价格 施工价格 其他费用",
             "/JGXX",
@@ -57,11 +57,11 @@ namespace SBTP.Data
             inputStr.Append("**JCXX\r\n");
             inputStr.Append("*TPCJH // 井号\r\n");
             inputStr.Append("/TPCJH\r\n");
-            inputStr.Append("*TPCXX // 井号 层号 有效厚度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率\r\n");
+            inputStr.Append("*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率\r\n");
             inputStr.Append("/TPCXX\r\n");
             inputStr.Append("*TPJXX // 井号 液体剂名称 液体剂浓度 颗粒剂名称 颗粒剂粒径 颗粒剂浓度 携带液浓度\r\n");
             inputStr.Append("/TPJXX\r\n");
-            inputStr.Append("*TPCLS // 井号 日注液量 初始油饱和度 累计注入水量 累计注聚量\r\n");
+            inputStr.Append("*TPCLS // 井号 井径 注采井距 日注液量 累计注入水量 累计注聚量 累计水驱天数 累计水驱年数 累计聚驱天数 累计聚驱年数\r\n");
             inputStr.Append("/TPCLS\r\n");
             inputStr.Append("*JGXX // 液体剂价格 固体剂价格 携带剂价格 原油价格 施工价格 其他费用\r\n");
             inputStr.Append("/JGXX\r\n");
@@ -174,6 +174,8 @@ namespace SBTP.Data
             inputStr += "/QTLB\r\n";
             inputStr += "*QTXS // 残余油饱和度  水相相渗端点值\r\n";
             inputStr += "/QTXS\r\n";
+            inputStr += "*OTHERS // 水粘度 油粘度 聚合物粘度 油密度 幂指数\r\n";
+            inputStr += "/OTHERS\r\n";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS0.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
             using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
@@ -250,6 +252,9 @@ namespace SBTP.Data
                 inputStr += "*QTXS // 残余油饱和度  水相相渗端点值\r\n";
                 inputStr += qkcs.Cyybhd + "\t" + qkcs.Sxxsddz + "\r\n";
                 inputStr += "/QTXS\r\n";
+                inputStr += "*OTHERS // 水粘度 油粘度 聚合物粘度 油密度 幂指数\r\n";
+                inputStr += qkcs.Sn + "\t" + qkcs.Yn + "\t" + qkcs.Jn + "\t" + qkcs.Ym + "\t" + qkcs.Mvalue + "\r\n";
+                inputStr += "/OTHERS\r\n";
                 sw.Write(inputStr);
             }
         }
@@ -265,32 +270,46 @@ namespace SBTP.Data
             int qtfs_index = data.FindIndex(x => x.ToString().Contains("*QTFS"));
             int qtlb_index = data.FindIndex(x => x.ToString().Contains("*QTLB"));
             int qtxs_index = data.FindIndex(x => x.ToString().Contains("*QTXS"));
+            int other_index = data.FindIndex(x => x.ToString().Contains("*OTHERS"));
             qkcs qkcs = new qkcs();
             if (!data[qkxz_index + 1].ToString().Contains("/QKXZ"))
             {
-                qkcs.Ycwd = double.Parse(data[qkxz_index + 1].ToString().Split('\t')[0]);
-                qkcs.Yckhd = double.Parse(data[qkxz_index + 1].ToString().Split('\t')[1]);
-                qkcs.Ycph = double.Parse(data[qkxz_index + 1].ToString().Split('\t')[2]);
-                qkcs.Ycyl = double.Parse(data[qkxz_index + 1].ToString().Split('\t')[3]);
+                string[] vs = data[qkxz_index + 1].ToString().Split('\t');
+                qkcs.Ycwd = double.Parse(vs[0]);
+                qkcs.Yckhd = double.Parse(vs[1]);
+                qkcs.Ycph = double.Parse(vs[2]);
+                qkcs.Ycyl = double.Parse(vs[3]);
             }
             if (!data[qtfs_index + 1].ToString().Contains("/QTFS"))
             {
-                qkcs.Fs = data[qtfs_index + 1].ToString().Split('\t')[0];
-                qkcs.Qtn = double.Parse(data[qtfs_index + 1].ToString().Split('\t')[1]);
-                qkcs.Qtgn = double.Parse(data[qtfs_index + 1].ToString().Split('\t')[2]);
+                string[] vs = data[qtfs_index + 1].ToString().Split('\t');
+                qkcs.Fs = vs[0];
+                qkcs.Qtn = double.Parse(vs[1]);
+                qkcs.Qtgn = double.Parse(vs[2]);
             }
             if (!data[qtlb_index + 1].ToString().Contains("/QTLB"))
             {
-                qkcs.Jlmin = double.Parse(data[qtlb_index + 1].ToString().Split('\t')[0]);
-                qkcs.Jlmax = double.Parse(data[qtlb_index + 1].ToString().Split('\t')[1]);
-                qkcs.Lb = double.Parse(data[qtlb_index + 1].ToString().Split('\t')[2]);
-                qkcs.Hf = double.Parse(data[qtlb_index + 1].ToString().Split('\t')[3]);
-                qkcs.Jq = double.Parse(data[qtlb_index + 1].ToString().Split('\t')[4]);
+                string[] vs = data[qtlb_index + 1].ToString().Split('\t');
+                qkcs.Jlmin = double.Parse(vs[0]);
+                qkcs.Jlmax = double.Parse(vs[1]);
+                qkcs.Lb = double.Parse(vs[2]);
+                qkcs.Hf = double.Parse(vs[3]);
+                qkcs.Jq = double.Parse(vs[4]);
             }
             if (!data[qtxs_index + 1].ToString().Contains("/QTXS"))
             {
-                qkcs.Cyybhd = double.Parse(data[qtxs_index + 1].ToString().Split('\t')[0]);
-                qkcs.Sxxsddz = double.Parse(data[qtxs_index + 1].ToString().Split('\t')[1]);
+                string[] vs = data[qtxs_index + 1].ToString().Split('\t');
+                qkcs.Cyybhd = double.Parse(vs[0]);
+                qkcs.Sxxsddz = double.Parse(vs[1]);
+            }
+            if (!data[other_index + 1].ToString().Contains("/OTHERS"))
+            {
+                string[] vs = data[other_index + 1].ToString().Split('\t');
+                qkcs.Sn = double.Parse(vs[0]);
+                qkcs.Yn = double.Parse(vs[1]);
+                qkcs.Jn = double.Parse(vs[2]);
+                qkcs.Ym = double.Parse(vs[3]);
+                qkcs.Mvalue = double.Parse(vs[4]);
             }
 
             return qkcs;
@@ -1536,7 +1555,7 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(path_string, false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*TPCLS // 井号 日注液量 初始油饱和度 累计注入水量 累计注聚量 累计水驱天数 累计水驱月数 累计聚驱天数 累计聚驱月数");
+                int startIndex = lines.IndexOf("*TPCLS // 井号 井径 注采井距 日注液量 累计注入水量 累计注聚量 累计水驱天数 累计水驱年数 累计聚驱天数 累计聚驱年数");
                 int endIndex = lines.IndexOf("/TPCLS");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -1546,14 +1565,16 @@ namespace SBTP.Data
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.Append($"{item.jh}\t");
+                    sb.Append($"{item.Jj}\t");
+                    sb.Append($"{item.Zcjj}\t");
                     sb.Append($"{item.dqrzl}\t");
-                    sb.Append($"{item.ysybhd}\t");
+                    //sb.Append($"{item.ysybhd}\t");
                     sb.Append($"{item.ljzsl}\t");
                     sb.Append($"{item.ljzjl}\t");
                     sb.Append($"{item.Sqts}\t");
-                    sb.Append($"{item.Sqys}\t");
+                    sb.Append($"{item.Sqns}\t");
                     sb.Append($"{item.Jqts}\t");
-                    sb.Append($"{item.Jqys}\r\n");
+                    sb.Append($"{item.Jqns}\r\n");
                     newData.Add(sb.ToString());
                 }
                 newLines.InsertRange(startIndex + 1, newData);
@@ -1713,14 +1734,16 @@ namespace SBTP.Data
                     list.Add(new jcxx_tpcls_model()
                     {
                         jh = vs[0].ToString(),
-                        dqrzl = Unity.ToDouble(vs[1]),
-                        ysybhd = Unity.ToDouble(vs[2]),
-                        ljzsl = Unity.ToDouble(vs[3]),
-                        ljzjl = Unity.ToDouble(vs[4]),
-                        Sqts = Unity.ToDouble(vs[5]),
-                        Sqys = Unity.ToDouble(vs[6]),
-                        Jqts = Unity.ToDouble(vs[7]),
-                        Jqys = Unity.ToDouble(vs[8])
+                        Jj = Unity.ToDouble(vs[1]),
+                        Zcjj = Unity.ToDouble(vs[2]),
+                        dqrzl = Unity.ToDouble(vs[3]),
+                        //ysybhd = Unity.ToDouble(vs[4]),
+                        ljzsl = Unity.ToDouble(vs[4]),
+                        ljzjl = Unity.ToDouble(vs[5]),
+                        Sqts = Unity.ToDouble(vs[6]),
+                        Sqns = Unity.ToDouble(vs[7]),
+                        Jqts = Unity.ToDouble(vs[8]),
+                        Jqns = Unity.ToDouble(vs[9])
                     });
                 }
                 if (line.Contains("**JCXX")) flag1 = true;

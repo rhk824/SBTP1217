@@ -86,7 +86,7 @@ namespace SBTP.BLL
                 oc_tpc.Remove(item);
                 oc_tpcxx.Add(new jcxx_tpcxx_model() { jh = item });
                 oc_tpjxx.Add(new jcxx_tpjxx_model() { jh = item });
-                oc_tpcls.Add(new jcxx_tpcls_model() { jh = item });
+                oc_tpcls.Add(new jcxx_tpcls_model() { jh = item, Zcjj = DatHelper.read_zcjz().Find(x => x.JH.Equals(item)) == null ? 0 : DatHelper.read_zcjz().Find(x => x.JH.Equals(item)).AverageDistance });
             }
         }
 

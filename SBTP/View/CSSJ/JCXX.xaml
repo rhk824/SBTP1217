@@ -59,7 +59,7 @@
                 <DataGrid Grid.Row="1" ItemsSource="{Binding oc_tpcxx}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn CellTemplate="{StaticResource SelectedColumn}" />
-                        <DataGridTextColumn Header="井号" Binding="{Binding jh}" />
+                        <DataGridTextColumn Header="井号" Binding="{Binding jh}" IsReadOnly="True"/>
                         <DataGridTextColumn Header="层段" Binding="{Binding cd}" />
                         <DataGridTextColumn Header="有效厚度（m）" Binding="{Binding yxhd}" />
                         <DataGridTextColumn Header="含油饱和度" Binding="{Binding ybhd}" />
@@ -119,7 +119,7 @@
                 <DataGrid Grid.Row="1" ItemsSource="{Binding oc_tpjxx}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn CellTemplate="{StaticResource SelectedColumn}" />
-                        <DataGridTextColumn Header="井号" Binding="{Binding jh}" />
+                        <DataGridTextColumn Header="井号" Binding="{Binding jh}" IsReadOnly="True"/>
                         <DataGridTemplateColumn HeaderStyle="{StaticResource header_yttpj_style}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -163,7 +163,9 @@
                 <DataGrid Name="qtls" Grid.Row="1" ItemsSource="{Binding oc_tpcls}">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn CellTemplate="{StaticResource SelectedColumn}" />
-                        <DataGridTextColumn Header="井号" Binding="{Binding jh}" />
+                        <DataGridTextColumn Header="井号" Binding="{Binding jh}" IsReadOnly="True" />
+                        <DataGridTextColumn Header="井径" Binding="{Binding Jj}"/>
+                        <DataGridTextColumn Header="注采井距" Binding="{Binding Zcjj}"/>
                         <DataGridTextColumn Binding="{Binding dqrzl, StringFormat={}{0:F4}}">
                             <DataGridTextColumn.Header>
                                 <TextBlock>
@@ -171,7 +173,6 @@
                                 </TextBlock>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="原始油饱和度" Binding="{Binding ysybhd}" />
                         <DataGridTextColumn Binding="{Binding ljzsl, StringFormat={}{0:F4}}">
                             <DataGridTextColumn.Header>
                                 <TextBlock>
@@ -186,6 +187,8 @@
                                 </TextBlock>
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
+                        <DataGridTextColumn Header="累计水驱天数" Binding="{Binding Sqts}"/>
+                        <DataGridTextColumn Header="累计聚驱天数" Binding="{Binding Jqts}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

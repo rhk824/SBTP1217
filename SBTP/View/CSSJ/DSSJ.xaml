@@ -100,7 +100,7 @@
             </Grid.RowDefinitions>
 
             <GroupBox Header="待设计井">
-                <ListBox Name="DSJ_Well"  SelectionChanged="DSJ_Well_SelectionChanged"/>
+                <ListBox Name="DSJ_Well" ItemsSource="{Binding DSJListSource}" DisplayMemberPath="{Binding jh}"  SelectionChanged="DSJ_Well_SelectionChanged"/>
             </GroupBox>
 
             <StackPanel Grid.Row="1" HorizontalAlignment="Center">
@@ -108,7 +108,7 @@
             </StackPanel>
 
             <GroupBox Header="已设计井" Grid.Row="2">
-                <ListBox Name="YSJ_Well"/>
+                <ListBox Name="YSJ_Well" ItemsSource="{Binding YSJListSource}"/>
             </GroupBox>
 
         </Grid>
@@ -152,7 +152,7 @@
                             <RowDefinition />
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <DataGrid Name="SJ_Grid" Grid.Row="0" LoadingRow="DataGrid_LoadingRow" HeadersVisibility="Column" ItemsSource="{Binding}" CanUserDeleteRows="True" CellEditEnding="SJ_Grid_CellEditEnding" PreparingCellForEdit="SJ_Grid_PreparingCellForEdit" MouseRightButtonDown="SJ_Grid_MouseRightButtonDown">
+                        <DataGrid Name="SJ_Grid" Grid.Row="0" LoadingRow="DataGrid_LoadingRow" HeadersVisibility="Column" ItemsSource="{Binding GetdssjModel}" CanUserDeleteRows="True" CellEditEnding="SJ_Grid_CellEditEnding" PreparingCellForEdit="SJ_Grid_PreparingCellForEdit" MouseRightButtonDown="SJ_Grid_MouseRightButtonDown">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn  Width="55" Header="施工序号"  >
                                     <DataGridTemplateColumn.CellTemplate>

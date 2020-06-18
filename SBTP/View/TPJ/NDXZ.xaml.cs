@@ -196,7 +196,7 @@ namespace SBTP.View.TPJ
         private double klnd;
         private double kllj;
         private double xdynd;
-        private double ytylfs;
+        private double ytylfs = 0.5;
 
         /// <summary>
         /// 井号

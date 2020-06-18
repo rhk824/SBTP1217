@@ -17,6 +17,8 @@ namespace SBTP.Model
         private double _jqts;
         private double _sqys;
         private double _jqys;
+        private double _jj = 0.1;
+        private double _zcjj;
 
         #region Property Getters And Setters
 
@@ -87,19 +89,27 @@ namespace SBTP.Model
         /// <summary>
         /// 水驱天数
         /// </summary>
-        public double Sqts { get => _sqts; set { _sqts = value; NotifyPropertyChanged("Sqts"); } }
+        public double Sqts { get => _sqts; set { _sqts = value; _sqys = value / 365; NotifyPropertyChanged("Sqts"); } }
         /// <summary>
         /// 聚驱天数
         /// </summary>
-        public double Jqts { get => _jqts; set { _jqts = value; NotifyPropertyChanged("Jqts"); } }
+        public double Jqts { get => _jqts; set { _jqts = value; _jqys = value / 365; NotifyPropertyChanged("Jqts"); } }
         /// <summary>
-        /// 水驱月数
+        /// 水驱年数
         /// </summary>
-        public double Sqys { get => _sqys; set { _sqys = value; NotifyPropertyChanged("Sqys"); } }
+        public double Sqns { get => _sqys; set { _sqys = value; NotifyPropertyChanged("Sqys"); } }
         /// <summary>
-        /// 聚驱月数
+        /// 聚驱年数
         /// </summary>
-        public double Jqys { get => _jqys; set { _jqys = value; NotifyPropertyChanged("Jqys"); } }
+        public double Jqns { get => _jqys; set { _jqys = value; NotifyPropertyChanged("Jqys"); } }
+        /// <summary>
+        /// 井径
+        /// </summary>
+        public double Jj { get => _jj; set { _jj = value; NotifyPropertyChanged("Jj"); } }
+        /// <summary>
+        /// 注采井距
+        /// </summary>
+        public double Zcjj { get => _zcjj; set { _zcjj = value; NotifyPropertyChanged("Zcjj"); } }
 
         #endregion
     }

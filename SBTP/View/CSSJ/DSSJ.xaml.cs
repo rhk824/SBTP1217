@@ -116,6 +116,9 @@ namespace SBTP.View.CSSJ
                 Changed("XN");
             }
         }
+        /// <summary>
+        /// 排量
+        /// </summary>
         public double ZRSD
         {
             get
@@ -128,6 +131,7 @@ namespace SBTP.View.CSSJ
                 Changed("ZRSD");
             }
         }
+
         public double ZRTS
         {
             get
@@ -140,6 +144,9 @@ namespace SBTP.View.CSSJ
                 Changed("ZRTS");
             }
         }
+        /// <summary>
+        /// 当量粘度
+        /// </summary>
         public double DLND
         {
             get
@@ -152,6 +159,9 @@ namespace SBTP.View.CSSJ
                 Changed("DLND");
             }
         }
+        /// <summary>
+        /// 注入压力
+        /// </summary>
         public double ZRYL
         {
             get
@@ -177,22 +187,38 @@ namespace SBTP.View.CSSJ
     /// <summary>
     /// DSSJ.xaml 的交互逻辑
     /// </summary>
-    public partial class DSSJ : Page
+    public partial class DSSJ : Page, INotifyPropertyChanged
     {
-        ObservableCollection<tpc_model> DSJListSource;
-        ObservableCollection<string> YSJListSource;
-        ObservableCollection<DssjModel> GetdssjModel;
+        private ObservableCollection<tpc_model> dsj;
+        private ObservableCollection<string> ysj;
+        private ObservableCollection<DssjModel> getdssj;
+
+        public ObservableCollection<tpc_model> DSJListSource { get => dsj; set { dsj = value; Changed("DSJListSource"); } }
+        public ObservableCollection<string> YSJListSource { get => ysj; set { ysj = value; Changed("YSJListSource"); } }
+        public ObservableCollection<DssjModel> GetdssjModel { get => getdssj; set { getdssj = value; Changed("GetdssjModel"); } }
         //调剖层信息
         List<jcxx_tpcxx_model> jcxx_Tpcxx_Models;
         //调剖历史信息
         List<jcxx_tpcls_model> jcxx_Tpcls_Models;
+        //储层物性
+        List<ccwx_tpjing_model> ccwxInfos;
+
+        #region 属性更改通知
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Changed(string PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+        #endregion
 
         public DSSJ()
         {
             InitializeComponent();
+            DataContext = this;
             this.Loaded += new RoutedEventHandler(BindingList);
             jcxx_Tpcxx_Models = DatHelper.read_jcxx_tpcxx();
             jcxx_Tpcls_Models = DatHelper.read_jcxx_tpcls();
+            ccwxInfos = DatHelper.read_ccwx();
         }
 
         private void BindingList(object sender, RoutedEventArgs e)
@@ -214,11 +240,7 @@ namespace SBTP.View.CSSJ
             else
                 if (tpc != null)
                 tpc.ForEach(x => DSJListSource.Add(x));
-
-            this.DSJ_Well.ItemsSource = DSJListSource;
-            this.YSJ_Well.ItemsSource = YSJListSource;
-            this.DSJ_Well.DisplayMemberPath = "jh";
-            this.SJ_Grid.DataContext = GetdssjModel;
+            //this.SJ_Grid.DataContext = GetdssjModel;
         }
 
         /// <summary>
@@ -562,123 +584,160 @@ namespace SBTP.View.CSSJ
         }
 
         /// <summary>
-        /// 注入压力
+        /// 计算注入压力
         /// </summary>
-        /// <param name="index">段塞序号</param>
-        /// <param name="jh">井号</param>
+        /// <param name="jh"></param>
+        /// <param name="dssjModels"></param>
         /// <returns></returns>
-        //private double PressureVal(int index, string jh, int ds_cout, double qkt, double nk, double zrf, double z_zrf, double rzl, double n0, double qk, double re, double rw = 0.1)
-        private double PressureVal(int index, string jh)
+        private double PressureValCal(string jh, List<DssjModel> dssjModels)
         {
-            double pressure = 0;
-            //注入井井径
-            double rw = 0.1;
-            //平均井距/2
-            double re = double.Parse(this.DistanceAver.Content.ToString()) / 2;
-            List<jcxx_tpcxx_model> jcxx_Tpcxx_Models = DatHelper.read_jcxx_tpcxx();
-            List<jcxx_tpcls_model> jcxx_Tpcls_Models = DatHelper.read_jcxx_tpcls();
-            jcxx_tpcxx_model jcxx_Tpcxx_ = jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh.Trim()));
-            jcxx_tpcls_model jcxx_Tpcls_ = jcxx_Tpcls_Models.Find(x => x.jh.Equals(jh.Trim()));
-            if (jcxx_Tpcxx_ == null || jcxx_Tpcls_ == null)
-                return 0;
-            //有效厚度
-            double yxhd = jcxx_Tpcxx_.yxhd;
-            //增注厚度
-            double zzhd = jcxx_Tpcxx_.zzhd;
-            //注入分数
-            double zrfs = jcxx_Tpcxx_.zrfs;
-            //增注入分数
-            double zzrfs = jcxx_Tpcxx_.zzrfs;
-            //调前日注量
-            double rzyl = jcxx_Tpcls_.dqrzl;
-
-            //封堵段渗透率
-            double kd = jcxx_Tpcxx_.k1;
-            //封堵段厚度
-            double hd = yxhd - zzhd;
-            //驱替前封堵段排量
-            double q0 = (zrfs - zzrfs) * rzyl;
-            //调前注入液粘度
-            double tqzrnd = double.Parse(TQZRND.Text.Trim());
-            //第一个段塞注入速度
-            //double q1 = double.Parse(FindVisualChild<TextBlock>(SJ_Grid.Columns[8].GetCellContent(SJ_Grid.Items[0]))[0].Text);
-            double q1 = GetdssjModel[0].ZRSD;
-
-            if (index == 1)
-            {
-                //第一个段塞当量粘度
-                //double n1 = double.Parse(FindVisualChild<TextBlock>(SJ_Grid.Columns[10].GetCellContent(SJ_Grid.Items[0]))[0].Text);
-                double n1 = GetdssjModel[0].DLND;
-                //double yl_1 = double.Parse(FindVisualChild<TextBlock>(SJ_Grid.Columns[3].GetCellContent(SJ_Grid.Items[0]))[0].Text);
-                double yl_1 = GetdssjModel[0].YL;
-                //第一个段塞注入压力
-                pressure = 0.01157 * (q1 * n1 - tqzrnd * q0) / (2 * Math.PI * kd * hd) * Math.Log((Math.Sqrt(hd * Math.PI * yl_1)) / rw) + (q1 - q0) * tqzrnd * Math.Log(re / (rw + Math.Sqrt(Math.PI * hd * yl_1))) / (2 * Math.PI * hd * kd);
-            }
-            else
-            {
-                //第1个到n的和
-                double q_1_n_sum = 0;
-                //第k个到n的和
-                double q_k_n_sum = 0;
-                //第k+1个到n的和
-                double q_k1_n_sum = 0;
-                //用量1到n
-                double q_1_n = 0;
-
-                //k+1到n
-                if (index + 1 != SJ_Grid.Items.Count)
-                {
-                    for (int i = index + 1; i < SJ_Grid.Items.Count; i++)
-                    {
-                        q_k1_n_sum += GetdssjModel[i].YL;
-                           // double.Parse(FindVisualChild<TextBlock>(SJ_Grid.Columns[3].GetCellContent(SJ_Grid.Items[i]))[0].Text);
-                    }
-                }
-                //1到n
-                for (int i = 0; i < SJ_Grid.Items.Count; i++)
-                {
-                    //第i段注入速度i
-                    //double qi = double.Parse(FindVisualChild<TextBlock>(SJ_Grid.Columns[8].GetCellContent(SJ_Grid.Items[i]))[0].Text);
-                    double qi = GetdssjModel[i].ZRSD;
-                    //第i段注入粘度
-                    //double ni = double.Parse(FindVisualChild<TextBlock>(SJ_Grid.Columns[10].GetCellContent(SJ_Grid.Items[i]))[0].Text);
-                    double ni = GetdssjModel[i].DLND;
-                    q_1_n_sum += qi * ni - tqzrnd * q0;
-                    q_1_n += GetdssjModel[i].ZRSD;
-                    //double.Parse(FindVisualChild<TextBlock>(SJ_Grid.Columns[3].GetCellContent(SJ_Grid.Items[i]))[0].Text);
-                }
-                //k到n
-                for (int i = index; i < SJ_Grid.Items.Count; i++)
-                {
-                    q_k_n_sum += GetdssjModel[i].ZRSD;
-                    //double.Parse(FindVisualChild<TextBlock>(SJ_Grid.Columns[3].GetCellContent(SJ_Grid.Items[i]))[0].Text);
-                }
-                pressure = 0.01157 * q_1_n_sum * Math.Log(Math.Sqrt(Math.PI * hd * q_k_n_sum) / (rw + Math.Sqrt(Math.PI * hd * q_k1_n_sum))) / (2 * Math.PI * kd * hd) + (q1 - q0) * tqzrnd * Math.Log(re / (rw + Math.Sqrt(Math.PI * hd * q_1_n))) / (2 * Math.PI * hd * kd); ;
-            }
-            return pressure;
-        }
-
-        private double PressureValBefore(string jh)
-        {
+            #region 参数值
             qkcs qkcs = DatHelper.readQkcs();
             //最小剪流速
             double v_min = qkcs.Jlmin;
+            //水粘度
+            double sn = qkcs.Sn;
+            //聚合物粘度
+            double jn = qkcs.Jn;
+            //幂指数
+            double m = qkcs.Mvalue;
             //吸液分数
-            double tpcxyfs = jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh)).zrfs/100;
+            double tpcxyfs = jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh)).zrfs / 100;
             //日注液量
             double tpcrzl = jcxx_Tpcls_Models.Find(x => x.jh.Equals(jh)).dqrzl;
-            //厚度
+            //井径
+            double rw = jcxx_Tpcls_Models.Find(x => x.jh.Equals(jh)).Jj;
+            //厚度ht
             double tpchd = jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh)).yxhd;
+            //厚度 hd
+            double tpchd_fd = tpchd - jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh)).zzhd;
+            //井距
+            double zcjj = jcxx_Tpcls_Models.Find(x => x.jh.Equals(jh)).Zcjj;
+            var tpc = ccwxInfos.Find(x => x.jh.Equals(jh));
+            //调剖层渗透率kt
+            double tpcstl = (tpc.k1 * tpchd_fd + tpc.k2 * tpc.zzhd) / tpchd;
+            //封堵段孔隙度φ
+            double fk = tpc.fddkxd;
+            //调剖层吸液量q0
+            double q0 = tpcxyfs * tpcrzl;
+            //最小剪流速位置
+            double r_min = q0 / (2 * Math.PI * v_min * tpchd);
+            #endregion
 
-            return 0;
+            #region 计算△P0
+            //计算参数
+            double R = 0, p0 = 0;
+            //计算p0值
+            if (r_min >= zcjj)
+                R = zcjj;
+            else
+            {
+                R = r_min;
+                p0 += q0 * jn * Math.Log(zcjj / r_min) / (2 * Math.PI * tpchd * tpcstl);
+            }
+            p0 += q0 * sn * Math.Log(R / rw) / (2 * Math.PI * tpcstl * tpchd) +
+                        Math.Pow(q0 / (2 * Math.PI * tpchd), m) * (jn - sn) * (Math.Pow(R, 1 - m) - Math.Pow(rw, 1 - m)) / ((1 - m) * Math.Pow(v_min * fk, m - 1) * tpcstl);
+            p0 *= 0.01157;
+            #endregion
+
+            #region 计算所有段塞压力损耗 ∑△Pk
+            //所有段塞用量集合、按顺序排列
+            List<double> dsyl = new List<double>();
+            //所有段塞排量集合
+            List<double> dspl = new List<double>();
+            //所有段塞最小流速半径集合
+            List<double> dsls_min = new List<double>();
+            //所有段塞位置集合(内外径)
+            Dictionary<double, double> dslocation = new Dictionary<double, double>();
+            //所有段塞压力损耗集合
+            List<double> dspressure = new List<double>();
+            dssjModels.ToList().ForEach(x => { dsyl.Add(x.YL); dspl.Add(x.ZRSD); dsls_min.Add(x.ZRSD / (2 * Math.PI * v_min * tpchd_fd)); });
+            for (int i = 0; i < dsyl.Count; i++)
+            {
+                double yl_sum_out = 0;
+                double yl_sum_in = 0;
+                for (int j = dsyl.Count - 1 - i; j < dsyl.Count; j++)
+                {
+                    //计算段塞实际排量
+                    //外径
+                    yl_sum_out += dsyl[j];
+                    //内径
+                    if (j == 0)
+                        yl_sum_in += rw;
+                    else
+                        yl_sum_in += dsyl[j - 1];
+                }
+                dslocation.Add(Math.Sqrt(yl_sum_in / (Math.PI * tpchd_fd * fk)), Math.Sqrt(yl_sum_out / (Math.PI * tpchd_fd * fk)));
+            }
+            //生成段塞压力损耗集合
+            for (int i = 0; i < dslocation.Count; i++)
+            {
+                double r_wj = 0;
+                double p = 0;
+                double rmin = dsls_min[i];
+                double pl = dspl[i];
+                double r_w = dslocation.ToList()[i].Value;
+                double r_n = dslocation.ToList()[i].Key;
+                if (i == dslocation.Count - 1)
+
+                    if (rmin > zcjj) r_min = zcjj;
+                if (r_n <= rmin)
+                {
+
+                    if (rmin >= r_w)
+                        r_wj = r_w;
+                    else
+                    {
+                        r_wj = rmin;
+                        p += pl * dssjModels[i].DLND * Math.Log(r_w / rmin) / (2 * Math.PI * tpc.k1 * tpchd_fd);
+                    }
+                    p += pl * sn * Math.Log(r_wj / r_n) / (2 * Math.PI * tpc.k1 * tpchd_fd) + Math.Pow(pl / (2 * Math.PI * tpchd_fd), m) * ((dssjModels[i].DLND - sn) / ((1 - m) * Math.Pow(v_min * fk, m - 1) * tpc.k1)) * (Math.Pow(r_wj, 1 - m) - Math.Pow(r_n, 1 - m));
+                }
+                else
+                    p = pl * dssjModels[i].DLND * Math.Log(r_w / r_n) / (2 * Math.PI * tpc.k1 * tpchd_fd);
+                p *= 0.01157;
+                dspressure.Add(p);
+            }
+            #endregion
+
+            #region 计算△Pp
+            //计算最外层段塞前缘到注采井距一半压力损耗△Pp
+            //最外层段塞外径
+            double wds_outside = dslocation.First().Value;
+            //最外层段塞最小流速半径
+            double wds_min = dsls_min.First();
+            //压力损耗、粘度、半径
+            double Pp = 0, nd = 0, r = 0;
+            //最外层段塞排量
+            double wpl = dspl.First();
+
+            if (wds_outside >= wds_min)
+            {
+                r = wds_outside;
+                nd = jn;
+            }
+            else
+            {
+                r = wds_min;
+                nd = dssjModels.First().DLND;
+                Pp += wpl * sn * Math.Log(wds_min / wds_outside) / (2 * Math.PI * tpc.k1 * tpchd_fd) + Math.Pow(wpl / (2 * Math.PI * tpchd_fd), m) * (nd - sn) * (Math.Pow(wds_min, 1 - m) - Math.Pow(wds_outside, 1 - m)) / ((1 - m) * Math.Pow(v_min * fk, m - 1) * tpc.k1);
+            }
+            Pp += wpl * nd * Math.Log(zcjj / r) / (2 * Math.PI * tpc.k1 * tpchd_fd);
+            Pp *= 0.01157;
+            #endregion
+
+            return Pp + p0 + dspressure.Sum();
         }
 
         private void PressureCalcu_Click(object sender, RoutedEventArgs e)
         {
             if (SJ_Grid.Items.Count == 0) return;
-            for (int i = 0; i < SJ_Grid.Items.Count; i++)
+            for (int i = 0; i < GetdssjModel.Count; i++)
             {
-                FindVisualChild<TextBlock>(SJ_Grid.Columns[11].GetCellContent(SJ_Grid.Items[i]))[0].Text = Math.Round(PressureVal(i + 1, (DSJ_Well.SelectedItem as tpc_model).jh), 3).ToString();
+                List<DssjModel> models = new List<DssjModel>();
+                GetdssjModel.ToList().ForEach(x => { if (GetdssjModel.IndexOf(x) <= i) models.Add(x); });
+                GetdssjModel[i].ZRYL = Math.Round(PressureValCal((DSJ_Well.SelectedItem as tpc_model).jh, models), 5);
+                //FindVisualChild<TextBlock>(SJ_Grid.Columns[11].GetCellContent(SJ_Grid.Items[i]))[0].Text = Math.Round(PressureVal(i + 1, (DSJ_Well.SelectedItem as tpc_model).jh), 3).ToString();
             }
         }
         private void btn_close_Click(object sender, RoutedEventArgs e)
