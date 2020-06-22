@@ -100,7 +100,7 @@
             </Grid.RowDefinitions>
 
             <GroupBox Header="待设计井">
-                <ListBox Name="DSJ_Well" ItemsSource="{Binding DSJListSource}" DisplayMemberPath="{Binding jh}"  SelectionChanged="DSJ_Well_SelectionChanged"/>
+                <ListBox Name="DSJ_Well" SelectionChanged="DSJ_Well_SelectionChanged"/>
             </GroupBox>
 
             <StackPanel Grid.Row="1" HorizontalAlignment="Center">
@@ -145,14 +145,14 @@
                         <TextBlock VerticalAlignment="Center">
                         <Run Text="m"/><Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
                         </TextBlock>
-                        <Button Name="PressureCalcu" Content="计算注入压力" Click="PressureCalcu_Click" Style="{DynamicResource btn-primary}"/>
+                        <Button Name="PressureCalcu" Content="计算注入压力" Click="PressureCalcu_Click"/>
                     </StackPanel>
                     <Grid Grid.Row="1" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <DataGrid Name="SJ_Grid" Grid.Row="0" LoadingRow="DataGrid_LoadingRow" HeadersVisibility="Column" ItemsSource="{Binding GetdssjModel}" CanUserDeleteRows="True" CellEditEnding="SJ_Grid_CellEditEnding" PreparingCellForEdit="SJ_Grid_PreparingCellForEdit" MouseRightButtonDown="SJ_Grid_MouseRightButtonDown">
+                        <DataGrid Name="SJ_Grid" Grid.Row="0" CanUserSortColumns="False" LoadingRow="DataGrid_LoadingRow" HeadersVisibility="Column" ItemsSource="{Binding GetdssjModel}" CanUserDeleteRows="True" CellEditEnding="SJ_Grid_CellEditEnding" PreparingCellForEdit="SJ_Grid_PreparingCellForEdit" MouseRightButtonDown="SJ_Grid_MouseRightButtonDown">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn  Width="55" Header="施工序号"  >
                                     <DataGridTemplateColumn.CellTemplate>
@@ -210,13 +210,8 @@
                                     <Label Content="注入速度:"/>
                                     <Label Name="SD_T" Content="1"/>
                                 </StackPanel>
-                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <Label Content="注入压力:"/>
-                                    <Label Name="YL_T" Content="0"/>
-                                </StackPanel>
                             </StackPanel>
                         </Border>
-
                     </Grid>
                 </Grid>
             </GroupBox>

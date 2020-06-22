@@ -84,8 +84,9 @@ namespace SBTP.View.CSSJ
                 }
                 foreach (Point i in value)
                 {
-                    double yl = i.X * (TPCInfo.yxhd - TPCInfo.zzhd) * Math.PI * TPCInfo.Fkxd / 100 * TPCInfo.ltfs * a / 4;
-                    double tcb = (yl * (50 * tpjnd.YTND * tpjjg.yttpj / 100000 + 50 * tpjnd.KLND * tpjjg.kltpj / 100000000 + 50 * tpjnd.XDYND * tpjjg.xdyfj / 100000000) + tpjjg.qt + tpjjg.sg) / (i.Y * tpjjg.yy);
+                    double yl = Math.Pow(i.X, 2) * (TPCInfo.yxhd - TPCInfo.zzhd) * Math.PI * TPCInfo.Fkxd / 100 * TPCInfo.ltfs * a / 4;
+                    double tcb = (i.Y * tpjjg.yy) / (yl * (50 * tpjnd.YTND * tpjjg.yttpj / 100000 + 50 * tpjnd.KLND * tpjjg.kltpj / 100000000 +
+                        50 * tpjnd.XDYND * tpjjg.xdyfj / 100000000) + tpjjg.qt + tpjjg.sg);
                     Bj_tcb.Add(new Point(i.X, Math.Round(tcb, 2)));
                     Bj_tpjyl.Add(new Point(i.X, yl));
                 }
@@ -274,7 +275,7 @@ namespace SBTP.View.CSSJ
                 //过水倍数
                 double GSBS = para * T_jqns * 10000 / (2 * T_sqts * tpcinfo.zzhd * 10);
                 //油饱和度
-                double YBHD = double.Parse((tpcHistory.Find(x => x.jh == item.JH).ysybhd / 100).ToString());
+                double YBHD = tpcxx.ybhd / 100;
                 //渗透率极差
                 double STLJC = FDDSTL*10 / ZZDSTL;
                 //过聚倍数
