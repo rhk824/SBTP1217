@@ -18,8 +18,6 @@ namespace SBTP.Data
     public class DatHelper
     {
         private static string datPath = @"{0}\RLS";
-        //
-        //private static string string.Format(datPath, App.Project[0].PROJECT_LOCATION) = string.Format(datPath, App.Project[0].PROJECT_LOCATION);
         private static string rls3 = "RLS3.DAT";
         private static string[] rls3_lines =
         {

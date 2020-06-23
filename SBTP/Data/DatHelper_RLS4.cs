@@ -15,9 +15,8 @@ using SBTP.View.CSSJ;
 namespace SBTP.Data
 {
     public class DatHelper_RLS4
-    {
-        private static string work_direction = App.Project[0].PROJECT_LOCATION;
-
+    {       
+        private static string datPath = @"{0}\RLS";
         private static string rls = "RLS4.DAT";
         private static string rls3 = "RLS3.DAT";
         private static string[] rls_lines =
@@ -38,7 +37,7 @@ namespace SBTP.Data
             sb.Append("/ZRYC\r\n");
             sb.Append("*JZXG //序号 井组名 年含水上升率 调剖有效期 增油 见效时间\r\n");
             sb.Append("/JZXG\r\n");
-            using (FileStream fs = new FileStream(work_direction + @"\RLS4.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+            using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS4.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
             using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
             {
@@ -54,9 +53,9 @@ namespace SBTP.Data
         /// </summary>
         public static bool check_rls(string file_name, string[] lines)
         {
-            if (string.IsNullOrEmpty(work_direction)) return false; //无法找到工程目录
+            if (string.IsNullOrEmpty(App.Project[0].PROJECT_LOCATION)) return false; //无法找到工程目录
 
-            string path_string = work_direction;
+            string path_string = string.Format(datPath, App.Project[0].PROJECT_LOCATION);
             Directory.CreateDirectory(path_string);
             path_string = Path.Combine(path_string, file_name);
 
@@ -95,8 +94,8 @@ namespace SBTP.Data
         public static bool save_xgyc_zrj(List<XGYC_ZRJ_BLL> list)
         {
             CheckRLS();
-            List<string> lines = new List<string>(File.ReadAllLines(work_direction + @"\RLS4.DAT"));
-            using (StreamWriter sw = new StreamWriter(work_direction + @"\RLS4.DAT", false, Encoding.UTF8))
+            List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS4.DAT"));
+            using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS4.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
                 int startIndex = lines.IndexOf("*ZRYC //序号 井号 注入液粘度 调剖半径 措施前视吸水指数 措施前等效压力 措施前增注段吸液量 措施后压力 措施后视吸水指数");
@@ -128,7 +127,7 @@ namespace SBTP.Data
         {
             CheckRLS();
             List<XGYC_ZRJ_BLL> list = new List<XGYC_ZRJ_BLL>();
-            List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(work_direction, "RLS4.DAT")));
+            List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), "RLS4.DAT")));
 
             foreach (string line in lines)
             {
@@ -164,8 +163,8 @@ namespace SBTP.Data
         public static bool save_xgyc_scj(List<XGYC_SCJ_BLL> list)
         {
             CheckRLS();
-            List<string> lines = new List<string>(File.ReadAllLines(work_direction + @"\RLS4.DAT"));
-            using (StreamWriter sw = new StreamWriter(work_direction + @"\RLS4.DAT", false, Encoding.UTF8))
+            List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS4.DAT"));
+            using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS4.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
                 int startIndex = lines.IndexOf("*JZXG //序号 井组名 年含水上升率 调剖有效期 增油 见效时间");
@@ -197,7 +196,7 @@ namespace SBTP.Data
         {
             CheckRLS();
             List<XGYC_SCJ_BLL> list = new List<XGYC_SCJ_BLL>();
-            List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(work_direction, "RLS4.DAT")));
+            List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), "RLS4.DAT")));
             int startIndex = lines.FindIndex(x => x.Contains("*JZXG"));
             int endIndex = lines.FindIndex(x => x.Contains("/JZXG"));
             for (int i = startIndex + 1; i <= endIndex - startIndex; i++)

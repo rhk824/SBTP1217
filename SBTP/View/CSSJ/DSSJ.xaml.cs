@@ -206,7 +206,9 @@ namespace SBTP.View.CSSJ
         List<jcxx_tpcls_model> jcxx_Tpcls_Models;
         //储层物性
         List<ccwx_tpjing_model> ccwxInfos;
-
+        //调剖剂浓度
+        List<TPJND_Model> tpjnd; 
+        //注入压力参数模型
         private ZRYLPARAM ZrylParams;
 
         #region 属性更改通知
@@ -296,8 +298,6 @@ namespace SBTP.View.CSSJ
             public Dictionary<double, double> dslocation { set; get; }
             //p0
             public double p0 { set; get; }
-            //pp
-            public double Pp { set; get; }
         }
 
         public DSSJ()
@@ -306,6 +306,7 @@ namespace SBTP.View.CSSJ
             DataContext = this;
             jcxx_Tpcxx_Models = DatHelper.read_jcxx_tpcxx();
             jcxx_Tpcls_Models = DatHelper.read_jcxx_tpcls();
+            tpjnd = DatHelper.TPJND_Read();
             ccwxInfos = DatHelper.read_ccwx();
             ZrylParams = new ZRYLPARAM();
             this.Loaded += new RoutedEventHandler(BindingList);
@@ -316,6 +317,7 @@ namespace SBTP.View.CSSJ
             DSJListSource = new ObservableCollection<JqxxyhModel>();
             YSJListSource = new ObservableCollection<string>();
             GetdssjModel = new ObservableCollection<DssjModel>();
+            TQZRND.Text = DatHelper.readQkcs().Qtgn.ToString();
             var csyh = DatHelper.ReadSTCS();
             var y_data = DatHelper.Read_GXSJ();
             //var tpc = DatHelper.read_tpc();
@@ -367,7 +369,7 @@ namespace SBTP.View.CSSJ
             //水粘度
             ZrylParams.sn = qkcs.Sn;
             //聚合物粘度
-            ZrylParams.jn = qkcs.Jn;
+            ZrylParams.jn = double.Parse(TQZRND.Text);
             //幂指数
             ZrylParams.m = qkcs.Mvalue;
             //吸液分数
@@ -391,7 +393,7 @@ namespace SBTP.View.CSSJ
             //调剖层吸液量q0
             ZrylParams.q0 = ZrylParams.tpcxyfs * ZrylParams.tpcrzl;
             //最小剪流速位置
-            ZrylParams.r_min = ZrylParams.q0 / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd);
+            ZrylParams.r_min = ZrylParams.q0 / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd* ZrylParams.tpck);
             //封堵段渗透率
             ZrylParams.k1 = tpc.k1;
             ZrylParams.dsyl = new List<double>();
@@ -413,40 +415,39 @@ namespace SBTP.View.CSSJ
         private void SJ_Grid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             int column_index = e.Column.DisplayIndex;
+            var targetwell = tpjnd.Find(x => x.JH.Equals(Hname.Text));
             double double_ZYL = string.IsNullOrWhiteSpace(ZYL.Text) ? 0 : double.Parse(ZYL.Text);
+            DssjModel targetDs = GetdssjModel[e.Row.GetIndex()];
             if (column_index == 1)
             {
                 //下拉菜单获取类型
                 ComboBox current_cell = SJ_Grid.Columns[1].GetCellContent(e.Row) as ComboBox;
-                string gxmc = current_cell.Text.Trim();
+                string gxmc = current_cell.Text.Trim();                
+                targetDs.YN = targetwell.YTND;
+                targetDs.KN = targetwell.KLND;
+                targetDs.KJ = targetwell.KLLJ;
+                targetDs.XN = targetwell.XDYND;
                 if (gxmc.Equals("凝胶段塞"))
                 {
-                    Dispatcher.Invoke(new Action(() =>
-                    {
-                        FindVisualChild<TextBlock>(SJ_Grid.Columns[5].GetCellContent(e.Row))[0].Text = "0";
-                        FindVisualChild<TextBlock>(SJ_Grid.Columns[6].GetCellContent(e.Row))[0].Text = "0";
-                        FindVisualChild<TextBlock>(SJ_Grid.Columns[7].GetCellContent(e.Row))[0].Text = "0";
-                    }));
-
+                    targetDs.KN = 0;
+                    targetDs.KJ = 0;
+                    targetDs.XN = 0;
                 }
                 else if (gxmc.Equals("颗粒段塞"))
-                    Dispatcher.Invoke(new Action(() =>
-                    {
-                        FindVisualChild<TextBlock>(SJ_Grid.Columns[4].GetCellContent(e.Row))[0].Text = "0";
-                    }));
+                    targetDs.YN = 0;
             }
             else if (column_index == 2)
             {
-                ((DssjModel)e.Row.Item).YL = Math.Round(double_ZYL * double.Parse((e.EditingElement as TextBox).Text), 3);
-                ((DssjModel)e.Row.Item).ZRTS = Math.Round(double_ZYL * double.Parse((e.EditingElement as TextBox).Text) / double.Parse((SJ_Grid.Columns[8].GetCellContent(e.Row) as TextBlock).Text), 3);
+                targetDs.YL = Math.Round(double_ZYL * double.Parse((e.EditingElement as TextBox).Text), 3);
+                targetDs.ZRTS = Math.Round(double_ZYL * double.Parse((e.EditingElement as TextBox).Text) / targetDs.ZRSD, 3);
                 BL_T.Content = ColSum(2);
                 YL_t.Content = ColSum(3);
                 TS_T.Content = ColSum(9);
             }
             else if (column_index == 8)
             {
-                ((DssjModel)e.Row.Item).YL = Math.Round(double_ZYL * double.Parse((SJ_Grid.Columns[2].GetCellContent(e.Row) as TextBlock).Text), 3);
-                ((DssjModel)e.Row.Item).ZRTS = Math.Round(double_ZYL * double.Parse((SJ_Grid.Columns[2].GetCellContent(e.Row) as TextBlock).Text) / double.Parse((e.EditingElement as TextBox).Text), 3);
+                targetDs.YL = Math.Round(double_ZYL * targetDs.BL, 3);
+                targetDs.ZRTS = Math.Round(double_ZYL * targetDs.BL / double.Parse((e.EditingElement as TextBox).Text), 3);
                 SD_T.Content = ColConcentration(8);
                 YL_t.Content = ColSum(3);
                 TS_T.Content = ColSum(9);
@@ -472,14 +473,14 @@ namespace SBTP.View.CSSJ
             for (int i = 0; i < SJ_Grid.Items.Count; i++)
             {
                 var element = SJ_Grid.Columns[columnIndex].GetCellContent(SJ_Grid.Items[i]);
-                string t = element.GetType().Name;
+                string elementName = element.GetType().Name;
                 string value;
-                if (element.GetType().Name.Equals("TextBox"))
+                if (elementName.Equals("TextBox"))
                 {
                     value = (SJ_Grid.Columns[columnIndex].GetCellContent(SJ_Grid.Items[i]) as TextBox).Text.ToString();
 
                 }
-                else if (element.GetType().Name.Equals("TextBlock"))
+                else if (elementName.Equals("TextBlock"))
                 {
                     value = (SJ_Grid.Columns[columnIndex].GetCellContent(SJ_Grid.Items[i]) as TextBlock).Text.ToString();
                 }
@@ -487,8 +488,7 @@ namespace SBTP.View.CSSJ
                 {
                     value = FindVisualChild<TextBlock>(SJ_Grid.Columns[columnIndex].GetCellContent(SJ_Grid.Items[i]))[0].Text.ToString();
                 }
-                double temp;
-                double.TryParse((value == "") ? "0" : value, out temp);
+                double.TryParse((value == "") ? "0" : value, out double temp);
                 result += temp;
             }
             return Math.Round(result, 3);
@@ -628,7 +628,7 @@ namespace SBTP.View.CSSJ
             if (e.AddedItems.Count == 0) return;
             this.Dispatcher.Invoke(new Action(() =>
             {
-                this.SJ_Box.Header = ((JqxxyhModel)DSJ_Well.SelectedItem).JH + " 井调剖施工工序设计";
+                this.Hname.Text = ((JqxxyhModel)DSJ_Well.SelectedItem).JH;
             }));
             var target = DatHelper.read_zcjz().Find(x => x.JH == ((JqxxyhModel)DSJ_Well.SelectedItem).JH);
             if (target != null)
@@ -652,7 +652,7 @@ namespace SBTP.View.CSSJ
         /// <param name="e"></param>
         private void SaveBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (SJ_Box.Header.Equals("**井调剖施工工序设计")) return;
+            if (Hname.Text.Equals(string.Empty)) return;
             string JH = ((JqxxyhModel)DSJ_Well.SelectedItem).JH;
             List<DssjModel> dssjModels = new List<DssjModel>();
             foreach (var item in SJ_Grid.Items)
@@ -685,7 +685,7 @@ namespace SBTP.View.CSSJ
             YSJListSource.Remove(YSJ_Well.SelectedItem.ToString());
             this.Dispatcher.Invoke(new Action(() =>
             {
-                this.SJ_Box.Header = "**井调剖施工工序设计";
+                this.Hname.Text = string.Empty;
             }));
         }
 
@@ -740,9 +740,9 @@ namespace SBTP.View.CSSJ
             List<KeyValuePair<double, double>> location = ZrylParams.dslocation.OfType<KeyValuePair<double, double>>().ToList();
             List<double> dsls = ZrylParams.dsls_min.OfType<double>().ToList();
             List<double> dspl = ZrylParams.dspl.OfType<double>().ToList();
-            dsls.RemoveRange(0, GetdssjModel.Count - dssjModels.Count);
-            dspl.RemoveRange(0, GetdssjModel.Count - dssjModels.Count);
-            location.RemoveRange(0, GetdssjModel.Count - dssjModels.Count);
+            dsls.RemoveRange(dssjModels.Count, ZrylParams.dsls_min.Count - dssjModels.Count);
+            dspl.RemoveRange(dssjModels.Count, ZrylParams.dspl.Count - dssjModels.Count);
+            location.RemoveRange(dssjModels.Count, ZrylParams.dslocation.Count - dssjModels.Count);
             //生成段塞压力损耗集合
             for (int i = 0; i < location.Count; i++)
             {
@@ -751,7 +751,7 @@ namespace SBTP.View.CSSJ
                 double pl = dspl[i];
                 double r_n = location.ToList()[i].Value;
                 double r_w = location.ToList()[i].Key;
-                
+
                 if (rmin > ZrylParams.zcjj) rmin = ZrylParams.zcjj;
                 if (r_n <= rmin)
                 {
@@ -781,10 +781,9 @@ namespace SBTP.View.CSSJ
             //最外层段塞最小流速半径
             double wds_min = ZrylParams.dsls_min.First();
             //压力损耗、粘度、半径
-            double Pp = 0, nd = 0, r = 0;
+            double Pp = 0, nd, r;
             //最外层段塞排量
             double wpl = ZrylParams.dspl.First();
-
             if (wds_outside >= wds_min)
             {
                 r = wds_outside;
@@ -806,7 +805,7 @@ namespace SBTP.View.CSSJ
 
         private void DSPramsCal()
         {
-            GetdssjModel.ToList().ForEach(x => { ZrylParams.dsyl.Add(x.YL); ZrylParams.dspl.Add(x.ZRSD); ZrylParams.dsls_min.Add(x.ZRSD / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd_fd)); });
+            GetdssjModel.ToList().ForEach(x => { ZrylParams.dsyl.Add(x.YL); ZrylParams.dspl.Add(x.ZRSD); ZrylParams.dsls_min.Add(x.ZRSD / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd_fd * ZrylParams.fk)); });
             #region 计算△P0
             //计算参数
             double R = 0, p0 = 0;
@@ -823,15 +822,16 @@ namespace SBTP.View.CSSJ
             p0 *= 0.01157;
             ZrylParams.p0 = p0;
             #endregion
+            //计算段塞半径
             for (int i = 0; i < ZrylParams.dsyl.Count; i++)
             {
                 double yl_sum_outside = 0;
                 double yl_sum_inside = 0;
-                for (int j = i; j < ZrylParams.dsyl.Count; j++)
+                for (int j = 0; j < i + 1; j++)
                 {
                     yl_sum_outside += ZrylParams.dsyl[j];
-                    if (j + 1 < ZrylParams.dsyl.Count)
-                        yl_sum_inside += ZrylParams.dsyl[j + 1];
+                    if (j - 1 >= 0)
+                        yl_sum_inside += ZrylParams.dsyl[j - 1];
                 }
                 ZrylParams.dslocation.Add(Math.Sqrt(yl_sum_outside / (Math.PI * ZrylParams.tpchd_fd * ZrylParams.fk)), yl_sum_inside == 0 ? ZrylParams.rw : Math.Sqrt(yl_sum_inside / (Math.PI * ZrylParams.tpchd_fd * ZrylParams.fk)));
             }
@@ -845,7 +845,7 @@ namespace SBTP.View.CSSJ
             for (int i = 0; i < GetdssjModel.Count; i++)
             {
                 List<DssjModel> models = new List<DssjModel>();
-                GetdssjModel.ToList().ForEach(x => { if (GetdssjModel.IndexOf(x) >= i) models.Add(x); });
+                GetdssjModel.ToList().ForEach(x => { if (GetdssjModel.IndexOf(x) <= i) models.Add(x); });
                 GetdssjModel[i].ZRYL = Math.Round(PressureValCal(models), 5);
             }
         }

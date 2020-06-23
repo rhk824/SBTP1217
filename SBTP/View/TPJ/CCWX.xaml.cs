@@ -262,7 +262,7 @@ namespace SBTP.View.TPJ
 
         private void diy_Click(object sender, RoutedEventArgs e)
         {
-            new ChooseWell().ShowDialog();
+            new ChooseWell(this).ShowDialog();
         }
 
         private void dg_tpjing_info_LoadingRow(object sender, DataGridRowEventArgs e)

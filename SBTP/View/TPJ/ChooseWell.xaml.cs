@@ -1,5 +1,6 @@
 ﻿using Maticsoft.DBUtility;
 using SBTP.BLL;
+using SBTP.Data;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
@@ -25,10 +26,13 @@ namespace SBTP.View.TPJ
     {
         public DataTable WaterWellsCollection { set; get; } = new DataTable();
         public DataTable DataSource { set; get; } = new DataTable();
-        public ChooseWell()
+        //父窗口
+        private Page parentPage;
+        public ChooseWell(Page parent)
         {
             InitializeComponent();
             DataContext = this;
+            parentPage = parent;
             WaterWellsCollection = SelectWell();
             DataSource = WaterWellsCollection.Copy();
         }
@@ -50,10 +54,25 @@ namespace SBTP.View.TPJ
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Wells.SelectedItems.OfType<DataRowView>().ToList().ForEach(x => ccwx_bll.oc_tpjing_info.Add(new ccwx_tpjing_model() { 
-            jh = x.Row.ItemArray[0].ToString(),
-            IsCustomize = true
-            }));
+            //var windows = Application.Current.Windows.OfType<Window>().ToList().FindAll(x => !x.Title.Equals(string.Empty));
+            var selecteditems = Wells.SelectedItems.OfType<DataRowView>().ToList();
+            if (parentPage.Title.Equals("储层物性动态计算"))
+                selecteditems.ForEach(
+                    x => ccwx_bll.oc_tpjing_info.Add(new ccwx_tpjing_model()
+                    {
+                        jh = x.Row.ItemArray[0].ToString(),
+                        IsCustomize = true
+                    }));
+            else
+                selecteditems.ForEach(
+                    x =>
+                    {
+                        string jh = x.Row.ItemArray[0].ToString();
+                        var targetwell = DatHelper.read_zcjz().Find(x => x.JH.Equals(jh));
+                        jcxx_bll.oc_tpcxx.Add(new jcxx_tpcxx_model() { jh = jh });
+                        jcxx_bll.oc_tpjxx.Add(new jcxx_tpjxx_model() { jh = jh });
+                        jcxx_bll.oc_tpcls.Add(new jcxx_tpcls_model() { jh = jh, Zcjj = targetwell == null ? 0 : targetwell.AverageDistance });
+                    });
             this.Close();
         }
     }

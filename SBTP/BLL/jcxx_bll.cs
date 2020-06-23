@@ -10,6 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI;
 
 namespace SBTP.BLL
 {
@@ -27,7 +28,7 @@ namespace SBTP.BLL
         /// <summary>
         /// 调剖剂信息
         /// </summary>
-        public ObservableCollection<jcxx_tpjxx_model> oc_tpjxx { get; set; }
+        public static ObservableCollection<jcxx_tpjxx_model> oc_tpjxx { get; set; }
         /// <summary>
         /// 调讴层驱替历史信息
         /// </summary>

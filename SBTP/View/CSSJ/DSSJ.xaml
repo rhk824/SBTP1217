@@ -124,7 +124,13 @@
         </Grid>
 
         <Grid Grid.Column="2">
-            <GroupBox Name="SJ_Box" Header="**井调剖施工工序设计"  >
+            <GroupBox Name="SJ_Box">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Name="Hname"/>
+                        <TextBlock Text="调剖施工工序设计"/>
+                    </StackPanel>
+                </GroupBox.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="61*"/>
@@ -138,7 +144,7 @@
                         <Label VerticalAlignment="Center" Content="平均注采井距："/>
                         <Label VerticalAlignment="Center" Name="DistanceAver"/>
                         <Label VerticalAlignment="Center" Content="调前注入液粘度："/>
-                        <TextBox Name="TQZRND" Text="10" />
+                        <TextBox Name="TQZRND" Text="15" />
                         <Label VerticalAlignment="Center" Content="Mpa·s" />
                         <Label VerticalAlignment="Center" Content="总用量：" />
                         <TextBlock VerticalAlignment="Center" Name="ZYL" Text="50" />

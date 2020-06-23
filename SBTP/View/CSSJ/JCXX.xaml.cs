@@ -1,6 +1,7 @@
 ﻿using Common;
 using SBTP.BLL;
 using SBTP.Model;
+using SBTP.View.TPJ;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -109,7 +110,9 @@ namespace SBTP.View.CSSJ
             new PZFA(pZFAModels).ShowDialog();
         }
 
-
-
+        private void diy_Click(object sender, RoutedEventArgs e)
+        {
+            new ChooseWell(this).ShowDialog();
+        }
     }
 }
