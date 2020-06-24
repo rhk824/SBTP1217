@@ -72,7 +72,7 @@ namespace SBTP.View.XGYC
 
             List<XGYC_ZRJ_BLL> list = new List<XGYC_ZRJ_BLL>();
             list.Add(average);
-            this.DataGrid2.ItemsSource = list;
+            //this.DataGrid2.ItemsSource = list;
         }
 
         private void Btn_save_Click(object sender, RoutedEventArgs e)
@@ -84,6 +84,11 @@ namespace SBTP.View.XGYC
         private void DataGrid1_LoadingRow(object sender, DataGridRowEventArgs e)
         {
             //e.Row.Header = e.Row.GetIndex() + 1;
+        }
+
+        private void btn_return_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 

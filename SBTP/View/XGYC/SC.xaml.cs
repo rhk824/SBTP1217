@@ -59,5 +59,10 @@ namespace SBTP.View.XGYC
         {
             e.Row.Header = e.Row.GetIndex() + 1;
         }
+
+        private void btn_next_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

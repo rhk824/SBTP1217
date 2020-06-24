@@ -737,20 +737,21 @@ namespace SBTP.View.CSSJ
             #region 计算所有段塞压力损耗 ∑△Pk
             //所有段塞压力损耗集合
             List<double> dspressure = new List<double>();
-            List<KeyValuePair<double, double>> location = ZrylParams.dslocation.OfType<KeyValuePair<double, double>>().ToList();
+            //List<KeyValuePair<double, double>> location = ZrylParams.dslocation.OfType<KeyValuePair<double, double>>().ToList();
             List<double> dsls = ZrylParams.dsls_min.OfType<double>().ToList();
             List<double> dspl = ZrylParams.dspl.OfType<double>().ToList();
             dsls.RemoveRange(dssjModels.Count, ZrylParams.dsls_min.Count - dssjModels.Count);
             dspl.RemoveRange(dssjModels.Count, ZrylParams.dspl.Count - dssjModels.Count);
-            location.RemoveRange(dssjModels.Count, ZrylParams.dslocation.Count - dssjModels.Count);
+            
+            //location.RemoveRange(dssjModels.Count, ZrylParams.dslocation.Count - dssjModels.Count);
             //生成段塞压力损耗集合
-            for (int i = 0; i < location.Count; i++)
+            for (int i = 0; i < ZrylParams.dslocation.Count; i++)
             {
                 double p = 0;
                 double rmin = dsls[i];
                 double pl = dspl[i];
-                double r_n = location.ToList()[i].Value;
-                double r_w = location.ToList()[i].Key;
+                double r_n = ZrylParams.dslocation.ToList()[i].Value;
+                double r_w = ZrylParams.dslocation.ToList()[i].Key;
 
                 if (rmin > ZrylParams.zcjj) rmin = ZrylParams.zcjj;
                 if (r_n <= rmin)
@@ -779,11 +780,11 @@ namespace SBTP.View.CSSJ
             //最外层段塞外径
             double wds_outside = ZrylParams.dslocation.First().Key;
             //最外层段塞最小流速半径
-            double wds_min = ZrylParams.dsls_min.First();
+            double wds_min = dsls.First();
             //压力损耗、粘度、半径
             double Pp = 0, nd, r;
             //最外层段塞排量
-            double wpl = ZrylParams.dspl.First();
+            double wpl = dspl.First();
             if (wds_outside >= wds_min)
             {
                 r = wds_outside;
@@ -803,7 +804,7 @@ namespace SBTP.View.CSSJ
             return Pp - ZrylParams.p0 + pressure_sum;
         }
 
-        private void DSPramsCal()
+        private void P0Cal()
         {
             GetdssjModel.ToList().ForEach(x => { ZrylParams.dsyl.Add(x.YL); ZrylParams.dspl.Add(x.ZRSD); ZrylParams.dsls_min.Add(x.ZRSD / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd_fd * ZrylParams.fk)); });
             #region 计算△P0
@@ -822,17 +823,20 @@ namespace SBTP.View.CSSJ
             p0 *= 0.01157;
             ZrylParams.p0 = p0;
             #endregion
+
+        }
+
+        private void DsRadiusCal(List<DssjModel> models)
+        {
+            ZrylParams.dslocation.Clear();
+            int count = models.Count;
             //计算段塞半径
-            for (int i = 0; i < ZrylParams.dsyl.Count; i++)
+            for (int i = 0; i < count; i++)
             {
                 double yl_sum_outside = 0;
                 double yl_sum_inside = 0;
-                for (int j = 0; j < i + 1; j++)
-                {
-                    yl_sum_outside += ZrylParams.dsyl[j];
-                    if (j - 1 >= 0)
-                        yl_sum_inside += ZrylParams.dsyl[j - 1];
-                }
+                yl_sum_outside += ZrylParams.dsyl.FindAll(x => ZrylParams.dsyl.IndexOf(x) >= i && ZrylParams.dsyl.IndexOf(x) < count).Sum();
+                yl_sum_inside += i == count - 1 ? 0 : ZrylParams.dsyl.FindAll(x => ZrylParams.dsyl.IndexOf(x) > i && ZrylParams.dsyl.IndexOf(x) < count).Sum();
                 ZrylParams.dslocation.Add(Math.Sqrt(yl_sum_outside / (Math.PI * ZrylParams.tpchd_fd * ZrylParams.fk)), yl_sum_inside == 0 ? ZrylParams.rw : Math.Sqrt(yl_sum_inside / (Math.PI * ZrylParams.tpchd_fd * ZrylParams.fk)));
             }
         }
@@ -841,11 +845,12 @@ namespace SBTP.View.CSSJ
         {
             if (SJ_Grid.Items.Count == 0) return;
             ParametersCalculation(GetdssjModel[0].JH);
-            DSPramsCal();
+            P0Cal();
             for (int i = 0; i < GetdssjModel.Count; i++)
             {
                 List<DssjModel> models = new List<DssjModel>();
                 GetdssjModel.ToList().ForEach(x => { if (GetdssjModel.IndexOf(x) <= i) models.Add(x); });
+                DsRadiusCal(models);
                 GetdssjModel[i].ZRYL = Math.Round(PressureValCal(models), 5);
             }
         }
