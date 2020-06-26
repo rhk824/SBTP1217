@@ -65,13 +65,6 @@
             </GroupBox.Header>
             <DataGrid ItemsSource="{Binding oc_xspm}">
                 <DataGrid.Columns>
-                    <!--<DataGridTextColumn Binding="{Binding YCZ}" Header="油层组" />
-                    <DataGridTextColumn Binding="{Binding XCH}" Header="小层号" />
-                    <DataGridTextColumn Binding="{Binding JSXH}" Header="解释序号" />
-                    <DataGridTextColumn Binding="{Binding JDDS1, StringFormat={}{0:F2}}" Header="井段顶深" />
-                    <DataGridTextColumn Binding="{Binding hd}" Header="厚度" />
-                    <DataGridTextColumn Binding="{Binding YXHD}" Header="有效厚度" />
-                    <DataGridTextColumn Binding="{Binding ZRBFS, StringFormat={}{0:F1}}" Header="注入百分数" />-->
                     <DataGridTextColumn Binding="{Binding depth}" Header="对应深度" />
                     <DataGridTextColumn Binding="{Binding area}" Header="波峰面积" />
                     <DataGridTextColumn Binding="{Binding ntc}" Header="拟调层" />

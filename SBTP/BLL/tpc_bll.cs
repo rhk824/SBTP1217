@@ -308,7 +308,7 @@ namespace SBTP.BLL
         private string get_jzlt_cw(List<DB_XCSJ> list)
         {
             string cw = string.Empty;
-            foreach (DB_XCSJ item in list) cw += item.YCZ + item.XCH + item.XCXH + ",";
+            foreach (DB_XCSJ item in list) cw += item.YCZ + " " + item.XCH + " " + item.XCXH + ",";
             return cw == string.Empty ? string.Empty : cw.Substring(0, cw.Length - 1);
         }
 

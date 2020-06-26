@@ -40,7 +40,7 @@
         </Grid>
 
         <GroupBox Grid.Row="0" Grid.Column="2" Header="调剖井效果预测">
-            <DataGrid Name="DataGrid1" SelectionMode="Single" ColumnWidth="*" IsReadOnly="True" LoadingRow="DataGrid1_LoadingRow">
+            <DataGrid Name="DataGrid1" SelectionMode="Single" CanUserSortColumns="False" ColumnWidth="*" IsReadOnly="True" LoadingRow="DataGrid1_LoadingRow">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="序号" Width="50">
                         <DataGridTemplateColumn.CellTemplate>
@@ -50,15 +50,17 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="井号" Binding="{Binding JH}" Width="80"/>
-                    <DataGridTextColumn Binding="{Binding ZRYND}" Header="注入液粘度(mPa.s)"/>
-                    <DataGridTextColumn Binding="{Binding RZYL}" Header="注入液粘度(mPa.s)"/>
+                    <DataGridTextColumn Binding="{Binding RZYL}" Header="日注液量(m³/d)"/>
+                    <DataGridTextColumn Binding="{Binding ZRYND}" Header="驱替液粘度(mPa.s)"/>
                     <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccsq_style}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding CSQ_DXYL}" Style="{StaticResource txt_cell_style}" />
+                                    <Rectangle Style="{StaticResource line_cell_style}" />
                                     <TextBlock Text="{Binding CSQ_SXSZS}" Style="{StaticResource txt_cell_style}" />
                                     <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSQ_DXYL}" Style="{StaticResource txt_cell_style}" />
+                                    <TextBlock Text="{Binding CSQ_TPCZRFS}" Style="{StaticResource txt_cell_style}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -69,6 +71,8 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding CSH_YL}" Style="{StaticResource txt_cell_style}" />
+                                    <Rectangle Style="{StaticResource line_cell_style}" />
+                                    <TextBlock Text="{Binding CSH_SXSZS}" Style="{StaticResource txt_cell_style}" />
                                     <Rectangle Style="{StaticResource line_cell_style}" />
                                     <TextBlock Text="{Binding CSH_SXSZS}" Style="{StaticResource txt_cell_style}" />
                                 </StackPanel>
@@ -83,6 +87,8 @@
                                     <TextBlock Text="{Binding CZ_YL}" Style="{StaticResource txt_cell_style}" />
                                     <Rectangle Style="{StaticResource line_cell_style}" />
                                     <TextBlock Text="{Binding CZ_SXSZS}" Style="{StaticResource txt_cell_style}" />
+                                    <Rectangle Style="{StaticResource line_cell_style}" />
+                                    <TextBlock Text="{Binding CSH_SXSZS}" Style="{StaticResource txt_cell_style}" />
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

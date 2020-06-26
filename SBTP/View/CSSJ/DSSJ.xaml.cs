@@ -229,6 +229,10 @@ namespace SBTP.View.CSSJ
             /// </summary>
             public double v_min { set; get; }
             /// <summary>
+            /// 井径
+            /// </summary>
+            public double rw { set; get; }
+            /// <summary>
             /// 水粘度
             /// </summary>
             public double sn { set; get; }
@@ -248,10 +252,7 @@ namespace SBTP.View.CSSJ
             /// 日注液量
             /// </summary>
             public double tpcrzl { set; get; }
-            /// <summary>
-            /// 井径
-            /// </summary>
-            public double rw { set; get; }
+
             /// <summary>
             /// 厚度ht
             /// </summary>
@@ -289,7 +290,7 @@ namespace SBTP.View.CSSJ
             /// </summary>
             public double r_min { set; get; }
             //所有段塞用量集合、按顺序排列
-            public List<double> dsyl { set; get; }
+            public Dictionary<int,double> dsyl { set; get; }
             //所有段塞排量集合
             public List<double> dspl { set; get; }
             //所有段塞最小流速半径集合
@@ -308,7 +309,7 @@ namespace SBTP.View.CSSJ
             jcxx_Tpcls_Models = DatHelper.read_jcxx_tpcls();
             tpjnd = DatHelper.TPJND_Read();
             ccwxInfos = DatHelper.read_ccwx();
-            ZrylParams = new ZRYLPARAM();
+            ZrylParams = new ZRYLPARAM();            
             this.Loaded += new RoutedEventHandler(BindingList);
         }
 
@@ -393,10 +394,10 @@ namespace SBTP.View.CSSJ
             //调剖层吸液量q0
             ZrylParams.q0 = ZrylParams.tpcxyfs * ZrylParams.tpcrzl;
             //最小剪流速位置
-            ZrylParams.r_min = ZrylParams.q0 / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd* ZrylParams.tpck);
+            ZrylParams.r_min = ZrylParams.q0 / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd * ZrylParams.tpck);
             //封堵段渗透率
             ZrylParams.k1 = tpc.k1;
-            ZrylParams.dsyl = new List<double>();
+            ZrylParams.dsyl = new Dictionary<int, double>();
             ZrylParams.dspl = new List<double>();
             ZrylParams.dsls_min = new List<double>();
             ZrylParams.dslocation = new Dictionary<double, double>();
@@ -736,8 +737,7 @@ namespace SBTP.View.CSSJ
 
             #region 计算所有段塞压力损耗 ∑△Pk
             //所有段塞压力损耗集合
-            List<double> dspressure = new List<double>();
-            //List<KeyValuePair<double, double>> location = ZrylParams.dslocation.OfType<KeyValuePair<double, double>>().ToList();
+            List<double> dspressure = new List<double>();            
             List<double> dsls = ZrylParams.dsls_min.OfType<double>().ToList();
             List<double> dspl = ZrylParams.dspl.OfType<double>().ToList();
             dsls.RemoveRange(dssjModels.Count, ZrylParams.dsls_min.Count - dssjModels.Count);
@@ -806,10 +806,18 @@ namespace SBTP.View.CSSJ
 
         private void P0Cal()
         {
-            GetdssjModel.ToList().ForEach(x => { ZrylParams.dsyl.Add(x.YL); ZrylParams.dspl.Add(x.ZRSD); ZrylParams.dsls_min.Add(x.ZRSD / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd_fd * ZrylParams.fk)); });
+            var collection = GetdssjModel.ToList();
+            for (int i = 0; i < collection.Count; i++)
+            {
+                ZrylParams.dsyl.Add(i, collection[i].YL);
+                ZrylParams.dspl.Add(collection[i].ZRSD);
+                ZrylParams.dsls_min.Add(collection[i].ZRSD / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd_fd * ZrylParams.fk));
+            }
+            //GetdssjModel.ToList().ForEach(x => { ZrylParams.dsyl.Add(x.YL); ZrylParams.dspl.Add(x.ZRSD); ZrylParams.dsls_min.Add(x.ZRSD / (2 * Math.PI * ZrylParams.v_min * ZrylParams.tpchd_fd * ZrylParams.fk)); });
             #region 计算△P0
             //计算参数
-            double R = 0, p0 = 0;
+            double p0 = 0;
+            double R;
             //计算p0值
             if (ZrylParams.r_min >= ZrylParams.zcjj)
                 R = ZrylParams.zcjj;
@@ -829,14 +837,15 @@ namespace SBTP.View.CSSJ
         private void DsRadiusCal(List<DssjModel> models)
         {
             ZrylParams.dslocation.Clear();
+            var ylCollection = ZrylParams.dsyl;
             int count = models.Count;
             //计算段塞半径
             for (int i = 0; i < count; i++)
             {
                 double yl_sum_outside = 0;
                 double yl_sum_inside = 0;
-                yl_sum_outside += ZrylParams.dsyl.FindAll(x => ZrylParams.dsyl.IndexOf(x) >= i && ZrylParams.dsyl.IndexOf(x) < count).Sum();
-                yl_sum_inside += i == count - 1 ? 0 : ZrylParams.dsyl.FindAll(x => ZrylParams.dsyl.IndexOf(x) > i && ZrylParams.dsyl.IndexOf(x) < count).Sum();
+                yl_sum_outside += ylCollection.Where(x => x.Key >= i && x.Key < count).ToDictionary(x => x.Key, x => x.Value).Values.OfType<double>().ToList().Sum();
+                yl_sum_inside += i == count - 1 ? 0 : ylCollection.Where(x => x.Key > i && x.Key < count).ToDictionary(x => x.Key, x => x.Value).Values.OfType<double>().ToList().Sum();
                 ZrylParams.dslocation.Add(Math.Sqrt(yl_sum_outside / (Math.PI * ZrylParams.tpchd_fd * ZrylParams.fk)), yl_sum_inside == 0 ? ZrylParams.rw : Math.Sqrt(yl_sum_inside / (Math.PI * ZrylParams.tpchd_fd * ZrylParams.fk)));
             }
         }

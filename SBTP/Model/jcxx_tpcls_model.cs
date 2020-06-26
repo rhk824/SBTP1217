@@ -10,7 +10,6 @@ namespace SBTP.Model
     {
         private string _jh;
         private double _dqrzl;
-        private double _ysybhd;
         private double _ljzsl;
         private double _ljzjl;
         private double _sqts;
@@ -47,20 +46,6 @@ namespace SBTP.Model
                 NotifyPropertyChanged("dqrzl");
             }
         }
-
-        /// <summary>
-        /// 原始油饱和度
-        /// </summary>
-        public double ysybhd
-        {
-            get { return _ysybhd; }
-            set
-            {
-                _ysybhd = value;
-                NotifyPropertyChanged("ysybhd");
-            }
-        }
-
         /// <summary>
         /// 累计注水量
         /// </summary>
