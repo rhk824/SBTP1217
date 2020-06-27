@@ -35,7 +35,7 @@ namespace SBTP.Data
             "/JGXX",
             "/JCXX",
             // 调剖用量优化
-            "**STCS // 井号 优化半径 增油 投产比 调剖剂用量",
+            "**STCS // 井号 优化半径 增油 投产比 调剖剂用量 调后增注段日吸水量",
             "/STCS",
             // 调剖段塞设计
             "**TPDSSJ",
@@ -66,7 +66,7 @@ namespace SBTP.Data
             inputStr.Append("/JCXX\r\n");
 
             // 调剖用量优化
-            inputStr.Append("**STCS // 井号 优化半径 增油 投产比 调剖剂用量\r\n");
+            inputStr.Append("**STCS // 井号 优化半径 增油 投产比 调剖剂用量 调后增注段日吸水量\r\n");
             inputStr.Append("/STCS\r\n");
 
             // 调剖段塞设计
@@ -1959,7 +1959,7 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS3.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("**STCS // 井号 优化半径 增油 投产比 调剖剂用量");
+                int startIndex = lines.IndexOf("**STCS // 井号 优化半径 增油 投产比 调剖剂用量 调后增注段日吸水量");
                 int endIndex = lines.IndexOf("/STCS");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -1972,7 +1972,8 @@ namespace SBTP.Data
                     sb.Append($"{item.YHBJ}\t");
                     sb.Append($"{item.YHZY}\t");
                     sb.Append($"{item.TCB}\t");
-                    sb.Append($"{item.TPJYL}\r\n");
+                    sb.Append($"{item.TPJYL}\t");
+                    sb.Append($"{item.Thzzdrxsl}\r\n");
                     newData.Add(sb.ToString());
                 }
                 newLines.InsertRange(startIndex + 1, newData);
@@ -1998,7 +1999,8 @@ namespace SBTP.Data
                     YHBJ = vs[1],
                     YHZY = vs[2],
                     TCB = vs[3],
-                    TPJYL = vs[4]
+                    TPJYL = vs[4],
+                    Thzzdrxsl = double.Parse(vs[5])
                 });
             }
             return list;

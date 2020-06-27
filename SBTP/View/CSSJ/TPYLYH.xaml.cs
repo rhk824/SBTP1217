@@ -29,6 +29,8 @@ namespace SBTP.View.CSSJ
         private string yHBJ;
         private string yHZY;
         private string tPJYL;
+        private double thzzdrxsl;
+        private List<Point> bjandrxsl;
         private ObservableCollection<string> bjs;
         private List<Point> bjandzy;
 
@@ -55,6 +57,7 @@ namespace SBTP.View.CSSJ
                         YHZY = Bjandzy.Find(x => x.X.Equals(double.Parse(value))).Y.ToString();
                         TCB = Bjandtcb.Find(x => x.X.Equals(double.Parse(value))).Y.ToString();
                     }
+                    Thzzdrxsl = Bjandrxsl == null ? 0 : Bjandrxsl.Find(x => x.X.Equals(double.Parse(value))).Y;
                 }
                 Changed("YHBJ");
             }
@@ -108,6 +111,10 @@ namespace SBTP.View.CSSJ
         public jcxx_jgxx_model tpjjg { set; get; }
         //调剖剂浓度
         public TPJND_Model tpjnd { set; get; }
+        //调后增注段日吸水量
+        public double Thzzdrxsl { get => thzzdrxsl; set => thzzdrxsl = value; }
+        //半径日吸水量
+        public List<Point> Bjandrxsl { get => bjandrxsl; set => bjandrxsl = value; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void Changed(string PropertyName)
@@ -223,6 +230,8 @@ namespace SBTP.View.CSSJ
                 this.loading.Visibility = Visibility.Visible;
                 //吸液强度集合
                 List<KeyValuePair<string, double>> XYQDs = new List<KeyValuePair<string, double>>();
+                //调前吸液量集合
+                List<Point> tqxyls = new List<Point>();
                 ccwx_tpjing_model tpcinfo = ccwxInfos.Find(x => x.jh.Equals(item.JH));
                 jcxx_tpcls_model tpcls = tpcHistory.Find(x => x.jh.Equals(item.JH));
                 jcxx_tpcxx_model tpcxx = baseData.Find(x => x.jh.Equals(item.JH));
@@ -236,12 +245,13 @@ namespace SBTP.View.CSSJ
                 DataTable tpj_table = getTpjInfoTable(TPJMC);
                 //调剖剂有效期
                 double YXQ = tpj_table.Rows.Count == 0 ? 1 : double.Parse(tpj_table.Rows[0]["SXQ"].ToString());
-                
+                double rw = 0.1;
                 foreach (string i in tpbj_collection)
                 {
                     //调后增注段日吸水量
-                    double Q_thzzxs = tpcls.dqrzl / (100 - tpcinfo.zrfs) * Math.Log(jz.AverageDistance / 0.2) / (Math.Log(double.Parse(i) / 0.1) / tpcinfo.zzrfs +
-                        Math.Log(jz.AverageDistance / double.Parse(i)) / tpcinfo.zrfs + Math.Log(jz.AverageDistance / 0.1) / (100 - tpcinfo.zzrfs));
+                    double Q_thzzxs = tpcls.dqrzl / (100 - tpcinfo.zrfs) * Math.Log(jz.AverageDistance / 2 / rw) / (Math.Log(double.Parse(i) / rw) / tpcinfo.zzrfs +
+                        Math.Log(jz.AverageDistance / 2 / double.Parse(i)) / tpcinfo.zrfs + Math.Log(jz.AverageDistance / 2 / rw) / (100 - tpcinfo.zzrfs));
+                    tqxyls.Add(new Point(double.Parse(i), Q_thzzxs));
                     //吸液强度
                     double xyqd = Q_thzzxs / tpcinfo.zzhd * YXQ / 2;
                     XYQDs.Add(new KeyValuePair<string, double>(i, xyqd));
@@ -332,7 +342,7 @@ namespace SBTP.View.CSSJ
                 tpbj.Split(',').ToList().ForEach(x => comboboxDatasource.Add(double.Parse(x).ToString()));
                 item.BJS = comboboxDatasource;
                 item.TPCInfo = tpcxx;
-                //item.NHHS = Data.DatHelper.GetFunctionParam("指数函数");
+                item.Bjandrxsl = tqxyls;
                 item.tpjjg = tpjJg.First();
                 item.CCWXInfo = ccwxInfos.Find(x => x.jh.Equals(item.JH));
                 item.tpjnd = tpjnd.Find(x => x.JH.Equals(item.JH));

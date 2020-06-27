@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SBTP.View.XGYC"
+      xmlns:panel="clr-namespace:SBTP.Resource"
       mc:Ignorable="d" 
      d:DesignHeight="520" d:DesignWidth="1000" Background="#eee"
       Title="注入井深部调剖效果预测">
@@ -29,18 +30,18 @@
         </Grid.ColumnDefinitions>
 
         <GroupBox Grid.Row="0" Grid.Column="0" Header="调剖井号">
-            <ListBox Name="LB_jh" Margin="5" SelectionMode="Extended" />
+            <ListBox Name="LB_jh" Margin="5" SelectionMode="Extended"/>
         </GroupBox>
 
         <Grid Grid.Column="1" Grid.RowSpan="3">
             <StackPanel VerticalAlignment="Center">
                 <Button Name="btn_right" Content="→" Click="Btn_right_Click" />
-                <Button Name="btn_left" Content="←" />
+                <Button Name="btn_left" Content="←" Click="btn_left_Click"/>
             </StackPanel>
         </Grid>
 
         <GroupBox Grid.Row="0" Grid.Column="2" Header="调剖井效果预测">
-            <DataGrid Name="DataGrid1" SelectionMode="Single" CanUserSortColumns="False" ColumnWidth="*" IsReadOnly="True" LoadingRow="DataGrid1_LoadingRow">
+            <DataGrid Name="DataGrid1" CanUserSortColumns="False" ColumnWidth="*" IsReadOnly="True" LoadingRow="DataGrid1_LoadingRow" ItemsSource="{Binding List_zrj}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="序号" Width="50">
                         <DataGridTemplateColumn.CellTemplate>
@@ -55,13 +56,18 @@
                     <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccsq_style}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CSQ_DXYL}" Style="{StaticResource txt_cell_style}" />
+                                <panel:KbiseczvTom HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding CSQ_DXYL}"/>
+                                    <TextBlock Text="{Binding CSQ_SXSZS}"/>
+                                    <TextBlock Text="{Binding CSQ_TPCZRFS}"  />
+                                </panel:KbiseczvTom>
+                                <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding CSQ_DXYL}"  />
                                     <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSQ_SXSZS}" Style="{StaticResource txt_cell_style}" />
+                                    <TextBlock Text="{Binding CSQ_SXSZS}"  />
                                     <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSQ_TPCZRFS}" Style="{StaticResource txt_cell_style}" />
-                                </StackPanel>
+                                    <TextBlock Text="{Binding CSQ_TPCZRFS}"  />
+                                </StackPanel>-->
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -69,13 +75,11 @@
                     <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccsh_style}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CSH_YL}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSH_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSH_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                </StackPanel>
+                                <panel:KbiseczvTom HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding CSH_YL}"/>
+                                    <TextBlock Text="{Binding CSH_SXSZS}"/>
+                                    <TextBlock Text="{Binding CSH_TPCZRFS}"/>
+                                </panel:KbiseczvTom>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -83,13 +87,11 @@
                     <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccz_style}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CZ_YL}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CZ_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSH_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                </StackPanel>
+                                <panel:KbiseczvTom HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding CZ_YL}"/>
+                                    <TextBlock Text="{Binding CZ_SXSZS}"/>
+                                    <TextBlock Text="{Binding CZ_ZRFS}"/>
+                                </panel:KbiseczvTom>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

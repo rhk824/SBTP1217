@@ -383,8 +383,8 @@ namespace SBTP.View.CSSJ
             ZrylParams.tpchd = jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh)).yxhd;
             //厚度 hd
             ZrylParams.tpchd_fd = ZrylParams.tpchd - jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh)).zzhd;
-            //井距
-            ZrylParams.zcjj = jcxx_Tpcls_Models.Find(x => x.jh.Equals(jh)).Zcjj;            
+            //井距半径
+            ZrylParams.zcjj = jcxx_Tpcls_Models.Find(x => x.jh.Equals(jh)).Zcjj / 2;
             //调剖层渗透率kt
             ZrylParams.tpcstl = (tpc.k1 * ZrylParams.tpchd_fd + tpc.k2 * tpc.zzhd) / ZrylParams.tpchd;
             //封堵段孔隙度φ

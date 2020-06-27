@@ -39,6 +39,11 @@
         <Setter Property="Width" Value="100" />
         <Setter Property="Padding" Value="2,0,0,0" />
     </Style>
+    <!--单元格样式-->
+    <Style x:Key="txt_cell_style_1" TargetType="TextBlock">
+        <Setter Property="Width" Value="33" />
+        <Setter Property="Padding" Value="2,0,0,0" />
+    </Style>
 
     <!--单元格间隔线-->
     <Style x:Key="line_cell_style" TargetType="Rectangle">

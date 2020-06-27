@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
@@ -200,6 +201,16 @@ namespace Common
                 return (T)parent;
             else
                 return null;
+        }
+
+        public static List<T> ConvertToList<T>(ObservableCollection<T> ts)
+        {
+            List<T> newList = new List<T>();
+            foreach (var item in ts)
+            {
+                newList.Add(item);
+            }
+            return newList;
         }
     }
 }

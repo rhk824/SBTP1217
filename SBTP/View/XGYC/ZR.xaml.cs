@@ -4,91 +4,109 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using SBTP.Data;
 using SBTP.BLL;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Common;
+using System.Linq;
 
 namespace SBTP.View.XGYC
 {
     /// <summary>
     /// ZR.xaml 的交互逻辑
     /// </summary>
-    public partial class ZR : Page
+    public partial class ZR : Page, INotifyPropertyChanged
     {
-        private List<XGYC_ZRJ_BLL> list_zrj;
+        private ObservableCollection<XGYC_ZRJ_BLL> list_zrj;
+        public ObservableCollection<XGYC_ZRJ_BLL> List_zrj { get => list_zrj; set { list_zrj = value; Changed("List_zrj"); } }
+        
+        #region 属性更改通知
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Changed(string PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+        #endregion
+
         public ZR()
         {
             InitializeComponent();
+            DataContext = this;
             bindListBox();
         }
 
         private void bindListBox()
         {
             List<string> temp_list = DatHelper.Read_GXSJ();
-            if (temp_list == null | temp_list.Count == 0) return;
-
-            foreach (string jh in temp_list)
-            {
-                LB_jh.Items.Add(jh);
-            }
+            if (temp_list == null || temp_list.Count == 0) return;
+            temp_list.ForEach(x => LB_jh.Items.Add(x));
         }
 
         //选中井号
         private void Btn_right_Click(object sender, RoutedEventArgs e)
         {
             if (LB_jh.SelectedItems.Count == 0) { return; }
-            list_zrj = new List<XGYC_ZRJ_BLL>();
-            foreach (string lbi in LB_jh.SelectedItems)
+            List_zrj = new ObservableCollection<XGYC_ZRJ_BLL>();
+            var items = LB_jh.SelectedItems;
+            for (int i = 0; i < items.Count; i++)
             {
-                XGYC_ZRJ_BLL zrj = XGYC_ZRJ_BLL.getBLL(lbi);
-                list_zrj.Add(zrj);
+                XGYC_ZRJ_BLL zrj = XGYC_ZRJ_BLL.getBLL(items[i].ToString());
+                List_zrj.Add(zrj);
+                LB_jh.Items.Remove(items[i]);
             }
-            this.DataGrid1.ItemsSource = list_zrj;
         }
 
         private void Btn_yuce_Click(object sender, RoutedEventArgs e)
-        {
-            XGYC_ZRJ_BLL average = new XGYC_ZRJ_BLL();
-            foreach (XGYC_ZRJ_BLL item in list_zrj)
+        {                     
+            foreach (XGYC_ZRJ_BLL item in List_zrj)
             {
                 item.YuCe();
-                average.JJ = average.JJ + item.JJ;
-                average.ZRYND = average.ZRYND + item.ZRYND;
-                average.RZYL = average.RZYL + item.RZYL;
-                average.TPBJ = average.TPBJ + item.TPBJ;
             }
-            this.DataGrid1.ItemsSource = list_zrj;
-
-            int n = list_zrj.Count;
-            //int n = 5;
-            average.JJ = average.JJ / n;
-            average.ZRYND = average.ZRYND / n;
-            average.RZYL = average.RZYL / n;
-            average.TPBJ = average.TPBJ / n;
-            average.CSQ_SXSZS = average.CSQ_SXSZS / average.CSQ_DXYL;
-            average.CSQ_DXYL = average.CSQ_DXYL / n;
-            average.CSH_SXSZS = average.CSH_SXSZS / average.CSH_YL;
-            average.CSH_YL = average.CSH_YL / n;
-            average.CZ_SXSZS = average.CZ_SXSZS / average.CZ_YL;
-            average.CZ_YL = average.CZ_YL / n;
-
-
-            List<XGYC_ZRJ_BLL> list = new List<XGYC_ZRJ_BLL>();
-            list.Add(average);
-            //this.DataGrid2.ItemsSource = list;
+            XGYC_ZRJ_BLL average = new XGYC_ZRJ_BLL
+            {
+                JH = "综合",
+                RZYL = (from i in List_zrj select i.RZYL).ToList().Sum(),
+                ZRYND = (from i in List_zrj select i.ZRYND).ToList().Average(),
+                CSQ_DXYL = (from i in List_zrj select i.CSQ_DXYL).ToList().Average(),
+                CSQ_SXSZS = (from i in List_zrj select i.CSQ_SXSZS).ToList().Average(),
+                CSQ_TPCZRFS = (from i in List_zrj select i.CSQ_TPCZRFS).ToList().Average(),
+                CSH_YL = (from i in List_zrj select i.CSH_YL).ToList().Average(),
+                CSH_SXSZS = (from i in List_zrj select i.CSH_SXSZS).ToList().Average(),
+                CSH_TPCZRFS = (from i in List_zrj select i.CSH_TPCZRFS).ToList().Average(),
+                CZ_YL = (from i in List_zrj select i.CZ_YL).ToList().Average(),
+                CZ_SXSZS = (from i in List_zrj select i.CZ_SXSZS).ToList().Average(),
+                CZ_ZRFS = (from i in List_zrj select i.CZ_ZRFS).ToList().Average(),
+            };
+            List_zrj.Add(average);
         }
 
         private void Btn_save_Click(object sender, RoutedEventArgs e)
         {
-            DatHelper_RLS4.save_xgyc_zrj(list_zrj);
+            //移除统计行
+            List_zrj.RemoveAt(List_zrj.Count - 1);
+            List<XGYC_ZRJ_BLL> xGYC_ZRJ_BLLs = Unity.ConvertToList<XGYC_ZRJ_BLL>(List_zrj); 
+            DatHelper_RLS4.save_xgyc_zrj(xGYC_ZRJ_BLLs);
             MessageBox.Show("保存成功");
         }
 
         private void DataGrid1_LoadingRow(object sender, DataGridRowEventArgs e)
         {
-            //e.Row.Header = e.Row.GetIndex() + 1;
+            e.Row.Header = e.Row.GetIndex() + 1;
         }
 
         private void btn_return_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void btn_left_Click(object sender, RoutedEventArgs e)
+        {
+            var items = DataGrid1.SelectedItems;
+            for (int i = 0; i < items.Count; i++)
+            {
+                XGYC_ZRJ_BLL target = items[i] as XGYC_ZRJ_BLL;
+                LB_jh.Items.Add(target.JH);
+                list_zrj.Remove(target);
+            }
         }
     }
 
