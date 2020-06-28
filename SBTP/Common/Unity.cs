@@ -202,7 +202,12 @@ namespace Common
             else
                 return null;
         }
-
+        /// <summary>
+        ///ObservableCollection转List
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ts"></param>
+        /// <returns></returns>
         public static List<T> ConvertToList<T>(ObservableCollection<T> ts)
         {
             List<T> newList = new List<T>();
@@ -211,6 +216,32 @@ namespace Common
                 newList.Add(item);
             }
             return newList;
+        }
+        /// <summary>
+        /// 最小二乘法
+        /// </summary>
+        /// <param name="DataPoints"></param>
+        /// <returns></returns>
+        public static KeyValuePair<double, double> OLSMethod(List<Point> DataPoints)
+        {
+            if (DataPoints.Count == 0) return new KeyValuePair<double, double>(0, 0);
+            List<double> xy = new List<double>();
+            DataPoints.ForEach(x => {
+                xy.Add(x.X * x.Y);
+            });
+            List<double> x2 = new List<double>();
+            DataPoints.ForEach(x => {
+                x2.Add(x.X * x.X);
+            });
+            double X_Sum = DataPoints.Sum(x => x.X);
+            double Y_Sum = DataPoints.Sum(y => y.Y);
+            double X2_Sum = x2.Sum();
+            double XY_Sum = xy.Sum();
+
+            double b = (DataPoints.Count * XY_Sum - X_Sum * Y_Sum) / (DataPoints.Count * X2_Sum - X_Sum * X_Sum);
+            double a = DataPoints.Average(x => x.Y) - DataPoints.Average(x => x.X) * b;
+            //a截距 b斜率
+            return new KeyValuePair<double, double>(a, b);
         }
     }
 }

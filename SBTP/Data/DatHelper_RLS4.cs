@@ -17,25 +17,13 @@ namespace SBTP.Data
     public class DatHelper_RLS4
     {       
         private static string datPath = @"{0}\RLS";
-        private static string rls = "RLS4.DAT";
-        private static string rls3 = "RLS3.DAT";
-        private static string[] rls_lines =
-        {
-            //注入井深部调剖效果预测
-            "*ZRYC //序号 井号 注入液粘度 调剖半径 措施前视吸水指数 措施前等效压力 措施后压力 措施后视吸水指数 措施前增注段吸液量",
-            "/ZRYC",
-
-            //生产井深部调剖效果预测
-            "*JZXG //序号 井组名 年含水上升率 调剖有效期 增油 见效时间",
-            "/JZXG"
-        };
 
         private static void CheckRLS()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("*ZRYC //序号 井号 注入液粘度 调剖半径 措施前视吸水指数 措施前等效压力 措施前增注段吸液量 措施后压力 措施后视吸水指数\r\n");
+            sb.Append("*ZRYC //井号 日注液量 注入液粘度 措施前注水压力 措施前视吸水指数 措施前注入分数 措施后注水压力 措施后视吸水指数 措施后注入分数\r\n");
             sb.Append("/ZRYC\r\n");
-            sb.Append("*JZXG //序号 井组名 年含水上升率 调剖有效期 增油 见效时间\r\n");
+            sb.Append("*JZXG //井组名 年含水上升率 调剖有效期 增油 见效时间\r\n");
             sb.Append("/JZXG\r\n");
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS4.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -98,7 +86,7 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS4.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*ZRYC //序号 井号 注入液粘度 调剖半径 措施前视吸水指数 措施前等效压力 措施前增注段吸液量 措施后压力 措施后视吸水指数");
+                int startIndex = lines.IndexOf("*ZRYC //井号 日注液量 注入液粘度 措施前注水压力 措施前视吸水指数 措施前注入分数 措施后注水压力 措施后视吸水指数 措施后注入分数");
                 int endIndex = lines.IndexOf("/ZRYC");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -106,16 +94,15 @@ namespace SBTP.Data
                 for (int i = 0; i < list.Count; i++)
                 {
                     XGYC_ZRJ_BLL item = list[i];
-                    data_str.AppendFormat("{0}\t", i + 1);
                     data_str.AppendFormat("{0}\t", item.JH);
+                    data_str.AppendFormat("{0}\t", item.RZYL);
                     data_str.AppendFormat("{0}\t", item.ZRYND);
-                    data_str.AppendFormat("{0}\t", item.TPBJ);
-                    data_str.AppendFormat("{0}\t", item.CSQ_SXSZS);
                     data_str.AppendFormat("{0}\t", item.CSQ_DXYL);
-                    data_str.AppendFormat("{0}\t", item.CSQ_ZZDXYL);
+                    data_str.AppendFormat("{0}\t", item.CSQ_SXSZS);                   
+                    data_str.AppendFormat("{0}\t", item.CSQ_TPCZRFS);
                     data_str.AppendFormat("{0}\t", item.CSH_YL);
-                    data_str.AppendFormat("{0}\r\n", item.CSH_SXSZS);
-
+                    data_str.AppendFormat("{0}\t", item.CSH_SXSZS);
+                    data_str.AppendFormat("{0}\r\n", item.CSH_TPCZRFS);
                 }
                 newLines.Insert(startIndex + 1, data_str.ToString());
                 sw.Write(string.Join("", newLines.ToArray()));
@@ -133,18 +120,18 @@ namespace SBTP.Data
             {
                 if (line.Contains("*ZRYC")) continue;
                 if (line.Contains("/ZRYC")) break;
-
                 string[] vs = line.Split('\t');
                 list.Add(new XGYC_ZRJ_BLL()
                 {
-                    JH = Unity.ToString(vs[1]),
+                    JH = Unity.ToString(vs[0]),
+                    RZYL = Unity.ToDouble(vs[1]),
                     ZRYND = Unity.ToDouble(vs[2]),
-                    TPBJ = Unity.ToDouble(vs[3]),
-                    CSQ_SXSZS = Unity.ToDouble(vs[4]),
-                    CSQ_DXYL = Unity.ToDouble(vs[5]),
-                    CSQ_ZZDXYL = Unity.ToDouble(vs[6]),
-                    CSH_YL = Unity.ToInt(vs[7]),
-                    CSH_SXSZS = Unity.ToDouble(vs[8])
+                    CSQ_DXYL = Unity.ToDouble(vs[3]),
+                    CSQ_SXSZS = Unity.ToDouble(vs[4]),                   
+                    CSQ_TPCZRFS = Unity.ToDouble(vs[5]),
+                    CSH_YL = Unity.ToInt(vs[6]),
+                    CSH_SXSZS = Unity.ToDouble(vs[7]),
+                    CSH_TPCZRFS = Unity.ToDouble(vs[8])
                 });
             }
             return list;

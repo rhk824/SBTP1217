@@ -14,6 +14,7 @@ namespace SBTP.BLL
     {
         private jcxx_tpcls_model tpcl;
         private jcxx_tpcxx_model tpcxx;
+        private ccwx_tpjing_model tpxccwx;
         private TPJData tpj;
         private JqxxyhModel tpcyh;
         #region 属性更改通知
@@ -123,34 +124,39 @@ namespace SBTP.BLL
             double m = DatHelper.readQkcs().Lb;
             //RSL3.DAT**JCXX*TPCXX 增注段渗透率
             double k = tpcxx.k2;
-            double stl = tpcxx.Zkxd / 100;
+            //增注段孔隙度
+            double zkxd = tpxccwx.zzdkxd / 100;
             //RSL3.DAT**JCXX*TPCXX 增注段厚度
             double h = tpcxx.zzhd;
             //有效厚度
             double ht = tpcxx.yxhd;
             //调剖层渗透率
             double kt = (tpcxx.k1 * (tpcxx.yxhd - tpcxx.zzhd) + tpcxx.k2 * tpcxx.zzhd) / ht;
+            //调剖层孔隙度
+            double tpckxd = (tpxccwx.fddkxd * (tpxccwx.yxhd - tpxccwx.zzhd) + tpxccwx.zzdkxd * tpxccwx.zzhd) / ht / 100;
             //最小流速位置
-            double r_min = Qz / (2 * Math.PI * v_min * h);
+            double r_min = Qz / (2 * Math.PI * v_min * h * tpckxd);
             //临时变量
             double r = r_min > L ? L : r_min;
             #region 计算△Pp
             double Pp = Qz * sn * Math.Log(r / rw) / (2 * Math.PI * k * h) +
-              Math.Pow(Qz / (2 * Math.PI * h), m) * (u - sn) * (Math.Pow(ZCJJ, 1 - m) - Math.Pow(rw, 1 - m)) / ((1 - m) * k * Math.Pow(v_min * stl, m - 1)) +
+              Math.Pow(Qz / (2 * Math.PI * h), m) * (u - sn) * (Math.Pow(ZCJJ, 1 - m) - Math.Pow(rw, 1 - m)) / ((1 - m) * k * Math.Pow(v_min * zkxd, m - 1)) +
               Qz * u * Math.Log(L / r) / (2 * Math.PI * k * h) +
               Qz * u * Math.Log(ZCJJ / L) / (2 * Math.PI * kt * ht);
             Pp *= 0.01157;
             #endregion
 
             #region 计算△P0
-            double p0 = Qz * sn * Math.Log(r / rw) / (2 * Math.PI * k * h) +
-              Math.Pow(Qz / (2 * Math.PI * h), m) * (u - sn) * (Math.Pow(r, 1 - m) - Math.Pow(rw, 1 - m)) / ((1 - m) * k * Math.Pow(v_min * stl, m - 1));
-            if (r_min < L)
-                p0 += Qz * sn * Math.Log(L / rw) / (2 * Math.PI * k * h);
+            //临时变量
+            double r_ = r_min > ZCJJ ? ZCJJ : r_min;
+            double p0 = Qz * sn * Math.Log(r_ / rw) / (2 * Math.PI * k * ht) +
+              Math.Pow(Qz / (2 * Math.PI * ht), m) * (u - sn) * (Math.Pow(r_, 1 - m) - Math.Pow(rw, 1 - m)) / ((1 - m) * k * Math.Pow(v_min * tpckxd, m - 1));
+            if (r_min < ZCJJ)
+                p0 += Qz * sn * Math.Log(ZCJJ / rw) / (2 * Math.PI * k * ht);
             p0 *= 0.01157;
             #endregion
 
-            CSH_TPCZRFS = Math.Round(Qz / tpcl.dqrzl, 3);
+            CSH_TPCZRFS = Math.Round(Qz * 100 / tpcl.dqrzl, 3);
             CSH_YL = Math.Round(CSQ_DXYL + Pp - p0, 3);
             CSH_SXSZS = Math.Round(RZYL / CSH_YL, 3);
             CZ_ZRFS = CSH_TPCZRFS - CSQ_TPCZRFS;
@@ -166,19 +172,20 @@ namespace SBTP.BLL
                 tpj = DatHelper.ReadTPJ(jh),
                 tpcl = DatHelper.read_jcxx_tpcls().FirstOrDefault(n => n.jh == jh),
                 tpcxx = DatHelper.read_jcxx_tpcxx().FirstOrDefault(n => n.jh == jh),
+                tpxccwx = DatHelper.read_ccwx().FirstOrDefault(n => n.jh == jh),
                 ZRYND = DatHelper.readQkcs().Qtgn,
                 tpcyh = DatHelper.ReadSTCS().Find(x => x.JH.Equals(jh))
             };
             //日注液量
             bll.RZYL = bll.tpcl == null ? 0 : bll.tpcl.dqrzl;
             //注采井距
-            bll.ZCJJ = bll.tpcl == null ? 0 : bll.tpcl.Zcjj;
+            bll.ZCJJ = bll.tpcl == null ? 0 : bll.tpcl.Zcjj/2;
             //措施前注入分数
             bll.CSQ_TPCZRFS = bll.tpcxx == null ? 0 : Math.Round(bll.tpcxx.zrfs, 3);
             //措施前视吸水指数：读取RSL1.DAT中**PROFILE CONTROL WELL *TWELL 视吸水指数
             bll.CSQ_SXSZS = bll.tpj == null ? 0 : Math.Round(bll.tpj.AWI, 3);
-            //措施前压力 = 日注液量 * 措施前视吸水指数
-            bll.CSQ_DXYL = Math.Round(bll.RZYL * bll.CSQ_SXSZS, 3);
+            //措施前压力 = 日注液量 / 措施前视吸水指数
+            bll.CSQ_DXYL = Math.Round(bll.RZYL / bll.CSQ_SXSZS, 3);
             return bll;
         }
     }

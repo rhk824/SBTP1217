@@ -222,32 +222,6 @@ namespace SBTP.View.TPJ
             return DataPoints;
         }
 
-        /// <summary>
-        /// 计算a',b值
-        /// </summary>
-        /// <returns></returns>
-        public static KeyValuePair<double, double> ParamsCalculation(List<Point> DataPoints)
-        {
-            if (DataPoints.Count == 0) return new KeyValuePair<double, double>(0, 0);
-            List<double> xy = new List<double>();
-            DataPoints.ForEach(x => {
-                xy.Add(x.X * x.Y);
-            });
-            List<double> x2 = new List<double>();
-            DataPoints.ForEach(x => {
-                x2.Add(x.X * x.X);
-            });
-            double X_Sum = DataPoints.Sum(x => x.X);
-            double Y_Sum = DataPoints.Sum(y => y.Y);
-            double X2_Sum = x2.Sum();
-            double XY_Sum = xy.Sum();
-
-            double b = (DataPoints.Count * XY_Sum - X_Sum * Y_Sum) / (DataPoints.Count * X2_Sum - X_Sum * X_Sum);
-            double a = DataPoints.Average(x => x.Y) - DataPoints.Average(x => x.X) * b;
-
-            return new KeyValuePair<double, double>(a, b);
-        }
-
         private void btn_next_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Unity.GetAncestor<MainWindow>(this);
@@ -310,7 +284,7 @@ namespace SBTP.View.TPJ
                         new_Data_Points.Add(new Point(Math.Log(x.X), Math.Log(x.Y)));
                 });
 
-            result = ParamsCalculation(new_Data_Points);
+            result = Unity.OLSMethod(new_Data_Points);
             //a'换算成a值
             this.Value_a.Text = Math.Round(Math.Exp(result.Key), 2).ToString();
             this.Value_b.Text = Math.Round(result.Value, 2).ToString();

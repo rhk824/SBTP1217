@@ -17,8 +17,11 @@ namespace SBTP.View.XGYC
     public partial class ZR : Page, INotifyPropertyChanged
     {
         private ObservableCollection<XGYC_ZRJ_BLL> list_zrj;
+        private XGYC_ZRJ_BLL average;
         public ObservableCollection<XGYC_ZRJ_BLL> List_zrj { get => list_zrj; set { list_zrj = value; Changed("List_zrj"); } }
-        
+
+        public XGYC_ZRJ_BLL Average { get => average; set => average = value; }
+
         #region 属性更改通知
         public event PropertyChangedEventHandler PropertyChanged;
         private void Changed(string PropertyName)
@@ -31,21 +34,26 @@ namespace SBTP.View.XGYC
         {
             InitializeComponent();
             DataContext = this;
-            bindListBox();
+            bindData();
         }
 
-        private void bindListBox()
+        private void bindData()
         {
+            List_zrj = new ObservableCollection<XGYC_ZRJ_BLL>();
             List<string> temp_list = DatHelper.Read_GXSJ();
+            var datasource = DatHelper_RLS4.read_XGYC_ZRJ();
+            if (datasource.Count > 0)
+                datasource.ForEach(x => List_zrj.Add(x));
+
             if (temp_list == null || temp_list.Count == 0) return;
-            temp_list.ForEach(x => LB_jh.Items.Add(x));
+            var query = (from i in datasource select i.JH).ToList();
+            temp_list.ForEach(x => { if (!query.Contains(x)) LB_jh.Items.Add(x); });
         }
 
         //选中井号
         private void Btn_right_Click(object sender, RoutedEventArgs e)
         {
-            if (LB_jh.SelectedItems.Count == 0) { return; }
-            List_zrj = new ObservableCollection<XGYC_ZRJ_BLL>();
+            if (LB_jh.SelectedItems.Count == 0) { return; }          
             var items = LB_jh.SelectedItems;
             for (int i = 0; i < items.Count; i++)
             {
@@ -56,12 +64,34 @@ namespace SBTP.View.XGYC
         }
 
         private void Btn_yuce_Click(object sender, RoutedEventArgs e)
-        {                     
+        {
             foreach (XGYC_ZRJ_BLL item in List_zrj)
             {
                 item.YuCe();
             }
-            XGYC_ZRJ_BLL average = new XGYC_ZRJ_BLL
+            if (Average != null)
+                List_zrj.RemoveAt(List_zrj.Count - 1);
+            Average = doAverageCal();
+            List_zrj.Add(Average);
+        }
+
+        private XGYC_ZRJ_BLL doAverageCal()
+        {
+            if (Average != null)
+            {
+                Average.RZYL = (from i in List_zrj select i.RZYL).ToList().Sum();
+                Average.ZRYND = (from i in List_zrj select i.ZRYND).ToList().Average();
+                Average.CSQ_DXYL = (from i in List_zrj select i.CSQ_DXYL).ToList().Average();
+                Average.CSQ_SXSZS = (from i in List_zrj select i.CSQ_SXSZS).ToList().Average();
+                Average.CSQ_TPCZRFS = (from i in List_zrj select i.CSQ_TPCZRFS).ToList().Average();
+                Average.CSH_YL = (from i in List_zrj select i.CSH_YL).ToList().Average();
+                Average.CSH_SXSZS = (from i in List_zrj select i.CSH_SXSZS).ToList().Average();
+                Average.CSH_TPCZRFS = (from i in List_zrj select i.CSH_TPCZRFS).ToList().Average();
+                Average.CZ_YL = (from i in List_zrj select i.CZ_YL).ToList().Average();
+                Average.CZ_SXSZS = (from i in List_zrj select i.CZ_SXSZS).ToList().Average();
+                return Average;
+            }
+            return new XGYC_ZRJ_BLL
             {
                 JH = "综合",
                 RZYL = (from i in List_zrj select i.RZYL).ToList().Sum(),
@@ -76,7 +106,6 @@ namespace SBTP.View.XGYC
                 CZ_SXSZS = (from i in List_zrj select i.CZ_SXSZS).ToList().Average(),
                 CZ_ZRFS = (from i in List_zrj select i.CZ_ZRFS).ToList().Average(),
             };
-            List_zrj.Add(average);
         }
 
         private void Btn_save_Click(object sender, RoutedEventArgs e)
@@ -104,9 +133,14 @@ namespace SBTP.View.XGYC
             for (int i = 0; i < items.Count; i++)
             {
                 XGYC_ZRJ_BLL target = items[i] as XGYC_ZRJ_BLL;
-                LB_jh.Items.Add(target.JH);
+                if (!target.JH.Equals("综合"))
+                    LB_jh.Items.Add(target.JH);
                 list_zrj.Remove(target);
             }
+            if (!list_zrj[0].JH.Equals("综合"))
+                doAverageCal();
+            else
+                list_zrj.Clear();
         }
     }
 
