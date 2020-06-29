@@ -14,7 +14,6 @@ namespace SBTP.BLL
     {
         private jcxx_tpcls_model tpcl;
         private jcxx_tpcxx_model tpcxx;
-        private ccwx_tpjing_model tpxccwx;
         private TPJData tpj;
         private JqxxyhModel tpcyh;
         #region 属性更改通知
@@ -28,6 +27,7 @@ namespace SBTP.BLL
         #region 属性
 
         private string jh;
+        private string tpcname;
         private double zrynd;
         private double rzyl;
         private double csqsxszs;
@@ -103,6 +103,8 @@ namespace SBTP.BLL
         /// 差值注入分数
         /// </summary>
         public double CZ_ZRFS { get => czzrfs; set { czzrfs = value; Changed("CZ_ZRFS"); } }
+
+        public string TPCNAME { get => tpcname; set { tpcname = value; Changed("TPCNAME"); } }
         #endregion
         public XGYC_ZRJ_BLL() { JJ = 0.1; }
 
@@ -125,7 +127,7 @@ namespace SBTP.BLL
             //RSL3.DAT**JCXX*TPCXX 增注段渗透率
             double k = tpcxx.k2;
             //增注段孔隙度
-            double zkxd = tpxccwx.zzdkxd / 100;
+            double zkxd = tpcxx.Zkxd / 100;
             //RSL3.DAT**JCXX*TPCXX 增注段厚度
             double h = tpcxx.zzhd;
             //有效厚度
@@ -133,7 +135,7 @@ namespace SBTP.BLL
             //调剖层渗透率
             double kt = (tpcxx.k1 * (tpcxx.yxhd - tpcxx.zzhd) + tpcxx.k2 * tpcxx.zzhd) / ht;
             //调剖层孔隙度
-            double tpckxd = (tpxccwx.fddkxd * (tpxccwx.yxhd - tpxccwx.zzhd) + tpxccwx.zzdkxd * tpxccwx.zzhd) / ht / 100;
+            double tpckxd = (tpcxx.Fkxd * (tpcxx.yxhd - tpcxx.zzhd) + tpcxx.Zkxd * tpcxx.zzhd) / ht / 100;
             //最小流速位置
             double r_min = Qz / (2 * Math.PI * v_min * h * tpckxd);
             //临时变量
@@ -172,10 +174,11 @@ namespace SBTP.BLL
                 tpj = DatHelper.ReadTPJ(jh),
                 tpcl = DatHelper.read_jcxx_tpcls().FirstOrDefault(n => n.jh == jh),
                 tpcxx = DatHelper.read_jcxx_tpcxx().FirstOrDefault(n => n.jh == jh),
-                tpxccwx = DatHelper.read_ccwx().FirstOrDefault(n => n.jh == jh),
                 ZRYND = DatHelper.readQkcs().Qtgn,
                 tpcyh = DatHelper.ReadSTCS().Find(x => x.JH.Equals(jh))
             };
+            //层名
+            bll.TPCNAME = bll.tpcxx == null ? string.Empty : bll.tpcxx.cd;
             //日注液量
             bll.RZYL = bll.tpcl == null ? 0 : bll.tpcl.dqrzl;
             //注采井距

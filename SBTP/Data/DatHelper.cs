@@ -25,7 +25,7 @@ namespace SBTP.Data
             "**JCXX",
             "*TPCJH // 井号",
             "/TPCJH",
-            "*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率",
+            "*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率 封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径",
             "/TPCXX",
             "*TPJXX // 井号 液体剂名称 液体剂浓度 颗粒剂名称 颗粒剂粒径 颗粒剂浓度 携带液浓度",
             "/TPJXX",
@@ -55,7 +55,7 @@ namespace SBTP.Data
             inputStr.Append("**JCXX\r\n");
             inputStr.Append("*TPCJH // 井号\r\n");
             inputStr.Append("/TPCJH\r\n");
-            inputStr.Append("*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率\r\n");
+            inputStr.Append("*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率 封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径\r\n");
             inputStr.Append("/TPCXX\r\n");
             inputStr.Append("*TPJXX // 井号 液体剂名称 液体剂浓度 颗粒剂名称 颗粒剂粒径 颗粒剂浓度 携带液浓度\r\n");
             inputStr.Append("/TPJXX\r\n");
@@ -1477,7 +1477,7 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率");
+                int startIndex = lines.IndexOf("*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率 封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径");
                 int endIndex = lines.IndexOf("/TPCXX");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -1495,7 +1495,11 @@ namespace SBTP.Data
                     sb.Append($"{item.zzrfs}\t");
                     sb.Append($"{item.ltfs}\t");
                     sb.Append($"{item.k1}\t");
-                    sb.Append($"{item.k2}\r\n");
+                    sb.Append($"{item.k2}\t");
+                    sb.Append($"{item.Fkxd}\t");
+                    sb.Append($"{item.Zkxd}\t");
+                    sb.Append($"{item.R1}\t");
+                    sb.Append($"{item.R2}\r\n");
                     newData.Add(sb.ToString());
                 }
                 newLines.InsertRange(startIndex + 1, newData);
@@ -1670,6 +1674,10 @@ namespace SBTP.Data
                         ltfs = Unity.ToInt(vs[7]),
                         k1 = Unity.ToDouble(vs[8]),
                         k2 = Unity.ToDouble(vs[9]),
+                        Zkxd = Unity.ToDouble(vs[10]),
+                        Fkxd = Unity.ToDouble(vs[11]),
+                        R1 = Unity.ToDouble(vs[12]),
+                        R2 = Unity.ToDouble(vs[13])
                     });
                 }
                 if (line.Contains("**JCXX")) flag1 = true;

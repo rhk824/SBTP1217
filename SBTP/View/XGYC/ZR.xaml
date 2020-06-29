@@ -41,7 +41,7 @@
         </Grid>
 
         <GroupBox Grid.Row="0" Grid.Column="2" Header="调剖井效果预测">
-            <DataGrid Name="DataGrid1" CanUserSortColumns="False" ColumnWidth="*" IsReadOnly="True" LoadingRow="DataGrid1_LoadingRow" ItemsSource="{Binding List_zrj}">
+            <DataGrid Name="DataGrid1" ColumnWidth="*" CanUserSortColumns="False" LoadingRow="DataGrid1_LoadingRow" ItemsSource="{Binding List_zrj}">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="序号" Width="50">
                         <DataGridTemplateColumn.CellTemplate>
@@ -51,23 +51,17 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Header="井号" Binding="{Binding JH}" Width="80"/>
+                    <DataGridTextColumn Header="调剖层" Binding="{Binding TPCNAME}" Width="80"/>
                     <DataGridTextColumn Binding="{Binding RZYL}" Header="日注液量(m³/d)"/>
                     <DataGridTextColumn Binding="{Binding ZRYND}" Header="驱替液粘度(mPa.s)"/>
                     <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccsq_style}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <panel:KbiseczvTom HorizontalAlignment="Stretch">
-                                    <TextBlock Text="{Binding CSQ_DXYL}"/>
-                                    <TextBlock Text="{Binding CSQ_SXSZS}"/>
-                                    <TextBlock Text="{Binding CSQ_TPCZRFS}"  />
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSQ_DXYL}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSQ_SXSZS}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSQ_TPCZRFS}"  />
                                 </panel:KbiseczvTom>
-                                <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding CSQ_DXYL}"  />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSQ_SXSZS}"  />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSQ_TPCZRFS}"  />
-                                </StackPanel>-->
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -76,9 +70,9 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <panel:KbiseczvTom HorizontalAlignment="Stretch">
-                                    <TextBlock Text="{Binding CSH_YL}"/>
-                                    <TextBlock Text="{Binding CSH_SXSZS}"/>
-                                    <TextBlock Text="{Binding CSH_TPCZRFS}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSH_YL}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSH_SXSZS}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSH_TPCZRFS}"/>
                                 </panel:KbiseczvTom>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -88,9 +82,9 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <panel:KbiseczvTom HorizontalAlignment="Stretch">
-                                    <TextBlock Text="{Binding CZ_YL}"/>
-                                    <TextBlock Text="{Binding CZ_SXSZS}"/>
-                                    <TextBlock Text="{Binding CZ_ZRFS}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CZ_YL}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CZ_SXSZS}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CZ_ZRFS}"/>
                                 </panel:KbiseczvTom>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -104,7 +98,7 @@
                 <Button Name="Btn_yuce" Content="预测" Click="Btn_yuce_Click"/>
                 <Button Name="Btn_save" Content="保存" Click="Btn_save_Click"/>
                 <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
-                <Button Name="Btn_quit" Content="退出" />
+                <Button Name="Btn_quit" Content="关闭" Click="Btn_quit_Click" />
             </StackPanel>
         </GroupBox>
 

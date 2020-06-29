@@ -439,16 +439,17 @@ namespace SBTP.View.CSSJ
             }
             else if (column_index == 2)
             {
-                targetDs.YL = Math.Round(double_ZYL * double.Parse((e.EditingElement as TextBox).Text), 3);
-                targetDs.ZRTS = Math.Round(double_ZYL * double.Parse((e.EditingElement as TextBox).Text) / targetDs.ZRSD, 3);
+                targetDs.BL = double.Parse((e.EditingElement as TextBox).Text);
+                targetDs.YL = Math.Round(double_ZYL * targetDs.BL, 3);
+                targetDs.ZRTS = Math.Round(double_ZYL * targetDs.BL / targetDs.ZRSD, 3);
                 BL_T.Content = ColSum(2);
                 YL_t.Content = ColSum(3);
                 TS_T.Content = ColSum(9);
             }
             else if (column_index == 8)
             {
-                targetDs.YL = Math.Round(double_ZYL * targetDs.BL, 3);
-                targetDs.ZRTS = Math.Round(double_ZYL * targetDs.BL / double.Parse((e.EditingElement as TextBox).Text), 3);
+                targetDs.ZRSD = double.Parse((e.EditingElement as TextBox).Text);
+                targetDs.ZRTS = Math.Round(double_ZYL * targetDs.BL / targetDs.ZRSD, 3);
                 SD_T.Content = ColConcentration(8);
                 YL_t.Content = ColSum(3);
                 TS_T.Content = ColSum(9);

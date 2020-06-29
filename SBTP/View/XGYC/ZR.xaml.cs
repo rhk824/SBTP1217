@@ -44,7 +44,6 @@ namespace SBTP.View.XGYC
             var datasource = DatHelper_RLS4.read_XGYC_ZRJ();
             if (datasource.Count > 0)
                 datasource.ForEach(x => List_zrj.Add(x));
-
             if (temp_list == null || temp_list.Count == 0) return;
             var query = (from i in datasource select i.JH).ToList();
             temp_list.ForEach(x => { if (!query.Contains(x)) LB_jh.Items.Add(x); });
@@ -53,8 +52,8 @@ namespace SBTP.View.XGYC
         //选中井号
         private void Btn_right_Click(object sender, RoutedEventArgs e)
         {
-            if (LB_jh.SelectedItems.Count == 0) { return; }          
             var items = LB_jh.SelectedItems;
+            if (LB_jh.SelectedItems.Count == 0) { return; }                     
             for (int i = 0; i < items.Count; i++)
             {
                 XGYC_ZRJ_BLL zrj = XGYC_ZRJ_BLL.getBLL(items[i].ToString());
@@ -67,10 +66,12 @@ namespace SBTP.View.XGYC
         {
             foreach (XGYC_ZRJ_BLL item in List_zrj)
             {
+                if (item.JH.Equals("综合")) continue;
                 item.YuCe();
             }
+            var zhob = List_zrj.ToList().Find(x => x.JH.Equals("综合"));
             if (Average != null)
-                List_zrj.RemoveAt(List_zrj.Count - 1);
+                List_zrj.Remove(zhob);
             Average = doAverageCal();
             List_zrj.Add(Average);
         }
@@ -110,9 +111,7 @@ namespace SBTP.View.XGYC
 
         private void Btn_save_Click(object sender, RoutedEventArgs e)
         {
-            //移除统计行
-            List_zrj.RemoveAt(List_zrj.Count - 1);
-            List<XGYC_ZRJ_BLL> xGYC_ZRJ_BLLs = Unity.ConvertToList<XGYC_ZRJ_BLL>(List_zrj); 
+            List<XGYC_ZRJ_BLL> xGYC_ZRJ_BLLs = List_zrj.ToList().FindAll(x => !x.JH.Equals("综合"));
             DatHelper_RLS4.save_xgyc_zrj(xGYC_ZRJ_BLLs);
             MessageBox.Show("保存成功");
         }
@@ -124,7 +123,8 @@ namespace SBTP.View.XGYC
 
         private void btn_return_Click(object sender, RoutedEventArgs e)
         {
-
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".SC");
         }
 
         private void btn_left_Click(object sender, RoutedEventArgs e)
@@ -133,14 +133,23 @@ namespace SBTP.View.XGYC
             for (int i = 0; i < items.Count; i++)
             {
                 XGYC_ZRJ_BLL target = items[i] as XGYC_ZRJ_BLL;
-                if (!target.JH.Equals("综合"))
-                    LB_jh.Items.Add(target.JH);
+                if (target.JH.Equals("综合")) continue;
+                LB_jh.Items.Add(target.JH);
                 list_zrj.Remove(target);
             }
-            if (!list_zrj[0].JH.Equals("综合"))
-                doAverageCal();
-            else
-                list_zrj.Clear();
+            var collect = list_zrj.ToList().Find(x => x.JH.Equals("综合"));
+            if (collect != null)
+            {
+                if (!list_zrj[0].JH.Equals("综合"))
+                    doAverageCal();
+                else
+                    list_zrj.Clear();
+            }
+        }
+        private void Btn_quit_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(" ");
         }
     }
 

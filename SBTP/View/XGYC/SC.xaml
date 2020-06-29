@@ -37,7 +37,7 @@
         <Grid Grid.Column="1" Grid.RowSpan="3">
             <StackPanel VerticalAlignment="Center">
                 <Button Name="btn_right" Content="→" Click="btn_right_Click" />
-                <Button Name="btn_left" Content="←"  />
+                <Button Name="btn_left" Content="←"  Click="btn_left_Click"/>
             </StackPanel>
         </Grid>
 
@@ -47,7 +47,7 @@
                     <RowDefinition/>
                     <RowDefinition Height="48"/>
                 </Grid.RowDefinitions>
-                <DataGrid Name="DataGrid1" ItemsSource="{Binding List_scj}" SelectionMode="Single" ColumnWidth="*" IsReadOnly="True" LoadingRow="DataGrid1_LoadingRow">
+                <DataGrid Name="DataGrid1" ItemsSource="{Binding List_scj}" SelectionMode="Single" ColumnWidth="*" CanUserSortColumns="False" LoadingRow="DataGrid1_LoadingRow">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="序号" Width="50">
                             <DataGridTemplateColumn.CellTemplate>
@@ -56,13 +56,13 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="井号" Binding="{Binding jz}"/>
-                        <DataGridTextColumn Header="措施前井组含水" Binding="{Binding CSQJJHS}"/>
-                        <DataGridTextColumn Header="年含水上升率" Binding="{Binding jj}"/>
-                        <DataGridTextColumn Header="调剖有效期(年)" Binding="{Binding zrfs}"/>
-                        <DataGridTextColumn Header="增油(t)" Binding="{Binding zzhd}"/>
-                        <DataGridTextColumn Header="见效时间(天)" Binding="{Binding zzrfs}"/>
-                        <DataGridTextColumn Header="投产比"/>
+                        <DataGridTextColumn Header="井号" Binding="{Binding JZ}" Width="70"/>
+                        <DataGridTextColumn Header="措施前井组含水(%)" Width="120" Binding="{Binding CSQJJHS}"/>
+                        <DataGridTextColumn Header="年含水上升率(%)" Binding="{Binding NHSSSL}"/>
+                        <DataGridTextColumn Header="调剖有效期(年)" Binding="{Binding TPYXQ}"/>
+                        <DataGridTextColumn Header="增油(m³)" Binding="{Binding ZY}"/>
+                        <DataGridTextColumn Header="见效时间(天)" Binding="{Binding JXSJ}"/>
+                        <DataGridTextColumn Header="投产比" Binding="{Binding TCB}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
@@ -70,7 +70,14 @@
                         <CheckBox.Content>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="计算年含水上升率"/>
-                                <TextBox Name="Yc" IsEnabled="{Binding ElementName=yesOrno,Path=IsChecked,Mode=OneWay}" Width="30"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="评价时间(年)" FontSize="11"/>
+                                    <TextBox Name="Yc" IsEnabled="{Binding ElementName=yesOrno,Path=IsChecked,Mode=OneWay}" Width="30"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="时间间隔(月)" FontSize="11"/>
+                                    <TextBox Name="y_step" IsEnabled="{Binding ElementName=yesOrno,Path=IsChecked,Mode=OneWay}" Width="30"/>
+                                </StackPanel>
                             </StackPanel>
                         </CheckBox.Content>
                     </CheckBox>
@@ -83,7 +90,7 @@
                 <Button Name="Btn_cal" Content="预测" Click="Btn_cal_Click"/>
                 <Button Name="Btn_save" Content="保存" Click="Btn_save_Click"/>
                 <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
-                <Button Content="退出" />
+                <Button Content="关闭" Name="Btn_close" Click="Btn_close_Click" />
             </StackPanel>
         </GroupBox>
 
