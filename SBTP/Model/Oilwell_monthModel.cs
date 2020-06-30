@@ -18,17 +18,8 @@ namespace SBTP.Model
 
         public string YCSL { get; set; } = "";
 
-        public string DYM { get; set; } = "";
-
-        public string YY { get; set; } = "";
-
-        public string TY { get; set; } = "";
-
         public string LY { get; set; } = "";
         public string CCJHWND { get; set; } = "";
-        public string LJCYL { get; set; } = "";
-        public string LJCSL { get; set; } = "";
-        public string HS { get; set; } = "";
         public string ZT { set; get; } = "0";
 
     }

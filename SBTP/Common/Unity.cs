@@ -60,8 +60,7 @@ namespace Common
         /// <returns>双精度数值</returns>
         public static double ToDouble(object obj)
         {
-            double num = 0;
-            return double.TryParse(obj.ToString(), out num) ? num : 0;
+            return double.TryParse(obj.ToString(), out double num) ? num : 0;
         }
 
         /// <summary>

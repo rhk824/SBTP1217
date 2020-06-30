@@ -25,9 +25,9 @@ namespace SBTP.BLL
             List<DictionaryEntry> SQLStringList = new List<DictionaryEntry>();
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into FZJ_MONTH (");
-            strSql.Append("JH,NY,CDXH,CDSZ,CDYZSL,CDYZMYL,CDLJZSL,CDLJZMYL,ZT)");
+            strSql.Append("JH,NY,CDXH,CDSZ,CDYZSL,CDYZMYL,ZT)");
             strSql.Append(" values(");
-            strSql.Append("@JH,@NY,@CDXH,@CDSZ,@CDYZSL,@CDYZMYL,@CDLJZSL,@CDLJZMYL,@ZT)");
+            strSql.Append("@JH,@NY,@CDXH,@CDSZ,@CDYZSL,@CDYZMYL,@ZT)");
 
             foreach (Fzj_monthModel fm in modellist)
             {
@@ -38,8 +38,6 @@ namespace SBTP.BLL
                    new OleDbParameter("@CDSZ",OleDbType.VarChar,255),
                    new OleDbParameter("@CDYZSL",OleDbType.Double,255),
                    new OleDbParameter("@CDYZMYL",OleDbType.Double,255),
-                   new OleDbParameter("@CDLJZSL",OleDbType.Double,255),
-                   new OleDbParameter("@CDLJZMYL",OleDbType.Double,255),
                    new OleDbParameter("@ZT",OleDbType.Integer,255)
                                          };
                 parameters[0].Value = fm.JH;
@@ -48,9 +46,7 @@ namespace SBTP.BLL
                 parameters[3].Value = fm.CDSZ;
                 parameters[4].Value = double.Parse(fm.CDYZSL);
                 parameters[5].Value = double.Parse(fm.CDYZMYL);
-                parameters[6].Value = double.Parse(fm.CDLJZSL);
-                parameters[7].Value = double.Parse(fm.CDLJZMYL);
-                parameters[8].Value = (int)App.Mycache.Get("cszt");
+                parameters[6].Value = (int)App.Mycache.Get("cszt");
 
                 DictionaryEntry de = new DictionaryEntry();
                 de.Key = strSql.ToString();

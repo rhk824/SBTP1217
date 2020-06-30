@@ -25,9 +25,9 @@ namespace SBTP.BLL
             List<DictionaryEntry> SQLStringList = new List<DictionaryEntry>();
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into WATER_WELL_MONTH (");
-            strSql.Append("JH,NY,TS,ZSFS,YZSL,PZCDS,YZMYL,YY,TY,LY,LJZSL,LJZJL,LZMYL,ZRYND,ZT)");
+            strSql.Append("JH,NY,TS,ZSFS,YZSL,PZCDS,YZMYL,YY,ZT)");
             strSql.Append(" values(");
-            strSql.Append("@JH,@NY,@TS,@ZSFS,@YZSL,@PZCDS,@YZMYL,@YY,@TY,@LY,@LJZSL,@LJZJL,@LZMYL,@ZRYND,@ZT)");
+            strSql.Append("@JH,@NY,@TS,@ZSFS,@YZSL,@PZCDS,@YZMYL,@YY,@ZT)");
 
             foreach (Waterwell_monthModel wm in modellist)
             {
@@ -40,12 +40,6 @@ namespace SBTP.BLL
                    new OleDbParameter("@PZCDS",OleDbType.VarChar,255),   
                    new OleDbParameter("@YZMYL",OleDbType.Double,255),   
                    new OleDbParameter("@YY",OleDbType.Double,255),   
-                   new OleDbParameter("@TY",OleDbType.VarChar,255),
-                   new OleDbParameter("@LY",OleDbType.VarChar,255),
-                   new OleDbParameter("@LJZSL",OleDbType.VarChar,255),
-                   new OleDbParameter("@LJZJL",OleDbType.VarChar,255),
-                   new OleDbParameter("@LZMYL",OleDbType.Double,255),
-                   new OleDbParameter("@ZRYND",OleDbType.Double,255),
                    new OleDbParameter("@ZT",OleDbType.Integer,255),
                                          };
                 parameters[0].Value = wm.JH;
@@ -56,13 +50,7 @@ namespace SBTP.BLL
                 parameters[5].Value = wm.PZCDS;
                 parameters[6].Value = string.IsNullOrEmpty(wm.YZMYL) ? 0 : double.Parse(wm.YZMYL);
                 parameters[7].Value = string.IsNullOrEmpty(wm.YY) ? 0 : double.Parse(wm.YY);
-                parameters[8].Value = wm.TY;
-                parameters[9].Value = wm.LY;
-                parameters[10].Value = wm.LJZSL;
-                parameters[11].Value = wm.LJZJL;
-                parameters[12].Value = string.IsNullOrEmpty(wm.LZMYL) ? 0 : double.Parse(wm.LZMYL);
-                parameters[13].Value = string.IsNullOrEmpty(wm.ZRYND) ? 0 : double.Parse(wm.ZRYND);
-                parameters[14].Value = (int)App.Mycache.Get("cszt");
+                parameters[8].Value = (int)App.Mycache.Get("cszt");
 
                 DictionaryEntry de = new DictionaryEntry();
                 de.Key = strSql.ToString();

@@ -15,11 +15,7 @@ namespace SBTP.Model
         public string YXHD { get; set; } = "";
 
         public string ZRYL { get; set; } = "";
-
-        public string JSXH { get; set; } = "";
-
         public string JDDS1 { get; set; } = "";
-        public string JDDS2 { get; set; } = "";
         public string ZRBFS { get; set; } = "";
         public string YCZ { get; set; } = "";
         public string XCH { get; set; } = "";
