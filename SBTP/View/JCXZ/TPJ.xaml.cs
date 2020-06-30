@@ -179,7 +179,6 @@ namespace SBTP.View.JCXZ
             {
                 well_list.Add("'" + oil_well_group.Split(',')[i] + "'");
             }
-            StringBuilder sqlStr = new StringBuilder();
             DataTable dt = new DataTable();
             dt.Columns.Add("JH", Type.GetType("System.String"));
             dt.Columns.Add("NY", Type.GetType("System.String"));

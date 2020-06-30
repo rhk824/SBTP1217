@@ -39,6 +39,11 @@
         <Setter Property="Width" Value="100" />
         <Setter Property="Padding" Value="2,0,0,0" />
     </Style>
+    <!--单元格样式-->
+    <Style x:Key="txt_cell_style_1" TargetType="TextBlock">
+        <Setter Property="Width" Value="33" />
+        <Setter Property="Padding" Value="2,0,0,0" />
+    </Style>
 
     <!--单元格间隔线-->
     <Style x:Key="line_cell_style" TargetType="Rectangle">
@@ -287,19 +292,29 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
                         <!-- 边框设置 -->
-                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource border_header_1_style}" />
                         <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource border_header_2_1_style}" />
                         <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border_header_2_2_style}" />
+                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource border_header_2_2_style}" />
 
                         <!--名称设置-->
-                        <TextBlock Text="措施前" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
-                        <TextBlock Style="{StaticResource txt_header_2_style}" Grid.Row="1">
-                                <Run Text="视吸水指数（m" /><Run Text="3" BaselineAlignment="TextTop" FontSize="8" /><Run Text="/Mpa.d）"/>
-                        </TextBlock>
-                        <TextBlock Text="等效压力（Mpa）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1" />
+                        <TextBlock Text="调剖前" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+                            <TextBlock Text="注水压力" Style="{StaticResource txt_header_2_style}"/>
+                            <TextBlock Text="(Mpa)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1">
+                            <TextBlock Text="视吸水指数" Style="{StaticResource txt_header_2_style}"/>
+                            <TextBlock Text="(m/Mpa.d)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2">
+                            <TextBlock Text="调剖层吸液分数" Style="{StaticResource txt_header_2_style}"/>
+                            <TextBlock Text="(%)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -319,19 +334,29 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
                         <!-- 边框设置 -->
-                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource border_header_1_style}" />
                         <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource border_header_2_1_style}" />
                         <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border_header_2_2_style}" />
+                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource border_header_2_2_style}" />
 
                         <!--名称设置-->
-                        <TextBlock Text="措施后" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="压力（Mpa）" Style="{StaticResource txt_header_2_style}" />
-                        <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
-                                <Run Text="视吸水指数（m" /><Run Text="3" BaselineAlignment="TextTop" FontSize="8" /><Run Text="/Mpa.d）"/>
-                        </TextBlock>
+                        <TextBlock Text="调剖后" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+                            <TextBlock Text="注水压力" Style="{StaticResource txt_header_2_style}"/>
+                            <TextBlock Text="(Mpa)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1">
+                            <TextBlock Text="视吸水指数" Style="{StaticResource txt_header_2_style}"/>
+                            <TextBlock Text="(m/Mpa.d)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2">
+                            <TextBlock Text="调剖层吸液分数" Style="{StaticResource txt_header_2_style}"/>
+                            <TextBlock Text="(%)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -351,20 +376,29 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
 
                         <!-- 边框设置 -->
-                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource border_header_1_style}" />
+                        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource border_header_1_style}" />
                         <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource border_header_2_1_style}" />
                         <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource border_header_2_2_style}" />
+                        <Border Grid.Row="1" Grid.Column="2" Style="{StaticResource border_header_2_2_style}" />
 
                         <!--名称设置-->
-                        <TextBlock Text="差值" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
-                        <TextBlock Grid.Row="1" Grid.Column="0" Text="压力（Mpa）" Style="{StaticResource txt_header_2_style}" />
-                        <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
-                                <Run Text="视吸水指数（m" /><Run Text="3" BaselineAlignment="TextTop" FontSize="8" /><Run Text="/Mpa.d）"/>
-                        </TextBlock>
-
+                        <TextBlock Text="变化" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+                            <TextBlock Text="注水压力" Style="{StaticResource txt_header_2_style}"/>
+                            <TextBlock Text="(Mpa)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1">
+                            <TextBlock Text="视吸水指数" Style="{StaticResource txt_header_2_style}"/>
+                            <TextBlock Text="(m/Mpa.d)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.Column="2">
+                            <TextBlock Text="调剖层吸液分数" Style="{StaticResource txt_header_2_style}"/>
+                            <TextBlock Text="(%)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

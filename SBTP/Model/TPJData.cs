@@ -63,5 +63,14 @@ namespace SBTP.Model
         /// 颗粒调剖剂名称
         /// </summary>
         public string KLMC { get; set; }
+        /// <summary>
+        /// 携带液浓度
+        /// </summary>
+        public double XDYND { get; set; }
+        /// <summary>
+        /// 液体用量分数
+        /// </summary>
+        public double YTYLFS { get; set; }
+
     }
 }

@@ -244,6 +244,7 @@
     <Compile Include="Model\xspm_img_model.cs" />
     <Compile Include="Model\Xspm_monthModel.cs" />
     <Compile Include="Model\zcjz_well_model.cs" />
+    <Compile Include="Resource\KbiseczvTom .cs" />
     <Compile Include="TPJtables\TPJ_table.xaml.cs">
       <DependentUpon>TPJ_table.xaml</DependentUpon>
     </Compile>

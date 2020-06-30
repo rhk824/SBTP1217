@@ -116,7 +116,7 @@ namespace SBTP.BLL
             return new tpc_model()
             {
                 jh = tpc.jh,
-                cd = first_model.YCZ + first_model.XCH + "~" + last_model.YCZ + last_model.XCH,
+                cd = first_model.YCZ + " " + first_model.XCH + "~" + last_model.YCZ + " " + last_model.XCH,
                 yxhd = yxhd,
                 yxhd_ds = first_model.JDDS1,
                 zrfs = zrfs,

@@ -31,25 +31,25 @@ namespace SBTP.BLL
 
             foreach (Fzj_monthModel fm in modellist)
             {
-                OleDbParameter[] parameters = { 
-                   new OleDbParameter("@JH",OleDbType.VarChar,255), 
-                   new OleDbParameter("@NY",OleDbType.DBDate,255),   
-                   new OleDbParameter("@CDXH",OleDbType.VarChar,255),   
-                   new OleDbParameter("@CDSZ",OleDbType.VarChar,255),   
-                   new OleDbParameter("@CDYZSL",OleDbType.VarChar,255),   
-                   new OleDbParameter("@CDYZMYL",OleDbType.VarChar,255),   
-                   new OleDbParameter("@CDLJZSL",OleDbType.VarChar,255),   
-                   new OleDbParameter("@CDLJZMYL",OleDbType.VarChar,255),
+                OleDbParameter[] parameters = {
+                   new OleDbParameter("@JH",OleDbType.VarChar,255),
+                   new OleDbParameter("@NY",OleDbType.DBDate,255),
+                   new OleDbParameter("@CDXH",OleDbType.VarChar,255),
+                   new OleDbParameter("@CDSZ",OleDbType.VarChar,255),
+                   new OleDbParameter("@CDYZSL",OleDbType.Double,255),
+                   new OleDbParameter("@CDYZMYL",OleDbType.Double,255),
+                   new OleDbParameter("@CDLJZSL",OleDbType.Double,255),
+                   new OleDbParameter("@CDLJZMYL",OleDbType.Double,255),
                    new OleDbParameter("@ZT",OleDbType.Integer,255)
                                          };
                 parameters[0].Value = fm.JH;
-                parameters[1].Value = DateTime.ParseExact(fm.NY, Unity.DateMathed(fm.NY),null);
+                parameters[1].Value = DateTime.ParseExact(fm.NY, Unity.DateMathed(fm.NY), null);
                 parameters[2].Value = fm.CDXH;
                 parameters[3].Value = fm.CDSZ;
-                parameters[4].Value = fm.CDYZSL;
-                parameters[5].Value = fm.CDYZMYL;
-                parameters[6].Value = fm.CDLJZSL;
-                parameters[7].Value = fm.CDLJZMYL;
+                parameters[4].Value = double.Parse(fm.CDYZSL);
+                parameters[5].Value = double.Parse(fm.CDYZMYL);
+                parameters[6].Value = double.Parse(fm.CDLJZSL);
+                parameters[7].Value = double.Parse(fm.CDLJZMYL);
                 parameters[8].Value = (int)App.Mycache.Get("cszt");
 
                 DictionaryEntry de = new DictionaryEntry();

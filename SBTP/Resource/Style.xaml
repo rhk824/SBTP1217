@@ -42,6 +42,20 @@
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
 
+    <Style x:Key="textblock_0" TargetType="Label">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Width="1" Fill="#000"/>
+                        <TextBlock Text="{Binding }" />
+                        <Rectangle Width="1" Fill="#000"/>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--DatePicker-->
     <Style TargetType="DatePicker">
         <Setter Property="Margin" Value="5" />

@@ -181,14 +181,13 @@
                 <ListBox Grid.Column="1" Width="auto" ItemsSource="{Binding oc_xcsj}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="255" Margin="5">
+                            <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
                                     <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
-                                    <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
@@ -203,21 +202,15 @@
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                    <TextBlock Text="  油井井号: " VerticalAlignment="Center" />
-                                    <TextBlock Text="{Binding JH}" VerticalAlignment="Center" />
-                                </StackPanel>
-
-                                <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
                                     <TextBlock Text="  有效厚度: " VerticalAlignment="Center" />
                                     <TextBlock Text="{Binding YXHD}" VerticalAlignment="Center" />
                                 </StackPanel>
 
-                                <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
+                                <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal">
                                     <TextBlock Text="  渗透率: " VerticalAlignment="Center" />
                                     <TextBlock Text="{Binding STL}" VerticalAlignment="Center" />
                                 </StackPanel>
-
-                                <Grid Grid.Row="1" Grid.ColumnSpan="4" Height="{Binding Path=YXHD, Converter={StaticResource tpc_height_converter}}" Background="Orange" />
+                                <Grid Grid.Row="1" Grid.ColumnSpan="3" Height="{Binding Path=YXHD, Converter={StaticResource tpc_height_converter}}" Background="Orange" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -228,7 +221,7 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left">
-                    <TextBlock Text="{Binding ElementName=dg_jzlt, Path=SelectedItem.sj}" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding ElementName=dg_jzlt, Path=SelectedItem.yj}" VerticalAlignment="Center"/>
                     <TextBlock Text="井（小层数据）" VerticalAlignment="Center"/>
                 </StackPanel>
                 

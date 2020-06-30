@@ -57,21 +57,11 @@ namespace SBTP.View.Graphic
                     XValue = Points[i].X,
                     YValues = new double[] { Points[i].Y },
                     MarkerSize = 2,                    
-                    
-                    //AxisLabel = string.Format("{0}{1}{2}({3})", list[i].YCZ, list[i].XCH, list[i].XCXH, list[i].YXHD),
-                    //Label = Points[i].STL.ToString()
                 };
-                //point.Click += Point_Click;
                 series.Points.Add(point);
             }
             chart.Series.Add(series);
         }
-
-        //private void Point_Click(object sender, RoutedEventArgs e)
-        //{
-        //    MessageBox.Show("6666");
-        //}
-
         /// <summary>
         /// 创建曲线
         /// </summary>

@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Common;
 using System.Globalization;
+using System.Data;
 
 namespace SBTP.BLL
 {
@@ -92,6 +93,22 @@ namespace SBTP.BLL
             reader.Close();
             reader.Dispose();
             return data;
+        }
+
+        public static string getMaxDate()
+        {
+            StringBuilder sqlStr = new StringBuilder("Select MAX(NY) from OIL_WELL_MONTH where zt=0");
+            return DbHelperOleDb.GetSingle(sqlStr.ToString()).ToString();
+        }
+        public static string getMinDate()
+        {
+            StringBuilder sqlStr = new StringBuilder("Select MIN(NY) from OIL_WELL_MONTH where zt=0");
+            return DbHelperOleDb.GetSingle(sqlStr.ToString()).ToString();
+        }
+        public static DataTable queryOilWellInfo(string jh)
+        {
+            StringBuilder sqlStr = new StringBuilder("Select * from OIL_WELL_MONTH where zt=0 and jh='"+jh+"' order by NY");
+            return DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
         }
     }
 }

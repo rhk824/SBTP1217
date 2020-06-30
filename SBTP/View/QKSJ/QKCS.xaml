@@ -54,8 +54,16 @@
                         <TextBox Name="oil_n" Text="{Binding Yn}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="聚合物粘度(mPa.s)："/>
+                        <TextBox Name="j_n" Text="{Binding Jn}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock Text="油密度(g/cm3)："/>
                         <TextBox Name="oil_m" Text="{Binding Ym}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="幂指数："/>
+                        <TextBox Name="m_value" Text="{Binding Mvalue}"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

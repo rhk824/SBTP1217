@@ -28,12 +28,22 @@
             <DataTemplate x:Key="fasjForEdite">
                 <DatePicker Text="{Binding Date, Mode=TwoWay,ValidatesOnExceptions=true, NotifyOnValidationError=true,UpdateSourceTrigger=PropertyChanged}" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
             </DataTemplate>
+            <DataTemplate x:Key="qyfs">
+                <TextBlock Text="{Binding Qyfs}"/>
+            </DataTemplate>
+            <DataTemplate x:Key="qyfsForEdit">
+                <ComboBox SelectedItem="{Binding Qyfs}" ItemsSource="{Binding Source={StaticResource LXEnumKey}}"/>
+            </DataTemplate>
         </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition />
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Vertical">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="自定义评价起止时间"/>
                 <CheckBox Name="isEnabled" IsChecked="False">
@@ -46,17 +56,18 @@
                     </CheckBox.Content>
                 </CheckBox>
             </StackPanel>
-            <DataGrid Name="pzfa_grid" ItemsSource="{Binding DataSource}" LoadingRow="pzfa_grid_LoadingRow" CanUserSortColumns="False">
+            <DataGrid Name="pzfa_grid" ItemsSource="{Binding DataSource}" LoadingRow="pzfa_grid_LoadingRow" CanUserSortColumns="False" Grid.Row="1">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="井号" IsReadOnly="True" Binding="{Binding Jh}"/>
                     <DataGridTemplateColumn Header="方案时间" CellTemplate="{StaticResource fasj}" CellEditingTemplate="{StaticResource fasjForEdite}"/>
                     <DataGridTextColumn Header="配注层段号" Binding="{Binding Pzcdh}"/>
                     <DataGridTextColumn Header="分注比例" Binding="{Binding Blxs}"/>
-                    <DataGridComboBoxColumn Header="驱油方式" SelectedItemBinding="{Binding Qyfs}" ItemsSource="{Binding Source={StaticResource LXEnumKey}}"/>
+                    <!--<DataGridComboBoxColumn Header="驱油方式" SelectedItemBinding="{Binding Qyfs}" ItemsSource="{Binding Source={StaticResource LXEnumKey}}"/>-->
+                    <DataGridTemplateColumn Header="驱油方式" CellTemplate="{StaticResource qyfs}" CellEditingTemplate="{StaticResource qyfsForEdit}"/>
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
-        
+        </Grid>
+
         <GroupBox Grid.Row="1" Header="操作">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Button Name="save_btn" Content="保存" Click="save_btn_Click"/>

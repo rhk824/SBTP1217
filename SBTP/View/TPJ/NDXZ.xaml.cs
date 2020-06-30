@@ -119,8 +119,10 @@ namespace SBTP.View.TPJ
                 double kllj = item.KLLJ;
                 string ytmc = item.YTMC;
                 string klmc = item.KLMC;
+                double xdynd = item.XDYND;
+                double ytylfs = item.YTYLFS;
                 if (ytnd == 0) continue;
-                DatHelper.TPJND_Save(jh, ytnd, klnd, kllj, ytmc, klmc);
+                DatHelper.TPJND_Save(jh, ytnd, klnd, kllj, ytmc, klmc, xdynd, ytylfs);
             }
             MessageBox.Show("操作成功！");
         }
@@ -193,6 +195,8 @@ namespace SBTP.View.TPJ
         private double zzrfs;
         private double klnd;
         private double kllj;
+        private double xdynd;
+        private double ytylfs = 0.5;
 
         /// <summary>
         /// 井号
@@ -230,6 +234,14 @@ namespace SBTP.View.TPJ
         /// 颗粒粒径
         /// </summary>
         public double KLLJ { get => kllj; set { kllj = value; NotifyPropertyChanged("KLLJ"); } }
+        /// <summary>
+        /// 携带液浓度
+        /// </summary>
+        public double XDYND { get => xdynd; set { xdynd = value; NotifyPropertyChanged("XDYND"); } }
+        /// <summary>
+        /// 液体用量分数
+        /// </summary>
+        public double YTYLFS { get => ytylfs; set { ytylfs = value; NotifyPropertyChanged("YTYLFS"); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void NotifyPropertyChanged(String info)

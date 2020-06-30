@@ -117,5 +117,11 @@ namespace SBTP.BLL
             return DbHelperOleDb.GetSingle(sql).ToString();
         }
 
+        public static string getMinYzmyDate(string jh)
+        {
+            string sql = "Select Min(NY) from WATER_WELL_MONTH where zt=0 and YZMYL>0 and jh='" + jh + "'";
+            return DbHelperOleDb.GetSingle(sql).ToString();
+        }
+
     }
 }

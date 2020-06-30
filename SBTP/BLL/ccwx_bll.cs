@@ -124,8 +124,8 @@ namespace SBTP.BLL
                     item.k2 = tpjing.k2;
                     item.zzdkxd = funcDelegate(tpjing.k2, value_a, value_b) - value_c;
                     item.fddkxd = funcDelegate(tpjing.k1, value_a, value_b) - value_c;
-                    item.r1 = Math.Sqrt(item.k1 / item.fddkxd);
-                    item.r2 = Math.Sqrt(item.k2 / item.zzdkxd);
+                    item.r1 = Math.Sqrt(item.k1 * 8 / item.fddkxd/100);
+                    item.r2 = Math.Sqrt(item.k2 * 8 / item.zzdkxd/100);
                     item.ybhd = tpjing.ybhd;
                     item.calculate_type = tpjing.calculate_type;
                 }

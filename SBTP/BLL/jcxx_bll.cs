@@ -10,6 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.UI;
 
 namespace SBTP.BLL
 {
@@ -23,11 +24,11 @@ namespace SBTP.BLL
         /// <summary>
         /// 调剖井信息
         /// </summary>
-        public ObservableCollection<jcxx_tpcxx_model> oc_tpcxx { get; set; }
+        public static ObservableCollection<jcxx_tpcxx_model> oc_tpcxx { get; set; }
         /// <summary>
         /// 调剖剂信息
         /// </summary>
-        public ObservableCollection<jcxx_tpjxx_model> oc_tpjxx { get; set; }
+        public static ObservableCollection<jcxx_tpjxx_model> oc_tpjxx { get; set; }
         /// <summary>
         /// 调讴层驱替历史信息
         /// </summary>
@@ -86,7 +87,7 @@ namespace SBTP.BLL
                 oc_tpc.Remove(item);
                 oc_tpcxx.Add(new jcxx_tpcxx_model() { jh = item });
                 oc_tpjxx.Add(new jcxx_tpjxx_model() { jh = item });
-                oc_tpcls.Add(new jcxx_tpcls_model() { jh = item });
+                oc_tpcls.Add(new jcxx_tpcls_model() { jh = item, Zcjj = DatHelper.read_zcjz().Find(x => x.JH.Equals(item)) == null ? 0 : DatHelper.read_zcjz().Find(x => x.JH.Equals(item)).AverageDistance });
             }
         }
 
@@ -162,7 +163,7 @@ namespace SBTP.BLL
         /// </summary>
         public void btn_tpjxx()
         {
-            List<TPJND_Model> list_tpjnd = Data.DatHelper.TPJND_Read();
+            List<TPJND_Model> list_tpjnd = DatHelper.TPJND_Read();
             if (list_tpjnd == null) return;
 
             foreach (jcxx_tpjxx_model item in oc_tpjxx)
@@ -217,31 +218,6 @@ namespace SBTP.BLL
         #endregion
 
         #region 本类内部的方法，为公共接口做辅助服务
-
-        /// <summary>
-        /// 获取某水井的水井井史
-        /// </summary>
-        /// <param name="jh">某水井</param>
-        /// <param name="t1">评价时间的起始时间</param>
-        /// <param name="t2">评价时间的结束时间</param>
-        /// <returns></returns>
-        private List<DB_WATER_WELL_MONTH> get_water_month(string jh, DateTime t1, DateTime t2)
-        {
-            string sql = $"select * from water_well_month where ZT=0 and jh=\"{jh}\" and ny between #{t1.ToString("yyyy/MM")}# and #{t2.ToString("yyyy/MM")}# order by ny";
-            DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
-            List<DB_WATER_WELL_MONTH> list_water = new List<DB_WATER_WELL_MONTH>();
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                list_water.Add(new DB_WATER_WELL_MONTH()
-                {
-                    JH = Unity.ToString(dt.Rows[i]["jh"]),
-                    NY = Unity.ToDateTime(dt.Rows[i]["NY"]),
-                    LZMYL = Unity.ToDecimal(dt.Rows[i]["lzmyl"]),
-                    LJZSL = Unity.ToDecimal(dt.Rows[i]["ljzsl"])
-                });
-            }
-            return list_water;
-        }
 
         /// <summary>
         /// 获取液体调剖剂价格

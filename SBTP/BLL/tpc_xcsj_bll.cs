@@ -88,7 +88,7 @@ namespace SBTP.BLL
             return new tpc_model()
             {
                 jh = tpc.jh,
-                cd = first_model.YCZ + first_model.XCH + first_model.XCXH + "~" + last_model.YCZ + last_model.XCH + last_model.XCXH,
+                cd = first_model.YCZ + " " + first_model.XCH + " " + first_model.XCXH + "~" + last_model.YCZ + " " + last_model.XCH + " " + last_model.XCXH,
                 yxhd = yxhd,
                 yxhd_ds = (double)first_model.SYDS,
                 zrfs = (dcxs_ndd / dcxs) * 100,

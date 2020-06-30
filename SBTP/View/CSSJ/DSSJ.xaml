@@ -100,7 +100,7 @@
             </Grid.RowDefinitions>
 
             <GroupBox Header="待设计井">
-                <ListBox Name="DSJ_Well"  SelectionChanged="DSJ_Well_SelectionChanged"/>
+                <ListBox Name="DSJ_Well" SelectionChanged="DSJ_Well_SelectionChanged"/>
             </GroupBox>
 
             <StackPanel Grid.Row="1" HorizontalAlignment="Center">
@@ -108,7 +108,7 @@
             </StackPanel>
 
             <GroupBox Header="已设计井" Grid.Row="2">
-                <ListBox Name="YSJ_Well"/>
+                <ListBox Name="YSJ_Well" ItemsSource="{Binding YSJListSource}"/>
             </GroupBox>
 
         </Grid>
@@ -124,7 +124,13 @@
         </Grid>
 
         <Grid Grid.Column="2">
-            <GroupBox Name="SJ_Box" Header="**井调剖施工工序设计"  >
+            <GroupBox Name="SJ_Box">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Name="Hname"/>
+                        <TextBlock Text="调剖施工工序设计"/>
+                    </StackPanel>
+                </GroupBox.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="61*"/>
@@ -138,21 +144,21 @@
                         <Label VerticalAlignment="Center" Content="平均注采井距："/>
                         <Label VerticalAlignment="Center" Name="DistanceAver"/>
                         <Label VerticalAlignment="Center" Content="调前注入液粘度："/>
-                        <TextBox Name="TQZRND" Text="10" />
+                        <TextBox Name="TQZRND" Text="15" />
                         <Label VerticalAlignment="Center" Content="Mpa·s" />
                         <Label VerticalAlignment="Center" Content="总用量：" />
                         <TextBlock VerticalAlignment="Center" Name="ZYL" Text="50" />
                         <TextBlock VerticalAlignment="Center">
                         <Run Text="m"/><Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
                         </TextBlock>
-                        <Button Name="PressureCalcu" Content="计算注入压力" Click="PressureCalcu_Click" Style="{DynamicResource btn-primary}"/>
+                        <Button Name="PressureCalcu" Content="计算注入压力" Click="PressureCalcu_Click"/>
                     </StackPanel>
                     <Grid Grid.Row="1" Grid.ColumnSpan="2">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <DataGrid Name="SJ_Grid" Grid.Row="0" LoadingRow="DataGrid_LoadingRow" HeadersVisibility="Column" ItemsSource="{Binding}" CanUserDeleteRows="True" CellEditEnding="SJ_Grid_CellEditEnding" PreparingCellForEdit="SJ_Grid_PreparingCellForEdit" MouseRightButtonDown="SJ_Grid_MouseRightButtonDown">
+                        <DataGrid Name="SJ_Grid" Grid.Row="0" CanUserSortColumns="False" LoadingRow="DataGrid_LoadingRow" HeadersVisibility="Column" ItemsSource="{Binding GetdssjModel}" CanUserDeleteRows="True" CellEditEnding="SJ_Grid_CellEditEnding" PreparingCellForEdit="SJ_Grid_PreparingCellForEdit" MouseRightButtonDown="SJ_Grid_MouseRightButtonDown">
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn  Width="55" Header="施工序号"  >
                                     <DataGridTemplateColumn.CellTemplate>
@@ -162,16 +168,14 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridComboBoxColumn Header="工序名称" TextBinding="{Binding GX_NAME,UpdateSourceTrigger=PropertyChanged}" SelectedItemBinding="{Binding GX_NAME,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" ItemsSource="{Binding Source={StaticResource GXMCEnumKey} }" />
-                                <DataGridTextColumn Header="比例" Binding="{Binding BL}"/>
+                                <DataGridTextColumn Header="比例(%)" Binding="{Binding BL}"/>
                                 <DataGridTemplateColumn Header="用量" CellTemplate="{StaticResource YL_CellTemplate}"/>
-                                <!--<DataGridTextColumn Header="用量" />-->
                                 <DataGridTemplateColumn  Header="液体调剖剂浓度（mg/L）" CanUserSort="True" CellEditingTemplate="{StaticResource YN_EditingTemplate}" CellTemplate="{StaticResource YN_CellTemplate}" />
                                 <DataGridTemplateColumn Header="颗粒调剖剂浓度（mm）"  CanUserSort="True" CellEditingTemplate="{StaticResource KN_EditingTemplate}" CellTemplate="{StaticResource KN_CellTemplate}"/>
-                                <DataGridTemplateColumn Header="颗粒调剖剂粒径（mg/L）" CanUserSort="True" CellEditingTemplate="{StaticResource KJ_EditingTemplate}" CellTemplate="{StaticResource KJ_CellTemplate}"/>
+                                <DataGridTemplateColumn Header="颗粒目数（mg/L）" CanUserSort="True" CellEditingTemplate="{StaticResource KJ_EditingTemplate}" CellTemplate="{StaticResource KJ_CellTemplate}"/>
                                 <DataGridTemplateColumn Header="携液浓度（mg/L）" CanUserSort="True" CellEditingTemplate="{StaticResource XN_EditingTemplate}" CellTemplate="{StaticResource XN_CellTemplate}"/>
-                                <DataGridTextColumn Header="注入速度（m/d）"  Binding="{Binding ZRSD}"/>
-                                <!--<DataGridTextColumn Header="注入天数（d）"/>-->
-                                <DataGridTemplateColumn Header="注入天数（d）" CellTemplate="{StaticResource ZRTS_CellTemplate}"/>
+                                <DataGridTextColumn Header="排量（m/d）"  Binding="{Binding ZRSD}"/>
+                                <DataGridTemplateColumn Header="施工周期（d）" CellTemplate="{StaticResource ZRTS_CellTemplate}"/>
                                 <DataGridTextColumn Header="当量粘度（mPa.s）" Binding="{Binding DLND}"/>
                                 <DataGridTemplateColumn Header="注入压力（MPa）" CellTemplate="{StaticResource ZRYL_CellTemplate}"/>
                                 <DataGridTextColumn Header="备注" />
@@ -212,13 +216,8 @@
                                     <Label Content="注入速度:"/>
                                     <Label Name="SD_T" Content="1"/>
                                 </StackPanel>
-                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <Label Content="注入压力:"/>
-                                    <Label Name="YL_T" Content="0"/>
-                                </StackPanel>
                             </StackPanel>
                         </Border>
-
                     </Grid>
                 </Grid>
             </GroupBox>

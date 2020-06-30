@@ -88,18 +88,20 @@ namespace SBTP.View.JCXZ
                 return;
             }
 
-            xspm_img_model model = new xspm_img_model();
-            model.file_name = this.img_path;
-            model.area = new string[]
+            xspm_img_model model = new xspm_img_model
+            {
+                file_name = this.img_path,
+                area = new string[]
             {
                 this.top_left_x,
                 this.top_left_y,
                 this.bot_right_x,
                 this.bot_right_y
+            },
+                top = tb_top.Text,
+                bottom = tb_bottom.Text,
+                color_count = tb_color.Text
             };
-            model.top = tb_top.Text;
-            model.bottom = tb_bottom.Text;
-            model.color_count = tb_color.Text;
             save_file(model);
 
             string path_python = Path.Combine(file_path, file_python);

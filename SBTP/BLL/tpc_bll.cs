@@ -124,14 +124,14 @@ namespace SBTP.BLL
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * ");
             sql.Append(" from oil_well_c ");
-            sql.AppendFormat(" where jh=\"{0}\" and syds <> 0 and stl <> 0", jzlt.yj);
+            sql.AppendFormat(" where zt=0 and jh=\"{0}\" and syds <> 0 and stl <> 0", jzlt.yj);
             sql.Append(" order by syds ");
 
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
 
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                oc_xcsj.Add(new Model.DB_XCSJ()
+                oc_xcsj.Add(new DB_XCSJ()
                 {
                     Selected = false,
                     JH = Unity.ToString(dt.Rows[i]["jh"]),
@@ -308,7 +308,7 @@ namespace SBTP.BLL
         private string get_jzlt_cw(List<DB_XCSJ> list)
         {
             string cw = string.Empty;
-            foreach (DB_XCSJ item in list) cw += item.YCZ + item.XCH + item.XCXH + ",";
+            foreach (DB_XCSJ item in list) cw += item.YCZ + " " + item.XCH + " " + item.XCXH + ",";
             return cw == string.Empty ? string.Empty : cw.Substring(0, cw.Length - 1);
         }
 

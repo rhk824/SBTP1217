@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SBTP.View.XGYC"
+      xmlns:panel="clr-namespace:SBTP.Resource"
       mc:Ignorable="d" 
      d:DesignHeight="520" d:DesignWidth="1000" Background="#eee"
       Title="注入井深部调剖效果预测">
@@ -21,65 +22,46 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="45"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Header="调剖井号">
-            <ListBox Name="LB_jh" Margin="5" SelectionMode="Extended" />
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="调剖井号">
+            <ListBox Name="LB_jh" Margin="5" SelectionMode="Extended"/>
         </GroupBox>
 
         <Grid Grid.Column="1" Grid.RowSpan="3">
             <StackPanel VerticalAlignment="Center">
                 <Button Name="btn_right" Content="→" Click="Btn_right_Click" />
-                <Button Name="btn_left" Content="←" />
+                <Button Name="btn_left" Content="←" Click="btn_left_Click"/>
             </StackPanel>
         </Grid>
 
         <GroupBox Grid.Row="0" Grid.Column="2" Header="调剖井效果预测">
-            <DataGrid Name="DataGrid1" SelectionMode="Single" ColumnWidth="*" IsReadOnly="True" LoadingRow="DataGrid1_LoadingRow">
+            <DataGrid Name="DataGrid1" ColumnWidth="*" CanUserSortColumns="False" LoadingRow="DataGrid1_LoadingRow" ItemsSource="{Binding List_zrj}">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="序号">
+                    <DataGridTemplateColumn Header="序号" Width="50">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGridRow}}, Path=Header}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="井号" Binding="{Binding JH}"/>
-                    <DataGridTextColumn Header="井径（m）" Binding="{Binding JJ}"/>
-
-                    <DataGridTextColumn Binding="{Binding ZRYND}">
-                        <DataGridTextColumn.Header>
-                            <StackPanel>
-                                <TextBlock>注入液粘度</TextBlock>
-                                <TextBlock>（mPa.s）</TextBlock>
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Binding="{Binding RZYL}">
-                        <DataGridTextColumn.Header>
-                            <StackPanel>
-                                <TextBlock>日注液量</TextBlock>
-                                <TextBlock><Run Text="（m" /><Run Text="3" BaselineAlignment="TextTop" FontSize="8" /><Run Text="/d）"/></TextBlock>
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="调剖半径（m）" Binding="{Binding TPBJ}"/>
-
+                    <DataGridTextColumn Header="井号" Binding="{Binding JH}" Width="80"/>
+                    <DataGridTextColumn Header="调剖层" Binding="{Binding TPCNAME}" Width="80"/>
+                    <DataGridTextColumn Binding="{Binding RZYL}" Header="日注液量(m³/d)"/>
+                    <DataGridTextColumn Binding="{Binding ZRYND}" Header="驱替液粘度(mPa.s)"/>
                     <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccsq_style}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CSQ_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSQ_DXYL}" Style="{StaticResource txt_cell_style}" />
-                                </StackPanel>
+                                <panel:KbiseczvTom HorizontalAlignment="Stretch">
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSQ_DXYL}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSQ_SXSZS}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSQ_TPCZRFS}"  />
+                                </panel:KbiseczvTom>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -87,11 +69,11 @@
                     <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccsh_style}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CSH_YL}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSH_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                </StackPanel>
+                                <panel:KbiseczvTom HorizontalAlignment="Stretch">
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSH_YL}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSH_SXSZS}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CSH_TPCZRFS}"/>
+                                </panel:KbiseczvTom>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -99,11 +81,11 @@
                     <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccz_style}">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CZ_YL}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CZ_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                </StackPanel>
+                                <panel:KbiseczvTom HorizontalAlignment="Stretch">
+                                    <TextBlock TextAlignment="Center" Text="{Binding CZ_YL}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CZ_SXSZS}"/>
+                                    <TextBlock TextAlignment="Center" Text="{Binding CZ_ZRFS}"/>
+                                </panel:KbiseczvTom>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -111,76 +93,12 @@
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
-
-        <GroupBox Header="平均值" Grid.Row="1" Grid.Column="2">
-            <DataGrid Name="DataGrid2">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="井径（m）" Binding="{Binding JJ}"/>
-
-                    <DataGridTextColumn Binding="{Binding ZRYND}">
-                        <DataGridTextColumn.Header>
-                            <StackPanel>
-                                <TextBlock>注入液粘度</TextBlock>
-                                <TextBlock>（mPa.s）</TextBlock>
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-
-                    <DataGridTextColumn Binding="{Binding RZYL}">
-                        <DataGridTextColumn.Header>
-                            <StackPanel>
-                                <TextBlock>日注液量</TextBlock>
-                                <TextBlock><Run Text="（m" /><Run Text="3" BaselineAlignment="TextTop" FontSize="8" /><Run Text="/d）"/></TextBlock>
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Header="调剖半径（m）" Binding="{Binding TPBJ}"/>
-
-                    <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccsq_style}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CSQ_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSQ_DXYL}" Style="{StaticResource txt_cell_style}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccsh_style}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CSH_YL}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CSH_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn HeaderStyle="{StaticResource header_xgyccz_style}">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding CZ_YL}" Style="{StaticResource txt_cell_style}" />
-                                    <Rectangle Style="{StaticResource line_cell_style}" />
-                                    <TextBlock Text="{Binding CZ_SXSZS}" Style="{StaticResource txt_cell_style}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                </DataGrid.Columns>
-            </DataGrid>
-        </GroupBox>
-
-        <GroupBox Grid.Column="2" Grid.Row="3" Header="操作">
+        <GroupBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Header="操作">
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal" >
                 <Button Name="Btn_yuce" Content="预测" Click="Btn_yuce_Click"/>
                 <Button Name="Btn_save" Content="保存" Click="Btn_save_Click"/>
-                <Button Name="Btn_quit" Content="退出" />
+                <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
+                <Button Name="Btn_quit" Content="关闭" Click="Btn_quit_Click" />
             </StackPanel>
         </GroupBox>
 
