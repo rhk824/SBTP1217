@@ -52,5 +52,11 @@ namespace SBTP.View.SGSJ
             bll.update_bookmark("designer_6", tb_pzr.Text);
             MessageBox.Show("操作成功");
         }
+
+        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage page = new MainPage();
+            page.Generate();
+        }
     }
 }

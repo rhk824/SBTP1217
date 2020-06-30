@@ -36,11 +36,11 @@
                         <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
-                                <DataGridTextColumn Header="液体剂浓度（mg/L）" Binding="{Binding ytjnd}"/>
-                                <DataGridTextColumn Header="颗粒剂浓度（mg/L）" Binding="{Binding kljnd}"/>
-                                <DataGridTextColumn Header="颗粒直径（目）" Binding="{Binding klzj}"/>
-                                <DataGridTextColumn Header="携带液浓度（mg/L）" Binding="{Binding xdynd}"/>
-                                <DataGridTextColumn Header="用量比" Binding="{Binding ylb}"/>
+                                <DataGridTextColumn Header="液体剂浓度（mg/L）" Binding="{Binding ytjnd, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="颗粒剂浓度（mg/L）" Binding="{Binding kljnd, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="颗粒直径（目）" Binding="{Binding klzj, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="携带液浓度（mg/L）" Binding="{Binding xdynd, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="用量比" Binding="{Binding ylb, StringFormat={}{0:0.##}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -52,6 +52,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

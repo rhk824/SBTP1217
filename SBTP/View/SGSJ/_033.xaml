@@ -38,9 +38,9 @@
                                 <DataGridTextColumn Header="水井" Binding="{Binding sj}"/>
                                 <DataGridTextColumn Header="调剖层" Binding="{Binding tpc}"/>
                                 <DataGridTextColumn Header="油井" Binding="{Binding yj}"/>
-                                <DataGridTextColumn Header="砂岩厚度（m）" Binding="{Binding syhd}"/>
-                                <DataGridTextColumn Header="有效厚度（m）" Binding="{Binding yxhd}"/>
-                                <DataGridTextColumn Binding="{Binding stl}">
+                                <DataGridTextColumn Header="砂岩厚度（m）" Binding="{Binding syhd, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="有效厚度（m）" Binding="{Binding yxhd, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Binding="{Binding stl, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <TextBlock>
                                         <Run Text="渗透率（um"/>
@@ -60,6 +60,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

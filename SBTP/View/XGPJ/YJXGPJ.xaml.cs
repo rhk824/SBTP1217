@@ -1,4 +1,6 @@
-﻿using Maticsoft.DBUtility;
+﻿using Common;
+using Maticsoft.DBUtility;
+using SBTP.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +19,8 @@ namespace SBTP.View.XGPJ
     public class YjxgModel : INotifyPropertyChanged
     {
         private string _JH = "";
+        private string _CSSJ = "";
+        private double _NHSSSL = 0;
         private double _CSQYCY = 0;
         private double _CSQYCYL = 0;
         private double _CSQHXJ = 0;
@@ -26,7 +30,11 @@ namespace SBTP.View.XGPJ
         private double _CSHHXJ = 0;
         private double _CSHZHHS = 0;
         private double _LJZY = 0;
+        private string _SSTPJ = "";
 
+        /// <summary>
+        /// 油井号
+        /// </summary>
         public string JH
         {
             get
@@ -38,6 +46,37 @@ namespace SBTP.View.XGPJ
                 _JH = value;
                 Changed("JH");
             }
+        }
+        /// <summary>
+        /// 措施时间
+        /// </summary>
+        public string CSSJ
+        {
+            get
+            {
+                return _CSSJ;
+            }
+            set
+            {
+                _CSSJ = value;
+                Changed("CSSJ");
+            }
+        }
+        /// <summary>
+        /// 年含水上升率
+        /// </summary>
+        public double NHSSSL
+        {
+            set
+            {
+                _NHSSSL = value;
+                Changed("NHSSSL");
+            }
+            get
+            {
+                return _NHSSSL;
+            }
+
         }
         /// <summary>
         /// 产液量
@@ -70,6 +109,9 @@ namespace SBTP.View.XGPJ
                 Changed("CSQYCYL");
             }
         }
+        /// <summary>
+        /// 措施前化学剂浓度
+        /// </summary>
         public double CSQHXJ
         {
             get
@@ -82,6 +124,9 @@ namespace SBTP.View.XGPJ
                 Changed("CSQHXJ");
             }
         }
+        /// <summary>
+        /// 措施前综合含水
+        /// </summary>
         public double CSQZHHS
         {
             get
@@ -124,6 +169,9 @@ namespace SBTP.View.XGPJ
                 Changed("CSHYCYL");
             }
         }
+        /// <summary>
+        /// 措施后化学剂浓度
+        /// </summary>
         public double CSHHXJ
         {
             get
@@ -136,6 +184,10 @@ namespace SBTP.View.XGPJ
                 Changed("THXSZS");
             }
         }
+
+        /// <summary>
+        /// 措施后综合含水
+        /// </summary>
         public double CSHZHHS
         {
             get
@@ -149,6 +201,9 @@ namespace SBTP.View.XGPJ
             }
         }
 
+        /// <summary>
+        /// 累积增油
+        /// </summary>
         public double LJZY
         {
             get
@@ -161,6 +216,23 @@ namespace SBTP.View.XGPJ
                 Changed("LJZY");
             }
         }
+
+        /// <summary>
+        /// 所属调剖井
+        /// </summary>
+        public string SSTPJ
+        {
+            get
+            {
+                return _SSTPJ;
+            }
+            set
+            {
+                _SSTPJ = value;
+                Changed("SSTPJ");
+            }
+        }
+
         #region 属性更改通知
         public event PropertyChangedEventHandler PropertyChanged;
         private void Changed(string PropertyName)
@@ -175,34 +247,70 @@ namespace SBTP.View.XGPJ
     public partial class YJXGPJ : Page
     {
         ObservableCollection<string> dataSource;
-        ObservableCollection<YjxgModel> yjxgModels;
-        Dictionary<string, string> Pj_Group; 
+        public static ObservableCollection<YjxgModel> yjxgModels { get; set; } = new ObservableCollection<YjxgModel>();
+        public static DateTime comment_time { get; set; }
+        Dictionary<string, string> Pj_Group;
         public YJXGPJ()
         {
             InitializeComponent();
             this.Loaded += ListInitialize;
         }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1307:指定 StringComparison", Justification = "<挂起>")]
         private void ListInitialize(object sender, RoutedEventArgs e)
         {
             dataSource = new ObservableCollection<string>();
             Pj_Group = new Dictionary<string, string>();
             yjxgModels = new ObservableCollection<YjxgModel>();
-            Data.DatHelper.read_zcjz().ForEach(x =>
+
+            var sjpj = DatHelper.TpjpjRead();
+            var yjpj = DatHelper.YjjpjRead();
+            var zcjz = DatHelper.read_zcjz();
+            List<string> yj = new List<string>();
+
+            //列表
+            sjpj.ForEach(x =>
             {
-                if (Data.DatHelper.Read_GXSJ().Contains(x.JH))
+                var sj = zcjz.Find(p => p.JH.Equals(x.JH));
+                if (sj != null)
                 {
-                    Pj_Group.Add(x.JH, x.oil_wells);
-                    x.oil_wells.Split(',').ToList().ForEach(x => dataSource.Add(x));
+                    Pj_Group.Add(sj.JH, sj.oil_wells);
+                    sj.oil_wells.Split(',').ToList().ForEach(x => yj.Add(x));   //添加列表内容（临时）
                 }
             });
-            if (Data.DatHelper.YjjpjRead() != null)
+            yj = yj.OrderBy(p => p).Distinct().ToList();    //油井井号去重
+
+            //表格
+            yjpj.ForEach(x =>
             {
-                List<string> names = new List<string>();
-                Data.DatHelper.YjjpjRead().ForEach(x => { yjxgModels.Add(x); names.Add(x.JH); });
-                List<string> datasouce = dataSource.Except(names).ToList();
-                dataSource.Clear();                               
-                datasouce.ForEach(x => dataSource.Add(x));
-            }
+                yjxgModels.Add(x);  //添加表格内容
+                if (yj.Contains(x.JH))
+                {
+                    yj.Remove(x.JH);
+                }
+            });
+
+            yj.ForEach(x =>
+            {
+                dataSource.Add(x);  //添加列表内容
+            });
+
+            //Data.DatHelper.read_zcjz().ForEach(x =>
+            //{
+            //    if (Data.DatHelper.Read_GXSJ().Contains(x.JH))
+            //    {
+            //        Pj_Group.Add(x.JH, x.oil_wells);
+            //        x.oil_wells.Split(',').ToList().ForEach(x => dataSource.Add(x));
+            //    }
+            //});
+            //if (Data.DatHelper.YjjpjRead() != null)
+            //{
+            //    List<string> names = new List<string>();
+            //    Data.DatHelper.YjjpjRead().ForEach(x => { yjxgModels.Add(x); names.Add(x.JH); });
+            //    List<string> datasouce = dataSource.Except(names).ToList();
+            //    dataSource.Clear();                               
+            //    datasouce.ForEach(x => dataSource.Add(x));
+            //}
             yjxg_grid.DataContext = yjxgModels;
             yj_list.ItemsSource = dataSource;
             Wells.ItemsSource = yjxgModels;
@@ -214,6 +322,7 @@ namespace SBTP.View.XGPJ
             e.Row.Header = e.Row.GetIndex() + 1;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:请不要将文本作为本地化参数传递", Justification = "<挂起>")]
         private void btn_right_Click(object sender, RoutedEventArgs e)
         {
             if (yj_list.SelectedItem == null) return;
@@ -222,10 +331,23 @@ namespace SBTP.View.XGPJ
             {
                 yjxgModels.Add(new YjxgModel()
                 {
-                    JH = yj_list.SelectedItems[i].ToString()
+                    JH = yj_list.SelectedItems[i].ToString(),
+                    CSSJ = "",      //todo：获取措施时间
+                    NHSSSL = 0,
+                    CSQYCY = 0,
+                    CSQYCYL = 0,
+                    CSQHXJ = 0,
+                    CSQZHHS = 0,
+                    CSHYCY = 0,
+                    CSHYCYL = 0,
+                    CSHHXJ = 0,
+                    CSHZHHS = 0,
+                    LJZY = 0,
+                    SSTPJ = ""      //todo：获取所属调剖井
                 });
                 source.Remove(yj_list.SelectedItems[i].ToString());
             }
+            yjxgModels = new ObservableCollection<YjxgModel>(yjxgModels.OrderBy(p => p.CSSJ));
             dataSource.Clear();
             for (int i = 0; i < source.Count; i++)
             {
@@ -243,9 +365,20 @@ namespace SBTP.View.XGPJ
                 yjxgModels.Add(tpxgs[j]);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private void Comment_Click(object sender, RoutedEventArgs e)
         {
             string[] startAndEndTime = Data.DatHelper.TPJParaRead();
+
+            comment_time = DateTime.Parse(dp_comment_time.Text);
+            DateTime end_time = DateTime.Parse(startAndEndTime[2]);
+            if (end_time >= comment_time)
+            {
+                MessageBox.Show("选择的评价时间，需要大于措施前评价时间");
+                return;
+            }
+            tb_comment_time.Text = Unity.DateTimeToString(comment_time, "yyyy年MM月");
+
             if (startAndEndTime.Length == 0) return;
             double csq_ycy_sum = 0;
             double csq_ycyl_sum = 0;
@@ -265,7 +398,7 @@ namespace SBTP.View.XGPJ
                 List<TpxgModel> newModel = tpxgModels.FindAll(x => result.Contains(x.JH));
                 //获取目标井措施时间
                 DateTime minTime = newModel.Min(x => DateTime.ParseExact(x.CSSJ, "yyyy/MM", CultureInfo.CurrentCulture));
-               
+
                 DataTable newdt1 = dt1.Clone();
                 newdt1.Columns["YCYL"].DataType = Type.GetType("System.Int32");
                 newdt1.Columns["YCSL"].DataType = Type.GetType("System.Int32");
@@ -274,7 +407,7 @@ namespace SBTP.View.XGPJ
                     newdt1.ImportRow((DataRow)dt1.Rows[i]);
                 }
                 DataTable dt2 = QuryAll(item.JH);
-                
+
                 if (newdt1.Rows.Count == 0 || dt2.Rows.Count == 0) continue;
                 string start_cjnd = string.IsNullOrWhiteSpace(newdt1.Rows[0]["CCJHWND"].ToString()) ? "0" : newdt1.Rows[0]["CCJHWND"].ToString();
                 string end_cjnd = string.IsNullOrWhiteSpace(newdt1.Rows[newdt1.Rows.Count - 1]["CCJHWND"].ToString()) ? "0" : newdt1.Rows[newdt1.Rows.Count - 1]["CCJHWND"].ToString();
@@ -288,7 +421,7 @@ namespace SBTP.View.XGPJ
                 item.CSQHXJ = (double.Parse(newdt1.Rows[0]["YCSL"].ToString()) * double.Parse(start_cjnd) + double.Parse(end_cjnd) * double.Parse(newdt1.Rows[newdt1.Rows.Count - 1]["YCSL"].ToString())) / (double.Parse(newdt1.Rows[0]["YCSL"].ToString()) + double.Parse(newdt1.Rows[newdt1.Rows.Count - 1]["YCSL"].ToString()));
                 DataRow[] targetTpj = Data.DatHelper.TPJDataRead().Select("JH='" + item.JH + "'");
                 item.CSQZHHS = targetTpj.Length == 0 ? 0 : double.Parse(Data.DatHelper.TPJDataRead().Select("JH='" + item.JH + "'")[0]["ZHHS"].ToString());
-                item.LJZY = QuryZY(minTime,item.JH);
+                item.LJZY = QuryZY(minTime, item.JH);
                 csq_ycy_sum += item.CSQYCY;
                 csq_ycyl_sum += item.CSQYCYL;
                 csh_ycy_sum += item.CSHYCY;
@@ -297,7 +430,7 @@ namespace SBTP.View.XGPJ
                 csh_hxj_tj += (item.CSHYCY - item.CSHYCYL) * item.CSHHXJ;
             }
             Csq_ycy_sum.Content = Math.Round(csq_ycy_sum, 3);
-            Csq_ycyl_sum.Content =Math.Round(csq_ycyl_sum,3);
+            Csq_ycyl_sum.Content = Math.Round(csq_ycyl_sum, 3);
             Csq_hxj_tj.Content = csq_hxj_tj / (csq_ycy_sum - csq_ycyl_sum);
             Csq_zhhs_tj.Content = Math.Round((csq_ycy_sum - csq_ycyl_sum) / csq_ycy_sum, 5);
             Csh_ycy_sum.Content = Math.Round(csh_ycy_sum, 3);
@@ -341,7 +474,7 @@ namespace SBTP.View.XGPJ
             CreateChart(((YjxgModel)Wells.SelectedItem).JH, StartTime.Text, EndTime.Text);
         }
 
-        private void CreateChart(string jh,string start, string end)
+        private void CreateChart(string jh, string start, string end)
         {
             MyToolKit.Series.Clear();
             StringBuilder sqlStr = new StringBuilder("select * from OIL_WELL_MONTH where zt=0 and JH='" + jh + "' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 order by NY");
@@ -384,6 +517,11 @@ namespace SBTP.View.XGPJ
         {
             Data.DatHelper.SaveYjxgpj(yjxgModels.ToList());
             MessageBox.Show("保存成功！");
+        }
+
+        private void btnNewWell_Click(object sender, RoutedEventArgs e)
+        {
+            new ChooseOilWell().ShowDialog();
         }
     }
 }

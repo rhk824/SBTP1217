@@ -32,31 +32,31 @@
 
                     </TextBox>
                 </GroupBox>
-                <GroupBox Header="油井">
-                    <DataGrid x:Name="dg_ow" ColumnWidth="*" ItemsSource="{Binding}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="累计产液" Binding="{Binding ljcy1}"/>
-                            <DataGridTextColumn Header="累计产油" Binding="{Binding ljcy2}"/>
-                            <DataGridTextColumn Header="油井井数" Binding="{Binding yjjs}"/>
-                            <DataGridTextColumn Header="月产液" Binding="{Binding ycy1}"/>
-                            <DataGridTextColumn Header="月产油" Binding="{Binding ycy2}"/>
-                            <DataGridTextColumn Header="综合含水" Binding="{Binding zhhs}"/>
-                            <DataGridTextColumn Header="单井日产液" Binding="{Binding rcy1}"/>
-                            <DataGridTextColumn Header="单井日产油" Binding="{Binding rcy2}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </GroupBox>
                 <GroupBox Header="水井">
                     <DataGrid x:Name="dg_ww" ColumnWidth="*" ItemsSource="{Binding}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="累计注水" Binding="{Binding ljzs}"/>
-                            <DataGridTextColumn Header="累注聚量" Binding="{Binding lzjl}"/>
-                            <DataGridTextColumn Header="水井井数" Binding="{Binding sjjs}"/>
-                            <DataGridTextColumn Header="月注聚量" Binding="{Binding yzjl}"/>
-                            <DataGridTextColumn Header="注聚浓度" Binding="{Binding zjnd}"/>
-                            <DataGridTextColumn Header="单井平均日注" Binding="{Binding rzyl}"/>
-                            <DataGridTextColumn Header="平均注水压力" Binding="{Binding zsyl}"/>
-                            <DataGridTextColumn Header="视吸水指数" Binding="{Binding sxszs}"/>
+                            <DataGridTextColumn Header="累计注水" Binding="{Binding ljzs, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="累注聚量" Binding="{Binding ljzj, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="水井井数" Binding="{Binding sjjs, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="月注聚量" Binding="{Binding yzyl, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="注聚浓度" Binding="{Binding jhwnd, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="单井平均日注" Binding="{Binding pjrz, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="平均注水压力" Binding="{Binding zsyl, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="视吸水指数" Binding="{Binding sxszs, StringFormat={}{0:0.##}}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox Header="油井">
+                    <DataGrid x:Name="dg_ow" ColumnWidth="*" ItemsSource="{Binding}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="累计产液" Binding="{Binding ljcy1, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="累计产油" Binding="{Binding ljcy2, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="油井井数" Binding="{Binding yjjs, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="月产液" Binding="{Binding ycy1, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="月产油" Binding="{Binding ycy2, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="综合含水" Binding="{Binding zhhs, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="单井日产液" Binding="{Binding rcy1, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="单井日产油" Binding="{Binding rcy2, StringFormat={}{0:0.##}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>
@@ -67,6 +67,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

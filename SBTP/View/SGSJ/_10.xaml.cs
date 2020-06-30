@@ -47,5 +47,11 @@ namespace SBTP.View.SGSJ
             bll.update_bookmark("text_10", tb.Text);
             MessageBox.Show("操作成功");
         }
+
+        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage page = new MainPage();
+            page.Generate();
+        }
     }
 }

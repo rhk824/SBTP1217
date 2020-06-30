@@ -1,4 +1,5 @@
-﻿using SBTP.BLL;
+﻿using Maticsoft.DBUtility;
+using SBTP.BLL;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,6 +28,7 @@ namespace SBTP.View.SGSJ
         public _051()
         {
             InitializeComponent();
+            
         }
 
         public _051(sgsj_bll bll)
@@ -36,13 +38,32 @@ namespace SBTP.View.SGSJ
             tb1.Text = bll.BookMarks["text_0511"];
             tb2.Text = bll.BookMarks["text_0512"];
             DataContext = this.bll;
+            this.Loaded += _051_Loaded;
+            this.dg2.LoadingRow += new EventHandler<DataGridRowEventArgs>(this.dg2_LoadingRow);
         }
 
+        private void _051_Loaded(object sender, RoutedEventArgs e)
+        {
+            bll.Init0511();
+            bll.Init0512();
+            dg1.DataContext = bll.dt0511;
+            dg2.DataContext = bll.dt0512;
+        }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:请不要将文本作为本地化参数传递", Justification = "<挂起>")]
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            bll.update0511();
-            bll.update0512();
+            string message = string.Empty;
+            if (!bll.update0511(out message))
+            {
+                MessageBox.Show(message);
+                return;
+            }
+            if (!bll.update0512(out message))
+            {
+                MessageBox.Show(message);
+                return;
+            }
             tb1.Text = $"调剖半径按照投入产出比进行优选设计。考虑因素价格因素有原油价格，施工价格，调剖剂价格等。增油量采用基于数值模拟样本点回归预测。";
             tb2.Text = $"根据注采井距，进行厚层内调剖增油预测，根据投产比和施工能力确定调剖半径。";
             dg1.DataContext = bll.dt0511;
@@ -53,7 +74,17 @@ namespace SBTP.View.SGSJ
         {
             bll.update_bookmark("text_0511", tb1.Text);
             bll.update_bookmark("text_0512", tb2.Text);
+            DbHelperOleDb.UpdateTable("sgsj_0511", (DataTable)dg1.DataContext);
+            DbHelperOleDb.UpdateTable("sgsj_0512", (DataTable)dg2.DataContext);
             MessageBox.Show("操作成功");
         }
+
+        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage page = new MainPage();
+            page.Generate();
+        }
+
+        private void dg2_LoadingRow(object sender, DataGridRowEventArgs e) { e.Row.Header = e.Row.GetIndex() + 1; }
     }
 }

@@ -435,7 +435,7 @@
                         <!--名称设置-->
                         <TextBlock Text="调剖层" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
                         <TextBlock Text="厚度（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
-                        <TextBlock Text="吸水量（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
+                        <TextBlock Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
                             <Run Text="吸水量（" />
                             <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
                             <Run Text="/d）"/>
@@ -473,7 +473,7 @@
                         <!--名称设置-->
                         <TextBlock Text="封堵段" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
                         <TextBlock Text="厚度（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
-                        <TextBlock Text="吸水量（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
+                        <TextBlock Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
                             <Run Text="吸水量（" />
                             <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
                             <Run Text="/d）"/>
@@ -511,7 +511,7 @@
                         <!--名称设置-->
                         <TextBlock Text="增注段" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
                         <TextBlock Text="厚度（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
-                        <TextBlock Text="吸水量（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
+                        <TextBlock Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
                             <Run Text="吸水量（" />
                             <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
                             <Run Text="/d）"/>
@@ -628,7 +628,6 @@
                             <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
                             <Run Text="/d.MPa）"/>
                         </TextBlock>-->
-
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -17,7 +17,6 @@ namespace SBTP.Data
     public class DatHelper_RLS4
     {       
         private static string datPath = @"{0}\RLS";
-
         private static void CheckRLS()
         {
             StringBuilder sb = new StringBuilder();
@@ -190,7 +189,6 @@ namespace SBTP.Data
             int startIndex = lines.FindIndex(x => x.Contains("*JZXG"));
             for (int i = startIndex + 1; i < lines.Count; i++)
             {
-                if (lines[i].Contains("/JZXG")) break;
                 string[] vs = lines[i].Split('\t');
                 list.Add(new XGYC_SCJ_BLL()
                 {

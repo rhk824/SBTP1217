@@ -63,7 +63,7 @@
                         <StackPanel>
                             <Button x:Name="btn_051" Style="{StaticResource ButtonStyle}" Click="Button_Click">调剖半径</Button>
                             <Button x:Name="btn_052" Style="{StaticResource ButtonStyle}" Click="Button_Click">段塞设计</Button>
-                            <Button x:Name="btn_053" Style="{StaticResource ButtonStyle}" Click="Button_Click">药物用量</Button>
+                            <Button x:Name="btn_053" Style="{StaticResource ButtonStyle}" Click="Button_Click">药剂用量</Button>
                         </StackPanel>
                     </Border>
                 </Expander>
@@ -115,8 +115,8 @@
             <Frame x:Name="frame" Grid.Column="1" />
 
             <StackPanel Grid.Row="1" Style="{StaticResource StackPanelStyle}">
-                <Button>全文预览</Button>
-                <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
+                <!--<Button>预览</Button>-->
+                <!--<Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>-->
             </StackPanel>
         </Grid>
     </Grid>

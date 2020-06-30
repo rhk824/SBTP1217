@@ -40,11 +40,13 @@ namespace Common
             return JsonConvert.DeserializeObject<T>(new JavaScriptSerializer().Serialize(obj));
         }
 
+
         /// <summary>
         /// 将 object 转换 string 类型
         /// </summary>
         /// <param name="obj"></param>
         /// <returns>字符串</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1720:标识符包含类型名称", Justification = "<挂起>")]
         public static string ToString(object obj)
         {
             string str = obj.ToString();
@@ -242,6 +244,17 @@ namespace Common
             double a = DataPoints.Average(x => x.Y) - DataPoints.Average(x => x.X) * b;
             //a截距 b斜率
             return new KeyValuePair<double, double>(a, b);
+        }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
+        public static string DecimalToString(decimal d)
+        {
+            return d.ToString("#0.########");
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
+        public static string IntToString(int i)
+        {
+            return i.ToString();
         }
     }
 }

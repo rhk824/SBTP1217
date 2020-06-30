@@ -1,0 +1,29 @@
+﻿<Window x:Class="SBTP.View.XGPJ.ChooseCommentDate"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SBTP.View.XGPJ"
+        xmlns:calender="clr-namespace:SBTP.View.JCXZ"
+        mc:Ignorable="d"
+        Title="评价时间" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="5">
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBlock VerticalAlignment="Center">开始时间：</TextBlock>
+                <DatePicker Name="StartTime" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <TextBlock VerticalAlignment="Center">结束时间：</TextBlock>
+                <DatePicker Name="EndTime" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Margin="5">
+            <Button Margin="5" Padding="8,2" Click="Button_Click" HorizontalAlignment="Right">确定</Button>
+        </StackPanel>
+    </Grid>
+</Window>

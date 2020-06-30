@@ -16,7 +16,7 @@
         <!--<HierarchicalDataTemplate x:Key="parent"  DataType="{x:Type local:MainWindow}" ItemsSource="{Binding Path=ProjectItems}" ItemTemplate="{StaticResource ResourceKey=itemTemplate}"/>-->
         <!--
         </DockPanel.Resources>-->
-        <Menu x:Name="menu" DockPanel.Dock="Top">
+        <Menu x:Name="menu" DockPanel.Dock="Top" BorderBrush="#eee" BorderThickness="0,1" Padding="0,2">
             <MenuItem Header="文件">
                 <MenuItem Name="miNewProject" Header="创建工程" Click="MiNewProject_Click"/>
                 <MenuItem Name="miOpenProject" Header="打开工程" Click="OpenProject_Click" />
@@ -48,11 +48,12 @@
                 <MenuItem Header="调剖段塞设计" Name="CSSJ_DSSJ" />
             </MenuItem>
             <MenuItem Header="效果预测" MenuItem.Click="Menu_Click">
-                <MenuItem Header="生产井深部调剖效果预测" Name="XGYC_SC" />
                 <MenuItem Header="注入井深部调剖效果预测" Name="XGYC_ZR" />
+                <!--<MenuItem Header="注入井深部调剖效果预测（临时）" Name="XGYC_ZR_Temp" />-->
+                <MenuItem Header="生产井深部调剖效果预测" Name="XGYC_SC" />
             </MenuItem>
             <MenuItem Header="施工设计" MenuItem.Click="Menu_Click">
-                <MenuItem Header="生成" Name="SGSJ_MainPage" />
+                <MenuItem Header="方案生成" Name="SGSJ_MainPage" />
             </MenuItem>
             <MenuItem Header="效果评价" MenuItem.Click="Menu_Click">
                 <MenuItem Header="调剖井效果评价" Name="XGPJ_TPJXGPJ"/>
