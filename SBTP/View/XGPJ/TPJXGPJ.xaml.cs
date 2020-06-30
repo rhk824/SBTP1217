@@ -560,7 +560,7 @@ namespace SBTP.View.XGPJ
                     tpxgModels.Add(new TpxgModel()
                     {
                         JH = jh,
-                        TPCM = query.TPCM,          //todo：“rls4.dat *zryc”没有调剖层号
+                        TPCM = query.TPCNAME,          //todo：“rls4.dat *zryc”没有调剖层号
                         TQZS = query.RZYL,          //todo：“rls4.dat *zryc”没有日注液量
                         TQYL = query.CSQ_DXYL,
                         TQXSFS = xsfs,
