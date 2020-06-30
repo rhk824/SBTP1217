@@ -37,7 +37,14 @@
         </Grid.ColumnDefinitions>
 
         <GroupBox Header="油井" Grid.Column="0" Grid.RowSpan="2">
-            <ListBox Name="yj_list" SelectionMode="Extended"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox Name="yj_list" SelectionMode="Extended"/>
+                <Button x:Name="btnNewWell" Grid.Row="1" Click="btnNewWell_Click">新井</Button>
+            </Grid>
         </GroupBox>
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.RowSpan="2">
@@ -90,6 +97,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Name="tb_comment_time" Text="**年**月" FontSize="18" FontFamily="黑体"/>
                         <TextBlock Text="油井效果统计表" FontSize="18" FontFamily="黑体"/>
                     </StackPanel>
                     <DataGrid Grid.Row="1" Name="yjxg_grid" ItemsSource="{Binding}" LoadingRow="yjxg_grid_LoadingRow" HeadersVisibility="Column" CanUserAddRows="False">
@@ -102,6 +110,8 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTemplateColumn Header="连通油井" CellTemplate="{StaticResource jh}" />
+                            <DataGridTextColumn Header="措施时间"/>
+                            <DataGridTextColumn Header="年含水上升率"/>
                             <DataGridTemplateColumn HeaderStyle="{StaticResource YJXGPJ_CSQ}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -183,6 +193,7 @@
                 </StackPanel>
             </Border>
             <StackPanel Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                <DatePicker Name="dp_comment_time" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
                 <Button Name="Comment" Content="评价" Click="Comment_Click"/>
                 <Button Name="Save" Content="保存" Click="Save_Click"/>
             </StackPanel>
@@ -193,6 +204,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -225,6 +237,10 @@
                     </WindowsFormsHost>-->
                     <tk:Chart Name="MyToolKit" Height="auto" Visibility="Collapsed"/>
                 </Grid>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button>图形输出</Button>
+                    <Button>继续</Button>
+                </StackPanel>
             </Grid>
         </GroupBox>
         

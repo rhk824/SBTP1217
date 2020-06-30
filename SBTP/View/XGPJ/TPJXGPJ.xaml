@@ -28,7 +28,15 @@
         </Grid.ColumnDefinitions>
 
         <GroupBox Header="调剖井" Grid.Column="0" Grid.RowSpan="2">
-            <ListBox Name="tpj_list" SelectionMode="Extended"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ListBox Name="tpj_list" SelectionMode="Extended"/>
+                <Button Grid.Row="1" Click="btnNewWell_Click">新井</Button>
+            </Grid>
+            
         </GroupBox>
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.RowSpan="2">
@@ -44,98 +52,240 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1" Margin="0,0,0,5">
                 <Grid>
-                    <Grid.Resources>
-                        <DataTemplate x:Key="jh">
-                            <TextBlock Text="{Binding JH}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        </DataTemplate>
-                        <DataTemplate x:Key="tqzs">
-                            <TextBlock Text="{Binding TQZS}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        </DataTemplate>
-                        <DataTemplate x:Key="cssj">
-                            <TextBlock Text="{Binding Path= CSSJ, StringFormat=\{0:d\}}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        </DataTemplate>
-                        <DataTemplate x:Key="cssjForEdite">
-                            <DatePicker Text="{Binding CSSJ, Mode=TwoWay,ValidatesOnExceptions=true, NotifyOnValidationError=true,UpdateSourceTrigger=PropertyChanged}" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
-                        </DataTemplate>
-                        <DataTemplate x:Key="tqyl">
-                            <TextBlock Text="{Binding TQYL}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        </DataTemplate>
-                        <DataTemplate x:Key="tqxszs">
-                            <TextBlock Text="{Binding TQXSZS}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        </DataTemplate>
-                        <DataTemplate x:Key="thzs">
-                            <TextBlock Text="{Binding THZS}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        </DataTemplate>
-                        <DataTemplate x:Key="thyl">
-                            <TextBlock Text="{Binding THYL}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        </DataTemplate>
-                        <DataTemplate x:Key="thxszs">
-                            <TextBlock Text="{Binding THXSZS}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                        </DataTemplate>
-                    </Grid.Resources>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock FontSize="18" FontFamily="黑体">
+                            <Run Name="run_comment_st">**年**月</Run>
+                            <Run> - </Run>
+                            <Run Name="run_comment_et">**年**月</Run>
+                        </TextBlock>
                         <TextBlock Text="调剖效果统计表" FontSize="18" FontFamily="黑体"/>
                     </StackPanel>
-                    <DataGrid Name="tpxg_grid" Grid.Row="1" ItemsSource="{Binding}" LoadingRow="DataGrid_LoadingRow"  HeadersVisibility="Column" CanUserAddRows="False">
+
+                    <DataGrid Name="tpxg_datagrid" Grid.Row="1" LoadingRow="DataGrid_LoadingRow" RowHeaderWidth="0" ItemsSource="{Binding}" HeadersVisibility="Column" CanUserAddRows="False">
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn  Width="55" Header="序号"  >
+
+                            <DataGridTemplateColumn Header="序号">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGridRow}}, Path=Header}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="调剖井号" CellTemplate="{StaticResource jh}" />
-                            <DataGridTemplateColumn Header="措施时间" CellEditingTemplate="{StaticResource cssjForEdite}" CellTemplate="{StaticResource cssj}"/>
-                            <DataGridTemplateColumn Header="调前注水" CellTemplate="{StaticResource tqzs}"/>
-                            <DataGridTemplateColumn Header="调前压力" CellTemplate="{StaticResource tqyl}"/>
-                            <DataGridTemplateColumn Header="调前吸水指数" CellTemplate="{StaticResource tqxszs}"/>
-                            <DataGridTemplateColumn Header="调后注水"  CellTemplate="{StaticResource thzs}"/>
-                            <DataGridTemplateColumn Header="调后压力" CellTemplate="{StaticResource thyl}"/>
-                            <DataGridTemplateColumn Header="调后吸水指数" CellTemplate="{StaticResource thxszs}"/>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.Header>
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock>井号</TextBlock>
+                                    </StackPanel>
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding JH}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.Header>
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock>调剖层名</TextBlock>
+                                    </StackPanel>
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding TPCM}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.Header>
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock>调剖时间</TextBlock>
+                                    </StackPanel>
+                                </DataGridTemplateColumn.Header>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <DatePicker Text="{Binding CSSJ, Mode=TwoWay,ValidatesOnExceptions=true, NotifyOnValidationError=true,UpdateSourceTrigger=PropertyChanged}" 
+                                                    calender:DatePickerCalendar.IsMonthYear="True" 
+                                                    calender:DatePickerDateFormat.DateFormat="yyyy/MM"
+                                                    BorderThickness="0" Margin="0" Padding="0"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Path= CSSJ, StringFormat=\{0:d\}}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <!-- 调前表头开始 -->
+                            <DataGridTextColumn Binding="{Binding TQZS, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>调前</TextBlock>
+                                        <TextBlock>注水量</TextBlock>
+                                        <TextBlock>（m3/d）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding TQXSFS, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>调前</TextBlock>
+                                        <TextBlock>吸水分数</TextBlock>
+                                        <TextBlock>（%）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding TQYL, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>调前</TextBlock>
+                                        <TextBlock>压力</TextBlock>
+                                        <TextBlock>（MPa）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding TQXSZS, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>调前</TextBlock>
+                                        <TextBlock>视吸水指数</TextBlock>
+                                        <TextBlock>（m3/d.MPa）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <!-- 调前表头终止 -->
+
+                            <!-- 调前表头开始 -->
+                            <DataGridTextColumn Binding="{Binding THZS, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>调后</TextBlock>
+                                        <TextBlock>注水量</TextBlock>
+                                        <TextBlock>（m3/d）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding THXSFS, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>调后</TextBlock>
+                                        <TextBlock>吸水分数</TextBlock>
+                                        <TextBlock>（%）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding THYL, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>调后</TextBlock>
+                                        <TextBlock>压力</TextBlock>
+                                        <TextBlock>（MPa）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding THXSZS, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>调后</TextBlock>
+                                        <TextBlock>视吸水指数</TextBlock>
+                                        <TextBlock>（m3/d.MPa）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <!-- 调前表头终止 -->
+
+                            <!-- 调前表头开始 -->
+                            <DataGridTextColumn Binding="{Binding CZZS, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>差值</TextBlock>
+                                        <TextBlock>注水量</TextBlock>
+                                        <TextBlock>（m3/d）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding CZXSFS, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>差值</TextBlock>
+                                        <TextBlock>吸水分数</TextBlock>
+                                        <TextBlock>（%）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding CZYL, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>差值</TextBlock>
+                                        <TextBlock>压力</TextBlock>
+                                        <TextBlock>（MPa）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding CZXSZS, StringFormat={}{0:F2}}">
+                                <DataGridTextColumn.Header>
+                                    <StackPanel>
+                                        <TextBlock>差值</TextBlock>
+                                        <TextBlock>视吸水指数</TextBlock>
+                                        <TextBlock>（m3/d.MPa）</TextBlock>
+                                    </StackPanel>
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <!-- 调前表头终止 -->
+
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </Border>
             <Border BorderBrush="LightGray" BorderThickness="1"  Grid.Row="1">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Label FontSize="13" FontWeight="Black" Content="均值统计"/>
-                        <Label Content="调前注水:"/>
-                        <Label Name="tqzs_average" Content="0"/>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontSize="13" FontWeight="Black">调前统计</TextBlock>
+                        <TextBlock>平均注水量：</TextBlock>
+                        <TextBlock x:Name="tb_tq_zsl">0</TextBlock>
+                        <TextBlock>平均压力：</TextBlock>
+                        <TextBlock x:Name="tb_tq_yl">0</TextBlock>
+                        <TextBlock>总吸水分数：</TextBlock>
+                        <TextBlock x:Name="tb_tq_xsfs">0</TextBlock>
+                        <TextBlock>平均视吸水指数：</TextBlock>
+                        <TextBlock x:Name="tb_tq_sxszs">0</TextBlock>
                     </StackPanel>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Label Content="调前压力:"/>
-                        <Label Name="tqyl_average" Content="0"/>
+                    <StackPanel Orientation="Horizontal" Margin="50,0,0,0">
+                        <TextBlock FontSize="13" FontWeight="Black">调后统计</TextBlock>
+                        <TextBlock>平均注水量：</TextBlock>
+                        <TextBlock x:Name="tb_th_zsl">0</TextBlock>
+                        <TextBlock>平均压力：</TextBlock>
+                        <TextBlock x:Name="tb_th_yl">0</TextBlock>
+                        <TextBlock>总吸水分数：</TextBlock>
+                        <TextBlock x:Name="tb_th_xsfs">0</TextBlock>
+                        <TextBlock>平均视吸水指数：</TextBlock>
+                        <TextBlock x:Name="tb_th_sxszs">0</TextBlock>
                     </StackPanel>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Label Content="调前视吸水指数:"/>
-                        <Label Name="tqawi_average" Content="0"/>
-                    </StackPanel>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Label Content="调后注水:"/>
-                        <Label Name="thzs_average" Content="0"/>
-                    </StackPanel>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Label Content="调后压力:"/>
-                        <Label Name="thyl_average" Content="0"/>
-                    </StackPanel>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Label Content="调后视吸水指数:"/>
-                        <Label Name="thawi_average" Content="0"/>
+                    <StackPanel Orientation="Horizontal" Margin="50,0,0,0">
+                        <TextBlock FontSize="13" FontWeight="Black">差值统计</TextBlock>
+                        <TextBlock>平均注水量：</TextBlock>
+                        <TextBlock x:Name="tb_cz_zsl">0</TextBlock>
+                        <TextBlock>平均压力：</TextBlock>
+                        <TextBlock x:Name="tb_cz_yl">0</TextBlock>
+                        <TextBlock>总吸水分数：</TextBlock>
+                        <TextBlock x:Name="tb_cz_xsfs">0</TextBlock>
+                        <TextBlock>平均视吸水指数：</TextBlock>
+                        <TextBlock x:Name="tb_cz_sxszs">0</TextBlock>
                     </StackPanel>
                 </StackPanel>
             </Border>
+            
             <StackPanel Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
-                <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="0,0,10,0">
+                <!--<StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="0,0,10,0">
                     <TextBlock VerticalAlignment="Center" Text="评价月数："/>
                     <TextBox Name="pjys"/>
                 </StackPanel>
-                <Button Name="Extract" Content="提取" Click="Extract_Click"/>
+                <Button Name="Extract" Content="提取" Click="Extract_Click"/>-->
+                <Button Name="Statistics" Click="Statistics_Click">统计</Button>
                 <Button Name="Comment" Content="评价" Click="Comment_Click"/>
                 <Button Name="Save" Content="保存" Click="Save_Click"/>
             </StackPanel>

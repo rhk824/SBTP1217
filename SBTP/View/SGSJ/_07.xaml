@@ -40,6 +40,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

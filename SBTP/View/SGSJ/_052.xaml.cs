@@ -1,4 +1,5 @@
-﻿using SBTP.BLL;
+﻿using Common;
+using SBTP.BLL;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,6 +35,13 @@ namespace SBTP.View.SGSJ
             InitializeComponent();
             this.bll = bll;
             tb.Text = bll.BookMarks["text_052"];
+            this.Loaded += _052_Loaded;
+        }
+
+        private void _052_Loaded(object sender, RoutedEventArgs e)
+        {
+            bll.Init052();
+            //dg.DataContext = bll.dt021;
         }
 
 
@@ -43,7 +51,9 @@ namespace SBTP.View.SGSJ
             DataContext = bll.well_info;
             grid_area.Children.Clear();
             tb.Text = $"深部调剖段按照前置段塞、主段塞、封口段塞、替挤段塞等工序设计。参考以往矿场应用情况，逐一对每口调剖井进行设计。" +
-               $"总调剖剂用量{bll.Tags["总调剖剂用量"]}m3。";
+               $"总调剖剂用量{Unity.ToDecimal(bll.Tags["总调剖剂用量"]).ToString("0.##")}m3。";
+            //tb.Text = $"深部调剖段按照前置段塞、主段塞、封口段塞、替挤段塞等工序设计。参考以往矿场应用情况，逐一对每口调剖井进行设计。" +
+            //   $"总调剖剂用量{bll.Tags["总调剖剂用量"]}m3。";
 
             foreach (var item in bll.well_info)
             {
@@ -69,13 +79,15 @@ namespace SBTP.View.SGSJ
             Dictionary<string, string> paras = new Dictionary<string, string>
             {
                 { "工序名称", "GX_NAME" },
-                { "比例", "BL" },
-                { "用量", "YL" },
-                { "液体浓度", "YN" },
-                { "颗粒浓度", "KN" },
-                { "颗粒粒径", "KJ" },
-                { "注入速度", "ZRSD" },
-                { "注入天数", "ZRTS" },
+                { "比例（%）", "BL" },
+                { "用量（m3）", "YL" },
+                { "液体浓度（mg/L）", "YN" },
+                { "颗粒浓度（mg/L）", "KN" },
+                { "颗粒目数（目）", "KJ" },
+                { "携液浓度（mg/L）", "KJ" },
+                { "排量（m3/d）", "ZRSD" },
+                { "施工周期（d）", "ZRTS" },
+                { "当量粘度（mP.s）", "ZRTS" },
                 { "注入压力", "ZRYL" }
             };
 
@@ -97,6 +109,12 @@ namespace SBTP.View.SGSJ
         {
             bll.update_bookmark("text_052", tb.Text);
             MessageBox.Show("操作成功");
+        }
+
+        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage page = new MainPage();
+            page.Generate();
         }
     }
 }

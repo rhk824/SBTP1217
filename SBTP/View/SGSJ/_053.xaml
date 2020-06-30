@@ -27,11 +27,11 @@
                     <StackPanel>
                         <TextBox x:Name="tb" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
                         <TextBlock>药剂用量</TextBlock>
-                        <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg" ItemsSource="{Binding}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
-                                <DataGridTextColumn Header="液体剂主剂干粉用量" Binding="{Binding yl1}"/>
-                                <DataGridTextColumn Header="颗粒型用量" Binding="{Binding yl2}"/>
+                                <DataGridTextColumn Header="液体剂主剂干粉用量（t）" Binding="{Binding yl1, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="颗粒型用量（t）" Binding="{Binding yl2, StringFormat={}{0:0.##}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -43,6 +43,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

@@ -51,6 +51,7 @@
         <StackPanel Grid.Row="1" Style="{StaticResource StackPanelStyle}">
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Name="btnSave" Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

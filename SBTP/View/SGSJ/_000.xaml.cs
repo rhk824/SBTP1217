@@ -51,6 +51,7 @@ namespace SBTP.View.SGSJ
             bll.update_bookmark("cover_5", tb5.Text);
             bll.update_bookmark("cover_6", tb6.Text);
             bll.update_bookmark("text_01", tb_foreword.Text);
+            MessageBox.Show("操作成功");
         }
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
@@ -60,6 +61,12 @@ namespace SBTP.View.SGSJ
                 tb_foreword.Text = $"目标设计区域{bll.Tags["前言_油井井史最早时间"]}年投入{bll.Tags["前言_采油次数"]}开发，**年开始聚驱。因油层非均质导致部分目标设计区域含水偏高，注入压力偏低，低效无效循环严重。为有效治理低效无效循环，采取目标设计区域深部调技术对水窜严重目标设计区域综合治理，大幅度改善驱替效果。";
             }
             MessageBox.Show(message);
+        }
+
+        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage page = new MainPage();
+            page.Generate();
         }
     }
 }

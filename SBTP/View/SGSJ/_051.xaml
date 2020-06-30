@@ -29,73 +29,82 @@
                         
                         <TextBlock>调剖费用价格（用户填写）</TextBlock>
 
-                        <DataGrid x:Name="dg1" ColumnWidth="*" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg1" ItemsSource="{Binding}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="原油（元/t）" Binding="{Binding yy}"/>
                                 
-                                <DataGridTextColumn Binding="{Binding yttpj}">
+                                <DataGridTextColumn Binding="{Binding yy, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
-                                        <TextBlock>
-                                            <Run Text="液体调剖剂（元/m"/>
-                                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8"/>
-                                            <Run Text="）"/>
-                                        </TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-                                
-                                <DataGridTextColumn Header="颗粒调剖剂（元/t）" Binding="{Binding kltpj}"/>
-
-                                <DataGridTextColumn Binding="{Binding xdy}">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock>
-                                            <Run Text="携带液（元/m"/>
-                                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8"/>
-                                            <Run Text="）"/>
-                                        </TextBlock>
+                                        <StackPanel>
+                                            <TextBlock>原油</TextBlock>
+                                            <TextBlock>（元/t）</TextBlock>
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
 
-                                <DataGridTextColumn Binding="{Binding sgf}">
+                                <DataGridTextColumn Binding="{Binding yttpj, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
-                                        <TextBlock>
-                                            <Run Text="施工费（元/m"/>
-                                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8"/>
-                                            <Run Text="）"/>
-                                        </TextBlock>
+                                        <StackPanel>
+                                            <TextBlock>1000mg/L液体调剖剂</TextBlock>
+                                            <TextBlock>（元/m3）</TextBlock>
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                
-                                <DataGridTextColumn Header="其他（元）" Binding="{Binding qt}"/>
+
+                                <DataGridTextColumn Binding="{Binding kltpj, StringFormat={}{0:0.##}}">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel>
+                                            <TextBlock>颗粒调剖剂</TextBlock>
+                                            <TextBlock>（元/t）</TextBlock>
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Binding="{Binding xdy, StringFormat={}{0:0.##}}">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel>
+                                            <TextBlock>携带液</TextBlock>
+                                            <TextBlock>（元/t）</TextBlock>
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Binding="{Binding sgf, StringFormat={}{0:0.##}}">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel>
+                                            <TextBlock>施工费</TextBlock>
+                                            <TextBlock>（元/m3）</TextBlock>
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Binding="{Binding qt, StringFormat={}{0:0.##}}">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel>
+                                            <TextBlock>施工费</TextBlock>
+                                            <TextBlock>（元）</TextBlock>
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+
                             </DataGrid.Columns>
                         </DataGrid>
 
                         <TextBox x:Name="tb2" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
 
-                        <DataGrid x:Name="dg2" ColumnWidth="*" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg2" ItemsSource="{Binding}" HeadersVisibility="Column" RowHeaderWidth="0">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="编号" Binding="{Binding bh}"/>
-                                <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
-                                <DataGridTextColumn Header="调剖半径（m）" Binding="{Binding tpbj}"/>
-                                <DataGridTextColumn Header="投产比" Binding="{Binding tcb}"/>
-                                <DataGridTextColumn Header="优选半径（m）" Binding="{Binding yxbj}"/>
-                                <DataGridTextColumn Binding="{Binding zyl}">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock>
-                                            <Run Text="增油量（m"/>
-                                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8"/>
-                                            <Run Text="）"/>
-                                        </TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding tpkxtj}">
-                                    <DataGridTextColumn.Header>
-                                        <TextBlock>
-                                            <Run Text="调剖孔隙体积（m"/>
-                                            <Run Text="3" BaselineAlignment="TextTop" FontSize="8"/>
-                                            <Run Text="）"/>
-                                        </TextBlock>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
+                                <DataGridTemplateColumn  Width="55" Header="编号">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGridRow}}, Path=Header}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="井号" Binding="{Binding jh, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="优选半径（m）" Binding="{Binding yxbj, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="投产比" Binding="{Binding tcb, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="增油量（t）" Binding="{Binding zyl, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="调剖剂用量（m3）" Binding="{Binding tpjyl, StringFormat={}{0:0.##}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         
@@ -108,6 +117,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

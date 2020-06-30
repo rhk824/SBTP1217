@@ -16,16 +16,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace SBTP.View.TPJ
+namespace SBTP.View.XGPJ
 {
     /// <summary>
-    /// ChooseWell.xaml 的交互逻辑
+    /// ChooseOilWell.xaml 的交互逻辑
     /// </summary>
-    public partial class ChooseWell : Window
+    public partial class ChooseOilWell : Window
     {
         public DataTable WaterWellsCollection { set; get; } = new DataTable();
         public DataTable DataSource { set; get; } = new DataTable();
-        public ChooseWell()
+        public ChooseOilWell()
         {
             InitializeComponent();
             DataContext = this;
@@ -33,9 +33,10 @@ namespace SBTP.View.TPJ
             DataSource = WaterWellsCollection.Copy();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:丢失范围之前释放对象", Justification = "<挂起>")]
         private DataTable SelectWell()
         {
-            return DbHelperOleDb.Query("Select distinct JH as 井号 from WATER_WELL_MONTH").Tables[0];
+            return DbHelperOleDb.Query("Select distinct JH as 井号 from OIL_WELL_MONTH").Tables[0];
         }
 
         private void wellname_TextChanged(object sender, TextChangedEventArgs e)
@@ -50,11 +51,26 @@ namespace SBTP.View.TPJ
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Wells.SelectedItems.OfType<DataRowView>().ToList().ForEach(x => ccwx_bll.oc_tpjing_info.Add(new ccwx_tpjing_model()
+            Wells.SelectedItems.OfType<DataRowView>().ToList().ForEach(x => YJXGPJ.yjxgModels.Add(new YjxgModel()
             {
-                jh = x.Row.ItemArray[0].ToString(),
-                IsCustomize = true
+                JH = x.Row.ItemArray[0].ToString()
+                //CSSJ = "",
+                //NHSSSL = 0,
+                //CSQYCY = 0,
+                //CSQYCYL = 0,
+                //CSQHXJ = 0,
+                //CSQZHHS = 0,
+                //CSHYCY = 0,
+                //CSHYCYL = 0,
+                //CSHHXJ = 0,
+                //CSHZHHS = 0,
+                //LJZY = 0,
             }));
+            //Wells.SelectedItems.OfType<DataRowView>().ToList().ForEach(x => ccwx_bll.oc_tpjing_info.Add(new ccwx_tpjing_model()
+            //{
+            //    jh = x.Row.ItemArray[0].ToString(),
+            //    IsCustomize = true
+            //}));
             this.Close();
         }
     }

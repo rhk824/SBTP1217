@@ -39,11 +39,13 @@ namespace Common
             return JsonConvert.DeserializeObject<T>(new JavaScriptSerializer().Serialize(obj));
         }
 
+
         /// <summary>
         /// 将 object 转换 string 类型
         /// </summary>
         /// <param name="obj"></param>
         /// <returns>字符串</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1720:标识符包含类型名称", Justification = "<挂起>")]
         public static string ToString(object obj)
         {
             string str = obj.ToString();
@@ -201,5 +203,18 @@ namespace Common
             else
                 return null;
         }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
+        public static string DecimalToString(decimal d)
+        {
+            return d.ToString("#0.########");
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
+        public static string IntToString(int i)
+        {
+            return i.ToString();
+        }
+
     }
 }

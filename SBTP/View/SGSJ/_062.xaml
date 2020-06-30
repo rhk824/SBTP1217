@@ -29,11 +29,10 @@
                         <TextBlock>调后增油效果预测</TextBlock>
                         <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="序号" Binding="{Binding xh}"/>
-                                <DataGridTextColumn Header="调剖井组" Binding="{Binding tpjz}"/>
-                                <DataGridTextColumn Header="预计增油（t）" Binding="{Binding yjzy}"/>
-                                <DataGridTextColumn Header="开始见效时间（月）" Binding="{Binding ksjxsj}"/>
-                                <DataGridTextColumn Header="投入产出比" Binding="{Binding tcb}"/>
+                                <DataGridTextColumn Header="井组" Binding="{Binding tpjz}"/>
+                                <DataGridTextColumn Header="增油（t）" Binding="{Binding yjzy, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="初见效时间（月）" Binding="{Binding ksjxsj, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="投产比" Binding="{Binding tcb, StringFormat={}{0:0.##}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -45,6 +44,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

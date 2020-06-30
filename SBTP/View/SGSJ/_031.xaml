@@ -51,8 +51,8 @@
                         <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
-                                <DataGridTextColumn Header="完善程度" Binding="{Binding wscd}"/>
-                                <DataGridTextColumn Binding="{Binding sxszs}">
+                                <DataGridTextColumn Header="完善程度" Binding="{Binding wscd, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Binding="{Binding sxszs, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <TextBlock>
                                             <Run Text="视吸水指数（m" />
@@ -61,7 +61,7 @@
                                         </TextBlock>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding rzyl}">
+                                <DataGridTextColumn Binding="{Binding rzyl, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <TextBlock>
                                             <Run Text="日注液量（m" />
@@ -70,8 +70,8 @@
                                         </TextBlock>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="注水压力（MPa）" Binding="{Binding zsyl}"/>
-                                <DataGridTextColumn Header="综合含水（%）" Binding="{Binding zhhs}"/>
+                                <DataGridTextColumn Header="注水压力（MPa）" Binding="{Binding zsyl, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="综合含水（%）" Binding="{Binding zhhs, StringFormat={}{0:0.##}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -84,6 +84,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

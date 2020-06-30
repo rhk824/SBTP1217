@@ -20,6 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -27,11 +28,16 @@
                 <ComboBox Name="Wells" Width="100"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
-                <TextBlock VerticalAlignment="Center" Text="开始时间："/>
+                <TextBlock VerticalAlignment="Center" Text="时间段："/>
                 <DatePicker Name="StartTime" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
-                <TextBlock VerticalAlignment="Center" Text="结束时间："/>
+                <TextBlock VerticalAlignment="Center" Text="-"/>
                 <DatePicker Name="EndTime" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
             </StackPanel>
+            <!--<StackPanel Orientation="Horizontal">
+                <TextBlock>显示月：</TextBlock>
+                <TextBox x:Name="tb_months" Width="24"></TextBox>
+                <TextBlock>步长</TextBlock>
+            </StackPanel>-->
             <StackPanel>
                 <Button Content="绘制" Click="Button_Click"/>
             </StackPanel>
@@ -39,5 +45,9 @@
         <Grid Grid.Row="1">
             <tk:Chart Name="MyToolKit" Height="auto" Visibility="Collapsed"/>
         </Grid>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button>图像曲线保存</Button>
+            <Button>继续</Button>
+        </StackPanel>
     </Grid>
 </Page>

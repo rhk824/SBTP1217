@@ -28,18 +28,17 @@
                     <StackPanel>
                         <TextBox x:Name="tb" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
                             <TextBlock>调剖井调后效果预测</TextBlock>
-                        <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg" ItemsSource="{Binding}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="序号" Binding="{Binding xh}"/>
                                 <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
 
                                 <DataGridTemplateColumn HeaderStyle="{StaticResource dgHeader_sgsj_yc_tpq}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding tpq_zryl}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding tpq_zryl, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding tpq_sxszz}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding tpq_sxszs, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -49,9 +48,9 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding tph_zryl}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding tph_zryl, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding tph_sxszz}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding tph_sxszs, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -61,9 +60,9 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding zf_zryl}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding zf_zryl, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding zf_sxszz}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding zf_sxszs, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -80,6 +79,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

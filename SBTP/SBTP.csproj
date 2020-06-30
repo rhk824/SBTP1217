@@ -343,17 +343,11 @@
     <Compile Include="View\SGSJ\_001.xaml.cs">
       <DependentUpon>_001.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SGSJ\_002.xaml.cs">
-      <DependentUpon>_002.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\SGSJ\_021.xaml.cs">
       <DependentUpon>_021.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SGSJ\_022.xaml.cs">
       <DependentUpon>_022.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\SGSJ\_03.xaml.cs">
-      <DependentUpon>_03.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SGSJ\_031.xaml.cs">
       <DependentUpon>_031.xaml</DependentUpon>
@@ -369,12 +363,6 @@
     </Compile>
     <Compile Include="View\SGSJ\_051.xaml.cs">
       <DependentUpon>_051.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\SGSJ\_0511.xaml.cs">
-      <DependentUpon>_0511.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\SGSJ\_0512.xaml.cs">
-      <DependentUpon>_0512.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SGSJ\_052.xaml.cs">
       <DependentUpon>_052.xaml</DependentUpon>
@@ -420,6 +408,15 @@
     </Compile>
     <Compile Include="View\TPJ\NDXZ.xaml.cs">
       <DependentUpon>NDXZ.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\XGPJ\ChooseCommentDate.xaml.cs">
+      <DependentUpon>ChooseCommentDate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\XGPJ\ChooseOilWell.xaml.cs">
+      <DependentUpon>ChooseOilWell.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\XGPJ\ChooseWaterWell.xaml.cs">
+      <DependentUpon>ChooseWaterWell.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\XGPJ\TPJXGPJ.xaml.cs">
       <DependentUpon>TPJXGPJ.xaml</DependentUpon>
@@ -611,19 +608,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\SGSJ\_002.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="View\SGSJ\_021.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\SGSJ\_022.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\SGSJ\_03.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -644,14 +633,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\SGSJ\_051.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\SGSJ\_0511.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\SGSJ\_0512.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -714,6 +695,18 @@
     <Page Include="View\TPJ\NDXZ.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\XGPJ\ChooseCommentDate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\XGPJ\ChooseOilWell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\XGPJ\ChooseWaterWell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\XGPJ\TPJXGPJ.xaml">
       <SubType>Designer</SubType>

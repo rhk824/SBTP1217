@@ -10,6 +10,7 @@ namespace SBTP.Model
     /// <summary>
     /// 井位
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public class DB_WELL : Base
     {
         private string _jh;
@@ -60,9 +61,11 @@ namespace SBTP.Model
         #endregion
     }
 
+
     /// <summary>
     /// 小层数据
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public class DB_XCSJ : Base
     {
         private string _jh;
@@ -226,9 +229,11 @@ namespace SBTP.Model
         #endregion
     }
 
+
     /// <summary>
     /// 油井井史
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public class DB_OIL_WELL_MONTH : Base
     {
         private string _jh;
@@ -424,9 +429,11 @@ namespace SBTP.Model
 
     }
 
+
     /// <summary>
     /// 水井井史
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public class DB_WATER_WELL_MONTH : Base
     {
         private string _jh;
@@ -443,6 +450,7 @@ namespace SBTP.Model
         private decimal _ljzsl;
         private decimal _ljzjl;
         private decimal _zt;
+        private decimal _zrynd;
 
         #region Property Getters And Setters
 
@@ -629,13 +637,25 @@ namespace SBTP.Model
                 NotifyPropertyChanged("ZT");
             }
         }
+        
+        public decimal ZRYND
+        {
+            get { return _zrynd; }
+            set
+            {
+                _zrynd = value;
+                NotifyPropertyChanged("ZRYND");
+            }
+        }
 
         #endregion
     }
 
+
     /// <summary>
     /// 分注井井史
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public class DB_FZ_WELL_MONTH : Base
     {
 
@@ -645,6 +665,7 @@ namespace SBTP.Model
     /// <summary>
     /// 吸水剖面
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public class DB_XSPM_MONTH : Base
     {
         private string _jh;
@@ -808,9 +829,11 @@ namespace SBTP.Model
 
     }
 
+
     /// <summary>
     /// 液体调剖剂
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public class DB_XTPL : Base
     {
         private string _mc;
@@ -1101,9 +1124,11 @@ namespace SBTP.Model
 
     }
 
+
     /// <summary>
     /// 体膨调剖剂
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public class DB_XTPK : Base
     {
 
@@ -1381,9 +1406,11 @@ namespace SBTP.Model
         #endregion
     }
 
+
     /// <summary>
     /// 应用调剖剂
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
     public class DB_XTPY : Base
     {
 
@@ -1928,6 +1955,985 @@ namespace SBTP.Model
 
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
+    public class DB_PC_XTPK_STATUS : Base
+    {
+        private int _id;
+        private string _mc;
+        private string _dw;
+        private DateTime? _tyrq;
+        private decimal _cpsj;
+        private decimal _cpbs;
+        private decimal _pzbs;
+        private decimal _pzsj;
+        private decimal _kyqd;
+        private decimal _nw;
+        private decimal _ny;
+        private decimal _nj;
+        private string _xn;
+        private decimal _bsb;
+        private decimal _txml;
+        private string _sxq;
+        private decimal _jg;
+        private string _bz;
+        private int _zt;
+
+        /// <summary>
+        /// 自动编号
+        /// </summary>
+        public int ID
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                NotifyPropertyChanged("ID");
+            }
+        }
+        /// <summary>
+        /// 名称（调剖剂名称）
+        /// </summary>
+        public string MC
+        {
+            get { return _mc; }
+            set
+            {
+                _mc = value;
+                NotifyPropertyChanged("MC");
+            }
+        }
+        /// <summary>
+        /// 单位（研制单位或生产厂家）
+        /// </summary>
+        public string DW
+        {
+            get { return _dw; }
+            set
+            {
+                _dw = value;
+                NotifyPropertyChanged("DW");
+            }
+        }
+        /// <summary>
+        /// 投用时间
+        /// </summary>
+        public DateTime? TYRQ
+        {
+            get { return _tyrq; }
+            set
+            {
+                _tyrq = value;
+                NotifyPropertyChanged("TYRQ");
+            }
+        }
+        /// <summary>
+        /// 初膨时间（h）
+        /// </summary>
+        public decimal CPSJ
+        {
+            get { return _cpsj; }
+            set
+            {
+                _cpsj = value;
+                NotifyPropertyChanged("CPSJ");
+            }
+        }
+        /// <summary>
+        /// 初膨质量倍数
+        /// </summary>
+        public decimal CPBS
+        {
+            get { return _cpbs; }
+            set
+            {
+                _cpbs = value;
+                NotifyPropertyChanged("CPBS");
+            }
+        }
+        /// <summary>
+        /// 终膨倍数
+        /// </summary>
+        public decimal PZBS
+        {
+            get { return _pzbs; }
+            set
+            {
+                _pzbs = value;
+                NotifyPropertyChanged("PZBS");
+            }
+        }
+        /// <summary>
+        /// 膨胀时间（天）
+        /// </summary>
+        public decimal PZSJ
+        {
+            get { return _pzsj; }
+            set
+            {
+                _pzsj = value;
+                NotifyPropertyChanged("PZSJ");
+            }
+        }
+        /// <summary>
+        /// 抗压强度（MPa）
+        /// </summary>
+        public decimal KYQD
+        {
+            get { return _kyqd; }
+            set
+            {
+                _kyqd = value;
+                NotifyPropertyChanged("KYQD");
+            }
+        }
+        /// <summary>
+        /// 耐温（适用温度上限）
+        /// </summary>
+        public decimal NW
+        {
+            get { return _nw; }
+            set
+            {
+                _nw = value;
+                NotifyPropertyChanged("NW");
+            }
+        }
+        /// <summary>
+        /// 耐盐（适用矿化度上限）
+        /// </summary>
+        public decimal NY
+        {
+            get { return _ny; }
+            set
+            {
+                _ny = value;
+                NotifyPropertyChanged("NY");
+            }
+        }
+        /// <summary>
+        /// 耐碱（适用PH）
+        /// </summary>
+        public decimal NJ
+        {
+            get { return _nj; }
+            set
+            {
+                _nj = value;
+                NotifyPropertyChanged("NJ");
+            }
+        }
+        /// <summary>
+        /// 性能
+        /// </summary>
+        public string XN
+        {
+            get { return _xn; }
+            set
+            {
+                _xn = value;
+                NotifyPropertyChanged("XN");
+            }
+        }
+        /// <summary>
+        /// 泊松比
+        /// </summary>
+        public decimal BSB
+        {
+            get { return _bsb; }
+            set
+            {
+                _bsb = value;
+                NotifyPropertyChanged("BSB");
+            }
+        }
+        /// <summary>
+        /// 弹性模量（MPa）
+        /// </summary>
+        public decimal TXML
+        {
+            get { return _txml; }
+            set
+            {
+                _txml = value;
+                NotifyPropertyChanged("TXML");
+            }
+        }
+        /// <summary>
+        /// 有效期
+        /// </summary>
+        public string SXQ
+        {
+            get { return _sxq; }
+            set
+            {
+                _sxq = value;
+                NotifyPropertyChanged("SXQ");
+            }
+        }
+        /// <summary>
+        /// 价格（元，1000mg/L价格）
+        /// </summary>
+        public decimal JG
+        {
+            get { return _jg; }
+            set
+            {
+                _jg = value;
+                NotifyPropertyChanged("JG");
+            }
+        }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string BZ
+        {
+            get { return _bz; }
+            set
+            {
+                _bz = value;
+                NotifyPropertyChanged("BZ");
+            }
+        }
+        /// <summary>
+        /// 状态（0：系统数据；1：用户数据
+        /// </summary>
+        public int ZT
+        {
+            get { return _zt; }
+            set
+            {
+                _zt = value;
+                NotifyPropertyChanged("ZT");
+            }
+        }
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
+    public class DB_PC_XTPL_STATUS : Base
+    {
+        private int _id;
+        private string _mc;
+        private string _dw;
+        private DateTime? _tyrq;
+        private decimal _nw;
+        private decimal _ny;
+        private decimal _nj;
+        private string _xn;
+        private string _cn;
+        private string _zn;
+        private string _gjl;
+        private decimal _sxq;
+        private decimal _jg;
+        private string _bz;
+        private int _zt;
+
+        /// <summary>
+        /// 自动编号
+        /// </summary>
+        public int ID
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                NotifyPropertyChanged("ID");
+            }
+        }
+        /// <summary>
+        /// 名称（调剖剂名称）
+        /// </summary>
+        public string MC
+        {
+            get { return _mc; }
+            set
+            {
+                _mc = value;
+                NotifyPropertyChanged("MC");
+            }
+        }
+        /// <summary>
+        /// 单位（研制单位或生产单位）
+        /// </summary>
+        public string DW
+        {
+            get { return _dw; }
+            set
+            {
+                _dw = value;
+                NotifyPropertyChanged("DW");
+            }
+        }
+        /// <summary>
+        /// 投用日期
+        /// </summary>
+        public DateTime? TYRQ
+        {
+            get { return _tyrq; }
+            set
+            {
+                _tyrq = value;
+                NotifyPropertyChanged("TYRQ");
+            }
+        }
+        /// <summary>
+        /// 耐温（适用温度上限）
+        /// </summary>
+        public decimal NW
+        {
+            get { return _nw; }
+            set
+            {
+                _nw = value;
+                NotifyPropertyChanged("NW");
+            }
+        }
+        /// <summary>
+        /// 耐盐（适用地层水矿化度上限）
+        /// </summary>
+        public decimal NY
+        {
+            get { return _ny; }
+            set
+            {
+                _ny = value;
+                NotifyPropertyChanged("NY");
+            }
+        }
+        /// <summary>
+        /// 耐碱（适用PH）
+        /// </summary>
+        public decimal NJ
+        {
+            get { return _nj; }
+            set
+            {
+                _nj = value;
+                NotifyPropertyChanged("NJ");
+            }
+        }
+        /// <summary>
+        /// 性能
+        /// </summary>
+        public string XN
+        {
+            get { return _xn; }
+            set
+            {
+                _xn = value;
+                NotifyPropertyChanged("XN");
+            }
+        }
+        /// <summary>
+        /// 初粘（mPa.s）
+        /// </summary>
+        public string CN
+        {
+            get { return _cn; }
+            set
+            {
+                _cn = value;
+                NotifyPropertyChanged("CN");
+            }
+        }
+        /// <summary>
+        /// 终粘（mPa.s）
+        /// </summary>
+        public string ZN
+        {
+            get { return _zn; }
+            set
+            {
+                _zn = value;
+                NotifyPropertyChanged("ZN");
+            }
+        }
+        /// <summary>
+        /// 铬交联
+        /// </summary>
+        public string GJL
+        {
+            get { return _gjl; }
+            set
+            {
+                _gjl = value;
+                NotifyPropertyChanged("GJL");
+            }
+        }
+        /// <summary>
+        /// 有效期（年）
+        /// </summary>
+        public decimal SXQ
+        {
+            get { return _sxq; }
+            set
+            {
+                _sxq = value;
+                NotifyPropertyChanged("SXQ");
+            }
+        }
+        /// <summary>
+        /// 价格（元，1000mg/L化学剂价格）
+        /// </summary>
+        public decimal JG
+        {
+            get { return _jg; }
+            set
+            {
+                _jg = value;
+                NotifyPropertyChanged("JG");
+            }
+        }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string BZ
+        {
+            get { return _bz; }
+            set
+            {
+                _bz = value;
+                NotifyPropertyChanged("BZ");
+            }
+        }
+        /// <summary>
+        /// 状态（0：系统数据；1：用户数据）
+        /// </summary>
+        public int ZT
+        {
+            get { return _zt; }
+            set
+            {
+                _zt = value;
+                NotifyPropertyChanged("ZT");
+            }
+        }
+    }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
+    public class DB_PC_XTPY_STATUS : Base
+    {
+        private int id;
+        private string jh;
+        private string qk;
+        private DateTime? csrq;
+        private decimal wd;
+        private decimal khd;
+        private string sjd;
+        private string qyfs;
+        private decimal tpsj;
+        private decimal zyhd;
+        private decimal csbhd;
+        private decimal tchd;
+        private decimal tcsjc;
+        private decimal ltfx;
+        private decimal sjhd;
+        private decimal tstl;
+        private decimal zstl;
+        private decimal yqd;
+        private decimal kxd;
+        private decimal khbj;
+        private decimal bj;
+        private decimal tgsl;
+        private decimal tgjl;
+        private decimal txsbl;
+        private string ymc;
+        private string gmc;
+        private string yyl;
+        private decimal ynd;
+        private decimal gyl;
+        private decimal gnd;
+        private decimal glj;
+        private decimal sgts;
+        private decimal ylsf;
+        private decimal jxsj;
+        private decimal hssj;
+        private decimal xjfd;
+        private decimal yxq;
+        private decimal zy;
+        private string bz;
+        private int zt;
+
+        /// <summary>
+        /// 自动编号
+        /// </summary>
+        public int ID
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                NotifyPropertyChanged("ID");
+            }
+        }
+        /// <summary>
+        /// 井号
+        /// </summary>
+        public string JH
+        {
+            get { return jh; }
+            set
+            {
+                jh = value;
+                NotifyPropertyChanged("MC");
+            }
+        }
+        /// <summary>
+        /// 区块
+        /// </summary>
+        public string QK
+        {
+            get { return qk; }
+            set
+            {
+                qk = value;
+                NotifyPropertyChanged("QK");
+            }
+        }
+        /// <summary>
+        /// 措施日期
+        /// </summary>
+        public DateTime? CSRQ
+        {
+            get { return csrq; }
+            set
+            {
+                csrq = value;
+                NotifyPropertyChanged("CSRQ");
+            }
+        }
+        /// <summary>
+        /// 温度
+        /// </summary>
+        public decimal WD
+        {
+            get { return wd; }
+            set
+            {
+                wd = value;
+                NotifyPropertyChanged("WD");
+            }
+        }
+        /// <summary>
+        /// 矿化度
+        /// </summary>
+        public decimal KHD
+        {
+            get { return khd; }
+            set
+            {
+                khd = value;
+                NotifyPropertyChanged("KHD");
+            }
+        }
+        /// <summary>
+        /// 酸碱度PH
+        /// </summary>
+        public string SJD
+        {
+            get { return sjd; }
+            set
+            {
+                sjd = value;
+                NotifyPropertyChanged("SJD");
+            }
+        }
+        /// <summary>
+        /// 驱油方式（水驱/聚驱/三元）
+        /// </summary>
+        public string QYFS
+        {
+            get { return qyfs; }
+            set
+            {
+                qyfs = value;
+                NotifyPropertyChanged("QYFS");
+            }
+        }
+        /// <summary>
+        /// 见剂时间（化学驱见剂）
+        /// </summary>
+        public decimal TPSJ
+        {
+            get { return tpsj; }
+            set
+            {
+                tpsj = value;
+                NotifyPropertyChanged("TPSJ");
+            }
+        }
+        /// <summary>
+        /// 总有效厚度（井射开有效厚度和）
+        /// </summary>
+        public decimal ZYHD
+        {
+            get { return zyhd; }
+            set
+            {
+                zyhd = value;
+                NotifyPropertyChanged("ZYHD");
+            }
+        }
+        /// <summary>
+        /// 初始含油饱和度（调剖层的）
+        /// </summary>
+        public decimal CSBHD
+        {
+            get { return csbhd; }
+            set
+            {
+                csbhd = value;
+                NotifyPropertyChanged("CSBHD");
+            }
+        }
+        /// <summary>
+        /// 调剖层有效厚度（m）
+        /// </summary>
+        public decimal TCHD
+        {
+            get { return tchd; }
+            set
+            {
+                tchd = value;
+                NotifyPropertyChanged("TCHD");
+            }
+        }
+        /// <summary>
+        /// 调剖层渗透率极差
+        /// </summary>
+        public decimal TCSJC
+        {
+            get { return tcsjc; }
+            set
+            {
+                tcsjc = value;
+                NotifyPropertyChanged("TCSJC");
+            }
+        }
+        /// <summary>
+        /// 调剖层连通方向（个）
+        /// </summary>
+        public decimal LTFX
+        {
+            get { return ltfx; }
+            set
+            {
+                ltfx = value;
+                NotifyPropertyChanged("LTFX");
+            }
+        }
+        /// <summary>
+        /// 设计调剖厚度（m）
+        /// </summary>
+        public decimal SJHD
+        {
+            get { return sjhd; }
+            set
+            {
+                sjhd = value;
+                NotifyPropertyChanged("SJHD");
+            }
+        }
+        /// <summary>
+        /// 调剖段渗透率（um2）
+        /// </summary>
+        public decimal TSTL
+        {
+            get { return tstl; }
+            set
+            {
+                tstl = value;
+                NotifyPropertyChanged("TSTL");
+            }
+        }
+        /// <summary>
+        /// 增注段渗透率（um2）
+        /// </summary>
+        public decimal ZSTL
+        {
+            get { return zstl; }
+            set
+            {
+                zstl = value;
+                NotifyPropertyChanged("ZSTL");
+            }
+        }
+        /// <summary>
+        /// 迂曲度（单位无）
+        /// </summary>
+        public decimal YQD
+        {
+            get { return yqd; }
+            set
+            {
+                yqd = value;
+                NotifyPropertyChanged("YQD");
+            }
+        }
+        /// <summary>
+        /// 孔隙度（小数）
+        /// </summary>
+        public decimal KXD
+        {
+            get { return kxd; }
+            set
+            {
+                kxd = value;
+                NotifyPropertyChanged("KXD");
+            }
+        }
+        /// <summary>
+        /// 孔吼半径（um，可通过渗透率计算）
+        /// </summary>
+        public decimal KHBJ
+        {
+            get { return khbj; }
+            set
+            {
+                khbj = value;
+                NotifyPropertyChanged("KHBJ");
+            }
+        }
+        /// <summary>
+        /// 调剖半径（m）
+        /// </summary>
+        public decimal BJ
+        {
+            get { return bj; }
+            set
+            {
+                bj = value;
+                NotifyPropertyChanged("BJ");
+            }
+        }
+        /// <summary>
+        /// 调剖层过水量（m3，投产累积过水量）
+        /// </summary>
+        public decimal TGSL
+        {
+            get { return tgsl; }
+            set
+            {
+                tgsl = value;
+                NotifyPropertyChanged("TGSL");
+            }
+        }
+        /// <summary>
+        /// 调剖层过聚量（m3，投产累积过聚量）
+        /// </summary>
+        public decimal TGJL
+        {
+            get { return tgjl; }
+            set
+            {
+                tgjl = value;
+                NotifyPropertyChanged("TGJL");
+            }
+        }
+        /// <summary>
+        /// 调剖层吸水比例（%）
+        /// </summary>
+        public decimal TXSBL
+        {
+            get { return txsbl; }
+            set
+            {
+                txsbl = value;
+                NotifyPropertyChanged("TXSBL");
+            }
+        }
+        /// <summary>
+        /// 液体调剖名称
+        /// </summary>
+        public string YMC
+        {
+            get { return ymc; }
+            set
+            {
+                ymc = value;
+                NotifyPropertyChanged("YMC");
+            }
+        }
+        /// <summary>
+        /// 颗粒调剖剂名称
+        /// </summary>
+        public string GMC
+        {
+            get { return gmc; }
+            set
+            {
+                gmc = value;
+                NotifyPropertyChanged("GMC");
+            }
+        }
+        /// <summary>
+        /// 液体用量（m3）
+        /// </summary>
+        public string YYL
+        {
+            get { return yyl; }
+            set
+            {
+                yyl = value;
+                NotifyPropertyChanged("YYL");
+            }
+        }
+        /// <summary>
+        /// 液体平均浓度（mg/L）
+        /// </summary>
+        public decimal YND
+        {
+            get { return ynd; }
+            set
+            {
+                ynd = value;
+                NotifyPropertyChanged("YND");
+            }
+        }
+        /// <summary>
+        /// 颗粒用量（t）
+        /// </summary>
+        public decimal GYL
+        {
+            get { return gyl; }
+            set
+            {
+                gyl = value;
+                NotifyPropertyChanged("GYL");
+            }
+        }
+        /// <summary>
+        /// 颗粒浓度（mg/L）
+        /// </summary>
+        public decimal GND
+        {
+            get { return gnd; }
+            set
+            {
+                gnd = value;
+                NotifyPropertyChanged("GND");
+            }
+        }
+        /// <summary>
+        /// 平均颗粒粒径（mm）
+        /// </summary>
+        public decimal GLJ
+        {
+            get { return glj; }
+            set
+            {
+                glj = value;
+                NotifyPropertyChanged("GLJ");
+            }
+        }
+        /// <summary>
+        /// 施工天数（天）
+        /// </summary>
+        public decimal SGTS
+        {
+            get { return sgts; }
+            set
+            {
+                sgts = value;
+                NotifyPropertyChanged("SGTS");
+            }
+        }
+        /// <summary>
+        /// 调后压力上升幅度（MPa）
+        /// </summary>
+        public decimal YLSF
+        {
+            get { return ylsf; }
+            set
+            {
+                ylsf = value;
+                NotifyPropertyChanged("YLSF");
+            }
+        }
+        /// <summary>
+        /// 见效时间（m3，调后调剖层过液量）
+        /// </summary>
+        public decimal JXSJ
+        {
+            get { return jxsj; }
+            set
+            {
+                jxsj = value;
+                NotifyPropertyChanged("JXSJ");
+            }
+        }
+        /// <summary>
+        /// 最低含水出现时间（m3，调后调剖层过液量）
+        /// </summary>
+        public decimal HSSJ
+        {
+            get { return hssj; }
+            set
+            {
+                hssj = value;
+                NotifyPropertyChanged("HSSJ");
+            }
+        }
+        /// <summary>
+        /// 含水下降幅度（%）
+        /// </summary>
+        public decimal XJFD
+        {
+            get { return xjfd; }
+            set
+            {
+                xjfd = value;
+                NotifyPropertyChanged("XJFD");
+            }
+        }
+        /// <summary>
+        /// 调剖有效期（年）
+        /// </summary>
+        public decimal YXQ
+        {
+            get { return yxq; }
+            set
+            {
+                yxq = value;
+                NotifyPropertyChanged("YXQ");
+            }
+        }
+        /// <summary>
+        /// 增油（m3）
+        /// </summary>
+        public decimal ZY
+        {
+            get { return zy; }
+            set
+            {
+                zy = value;
+                NotifyPropertyChanged("ZY");
+            }
+        }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string BZ
+        {
+            get { return bz; }
+            set
+            {
+                bz = value;
+                NotifyPropertyChanged("BZ");
+            }
+        }
+        /// <summary>
+        /// 状态（0：系统数据；1：用户数据）
+        /// </summary>
+        public int ZT
+        {
+            get { return zt; }
+            set
+            {
+                zt = value;
+                NotifyPropertyChanged("ZT");
+            }
+        }
+    }
 
 }
 

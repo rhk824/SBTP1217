@@ -12,6 +12,7 @@ using System.Windows.Forms.Integration;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
+using Common;
 
 namespace SBTP.View.XGPJ
 {
@@ -48,6 +49,7 @@ namespace SBTP.View.XGPJ
             Wells.DisplayMemberPath = "JH";
         }
 
+
         /// <summary>
         /// 生成图表
         /// </summary>
@@ -55,6 +57,7 @@ namespace SBTP.View.XGPJ
         /// <param name="jh">井号</param>
         /// <param name="time">测试日期</param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private Series CreateChart(string cs_name, string jh, string time, out ChartArea chartArea)
         {
             string cssj = TpxgModels.First(x => x.JH.Equals(jh)).CSSJ;
@@ -89,11 +92,17 @@ namespace SBTP.View.XGPJ
             for (int i = 0; i < column_data.Rows.Count; i++)
             {
                 double xfch = random.NextDouble();
+                string cw = string.Format("{0}_{1}_{2}", 
+                    column_data.Rows[i]["YCZ"],
+                    column_data.Rows[i]["XCH"],
+                    column_data.Rows[i]["XFCH"]);
+                string ds = Unity.ToDecimal(column_data.Rows[i]["JDDS1"]).ToString("0.00");
                 DataPoint point = new DataPoint
                 {
                     XValue = i,
                     YValues = new double[] { double.Parse(column_data.Rows[i]["ZRBFS"].ToString()) },
-                    AxisLabel = string.Format("{0}{1}({2})", column_data.Rows[i]["YCZ"].ToString(), column_data.Rows[i]["XCH"].ToString(), xfch.ToString()),
+                    //AxisLabel = string.Format("{0}{1}({2})", column_data.Rows[i]["YCZ"].ToString(), column_data.Rows[i]["XCH"].ToString(), xfch.ToString()),
+                    AxisLabel = $"{cw}({ds})",
                     Label = column_data.Rows[i]["ZRBFS"].ToString()
                 };
                 series.Points.Add(point);

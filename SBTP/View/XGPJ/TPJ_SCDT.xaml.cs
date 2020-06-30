@@ -1,9 +1,12 @@
-﻿using Maticsoft.DBUtility;
+﻿using Common;
+using Maticsoft.DBUtility;
+using SBTP.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,25 +37,26 @@ namespace SBTP.View.XGPJ
             Wells.DisplayMemberPath = "JH";
         }
 
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:丢失范围之前释放对象", Justification = "<挂起>")]
         private void CreateChart(string jh, string start, string end)
         {
-            MyToolKit.Series.Clear();            
-            StringBuilder sqlStr = new StringBuilder("select * from WATER_WELL_MONTH where zt=0 and JH='" + jh + "' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 order by NY");
-            DataTable line_data = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
-            Dictionary<string, double> points_1 = new Dictionary<string, double>();
-            Dictionary<string, double> points_2 = new Dictionary<string, double>();
+            MyToolKit.Series.Clear();
+            var start_time = DateTime.Parse(start);
+            var end_time = DateTime.Parse(end);
+            var query = DBContext.GetList_WATER_WELL_MONTH()
+                .Where(p =>p.JH == jh && p.NY >= start_time && p.NY <= end_time).OrderBy(p => p.NY).ToList();
 
-            foreach (DataRow dr in line_data.Rows)
+            Dictionary<string, decimal> points_1 = new Dictionary<string, decimal>(); //日注液量（m3/d）
+            Dictionary<string, decimal> points_2 = new Dictionary<string, decimal>(); //注入压力（MPa）
+
+            foreach (var item in query)
             {
-                string DateStr = dr["NY"].ToString().Replace(' ', ',').Split(',')[0];
-                DateStr = DateStr.Substring(0, DateStr.LastIndexOf('/'));
-                DateTime dateTime = DateTime.ParseExact(DateStr, "yyyy/M", CultureInfo.CurrentCulture);
-                //日注液量
-                points_1.Add(dateTime.ToString("yyyy/M", CultureInfo.CurrentCulture), dr["TS"].Equals("0") ? 0 : (double.Parse(dr["YZSL"].ToString()) + double.Parse(dr["YZMYL"].ToString())) / double.Parse(dr["TS"].ToString()));
-                //注入压力
-                points_2.Add(dateTime.ToString("yyyy/M", CultureInfo.CurrentCulture), double.Parse(dr["YY"].ToString()));
+                var ny = Unity.DateTimeToString(item.NY, "yyyy/MM");
+                points_1.Add(ny, (item.YZSL + item.YZMYL) / item.TS);
+                points_2.Add(ny, item.YY);
             }
+
             LineSeries lineSeries_1 = new LineSeries()
             {
                 Title = "日注液量",

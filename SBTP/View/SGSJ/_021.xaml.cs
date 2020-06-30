@@ -1,7 +1,10 @@
-﻿using SBTP.BLL;
+﻿using Common;
+using Maticsoft.DBUtility;
+using SBTP.BLL;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,32 +39,47 @@ namespace SBTP.View.SGSJ
             this.bll = bll;
             tb1.Text = bll.BookMarks["text_021"];
             DataContext = this.bll;
+            this.Loaded += _021_Loaded;
         }
 
+        private void _021_Loaded(object sender, RoutedEventArgs e)
+        {
+            bll.Init021();
+            dg.DataContext = bll.dt021;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            if (bll.update021(out string message))
+            if (!bll.Update021(out string message))
             {
-                tb1.Text =
-                $"目标设计区域油层埋藏深度{bll.Tags["埋藏深度"]}，" +
-                $"砂岩厚度{bll.Tags["砂岩厚度"]}，" +
-                $"有效厚度{bll.Tags["有效厚度"]}，" +
-                $"渗透率{bll.Tags["渗透率"]}，" +
-                $"孔隙度{bll.Tags["孔隙度"]}，" +
-                $"油层温度{bll.Tags["油层温度"]}，" +
-                $"地层水矿化度{bll.Tags["地层水矿化度"]}，" +
-                $"油层水PH值{bll.Tags["酸碱度PH"]}。";
-                dg.DataContext = bll.dt021;
+                MessageBox.Show(message);
+                return;
             }
-            MessageBox.Show(message);
+            
+            tb1.Text =
+                $"目标设计区域油层埋藏深度{Unity.ToDecimal(bll.Tags["埋藏深度"]).ToString("0.##")}，" +
+                $"砂岩厚度{Unity.ToDecimal(bll.Tags["砂岩厚度"]).ToString("0.##")}，" +
+                $"有效厚度{Unity.ToDecimal(bll.Tags["有效厚度"]).ToString("0.##")}，" +
+                $"渗透率{Unity.ToDecimal(bll.Tags["渗透率"]).ToString("0.##")}，" +
+                $"孔隙度{Unity.ToDecimal(bll.Tags["孔隙度"]).ToString("0.##")}，" +
+                $"油层温度{Unity.ToDecimal(bll.Tags["油层温度"]).ToString("0.##")}，" +
+                $"地层水矿化度{Unity.ToDecimal(bll.Tags["地层水矿化度"]).ToString("0.##")}，" +
+                $"油层水PH值{Unity.ToDecimal(bll.Tags["酸碱度PH"]).ToString("0.##")}。";
+            dg.DataContext = bll.dt021;
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             bll.update_bookmark("text_021", tb1.Text);
+            DbHelperOleDb.UpdateTable("sgsj_021", (DataTable)dg.DataContext);
             MessageBox.Show("操作成功");
         }
-    }
 
-    
+        private void btnGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage page = new MainPage();
+            page.Generate();
+        }
+    }
 }

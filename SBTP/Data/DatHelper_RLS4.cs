@@ -27,7 +27,8 @@ namespace SBTP.Data
             "/ZRYC",
 
             //生产井深部调剖效果预测
-            "*JZXG //序号 井组名 年含水上升率 调剖有效期 增油 见效时间",
+            //"*JZXG //序号 井组名 年含水上升率 调剖有效期 增油 见效时间",
+            "*JZXG //序号 井号 措施前井组含水 含水上升率 液体调剖剂有效期 增油 初见效时间 投产比",
             "/JZXG"
         };
 
@@ -36,7 +37,7 @@ namespace SBTP.Data
             StringBuilder sb = new StringBuilder();
             sb.Append("*ZRYC //序号 井号 注入液粘度 调剖半径 措施前视吸水指数 措施前等效压力 措施前增注段吸液量 措施后压力 措施后视吸水指数\r\n");
             sb.Append("/ZRYC\r\n");
-            sb.Append("*JZXG //序号 井组名 年含水上升率 调剖有效期 增油 见效时间\r\n");
+            sb.Append("*JZXG //序号 井号 措施前井组含水 含水上升率 液体调剖剂有效期 增油 初见效时间 投产比\r\n");
             sb.Append("/JZXG\r\n");
             using (FileStream fs = new FileStream(work_direction + @"\RLS4.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -145,7 +146,8 @@ namespace SBTP.Data
                     CSQ_DXYL = Unity.ToDouble(vs[5]),
                     CSQ_ZZDXYL = Unity.ToDouble(vs[6]),
                     CSH_YL = Unity.ToInt(vs[7]),
-                    CSH_SXSZS = Unity.ToDouble(vs[8])
+                    CSH_SXSZS = Unity.ToDouble(vs[8]),
+                    TPCM = ""
                 });
             }
             return list;
@@ -168,7 +170,7 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(work_direction + @"\RLS4.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*JZXG //序号 井组名 年含水上升率 调剖有效期 增油 见效时间");
+                int startIndex = lines.IndexOf("*JZXG //序号 井号 措施前井组含水 含水上升率 液体调剖剂有效期 增油 初见效时间 投产比");
                 int endIndex = lines.IndexOf("/JZXG");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -178,10 +180,12 @@ namespace SBTP.Data
                     XGYC_SCJ_BLL item = list[i];
                     data_str.AppendFormat("{0}\t", i);
                     data_str.AppendFormat("{0}\t", item.JZ);
+                    data_str.AppendFormat("{0}\t", item.HS);
                     data_str.AppendFormat("{0}\t", item.NHSSSL);
                     data_str.AppendFormat("{0}\t", item.TPYXQ);
                     data_str.AppendFormat("{0}\t", item.ZY);
-                    data_str.AppendFormat("{0}\r\n", item.JXSJ);
+                    data_str.AppendFormat("{0}\t", item.JXSJ);
+                    data_str.AppendFormat("{0}\r\n", item.TCB);
                 }
                 newLines.Insert(startIndex + 1, data_str.ToString());
                 sw.Write(string.Join("", newLines.ToArray()));
@@ -200,17 +204,18 @@ namespace SBTP.Data
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(work_direction, "RLS4.DAT")));
             int startIndex = lines.FindIndex(x => x.Contains("*JZXG"));
             int endIndex = lines.FindIndex(x => x.Contains("/JZXG"));
-            for (int i = startIndex + 1; i <= endIndex - startIndex; i++)
+            for (int i = startIndex + 1; i <= endIndex - 1; i++)
             {
-                if (lines[i].Contains("/JZXG")) break;
                 string[] vs = lines[i].Split('\t');
                 list.Add(new XGYC_SCJ_BLL()
                 {
                     JZ = Unity.ToString(vs[1]),
-                    NHSSSL = Unity.ToDouble(vs[2]),
-                    TPYXQ = Unity.ToDouble(vs[3]),
-                    ZY = Unity.ToDouble(vs[4]),
-                    JXSJ = Unity.ToDouble(vs[5]),
+                    HS = Unity.ToDouble(vs[2]),
+                    NHSSSL = Unity.ToDouble(vs[3]),
+                    TPYXQ = Unity.ToDouble(vs[4]),
+                    ZY = Unity.ToDouble(vs[5]),
+                    JXSJ = Unity.ToDouble(vs[6]),
+                    TCB = Unity.ToDouble(vs[7]),
                 });
             }          
             return list;

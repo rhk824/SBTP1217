@@ -23,8 +23,6 @@ namespace Maticsoft.DBUtility
 
         #region 公用方法
 
-
-
         public static bool Exists(string strSql, OleDbParameter[] cmdParms)
         {
             object obj = GetSingle(strSql, cmdParms);
@@ -76,7 +74,6 @@ namespace Maticsoft.DBUtility
                 }
             }
         }
-
         /// <summary>
         /// 执行多条SQL语句，实现数据库事务。
         /// </summary>
@@ -281,7 +278,6 @@ namespace Maticsoft.DBUtility
             }
         }
 
-
         /// <summary>
         /// 执行多条SQL语句，实现数据库事务。
         /// </summary>
@@ -378,7 +374,6 @@ namespace Maticsoft.DBUtility
             }
         }
 
-
         /// <summary>
         /// 执行一条计算查询结果语句，返回查询结果（object）。
         /// </summary>
@@ -463,7 +458,6 @@ namespace Maticsoft.DBUtility
             }
         }
 
-
         private static void PrepareCommand(OleDbCommand cmd, OleDbConnection conn, OleDbTransaction trans, string cmdText, OleDbParameter[] cmdParms)
         {
             if (conn.State != ConnectionState.Open)
@@ -478,6 +472,85 @@ namespace Maticsoft.DBUtility
                 foreach (OleDbParameter parm in cmdParms)
                     cmd.Parameters.Add(parm);
             }
+        }
+
+        /// <summary>
+        /// 对Datatable数据进行批量更新处理
+        /// </summary>
+        /// <param name="tableName">Access表名称</param>
+        /// <param name="dt">数据内容</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:检查 SQL 查询是否存在安全漏洞", Justification = "<挂起>")]
+        public static void ExcuteTableSql(string tableName, DataTable dt)
+        {
+            using (OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            {
+                List<string> columnList = new List<string>();
+                foreach (DataColumn one in dt.Columns)
+                {
+                    columnList.Add(one.ColumnName);
+                }
+                using (OleDbDataAdapter adapter = new OleDbDataAdapter())
+                {
+                    adapter.SelectCommand = new OleDbCommand("select * from " + tableName, conn);
+                    using (OleDbCommandBuilder builder = new OleDbCommandBuilder(adapter))
+                    {
+                        adapter.InsertCommand = builder.GetInsertCommand();
+                        foreach (string one in columnList)
+                        {
+                            adapter.InsertCommand.Parameters.Add(new OleDbParameter(one, dt.Columns[one].DataType));
+                        }
+                        adapter.Update(dt);
+                    }
+                }
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:检查 SQL 查询是否存在安全漏洞", Justification = "<挂起>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
+        private static void ExcuteSql(string sqlStr)
+        {
+            using (OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            {
+                try
+                {
+                    conn.Open();
+                    OleDbCommand comm = conn.CreateCommand();
+                    comm.CommandText = sqlStr;
+                    comm.Connection = conn;
+                    comm.ExecuteNonQuery();
+                    comm.Dispose();
+                    conn.Close();
+                }
+                catch (Exception)
+                {
+                    //MessageBox.Show(e.Message.ToString());
+                    conn.Close();
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 清空Access表数据
+        /// </summary>
+        /// <param name="tableName">表名</param>
+        private static void ClearDataTable(string tableName)
+        {
+            string strcomm = $"delete * from {tableName}";
+            ExcuteSql(strcomm);
+            //string strIter = $"alter table {tableName} column id counter (1, 1)";
+            //ExcuteSql(strIter);
+        }
+
+        public static void UpdateTable(string tableName, DataTable dt)
+        {
+            ClearDataTable(tableName);
+            ExcuteTableSql(tableName, dt);
         }
 
         #endregion

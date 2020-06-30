@@ -77,6 +77,8 @@ namespace SBTP.BLL
         /// 差值压力
         /// </summary>
         public double CZ_YL { get; set; }
+
+        public string TPCM { get; set; }
         #endregion
 
         public XGYC_ZRJ_BLL() { JJ = 0.1; }

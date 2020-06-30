@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SBTP.View.XGPJ"
+      xmlns:calender="clr-namespace:SBTP.View.JCXZ"
       xmlns:tk="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
       xmlns:wfc="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
       mc:Ignorable="d" Background="#eee"
@@ -21,6 +22,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -37,7 +39,7 @@
                         <TextBlock VerticalAlignment="Center" Text="措施前："/>
                         <RadioButton GroupName="csq" Name="csq_date">
                             <RadioButton.Content>
-                                <DatePicker Name="csq_Date" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <DatePicker Name="csq_Date" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
                             </RadioButton.Content>
                         </RadioButton>
                         <RadioButton GroupName="csq" Name="csq_img">
@@ -73,7 +75,7 @@
                         <TextBlock VerticalAlignment="Center" Text="措施后："/>
                         <RadioButton GroupName="csh" Name="csh_date">
                             <RadioButton.Content>
-                                <DatePicker Name="csh_Date" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                                <DatePicker Name="csh_Date" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
                             </RadioButton.Content>
                         </RadioButton>
                         <RadioButton GroupName="csh" Name="csh_img">
@@ -134,5 +136,9 @@
                 </StackPanel>
             </Viewbox>
         </Grid>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button>图像曲线保存</Button>
+            <Button>继续</Button>
+        </StackPanel>
     </Grid>
 </Page>

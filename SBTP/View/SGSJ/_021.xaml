@@ -23,26 +23,7 @@
         </Grid.RowDefinitions>
         <ScrollViewer>
             <StackPanel>
-                <!--<GroupBox Header="沉积概况">
-                    <StackPanel>
-                        <TextBlock>油层埋藏深度：</TextBlock>
-                        <TextBox/>
-                        <TextBlock>砂岩厚度：</TextBlock>
-                        <TextBox/>
-                        <TextBlock>有效厚度：</TextBlock>
-                        <TextBox/>
-                        <TextBlock>渗透率：</TextBlock>
-                        <TextBox/>
-                        <TextBlock>孔隙度：</TextBlock>
-                        <TextBox/>
-                        <TextBlock>油层温度：</TextBlock>
-                        <TextBox/>
-                        <TextBlock>地层水矿化度：</TextBlock>
-                        <TextBox/>
-                        <TextBlock>油层水PH值：</TextBlock>
-                        <TextBox/>
-                    </StackPanel>
-                </GroupBox>-->
+                
                 <GroupBox Header="目标设计区域概况 - 沉积概况">
                     <TextBox
                         x:Name="tb1"
@@ -56,9 +37,9 @@
                     <DataGrid Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
-                            <DataGridTextColumn Header="砂岩厚度" Binding="{Binding syhd}"/>
-                            <DataGridTextColumn Header="有效厚度" Binding="{Binding yxhd}"/>
-                            <DataGridTextColumn Header="渗透率" Binding="{Binding stl}"/>
+                            <DataGridTextColumn Header="砂岩厚度" Binding="{Binding syhd, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="有效厚度" Binding="{Binding yxhd, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="渗透率" Binding="{Binding stl, StringFormat={}{0:0.##}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>
@@ -70,6 +51,7 @@
             <!--<Button>预览</Button>-->
             <Button Click="btnUpdate_Click">更新</Button>
             <Button Click="btnSave_Click">保存</Button>
+            <Button x:Name="btnGenerate" Click="btnGenerate_Click">生成</Button>
         </StackPanel>
     </Grid>
 </Page>

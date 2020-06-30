@@ -22,6 +22,11 @@ namespace SBTP.BLL
         public string JZ { get; set; }
 
         /// <summary>
+        /// 措施前井组含水
+        /// </summary>
+        public double HS { get; set; }
+
+        /// <summary>
         /// 年含水上升率
         /// </summary>
         public double NHSSSL { get; set; }
@@ -42,9 +47,16 @@ namespace SBTP.BLL
         public double JXSJ { get; set; }
 
         /// <summary>
+        /// 投产比
+        /// </summary>
+        public double TCB { get; set; }
+
+        /// <summary>
         /// 调前累计注水量
         /// </summary>
         public double dqljzsl { get; set; }
+
+        
         #endregion
 
         public XGYC_SCJ_BLL() { NHSSSL = 0; }

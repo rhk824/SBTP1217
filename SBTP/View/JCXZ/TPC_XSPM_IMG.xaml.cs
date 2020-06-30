@@ -37,13 +37,18 @@ namespace SBTP.View.JCXZ
         string bot_right_x { get; set; }
         string bot_right_y { get; set; }
 
+        string file_path = System.AppDomain.CurrentDomain.BaseDirectory + @"py\peakpicker\";
+        string file_python = "pick_picker.py";
+        string file_json = "pick_picker.json";
+
+
         public TPC_XSPM_IMG(tpc_bll bll)
         {
             InitializeComponent();
             this.bll = new tpc_xspm_img_bll(bll);
-            tb_top.Text = "1000";
-            tb_bottom.Text = "2000";
-            tb_color.Text = "2";
+            //tb_top.Text = "1000";
+            //tb_bottom.Text = "2000";
+            //tb_color.Text = "2";
             DataContext = this.bll;
 
         }
@@ -97,12 +102,11 @@ namespace SBTP.View.JCXZ
             model.color_count = tb_color.Text;
             save_file(model);
 
-            string file_path = System.AppDomain.CurrentDomain.BaseDirectory + @"ImageRecognition\";
-            string file_python = "pick_picker.py";
-            string file_json = "pick_picker.json";
-            //string result = RunCMD.run_python(file_path + file_python, new string[] { file_path + file_json });
-            //bll.analysis_pythonstr(result);
-            //Console.WriteLine(result);
+            string path_python = Path.Combine(file_path, file_python);
+            string path_json = Path.Combine(file_path, file_json);
+            string result = RunCMD.run_python(path_python, path_json);
+            bll.analysis_pythonstr(result);
+            Console.WriteLine(result);
         }
 
         private void Btn_add_Click(object sender, RoutedEventArgs e)
@@ -173,13 +177,12 @@ namespace SBTP.View.JCXZ
         {
             // 保存 Json 文件
             DirectoryInfo dir;
-            string file_path = System.AppDomain.CurrentDomain.BaseDirectory + @"ImageRecognition\";
             if (!Directory.Exists(file_path))
                 dir = Directory.CreateDirectory(file_path);
             else
                 dir = new DirectoryInfo(file_path);
 
-            string fp = file_path + @"pick_picker.json";
+            string fp = Path.Combine(file_path, file_json);
             if (!System.IO.File.Exists(fp))
             {
                 FileStream fs = new FileStream(fp, FileMode.Create, FileAccess.ReadWrite);
