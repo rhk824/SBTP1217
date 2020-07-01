@@ -100,7 +100,7 @@
                         <TextBlock Name="tb_comment_time" Text="**年**月" FontSize="18" FontFamily="黑体"/>
                         <TextBlock Text="油井效果统计表" FontSize="18" FontFamily="黑体"/>
                     </StackPanel>
-                    <DataGrid Grid.Row="1" Name="yjxg_grid" ItemsSource="{Binding}" LoadingRow="yjxg_grid_LoadingRow" HeadersVisibility="Column" CanUserAddRows="False">
+                    <DataGrid Grid.Row="1" Name="yjxg_grid" ItemsSource="{Binding yjxgModels}" LoadingRow="yjxg_grid_LoadingRow" HeadersVisibility="Column" CanUserAddRows="False">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="序号">
                                 <DataGridTemplateColumn.CellTemplate>

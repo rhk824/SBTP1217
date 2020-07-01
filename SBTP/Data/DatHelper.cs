@@ -39,7 +39,7 @@ namespace SBTP.Data
             "/STCS",
             // 调剖段塞设计
             "**TPDSSJ",
-            "*TQZRYND 10",
+            "*TQZRYND 15",
             "*GXSJ 0",
             "/GXSJ",
             "/TPDSSJ"
@@ -71,7 +71,7 @@ namespace SBTP.Data
 
             // 调剖段塞设计
             inputStr.Append("**TPDSSJ\r\n");
-            inputStr.Append("*TQZRYND 10\r\n");
+            inputStr.Append("*TQZRYND 15\r\n");
             inputStr.Append("*GXSJ 0\r\n");
             inputStr.Append("/GXSJ\r\n");
             inputStr.Append("/TPDSSJ\r\n");
@@ -1441,8 +1441,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_tpcjh(List<string> list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path));
             using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
@@ -1471,8 +1471,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_tpcxx(List<jcxx_tpcxx_model> tpcxx_list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path));
             using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
@@ -1515,8 +1515,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_tpjxx(List<jcxx_tpjxx_model> tpjxx_list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path_string = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path_string));
             using (StreamWriter sw = new StreamWriter(path_string, false, Encoding.UTF8))
@@ -1551,8 +1551,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_tpcls(List<jcxx_tpcls_model> tpcls_list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path_string = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path_string));
             using (StreamWriter sw = new StreamWriter(path_string, false, Encoding.UTF8))
@@ -1592,8 +1592,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_jgxx(List<jcxx_jgxx_model> jcxx_list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path_string = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path_string));
             using (StreamWriter sw = new StreamWriter(path_string, false, Encoding.UTF8))
@@ -1628,8 +1628,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<string> read_jcxx_tpcjh()
         {
-            List<string> list = new List<string>();
-            if (!check_rls(rls3, rls3_lines)) return list;
+            CheckRLS3();
+            List<string> list = new List<string>();            
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;
@@ -1651,8 +1651,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<jcxx_tpcxx_model> read_jcxx_tpcxx()
         {
+            CheckRLS3();
             List<jcxx_tpcxx_model> list = new List<jcxx_tpcxx_model>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;
@@ -1692,8 +1692,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<jcxx_tpjxx_model> read_jcxx_tpjxx()
         {
+            CheckRLS3();
             List<jcxx_tpjxx_model> list = new List<jcxx_tpjxx_model>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;
@@ -1726,8 +1726,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<jcxx_tpcls_model> read_jcxx_tpcls()
         {
+            CheckRLS3();
             List<jcxx_tpcls_model> list = new List<jcxx_tpcls_model>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;
@@ -1744,7 +1744,6 @@ namespace SBTP.Data
                         Jj = Unity.ToDouble(vs[1]),
                         Zcjj = Unity.ToDouble(vs[2]),
                         dqrzl = Unity.ToDouble(vs[3]),
-                        //ysybhd = Unity.ToDouble(vs[4]),
                         ljzsl = Unity.ToDouble(vs[4]),
                         ljzjl = Unity.ToDouble(vs[5]),
                         Sqts = Unity.ToDouble(vs[6]),
@@ -1764,30 +1763,9 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<jcxx_jgxx_model> read_jcxx_jgxx()
         {
+            CheckRLS3();
             List<jcxx_jgxx_model> list = new List<jcxx_jgxx_model>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
-            //bool flag1 = false;
-            //bool flag2 = false;
-            //foreach (string line in lines)
-            //{
-            //if (flag1 == true && flag2 == true)
-            //{
-            //if (line.Contains("/JGXX")) break;
-            //string[] vs = line.Split('\t');
-            //list.Add(new jcxx_jgxx_model()
-            //{
-            //    yttpj = Unity.ToDouble(vs[0]),
-            //    kltpj = Unity.ToDouble(vs[1]),
-            //    xdyfj = Unity.ToDouble(vs[2]),
-            //    yy = Unity.ToDouble(vs[3]),
-            //    sg = Unity.ToDouble(vs[4]),
-            //    qt = Unity.ToDouble(vs[5]),
-            //});
-            //}
-            //if (line.Contains("**JCXX")) flag1 = true;
-            //if (line.Contains("*JGXX")) flag2 = true;
-            //}
             int startIndex = lines.FindIndex(x => x.Contains("*JGXX"));
             for (int i = startIndex + 1; i < lines.Count; i++)
             {

@@ -345,9 +345,9 @@ namespace SBTP.View.JCXZ
                             //水嘴类型 0普通12偏心11同心
                             string zsfs = drr[i]["ZSFS"].ToString().Trim();
                             if (string.IsNullOrWhiteSpace(zsfs)) continue;
-                            if (!zsfs.Contains("0") && zsfs.Contains("2"))
+                            if (zsfs.Equals("12"))
                                 coefficient = 2.456877;
-                            if (!zsfs.Contains("0") && !zsfs.Contains("2"))
+                            if (zsfs.Equals("11"))
                                 coefficient = 3.474024;
 
                             var cdsz_ = drr[i]["CDSZ"];

@@ -65,7 +65,7 @@
                         <TextBlock Text="调剖效果统计表" FontSize="18" FontFamily="黑体"/>
                     </StackPanel>
 
-                    <DataGrid Name="tpxg_datagrid" Grid.Row="1" LoadingRow="DataGrid_LoadingRow" RowHeaderWidth="0" ItemsSource="{Binding}" HeadersVisibility="Column" CanUserAddRows="False">
+                    <DataGrid Name="tpxg_datagrid" Grid.Row="1" LoadingRow="DataGrid_LoadingRow" RowHeaderWidth="0" ItemsSource="{Binding tpxgModels}" HeadersVisibility="Column" CanUserAddRows="False">
                         <DataGrid.Columns>
 
                             <DataGridTemplateColumn Header="序号">
@@ -242,7 +242,7 @@
                 </Grid>
             </Border>
             <Border BorderBrush="LightGray" BorderThickness="1"  Grid.Row="1">
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="13" FontWeight="Black">调前统计</TextBlock>
                         <TextBlock>平均注水量：</TextBlock>
@@ -254,7 +254,7 @@
                         <TextBlock>平均视吸水指数：</TextBlock>
                         <TextBlock x:Name="tb_tq_sxszs">0</TextBlock>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="50,0,0,0">
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="13" FontWeight="Black">调后统计</TextBlock>
                         <TextBlock>平均注水量：</TextBlock>
                         <TextBlock x:Name="tb_th_zsl">0</TextBlock>
@@ -265,7 +265,7 @@
                         <TextBlock>平均视吸水指数：</TextBlock>
                         <TextBlock x:Name="tb_th_sxszs">0</TextBlock>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="50,0,0,0">
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="13" FontWeight="Black">差值统计</TextBlock>
                         <TextBlock>平均注水量：</TextBlock>
                         <TextBlock x:Name="tb_cz_zsl">0</TextBlock>

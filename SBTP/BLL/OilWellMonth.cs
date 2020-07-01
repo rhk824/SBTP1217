@@ -30,7 +30,7 @@ namespace SBTP.BLL
             strSql.Append("insert into OIL_WELL_MONTH (");
             strSql.Append("JH,NY,TS,YCYL,YCSL,LY,CCJHWND,ZT)");
             strSql.Append(" values(");
-            strSql.Append("@JH,@NY,@TS,@YCYL,@YCSL,@DYM,@YY,@TY,@LY,@CCJHWND,@ZT)");
+            strSql.Append("@JH,@NY,@TS,@YCYL,@YCSL,@LY,@CCJHWND,@ZT)");
 
             foreach (Oilwell_monthModel om in modellist)
             {

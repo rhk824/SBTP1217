@@ -244,12 +244,23 @@ namespace SBTP.View.XGPJ
     /// <summary>
     /// YJXGPJ.xaml 的交互逻辑
     /// </summary>
-    public partial class YJXGPJ : Page
+    public partial class YJXGPJ : Page,INotifyPropertyChanged
     {
         ObservableCollection<string> dataSource;
-        public static ObservableCollection<YjxgModel> yjxgModels { get; set; } = new ObservableCollection<YjxgModel>();
-        public static DateTime comment_time { get; set; }
+        private ObservableCollection<YjxgModel> yjxgs;
+        private  DateTime comment_time { get; set; }
+        public ObservableCollection<YjxgModel> yjxgModels { get => yjxgs; set { yjxgs = value; Changed("yjxgModels"); } }
+
         Dictionary<string, string> Pj_Group;
+
+        #region 属性更改通知
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Changed(string PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+        #endregion
+
         public YJXGPJ()
         {
             InitializeComponent();
@@ -269,31 +280,37 @@ namespace SBTP.View.XGPJ
             List<string> yj = new List<string>();
 
             //列表
-            sjpj.ForEach(x =>
+            if(sjpj!=null)
             {
-                var sj = zcjz.Find(p => p.JH.Equals(x.JH));
-                if (sj != null)
+                sjpj.ForEach(x =>
                 {
-                    Pj_Group.Add(sj.JH, sj.oil_wells);
-                    sj.oil_wells.Split(',').ToList().ForEach(x => yj.Add(x));   //添加列表内容（临时）
-                }
-            });
-            yj = yj.OrderBy(p => p).Distinct().ToList();    //油井井号去重
+                    var sj = zcjz.Find(p => p.JH.Equals(x.JH));
+                    if (sj != null)
+                    {
+                        Pj_Group.Add(sj.JH, sj.oil_wells);
+                        sj.oil_wells.Split(',').ToList().ForEach(x => yj.Add(x));   //添加列表内容（临时）
+                    }
+                });
+                yj = yj.OrderBy(p => p).Distinct().ToList();    //油井井号去重
+            }
 
             //表格
-            yjpj.ForEach(x =>
+            if (yjpj != null)
             {
-                yjxgModels.Add(x);  //添加表格内容
-                if (yj.Contains(x.JH))
+                yjpj.ForEach(x =>
                 {
-                    yj.Remove(x.JH);
-                }
-            });
+                    yjxgModels.Add(x);  //添加表格内容
+                    if (yj.Contains(x.JH))
+                    {
+                        yj.Remove(x.JH);
+                    }
+                });
 
-            yj.ForEach(x =>
-            {
-                dataSource.Add(x);  //添加列表内容
-            });
+                yj.ForEach(x =>
+                {
+                    dataSource.Add(x);  //添加列表内容
+                });
+            }
 
             //Data.DatHelper.read_zcjz().ForEach(x =>
             //{
@@ -311,7 +328,6 @@ namespace SBTP.View.XGPJ
             //    dataSource.Clear();                               
             //    datasouce.ForEach(x => dataSource.Add(x));
             //}
-            yjxg_grid.DataContext = yjxgModels;
             yj_list.ItemsSource = dataSource;
             Wells.ItemsSource = yjxgModels;
             Wells.DisplayMemberPath = "JH";
@@ -521,7 +537,7 @@ namespace SBTP.View.XGPJ
 
         private void btnNewWell_Click(object sender, RoutedEventArgs e)
         {
-            new ChooseOilWell().ShowDialog();
+            new ChooseOilWell(this).ShowDialog();
         }
     }
 }

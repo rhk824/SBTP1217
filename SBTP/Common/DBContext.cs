@@ -67,15 +67,9 @@ namespace SBTP.Common
                         TS = Unity.ToDecimal(dt.Rows[i]["TS"]),
                         YCYL = Unity.ToDecimal(dt.Rows[i]["YCYL"]),
                         YCSL = Unity.ToDecimal(dt.Rows[i]["YCSL"]),
-                        DYM = Unity.ToDecimal(dt.Rows[i]["DYM"]),
-                        YY = Unity.ToDecimal(dt.Rows[i]["YY"]),
-                        TY = Unity.ToDecimal(dt.Rows[i]["TY"]),
                         LY = Unity.ToDecimal(dt.Rows[i]["LY"]),
                         ZT = Unity.ToDecimal(dt.Rows[i]["ZT"]),
-                        CCJHWND = Unity.ToDecimal(dt.Rows[i]["CCJHWND"]),
-                        LJCYL = Unity.ToDecimal(dt.Rows[i]["LJCYL"]),
-                        LJCSL = Unity.ToDecimal(dt.Rows[i]["LJCSL"]),
-                        HS = Unity.ToDecimal(dt.Rows[i]["HS"])
+                        CCJHWND = Unity.ToDecimal(dt.Rows[i]["CCJHWND"])
                     });
                 }
             }
@@ -106,11 +100,6 @@ namespace SBTP.Common
                         PZCDS = Unity.ToDecimal(dt.Rows[i]["PZCDS"]),
                         YZMYL = Unity.ToDecimal(dt.Rows[i]["YZMYL"]),
                         YY = Unity.ToDecimal(dt.Rows[i]["YY"]),
-                        TY = Unity.ToDecimal(dt.Rows[i]["TY"]),
-                        LY = Unity.ToDecimal(dt.Rows[i]["LY"]),
-                        LZMYL = Unity.ToDecimal(dt.Rows[i]["LZMYL"]),
-                        LJZSL = Unity.ToDecimal(dt.Rows[i]["LJZSL"]),
-                        LJZJL = Unity.ToDecimal(dt.Rows[i]["LJZJL"]),
                         ZT = Unity.ToDecimal(dt.Rows[i]["ZT"]),
                     });
                 }
@@ -142,12 +131,7 @@ namespace SBTP.Common
                         PZCDS = Unity.ToDecimal(dt.Rows[i]["PZCDS"]),
                         YZMYL = Unity.ToDecimal(dt.Rows[i]["YZMYL"]),
                         YY = Unity.ToDecimal(dt.Rows[i]["YY"]),
-                        TY = Unity.ToDecimal(dt.Rows[i]["TY"]),
-                        LY = Unity.ToDecimal(dt.Rows[i]["LY"]),
-                        LZMYL = Unity.ToDecimal(dt.Rows[i]["LZMYL"]),
-                        LJZSL = Unity.ToDecimal(dt.Rows[i]["LJZSL"]),
-                        LJZJL = Unity.ToDecimal(dt.Rows[i]["LJZJL"]),
-                        ZT = Unity.ToDecimal(dt.Rows[i]["ZT"]),
+                        ZT = Unity.ToDecimal(dt.Rows[i]["ZT"])
                     });
                 }
             }
