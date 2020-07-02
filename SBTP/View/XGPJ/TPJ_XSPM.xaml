@@ -27,7 +27,7 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <TextBlock Text="井号："/>
-                <ComboBox Name="Wells" Width="100"/>
+                <ComboBox Name="Wells" Width="100" SelectionChanged="Wells_SelectionChanged"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="50,0,50,0">
                 <Grid>
@@ -39,7 +39,7 @@
                         <TextBlock VerticalAlignment="Center" Text="措施前："/>
                         <RadioButton VerticalAlignment="Center" GroupName="csq" Name="csq_date">
                             <RadioButton.Content>
-                                <ComboBox Width="80" Name="csq_DateList" IsEnabled="{Binding ElementName=csq_date,Path=IsChecked,Mode=OneWay}"/>
+                                <ComboBox Width="100" Name="csq_DateList" IsEnabled="{Binding ElementName=csq_date,Path=IsChecked,Mode=OneWay}"/>
                                 <!--<DatePicker Name="csq_Date" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>-->
                             </RadioButton.Content>
                         </RadioButton>
@@ -76,7 +76,7 @@
                         <TextBlock VerticalAlignment="Center" Text="措施后："/>
                         <RadioButton GroupName="csh" Name="csh_date" VerticalAlignment="Center">
                             <RadioButton.Content>
-                                <ComboBox Width="80" Name="csh_DateList" IsEnabled="{Binding ElementName=csh_date,Path=IsChecked,Mode=OneWay}"/>
+                                <ComboBox Width="100" Name="csh_DateList" IsEnabled="{Binding ElementName=csh_date,Path=IsChecked,Mode=OneWay}"/>
                                 <!--<DatePicker Name="csh_Date" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>-->
                             </RadioButton.Content>
                         </RadioButton>
@@ -121,22 +121,35 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Viewbox Stretch="Fill">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="措施前吸水剖面" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    <Grid x:Name="CSQ_Img">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Viewbox Stretch="Uniform">
+                    <TextBlock Text="措施前吸水剖面" VerticalAlignment="Top"/>
+                </Viewbox>
+                <Viewbox Stretch="Fill" Grid.Row="1">
+                    <Grid Name="CSQ_Img">
                         <WindowsFormsHost Name="MyToolKit1" />
                     </Grid>
-                </StackPanel>
-            </Viewbox>
-            <Viewbox Stretch="Fill"  Grid.Column="1">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock Text="措施后吸水剖面" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Viewbox>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Viewbox Stretch="Uniform">
+                    <TextBlock Text="措施后吸水剖面" VerticalAlignment="Top"/>
+                </Viewbox>
+                <Viewbox Stretch="Fill" Grid.Row="1">
                     <Grid Name="CSH_Img">
                         <WindowsFormsHost Name="MyToolKit2" />
                     </Grid>
-                </StackPanel>
-            </Viewbox>
+                </Viewbox>
+            </Grid>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button>图像曲线保存</Button>

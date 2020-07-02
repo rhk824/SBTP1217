@@ -57,37 +57,12 @@
                 <DataTemplate x:Key="jh">
                     <TextBlock Text="{Binding JH}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </DataTemplate>
-                <!--<DataTemplate x:Key="csqycy">
-                    <TextBlock Text="{Binding CSQYCY}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                </DataTemplate>
-                <DataTemplate x:Key="csqycyl">
-                    <TextBlock Text="{Binding CSQYCYL}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                </DataTemplate>
-                <DataTemplate x:Key="csqhxj">
-                    <TextBlock Text="{Binding CSQHXJ}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                </DataTemplate>
-                <DataTemplate x:Key="csqzhhs">
-                    <TextBlock Text="{Binding CSQZHHS}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                </DataTemplate>
-                <DataTemplate x:Key="cshycy">
-                    <TextBlock Text="{Binding CSHYCY}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                </DataTemplate>
-                <DataTemplate x:Key="cshycyl">
-                    <TextBlock Text="{Binding CSHYCYL}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                </DataTemplate>
-                <DataTemplate x:Key="cshhxj">
-                    <TextBlock Text="{Binding CSHHXJ}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                </DataTemplate>
-                <DataTemplate x:Key="cshzhhs">
-                    <TextBlock Text="{Binding CSHZHHS}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
-                </DataTemplate>-->
                 <DataTemplate x:Key="ljzy">
                     <TextBlock Text="{Binding LJZY}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
                 </DataTemplate>
             </Grid.Resources>
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Border Grid.Row="0" BorderBrush="Black" BorderThickness="1"  Margin="0,0,0,5">
@@ -97,102 +72,126 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Name="tb_comment_time" Text="**年**月" FontSize="18" FontFamily="黑体"/>
+                        <TextBlock Name="tb_comment_time" Text="{Binding ElementName=dp_comment_time,Path=Text,Mode=TwoWay}" FontSize="18" FontFamily="黑体"/>
                         <TextBlock Text="油井效果统计表" FontSize="18" FontFamily="黑体"/>
                     </StackPanel>
-                    <DataGrid Grid.Row="1" Name="yjxg_grid" ItemsSource="{Binding yjxgModels}" LoadingRow="yjxg_grid_LoadingRow" HeadersVisibility="Column" CanUserAddRows="False">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="序号">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGridRow}}, Path=Header}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="连通油井" CellTemplate="{StaticResource jh}" />
-                            <DataGridTextColumn Header="措施时间"/>
-                            <DataGridTextColumn Header="年含水上升率"/>
-                            <DataGridTemplateColumn HeaderStyle="{StaticResource YJXGPJ_CSQ}">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding CSQYCY, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
-                                            <Rectangle Style="{StaticResource line_cell_style}" />
-                                            <TextBlock Text="{Binding CSQYCYL, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
-                                            <Rectangle Style="{StaticResource line_cell_style}" />
-                                            <TextBlock Text="{Binding CSQHXJ, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
-                                            <Rectangle Style="{StaticResource line_cell_style}" />
-                                            <TextBlock Text="{Binding CSQZHHS, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="48"/>
+                        </Grid.RowDefinitions>
+                        <DataGrid Name="yjxg_grid" ItemsSource="{Binding yjxgModels}" LoadingRow="yjxg_grid_LoadingRow" HeadersVisibility="Column" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="序号">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGridRow}}, Path=Header}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="油井井号" CellTemplate="{StaticResource jh}" />
+                                <DataGridTextColumn Header="措施时间" IsReadOnly="True" Binding="{Binding CSSJ}"/>
+                                <DataGridTextColumn Header="所属井组" IsReadOnly="True" Binding="{Binding SSTPJ}"/>
+                                <DataGridTextColumn Header="年含水上升率"/>
+                                <DataGridTemplateColumn HeaderStyle="{StaticResource YJXGPJ_CSQ}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding CSQYCY, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding CSQYCYL, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding CSQHXJ, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding CSQZHHS, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn HeaderStyle="{StaticResource YJXGPJ_CSH}">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding CSHYCY, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding CSHYCYL, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding CSHHXJ, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                                <Rectangle Style="{StaticResource line_cell_style}" />
+                                                <TextBlock Text="{Binding CSHZHHS, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="累计增油"  CellTemplate="{StaticResource ljzy}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Grid  Grid.Row="1">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                <Label FontSize="13" FontWeight="Black" Content="统计"/>
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <Label FontSize="10" FontWeight="Black" Content="措施前"/>
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <Label Content="月产液量:"/>
+                                            <Label Name="Csq_ycy_sum" Content="0"/>
                                         </StackPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn HeaderStyle="{StaticResource YJXGPJ_CSH}">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding CSHYCY, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
-                                            <Rectangle Style="{StaticResource line_cell_style}" />
-                                            <TextBlock Text="{Binding CSHYCYL, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
-                                            <Rectangle Style="{StaticResource line_cell_style}" />
-                                            <TextBlock Text="{Binding CSHHXJ, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
-                                            <Rectangle Style="{StaticResource line_cell_style}" />
-                                            <TextBlock Text="{Binding CSHZHHS, StringFormat={}{0:F2}}" Style="{StaticResource txt_cell_style}" />
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <Label Content="月产油量:"/>
+                                            <Label Name="Csq_ycyl_sum" Content="0"/>
                                         </StackPanel>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="累计增油"  CellTemplate="{StaticResource ljzy}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <Label Content="化学剂浓度:"/>
+                                            <Label Name="Csq_hxj_tj" Content="0"/>
+                                        </StackPanel>
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <Label Content="综合含水:"/>
+                                            <Label Name="Csq_zhhs_tj" Content="0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <Label FontSize="10" FontWeight="Black" Content="措施后"/>
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <Label Content="月产液量:"/>
+                                            <Label Name="Csh_ycy_sum" Content="0"/>
+                                        </StackPanel>
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <Label Content="月产油量:"/>
+                                            <Label Name="Csh_ycyl_sum" Content="0"/>
+                                        </StackPanel>
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <Label Content="化学剂浓度:"/>
+                                            <Label Name="Csh_hxj_tj" Content="0"/>
+                                        </StackPanel>
+                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <Label Content="综合含水:"/>
+                                            <Label Name="Csh_zhhs_tj" Content="0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                            <CheckBox Name="yesOrno" HorizontalAlignment="Right">
+                                <CheckBox.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="计算年含水上升率"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <TextBlock Text="评价时间(年)" FontSize="11"/>
+                                            <TextBox Name="Yc" IsEnabled="{Binding ElementName=yesOrno,Path=IsChecked,Mode=OneWay}" Width="30"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <TextBlock Text="时间间隔(月)" FontSize="11"/>
+                                            <TextBox Name="y_step" IsEnabled="{Binding ElementName=yesOrno,Path=IsChecked,Mode=OneWay}" Width="30"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </CheckBox.Content>
+                            </CheckBox>
+                        </Grid>
+
+                    </Grid>
+
                 </Grid>
             </Border>
-            <Border BorderBrush="LightGray" BorderThickness="1"  Grid.Row="1">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <Label FontSize="13" FontWeight="Black" Content="求和统计"/>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Label FontSize="10" FontWeight="Black" Content="措施前"/>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Label Content="月产液量:"/>
-                                <Label Name="Csq_ycy_sum" Content="0"/>
-                            </StackPanel>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Label Content="月产油量:"/>
-                                <Label Name="Csq_ycyl_sum" Content="0"/>
-                            </StackPanel>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Label Content="化学剂浓度:"/>
-                                <Label Name="Csq_hxj_tj" Content="0"/>
-                            </StackPanel>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Label Content="综合含水:"/>
-                                <Label Name="Csq_zhhs_tj" Content="0"/>
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Label FontSize="10" FontWeight="Black" Content="措施后"/>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Label Content="月产液量:"/>
-                                <Label Name="Csh_ycy_sum" Content="0"/>
-                            </StackPanel>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Label Content="月产油量:"/>
-                                <Label Name="Csh_ycyl_sum" Content="0"/>
-                            </StackPanel>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Label Content="化学剂浓度:"/>
-                                <Label Name="Csh_hxj_tj" Content="0"/>
-                            </StackPanel>
-                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                <Label Content="综合含水:"/>
-                                <Label Name="Csh_zhhs_tj" Content="0"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-            <StackPanel Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+            <StackPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
                 <DatePicker Name="dp_comment_time" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
                 <Button Name="Comment" Content="评价" Click="Comment_Click"/>
                 <Button Name="Save" Content="保存" Click="Save_Click"/>

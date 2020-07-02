@@ -1,6 +1,8 @@
 ﻿using Common;
 using Maticsoft.DBUtility;
+using SBTP.BLL;
 using SBTP.Data;
+using SBTP.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -246,11 +248,11 @@ namespace SBTP.View.XGPJ
     /// </summary>
     public partial class YJXGPJ : Page,INotifyPropertyChanged
     {
-        ObservableCollection<string> dataSource;
+        //ObservableCollection<string> dataSource;
         private ObservableCollection<YjxgModel> yjxgs;
         private  DateTime comment_time { get; set; }
         public ObservableCollection<YjxgModel> yjxgModels { get => yjxgs; set { yjxgs = value; Changed("yjxgModels"); } }
-
+        private List<TpxgModel> sjpj;
         Dictionary<string, string> Pj_Group;
 
         #region 属性更改通知
@@ -264,17 +266,18 @@ namespace SBTP.View.XGPJ
         public YJXGPJ()
         {
             InitializeComponent();
+            DataContext = this;
             this.Loaded += ListInitialize;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1307:指定 StringComparison", Justification = "<挂起>")]
         private void ListInitialize(object sender, RoutedEventArgs e)
         {
-            dataSource = new ObservableCollection<string>();
+            //dataSource = new ObservableCollection<string>();
             Pj_Group = new Dictionary<string, string>();
             yjxgModels = new ObservableCollection<YjxgModel>();
 
-            var sjpj = DatHelper.TpjpjRead();
+            sjpj = DatHelper.TpjpjRead();
             var yjpj = DatHelper.YjjpjRead();
             var zcjz = DatHelper.read_zcjz();
             List<string> yj = new List<string>();
@@ -291,7 +294,7 @@ namespace SBTP.View.XGPJ
                         sj.oil_wells.Split(',').ToList().ForEach(x => yj.Add(x));   //添加列表内容（临时）
                     }
                 });
-                yj = yj.OrderBy(p => p).Distinct().ToList();    //油井井号去重
+                yj.OrderBy(p => p).Distinct().ToList().ForEach(x=> yj_list.Items.Add(x)) ;    //油井井号去重
             }
 
             //表格
@@ -308,27 +311,9 @@ namespace SBTP.View.XGPJ
 
                 yj.ForEach(x =>
                 {
-                    dataSource.Add(x);  //添加列表内容
+                    yj_list.Items.Add(x);  //添加列表内容
                 });
             }
-
-            //Data.DatHelper.read_zcjz().ForEach(x =>
-            //{
-            //    if (Data.DatHelper.Read_GXSJ().Contains(x.JH))
-            //    {
-            //        Pj_Group.Add(x.JH, x.oil_wells);
-            //        x.oil_wells.Split(',').ToList().ForEach(x => dataSource.Add(x));
-            //    }
-            //});
-            //if (Data.DatHelper.YjjpjRead() != null)
-            //{
-            //    List<string> names = new List<string>();
-            //    Data.DatHelper.YjjpjRead().ForEach(x => { yjxgModels.Add(x); names.Add(x.JH); });
-            //    List<string> datasouce = dataSource.Except(names).ToList();
-            //    dataSource.Clear();                               
-            //    datasouce.ForEach(x => dataSource.Add(x));
-            //}
-            yj_list.ItemsSource = dataSource;
             Wells.ItemsSource = yjxgModels;
             Wells.DisplayMemberPath = "JH";
         }
@@ -341,14 +326,21 @@ namespace SBTP.View.XGPJ
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:请不要将文本作为本地化参数传递", Justification = "<挂起>")]
         private void btn_right_Click(object sender, RoutedEventArgs e)
         {
-            if (yj_list.SelectedItem == null) return;
-            List<string> source = dataSource.ToList();
-            for (int i = 0; i < yj_list.SelectedItems.Count; i++)
+            if (yj_list.SelectedItem == null|| sjpj==null) return;
+            //获取调剖井评价信息
+
+            var select = yj_list.SelectedItems;
+            for (int i = 0; i < select.Count; i++)
             {
+                List<string> relateWaterWellNames = new List<string>();
+                Pj_Group.Where(x => x.Value.Contains(select[i].ToString())).ToList().ForEach(x => relateWaterWellNames.Add(x.Key));              
+                List<TpxgModel> newModel = sjpj.FindAll(x => relateWaterWellNames.Contains(x.JH));
+                //获取目标井措施时间
+                DateTime minTime = newModel.Min(x => DateTime.ParseExact(x.CSSJ, "yyyy/MM", CultureInfo.CurrentCulture));
                 yjxgModels.Add(new YjxgModel()
                 {
-                    JH = yj_list.SelectedItems[i].ToString(),
-                    CSSJ = "",      //todo：获取措施时间
+                    JH = select[i].ToString(),
+                    CSSJ = minTime.ToShortDateString(),
                     NHSSSL = 0,
                     CSQYCY = 0,
                     CSQYCYL = 0,
@@ -359,33 +351,36 @@ namespace SBTP.View.XGPJ
                     CSHHXJ = 0,
                     CSHZHHS = 0,
                     LJZY = 0,
-                    SSTPJ = ""      //todo：获取所属调剖井
+                    SSTPJ =string.Join(",",relateWaterWellNames.ToArray())
                 });
-                source.Remove(yj_list.SelectedItems[i].ToString());
+                yj_list.Items.Remove(select[i]);
             }
             yjxgModels = new ObservableCollection<YjxgModel>(yjxgModels.OrderBy(p => p.CSSJ));
-            dataSource.Clear();
-            for (int i = 0; i < source.Count; i++)
-            {
-                dataSource.Add(source[i]);
-            }
         }
 
         private void btn_left_Click(object sender, RoutedEventArgs e)
         {
-            List<YjxgModel> tpxgs = yjxgModels.ToList();
-            dataSource.Add((yjxg_grid.SelectedItem as YjxgModel).JH);
-            tpxgs.Remove(yjxg_grid.SelectedItem as YjxgModel);
-            yjxgModels.Clear();
-            for (int j = 0; j < tpxgs.Count; j++)
-                yjxgModels.Add(tpxgs[j]);
+            var select = yjxg_grid.SelectedItems;
+            for (int i = 0; i < select.Count; i++)
+            {
+                yjxgModels.Remove(select[i] as YjxgModel);
+                yj_list.Items.Add((select[i] as YjxgModel).JH);
+            }
+            //List<YjxgModel> tpxgs = yjxgModels.ToList();
+            //dataSource.Add((yjxg_grid.SelectedItem as YjxgModel).JH);
+            //tpxgs.Remove(yjxg_grid.SelectedItem as YjxgModel);
+            //yjxgModels.Clear();
+            //for (int j = 0; j < tpxgs.Count; j++)
+            //    yjxgModels.Add(tpxgs[j]);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private void Comment_Click(object sender, RoutedEventArgs e)
         {
-            string[] startAndEndTime = Data.DatHelper.TPJParaRead();
-
+            qkcs qkcs = DatHelper.readQkcs();
+            //油密度
+            double ym = qkcs == null ? 1 : qkcs.Ym;
+            string[] startAndEndTime = DatHelper.TPJParaRead();
             comment_time = DateTime.Parse(dp_comment_time.Text);
             DateTime end_time = DateTime.Parse(startAndEndTime[2]);
             if (end_time >= comment_time)
@@ -406,38 +401,44 @@ namespace SBTP.View.XGPJ
             foreach (YjxgModel item in yjxgModels)
             {
                 DataTable dt1 = Qury(startAndEndTime[1], startAndEndTime[2], item.JH);
-                //获取调剖井评价信息
-                List<TpxgModel> tpxgModels = Data.DatHelper.TpjpjRead();
-                if (tpxgModels == null) continue;
-                var result = new List<string>();
-                Pj_Group.Where(x => x.Value.Contains(item.JH)).ToList().ForEach(x => result.Add(x.Key));
-                List<TpxgModel> newModel = tpxgModels.FindAll(x => result.Contains(x.JH));
-                //获取目标井措施时间
-                DateTime minTime = newModel.Min(x => DateTime.ParseExact(x.CSSJ, "yyyy/MM", CultureInfo.CurrentCulture));
-
+                //措施后油井数据
+                DataTable csh = QuryZY(comment_time, item.JH);
                 DataTable newdt1 = dt1.Clone();
+                DataTable dt2 = QuryCsh(item.JH, dp_comment_time.Text);
+
                 newdt1.Columns["YCYL"].DataType = Type.GetType("System.Int32");
                 newdt1.Columns["YCSL"].DataType = Type.GetType("System.Int32");
                 for (int i = 0; i < dt1.Rows.Count; i++)
                 {
                     newdt1.ImportRow((DataRow)dt1.Rows[i]);
                 }
-                DataTable dt2 = QuryAll(item.JH);
 
                 if (newdt1.Rows.Count == 0 || dt2.Rows.Count == 0) continue;
                 string start_cjnd = string.IsNullOrWhiteSpace(newdt1.Rows[0]["CCJHWND"].ToString()) ? "0" : newdt1.Rows[0]["CCJHWND"].ToString();
                 string end_cjnd = string.IsNullOrWhiteSpace(newdt1.Rows[newdt1.Rows.Count - 1]["CCJHWND"].ToString()) ? "0" : newdt1.Rows[newdt1.Rows.Count - 1]["CCJHWND"].ToString();
-                string cjnd = string.IsNullOrWhiteSpace(dt2.Rows[dt2.Rows.Count - 1]["CCJHWND"].ToString()) ? "0" : dt2.Rows[dt2.Rows.Count - 1]["CCJHWND"].ToString();
-                item.CSHYCY = double.Parse(dt2.Rows[dt2.Rows.Count - 1]["YCYL"].ToString()) + double.Parse(dt2.Rows[dt2.Rows.Count - 1]["YCSL"].ToString());
-                item.CSHYCYL = double.Parse(dt2.Rows[dt2.Rows.Count - 1]["YCYL"].ToString());
+
+                #region 措施后
+                string cjnd = dt2 == null ? "0" : dt2.Rows[0]["CCJHWND"].ToString();
+                item.CSHYCY = dt2 == null ? 0 : double.Parse(dt2.Rows[0]["YCYL"].ToString()) / ym + double.Parse(dt2.Rows[0]["YCSL"].ToString());
+                item.CSHYCYL = dt2 == null ? 0 : double.Parse(dt2.Rows[dt2.Rows.Count - 1]["YCYL"].ToString());
                 item.CSHHXJ = double.Parse(cjnd);
-                item.CSHZHHS = Math.Round((item.CSHYCY - item.CSHYCYL) / item.CSHYCY, 5);
-                item.CSQYCY = double.Parse(newdt1.Compute("sum(YCYL)", "").ToString()) + double.Parse(newdt1.Compute("sum(YCSL)", "").ToString()) / newdt1.Rows.Count;
+                item.CSHZHHS = dt2 == null ? 0 : Math.Round((item.CSHYCY - item.CSHYCYL) / item.CSHYCY, 5);
+                #endregion
+
+                #region 措施前
+                item.CSQYCY = double.Parse(newdt1.Compute("sum(YCYL)", "").ToString()) / ym + double.Parse(newdt1.Compute("sum(YCSL)", "").ToString()) / newdt1.Rows.Count;
                 item.CSQYCYL = double.Parse(newdt1.Compute("sum(YCYL)", "").ToString()) / newdt1.Rows.Count;
                 item.CSQHXJ = (double.Parse(newdt1.Rows[0]["YCSL"].ToString()) * double.Parse(start_cjnd) + double.Parse(end_cjnd) * double.Parse(newdt1.Rows[newdt1.Rows.Count - 1]["YCSL"].ToString())) / (double.Parse(newdt1.Rows[0]["YCSL"].ToString()) + double.Parse(newdt1.Rows[newdt1.Rows.Count - 1]["YCSL"].ToString()));
-                DataRow[] targetTpj = Data.DatHelper.TPJDataRead().Select("JH='" + item.JH + "'");
-                item.CSQZHHS = targetTpj.Length == 0 ? 0 : double.Parse(Data.DatHelper.TPJDataRead().Select("JH='" + item.JH + "'")[0]["ZHHS"].ToString());
-                item.LJZY = QuryZY(minTime, item.JH);
+                DataRow[] targetTpj = DatHelper.TPJDataRead().Select("JH='" + item.JH + "'");
+                item.CSQZHHS = targetTpj.Length == 0 ? 0 : double.Parse(DatHelper.TPJDataRead().Select("JH='" + item.JH + "'")[0]["ZHHS"].ToString());
+                #endregion
+
+                item.NHSSSL = yesOrno.IsChecked == true ? HsRiseRateByYear(item.JH, int.Parse(Yc.Text), int.Parse(y_step.Text)) : 0;
+                //累计增油
+                foreach (DataRow dr in csh.Rows)
+                {
+                    item.LJZY += double.Parse(dr["YCYL"].ToString()) - item.CSQYCYL + double.Parse(dr["YCYL"].ToString()) * item.NHSSSL / 12 / 100;
+                }
                 csq_ycy_sum += item.CSQYCY;
                 csq_ycyl_sum += item.CSQYCYL;
                 csh_ycy_sum += item.CSHYCY;
@@ -455,14 +456,16 @@ namespace SBTP.View.XGPJ
             Csh_zhhs_tj.Content = Math.Round((csh_ycy_sum - csh_ycyl_sum) / csh_ycy_sum, 5);
         }
 
-        private double QuryZY(DateTime cssj, string jh)
+        /// <summary>
+        /// 措施后月产量
+        /// </summary>
+        /// <param name="cssj"></param>
+        /// <param name="jh"></param>
+        /// <returns></returns>
+        private DataTable QuryZY(DateTime cssj, string jh)
         {
-            StringBuilder sqlstr = new StringBuilder("select * from OIL_WELL_MONTH where zt=0 and DateDiff('m','" + cssj.ToString("yyyy/MM", CultureInfo.CurrentCulture) + "',NY)>=0 AND JH='" + jh + "' order by NY");
-            DataTable dataTable = DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
-            double zy = 0;
-            for (int i = 1; i < dataTable.Rows.Count; i++)
-                zy += double.Parse(dataTable.Rows[i]["YCYL"].ToString()) - double.Parse(dataTable.Rows[0]["YCYL"].ToString());
-            return zy;
+            StringBuilder sqlstr = new StringBuilder("select YCYL,YCSL from OIL_WELL_MONTH where zt=1 and NY<=#" + cssj.ToString("yyyy/MM", CultureInfo.CurrentCulture) + "# AND JH='" + jh + "' order by NY");
+            return DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
         }
 
         private DataTable Qury(string start, string end, string jh)
@@ -477,9 +480,49 @@ namespace SBTP.View.XGPJ
             return dataTable;
         }
 
-        private DataTable QuryAll(string jh)
+        /// <summary>
+        /// 计算年含水上升率
+        /// </summary>
+        /// <param name="jh"></param>
+        /// <returns></returns>
+        private double HsRiseRateByYear(string jh, int yearcount, int monthcount)
         {
-            StringBuilder sqlstr = new StringBuilder("select * from OIL_WELL_MONTH where zt=0 and JH='" + jh + "' order by NY");
+            DateTime startDT = DateTime.Parse(OilWellMonth.getMaxDate());
+            DateTime endDT = DateTime.Parse(OilWellMonth.getMinDate());
+            DateTime targetDT = endDT <= startDT.AddYears(-yearcount) ? startDT.AddYears(-yearcount) : endDT;
+
+            List<Point> HsList = new List<Point>();
+            int index = 0;
+            while (startDT >= targetDT)
+            {
+                DataTable oilTable = getHsByDate(startDT.ToString("yyyy/MM"), jh);
+                if (oilTable == null) continue;
+                double ycyl = double.Parse(oilTable.Rows[0]["YCYL"].ToString());
+                double ycsl = double.Parse(oilTable.Rows[0]["YCSL"].ToString());
+
+                HsList.Add(new Point(index, ycsl * 100 / (ycsl + ycyl)));
+                startDT = startDT.AddMonths(-monthcount);
+                index -= monthcount;
+            }
+            if (HsList.Count < 2)
+                return 0;
+            return Unity.OLSMethod(HsList).Value * 12 / monthcount;
+        }
+
+        private DataTable getHsByDate(string date, string jh)
+        {
+            StringBuilder sqlStr = new StringBuilder("Select YCYL,YCSL from OIL_WELL_MONTH where zt=0 and NY=#" + date + "# and jh='" + jh + "'");
+            return DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
+        }
+
+        /// <summary>
+        /// 措施后查询
+        /// </summary>
+        /// <param name="jh"></param>
+        /// <returns></returns>
+        private DataTable QuryCsh(string jh, string date)
+        {
+            StringBuilder sqlstr = new StringBuilder("select * from OIL_WELL_MONTH where zt=1 and JH='" + jh + "' and NY=#" + date + "#");
             DataTable dataTable = DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
             return dataTable;
         }

@@ -149,7 +149,7 @@ namespace SBTP.Data
             inputStr += "*SJPJ // 井号 调剖层名 措施时间 调前注水 调前吸水分数 调前压力 调前视吸水指数 调后注水 调后吸水分数 调后压力 调后吸水指数 差值注水 差值吸水分数 差值压力 差值吸水指数\r\n";
             inputStr += "/SJPJ\r\n";
             //inputStr += "*YJPJ // 井号 月产液 月产油 化学剂浓度 综合含水 措施后月产液  月产油 化学剂浓度 综合含水 累积增油\r\n";
-            inputStr += "*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井";
+            inputStr += "*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井\r\n";
             inputStr += "/YJPJ\r\n";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))

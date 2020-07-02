@@ -159,7 +159,7 @@
                             </DataGridTextColumn>
                             <!-- 调前表头终止 -->
 
-                            <!-- 调前表头开始 -->
+                            <!-- 调后表头开始 -->
                             <DataGridTextColumn Binding="{Binding THZS, StringFormat={}{0:F2}}">
                                 <DataGridTextColumn.Header>
                                     <StackPanel>
@@ -196,9 +196,9 @@
                                     </StackPanel>
                                 </DataGridTextColumn.Header>
                             </DataGridTextColumn>
-                            <!-- 调前表头终止 -->
+                            <!-- 调后表头终止 -->
 
-                            <!-- 调前表头开始 -->
+                            <!-- 差值表头开始 -->
                             <DataGridTextColumn Binding="{Binding CZZS, StringFormat={}{0:F2}}">
                                 <DataGridTextColumn.Header>
                                     <StackPanel>
@@ -235,7 +235,7 @@
                                     </StackPanel>
                                 </DataGridTextColumn.Header>
                             </DataGridTextColumn>
-                            <!-- 调前表头终止 -->
+                            <!-- 差值表头终止 -->
 
                         </DataGrid.Columns>
                     </DataGrid>

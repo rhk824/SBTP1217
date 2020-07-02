@@ -4,6 +4,7 @@ using SBTP.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.OleDb;
 using System.Globalization;
 using System.Text;
@@ -61,6 +62,13 @@ namespace SBTP.BLL
 
             try { return DbHelperOleDb.ExecuteSqlTran(SQLStringList, TableName); }
             catch { throw; }
+        }
+
+        public static DataTable QueryDitinctDate(string start, string end, string jh, int zt)
+        {
+            StringBuilder sqlstr = new StringBuilder($"select distinct csrq from XSPM_MONTH where zt={zt} and jh='{jh}' and CSRQ between #{start}# and #{end}# ");
+            //($"select jh, (sum(yzsl+yzmyl)/30) as rzyl, avg(yy) as avg_yy from water_well_month where ny between #{tpj_para_read[1]}# and #{tpj_para_read[2]}#  and ZT=0 group by jh")
+            return DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
         }
     }
 }

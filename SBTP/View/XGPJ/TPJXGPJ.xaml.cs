@@ -82,7 +82,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _TQZS = value;
+                _TQZS = Math.Round(value,3);
                 Changed("TQZS");
             }
         }
@@ -94,7 +94,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _TQXSFS = value;
+                _TQXSFS = Math.Round(value, 3);
                 Changed("TQXSFS");
             }
         }
@@ -106,7 +106,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _TQYL = value;
+                _TQYL = Math.Round(value, 3);
                 Changed("TQYL");
             }
         }
@@ -118,7 +118,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _TQXSZS = value;
+                _TQXSZS = Math.Round(value, 3);
                 Changed("TQXSZS");
             }
         }
@@ -130,7 +130,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _THZS = value;
+                _THZS = Math.Round(value, 3);
                 Changed("THZS");
             }
         }
@@ -142,7 +142,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _THYL = value;
+                _THYL = Math.Round(value, 3);
                 Changed("THYL");
             }
         }
@@ -154,7 +154,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _THXSFS = value;
+                _THXSFS = Math.Round(value, 3);
                 Changed("THXSFS");
             }
         }
@@ -166,7 +166,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _THXSZS = value;
+                _THXSZS = Math.Round(value, 3);
                 Changed("THXSZS");
             }
         }
@@ -178,7 +178,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _CZZS = value;
+                _CZZS = Math.Round(value, 3);
                 Changed("CZZS");
             }
         }
@@ -190,7 +190,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _CZXSFS = value;
+                _CZXSFS = Math.Round(value, 3);
                 Changed("CZXSFS");
             }
         }
@@ -202,7 +202,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _CZYL = value;
+                _CZYL = Math.Round(value, 3);
                 Changed("CZYL");
             }
         }
@@ -214,7 +214,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _CZXSZS = value;
+                _CZXSZS = Math.Round(value, 3);
                 Changed("CZXSZS");
             }
         }

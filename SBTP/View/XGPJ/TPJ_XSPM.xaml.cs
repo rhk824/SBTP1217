@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using System.IO;
 using Common;
 using SBTP.Data;
+using System.Collections.Generic;
+using SBTP.BLL;
 
 namespace SBTP.View.XGPJ
 {
@@ -23,6 +25,8 @@ namespace SBTP.View.XGPJ
     public partial class TPJ_XSPM : Page
     {
         ObservableCollection<TpxgModel> TpxgModels;
+        Dictionary<string, ObservableCollection<string>> csqWellcsrqs;
+        Dictionary<string, ObservableCollection<string>> cshWellcsrqs;
         object CSQ_RadioButtonSender = null;
         object CSH_RadioButtonSender = null;
         private TPJXGPJ tpj;
@@ -50,28 +54,36 @@ namespace SBTP.View.XGPJ
         private void ListInitialize(object sender, RoutedEventArgs e)
         {
             if (TpxgModels == null) return;
-            bindDateList();
             Wells.ItemsSource = TpxgModels;
             Wells.DisplayMemberPath = "JH";
         }
 
-        private void bindDateList()
+        private void getSelectDate()
         {
-            DateTime csq_start = tpj.comment_st;
-            DateTime csh_start = DateTime.Parse(tpjpara[1]);
-            DateTime csh_end = DateTime.Parse(tpjpara[2]);
-            while (csq_start <= tpj.comment_et)
+            DateTime csq_start = DateTime.Parse(tpjpara[1]);
+            DateTime csq_end = DateTime.Parse(tpjpara[2]);
+            DateTime csh_start = tpj.comment_st;
+            DateTime csh_end = tpj.comment_et;
+            csqWellcsrqs = new Dictionary<string, ObservableCollection<string>>();
+            cshWellcsrqs = new Dictionary<string, ObservableCollection<string>>();
+            foreach (var item in TpxgModels)
             {
-                csh_DateList.Items.Add(csq_start.ToString("yyyy/MM"));
-                csq_start = csq_start.AddMonths(1);
-            }
-            while (csh_start <= csh_end)
-            {
-                csq_DateList.Items.Add(csh_start.ToString("yyyy/MM"));
-                csh_start = csh_start.AddMonths(1);
+                DataTable csqTable = XspmMonth.QueryDitinctDate(csq_start.ToShortDateString(), csq_end.ToShortDateString(), item.JH, 0);
+                DataTable cshTable = XspmMonth.QueryDitinctDate(csh_start.ToShortDateString(), csh_end.ToShortDateString(), item.JH, 1);
+                ObservableCollection<string> csqdatecollect = new ObservableCollection<string>();
+                ObservableCollection<string> cshdatecollect = new ObservableCollection<string>();
+                foreach (DataRow row in csqTable.Rows)
+                {
+                    csqdatecollect.Add(DateTime.Parse(row[0].ToString()).ToShortDateString());
+                }
+                foreach (DataRow row in cshTable.Rows)
+                {
+                    cshdatecollect.Add(DateTime.Parse(row[0].ToString()).ToShortDateString());
+                }
+                csqWellcsrqs.Add(item.JH, csqdatecollect);
+                cshWellcsrqs.Add(item.JH, cshdatecollect);
             }
         }
-
 
         /// <summary>
         /// 生成图表
@@ -101,7 +113,7 @@ namespace SBTP.View.XGPJ
                 sqlStr = string.Format(sqlStr, 0);
             else
                 sqlStr = string.Format(sqlStr, 1);
-            sqlStr += " AND CSRQ >=#" + time + "# and CSRQ <#" + DateTime.Parse(time).AddMonths(1).ToString("yyyy/MM") + "#";
+            sqlStr += " AND CSRQ =#" + time + "#";
 
             DataTable column_data = DbHelperOleDb.Query(sqlStr).Tables[0];
             Series series = new Series
@@ -256,6 +268,14 @@ namespace SBTP.View.XGPJ
                 else
                     csh_Path.Text = op.FileName;
             }
+        }
+
+        private void Wells_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string jh = (e.AddedItems[0] as TpxgModel).JH;
+            getSelectDate();
+            csq_DateList.ItemsSource = csqWellcsrqs[jh];
+            csh_DateList.ItemsSource = cshWellcsrqs[jh];
         }
     }
 }
