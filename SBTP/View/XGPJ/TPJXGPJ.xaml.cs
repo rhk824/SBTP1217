@@ -2,6 +2,7 @@
 using Maticsoft.DBUtility;
 using SBTP.BLL;
 using SBTP.Common;
+using SBTP.Data;
 using SBTP.View.TPJ;
 using System;
 using System.Collections.Generic;
@@ -238,7 +239,7 @@ namespace SBTP.View.XGPJ
     {
         private ObservableCollection<TpxgModel> tpxgs;
         public ObservableCollection<TpxgModel> tpxgModels { get => tpxgs; set { tpxgs = value; Changed("tpxgModels"); } }
-        ObservableCollection<string> dataSource;
+        ObservableCollection<string> dataSource { set; get; }
         //笼统注入井数据集
         private DataTable ltzrj;
         //分注井数据集
@@ -377,7 +378,7 @@ namespace SBTP.View.XGPJ
         {
             dataSource = new ObservableCollection<string>();
             tpxgModels = new ObservableCollection<TpxgModel>();
-            if (Data.DatHelper.TpjpjRead() != null)
+            if (DatHelper.TpjpjRead() != null)
             {
                 List<string> names = new List<string>();
                 Data.DatHelper.TpjpjRead().ForEach(x => { tpxgModels.Add(x); names.Add(x.JH); });
@@ -454,6 +455,7 @@ namespace SBTP.View.XGPJ
 
             run_comment_st.Text = Unity.DateTimeToString(comment_st, "yyyy年MM月");
             run_comment_et.Text = Unity.DateTimeToString(comment_et, "yyyy年MM月");
+            string[] date = DatHelper.TPJParaRead();
 
             var query = DBContext.GetList_WATER_WELL_MONTH_zt1()
                 .Where(p => p.NY >= comment_st && p.NY <= comment_et)
@@ -462,11 +464,11 @@ namespace SBTP.View.XGPJ
             if (query.Any())
             {
                 foreach (var item in tpxgModels)
-                {
-                    var query_item = query.Where(p => p.JH.Equals(item.JH) && !p.YY.Equals(0) && !p.TS.Equals(0)).ToList();
+                {                   
+                    var query_item = query.FindAll(p => p.JH.Equals(item.JH) && !p.YY.Equals(0) && !p.TS.Equals(0)&& !p.YZSL.Equals(0)).ToList();
                     if (query_item.Any())
                     {
-                        item.THZS = (double)query_item.Sum(p => p.YZSL);
+                        item.THZS = (double)query_item.Sum(p => p.YZSL+p.YZMYL)/ WaterWellMonth.dayCountCal(item.JH, comment_st.ToShortDateString(),comment_et.ToShortDateString());
                         item.THXSFS = 0;    //用户输入
                         item.THYL = (double)(query_item.Sum(p => p.YZSL) / query_item.Sum(p => p.TS));
                         item.THXSZS = (double)query_item.Average(p => p.YZSL / p.TS / p.YY);
@@ -498,20 +500,20 @@ namespace SBTP.View.XGPJ
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1307:指定 StringComparison", Justification = "<挂起>")]
         private void btn_right_Click(object sender, RoutedEventArgs e)
-        {
+        {          
             if (tpj_list.SelectedItem == null) return;
+            var select = tpj_list.SelectedItems.OfType<string>().ToList();
             List<string> source = dataSource.ToList();
+            var zryc = DatHelper_RLS4.read_XGYC_ZRJ();
+            var tpcxx = DatHelper.read_jcxx_tpcxx();
 
-            var zryc = Data.DatHelper_RLS4.read_XGYC_ZRJ();
-            var tpcxx = Data.DatHelper.read_jcxx_tpcxx();
-
-            for (int i = 0; i < tpj_list.SelectedItems.Count; i++)
+            for (int i = 0; i < select.Count; i++)
             {
-                var query = zryc.Find(p => p.JH.Equals(tpj_list.SelectedItems[i]));
-                TpxgModel newtpxg = new TpxgModel() { JH = tpj_list.SelectedItems[i].ToString() };
+                var query = zryc.Find(p => p.JH.Equals(select[i]));
+                TpxgModel newtpxg = new TpxgModel() { JH = select[i].ToString() };
                 if (query != null)
                 {
-                    string jh = tpj_list.SelectedItems[i].ToString();
+                    string jh = select[i].ToString();
                     double xsfs = 0;
                     var tpcxx_item = tpcxx.Find(p => p.jh.Equals(jh));
                     if (tpcxx_item != null)
@@ -525,9 +527,10 @@ namespace SBTP.View.XGPJ
                     newtpxg.TQXSZS = query.CSQ_SXSZS;                    
                 }
                 tpxgModels.Add(newtpxg);
-                source.Remove(tpj_list.SelectedItems[i].ToString());
+                //tpj_list.Items.Remove(select[i]);
+                source.Remove(select.ToString());
             }
-            //tpxgModels = new ObservableCollection<TpxgModel>(tpxgModels.OrderBy(p => p.CSSJ));
+            tpxgModels = new ObservableCollection<TpxgModel>(tpxgModels.OrderBy(p => p.CSSJ));
             dataSource.Clear();
             for (int i = 0; i < source.Count; i++)
             {
@@ -538,9 +541,14 @@ namespace SBTP.View.XGPJ
 
         private void btn_left_Click(object sender, RoutedEventArgs e)
         {
-            TpxgModel selected = tpxg_datagrid.SelectedItem as TpxgModel;
-            dataSource.Add(selected.JH);
-            tpxgModels.Remove(selected);
+            if (tpxg_datagrid.SelectedItem == null) return;
+            var select = tpxg_datagrid.SelectedItems.OfType<TpxgModel>().ToList();
+            foreach (var item in select)
+            {
+                tpxgModels.Remove(item);
+                dataSource.Add(item.JH);
+            }
+
         }
 
         private void btnNewWell_Click(object sender, RoutedEventArgs e)
@@ -567,6 +575,23 @@ namespace SBTP.View.XGPJ
             tb_cz_yl.Text = data.Average(p => p.CZYL).ToString("0.##");
             tb_cz_xsfs.Text = data.Sum(p => p.CZXSFS).ToString("0.##");
             tb_cz_sxszs.Text = (data.Sum(p => p.CZYL * p.CZXSZS) / data.Sum(p => p.CZYL)).ToString("0.##");
+        }
+
+        private void Btn_img_export_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".YJXGPJ");
+        }
+
+        private void Btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(" ");
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
+using System.Windows.Data;
 
 namespace SBTP.View.CSSJ
 {
@@ -123,6 +125,52 @@ namespace SBTP.View.CSSJ
         }
     }
 
+    public class RadiusRangeRule : ValidationRule
+    {
+        private int _min;
+        private int _max;
+        public RadiusRangeRule()
+        {
+        }
+
+        public int Min
+        {
+            get { return _min; }
+            set { _min = value; }
+        }
+
+        public int Max
+        {
+            get { return _max; }
+            set { _max = value; }
+        }
+
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            int Radius = 0;
+
+            try
+            {
+                if (((string)value).Length > 0)
+                    Radius = Int32.Parse((String)value);
+            }
+            catch (Exception e)
+            {
+                return new ValidationResult(false, "Illegal characters or " + e.Message);
+            }
+
+            if ((Radius < Min) || (Radius > Max))
+            {
+                return new ValidationResult(false,
+                  "Please enter an age in the range: " + Min + " - " + Max + ".");
+            }
+            else
+            {
+                return new ValidationResult(true, null);
+            }
+        }
+    }
+
     /// <summary>
     /// TPYLYH.xaml 的交互逻辑
     /// </summary>
@@ -135,13 +183,16 @@ namespace SBTP.View.CSSJ
         List<jcxx_tpcxx_model> baseData;
         List<jcxx_tpcls_model> tpcHistory;
         List<jcxx_tpjxx_model> tpjInfo;
+        public double Radius_min = 33;
+        public double Radius_max = 70;
+        public double Jcjj = 0;
         //调剖剂价格
         List<jcxx_jgxx_model> tpjJg;
         //储层物性
         List<ccwx_tpjing_model> ccwxInfos;
         //调剖剂浓度读取
         List<TPJND_Model> tpjnd; 
-        List<zcjz_well_model> zcjzs;
+        List<zcjz_well_model> zcjzs;        
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void Changed(string PropertyName)
@@ -154,6 +205,7 @@ namespace SBTP.View.CSSJ
             InitializeComponent();
             DataContext = this;
             this.Loaded += ListInitialize;
+            
         }
 
         private void ListInitialize(object sender, RoutedEventArgs e)
@@ -167,6 +219,13 @@ namespace SBTP.View.CSSJ
             ccwxInfos = Data.DatHelper.read_ccwx();
             tpjnd = Data.DatHelper.TPJND_Read();
             zcjzs = Data.DatHelper.read_zcjz();
+
+            var myBindingExpression = radius_end.GetBindingExpression(TextBox.TextProperty);
+            DataFormatRule rule = myBindingExpression.ParentBinding.ValidationRules.First() as DataFormatRule;
+            rule.JCJJ_RADIUS = 75;
+            myBindingExpression = radius_start.GetBindingExpression(TextBox.TextProperty);
+            //DataFormatRule rule = myBindingExpression.ParentBinding.ValidationRules.First() as DataFormatRule;
+            //rule.JCJJ_RADIUS = 75;
 
             if (baseData != null)
                 baseData.ForEach(x => dataSource.Add(x.jh));
@@ -246,6 +305,9 @@ namespace SBTP.View.CSSJ
                 //调剖剂有效期
                 double YXQ = tpj_table.Rows.Count == 0 ? 1 : double.Parse(tpj_table.Rows[0]["SXQ"].ToString());
                 double rw = 0.1;
+                string bj_min = radius_start.Text;
+                string bj_max = radius_end.Text;
+                string bj_step = step.Text;
                 foreach (string i in tpbj_collection)
                 {
                     //调后增注段日吸水量
@@ -280,7 +342,6 @@ namespace SBTP.View.CSSJ
                     case 3: ljxs = 0.89; break;
                     case 4: ljxs = 0.86; break;
                 }
-
                 //计算机器学习参数
                 //过水倍数
                 double GSBS = para * T_jqns * 10000 / (2 * T_sqts * tpcinfo.zzhd * 10);
@@ -291,9 +352,6 @@ namespace SBTP.View.CSSJ
                 //过聚倍数
                 double GJBS = para * T_jqns * 10000 / (2 * T_jqts * tpcinfo.zzhd * 10);
 
-                string bj_min = radius_start.Text;
-                string bj_max = radius_end.Text;
-                string bj_step = step.Text;
                 ////过水倍数
                 //double GSBS = 0.41;
                 ////油饱和度
@@ -348,8 +406,7 @@ namespace SBTP.View.CSSJ
                 item.tpjnd = tpjnd.Find(x => x.JH.Equals(item.JH));
                 item.Bjandzy = zyList;
                 item.TPBJ = "(" + tpbj + ")";
-                item.ZY = PointToString(zyList);
-                //优化半径下的增油量集合                             
+                item.ZY = PointToString(zyList);                          
             }
         }
         /// <summary>

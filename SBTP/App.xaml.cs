@@ -56,10 +56,9 @@ namespace SBTP
         {
             RegistryKey hklm = Registry.LocalMachine;
             RegistryKey excelKey;
+            excelKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Jet\4.0\Engines\Excel", true);
             if (Environment.Is64BitOperatingSystem)
-                excelKey = hklm.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Jet\4.0\Engines\Excel",true);
-            else
-                excelKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Jet\4.0\Engines\Excel",true);
+                excelKey = hklm.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Jet\4.0\Engines\Excel",true);           
             excelKey.SetValue("TypeGuessRows",0);
         }
 

@@ -227,23 +227,27 @@ namespace SBTP.View.JCXZ
             {
                 //if (well.well_type != "SJ") continue;
                 if (well.JH != sjh) continue;
-                Series series = new Series();
-                series.Name = "sjh";
-                series.IsVisibleInLegend = true;
-                series.LegendText = well.JH;
-                series.ChartType = SeriesChartType.Line;
-                series.BorderWidth = 5;
-                series.IsValueShownAsLabel = true;
-                
+                Series series = new Series
+                {
+                    Name = "sjh",
+                    IsVisibleInLegend = true,
+                    LegendText = well.JH,
+                    ChartType = SeriesChartType.Line,
+                    BorderWidth = 5,
+                    IsValueShownAsLabel = true
+                };
+
                 for (int i = 0; i < list_month.Count; i++)
                 {
                     if (well.YL[i] > db_Max) db_Max = well.YL[i];
                     if (well.YL[i] < db_Min) db_Min = well.YL[i];
 
-                    DataPoint point = new DataPoint();
-                    point.XValue = i;
-                    point.YValues = new double[] { well.YL[i] };
-                    point.AxisLabel = list_month[i];
+                    DataPoint point = new DataPoint
+                    {
+                        XValue = i,
+                        YValues = new double[] { well.YL[i] },
+                        AxisLabel = list_month[i]
+                    };
                     series.Points.Add(point);
                 }
                 chart.Series.Add(series);
@@ -270,23 +274,27 @@ namespace SBTP.View.JCXZ
             {
                 //if (well.well_type != "YJ") continue;
                 if (yjh.Contains(well.JH) == false) continue;
-                Series series = new Series();
-                series.Name = well.JH;
-                series.IsVisibleInLegend = true;
-                series.LegendText = well.JH;
-                series.ChartType = SeriesChartType.Line;
-                series.BorderWidth = 1;
-                series.IsValueShownAsLabel = true;
-                series.YAxisType = AxisType.Secondary;
+                Series series = new Series
+                {
+                    Name = well.JH,
+                    IsVisibleInLegend = true,
+                    LegendText = well.JH,
+                    ChartType = SeriesChartType.Line,
+                    BorderWidth = 1,
+                    IsValueShownAsLabel = true,
+                    YAxisType = AxisType.Secondary
+                };
                 for (int i = 0; i < list_month.Count; i++)
                 {
                     if (well.YL[i] > db_Max) db_Max = well.YL[i];
                     if (well.YL[i] < db_Min) db_Min = well.YL[i];
 
-                    DataPoint point = new DataPoint();
-                    point.XValue = i;
-                    point.YValues = new double[] { well.YL[i] };
-                    point.AxisLabel = list_month[i];
+                    DataPoint point = new DataPoint
+                    {
+                        XValue = i,
+                        YValues = new double[] { well.YL[i] },
+                        AxisLabel = list_month[i]
+                    };
                     series.Points.Add(point);
                 }
                 chart.Series.Add(series);

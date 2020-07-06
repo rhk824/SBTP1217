@@ -2109,7 +2109,6 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                //int startIndex = lines.IndexOf("*YJPJ // 井号 月产液 月产油 化学剂浓度 综合含水 措施后月产液  月产油 化学剂浓度 综合含水 累积增油");
                 int startIndex = lines.IndexOf("*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井");
                 int endIndex = lines.IndexOf("/YJPJ");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
@@ -2120,6 +2119,8 @@ namespace SBTP.Data
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.Append($"{item.JH}\t");
+                    sb.Append($"{item.CSSJ}\t");
+                    sb.Append($"{item.NHSSSL}\t");
                     sb.Append($"{item.CSQYCY}\t");
                     sb.Append($"{item.CSQYCYL}\t");
                     sb.Append($"{item.CSQHXJ}\t");
@@ -2128,7 +2129,8 @@ namespace SBTP.Data
                     sb.Append($"{item.CSHYCYL}\t");
                     sb.Append($"{item.CSHHXJ}\t");
                     sb.Append($"{item.CSHZHHS}\t");
-                    sb.Append($"{item.LJZY}\r\n");
+                    sb.Append($"{item.LJZY}\t");
+                    sb.Append($"{item.SSTPJ}\r\n");
                     newData.Add(sb.ToString());
                 }
                 newLines.InsertRange(startIndex + 1, newData);
@@ -2169,18 +2171,22 @@ namespace SBTP.Data
             dataArry.RemoveAt(dataArry.Count - 1);
             foreach (var item in dataArry)
             {
+                string[] resultArry = item.Split('\t');
                 YjxgModel yjxgModel = new YjxgModel()
                 {
-                    JH = item.Split('\t')[0],
-                    CSQYCY = double.Parse(item.Split('\t')[1]),
-                    CSQYCYL = double.Parse(item.Split('\t')[2]),
-                    CSQHXJ = double.Parse(item.Split('\t')[3]),
-                    CSQZHHS = double.Parse(item.Split('\t')[4]),
-                    CSHYCY = double.Parse(item.Split('\t')[5]),
-                    CSHYCYL = double.Parse(item.Split('\t')[6]),
-                    CSHHXJ = double.Parse(item.Split('\t')[7]),
-                    CSHZHHS = double.Parse(item.Split('\t')[8]),
-                    LJZY = double.Parse(item.Split('\t')[9]),
+                    JH = resultArry[0],
+                    CSSJ = resultArry[1],
+                    NHSSSL = double.Parse(resultArry[2]),
+                    CSQYCY = double.Parse(resultArry[3]),
+                    CSQYCYL = double.Parse(resultArry[4]),
+                    CSQHXJ = double.Parse(resultArry[5]),
+                    CSQZHHS = double.Parse(resultArry[6]),
+                    CSHYCY = double.Parse(resultArry[7]),
+                    CSHYCYL = double.Parse(resultArry[8]),
+                    CSHHXJ = double.Parse(resultArry[9]),
+                    CSHZHHS = double.Parse(resultArry[10]),
+                    LJZY = double.Parse(resultArry[11]),
+                    SSTPJ = resultArry[12]
                 };
                 yjxgModels.Add(yjxgModel);
             }

@@ -8,7 +8,7 @@
       xmlns:calender="clr-namespace:SBTP.View.JCXZ"
       xmlns:tk="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
       mc:Ignorable="d" 
-      xmlns:Loading="clr-namespace:SBTP.BLL"
+      xmlns:Loading="clr-namespace:SBTP.BLL" xmlns:local1="clr-namespace:SBTP.Common"
       d:DesignHeight="520" d:DesignWidth="1000" Background="#eee"
       Title="TPYLYH">
 
@@ -18,6 +18,21 @@
                 <ResourceDictionary Source="/SBTP;component/Resource/Style.xaml"/>
                 <ResourceDictionary Source="/SBTP;component/Resource/datagrid_style.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <ControlTemplate x:Key="validationTemplate">
+                <DockPanel>
+                    <TextBlock Foreground="Red" FontSize="20">!</TextBlock>
+                    <AdornedElementPlaceholder/>
+                </DockPanel>
+            </ControlTemplate>
+            <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+                <Style.Triggers>
+                    <Trigger Property="Validation.HasError" Value="true">
+                        <Setter Property="ToolTip"
+        Value="{Binding RelativeSource={x:Static RelativeSource.Self},
+                        Path=(Validation.Errors)/ErrorContent}"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -131,9 +146,25 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,10,0">
                         <TextBlock VerticalAlignment="Center" Text="优化半径范围："/>
-                        <TextBox Name="radius_start" Text="44" Width="50"/>
+                        <TextBox Name="radius_start" Width="50" >
+                            <TextBox.Text>
+                                <Binding Path="Radius_min" Mode="TwoWay" UpdateSourceTrigger="LostFocus">
+                                    <Binding.ValidationRules>
+                                        <local1:DataFormatRule/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <TextBlock VerticalAlignment="Center" Text="-"/>
-                        <TextBox Name="radius_end" Text="55" Width="50"/>
+                        <TextBox Name="radius_end" Width="50">
+                            <TextBox.Text>
+                                <Binding Path="Radius_max" Mode="TwoWay" UpdateSourceTrigger="LostFocus">
+                                    <Binding.ValidationRules>
+                                        <local1:DataFormatRule JCJJ_RADIUS="0"/>
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <TextBlock VerticalAlignment="Center" Text="m"/>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,10,0">

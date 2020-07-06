@@ -78,7 +78,7 @@
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
-                            <RowDefinition Height="48"/>
+                            <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
                         <DataGrid Name="yjxg_grid" ItemsSource="{Binding yjxgModels}" LoadingRow="yjxg_grid_LoadingRow" HeadersVisibility="Column" CanUserAddRows="False">
                             <DataGrid.Columns>
@@ -90,9 +90,9 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="油井井号" CellTemplate="{StaticResource jh}" />
-                                <DataGridTextColumn Header="措施时间" IsReadOnly="True" Binding="{Binding CSSJ}"/>
-                                <DataGridTextColumn Header="所属井组" IsReadOnly="True" Binding="{Binding SSTPJ}"/>
-                                <DataGridTextColumn Header="年含水上升率"/>
+                                <DataGridTextColumn Header="措施时间" Binding="{Binding CSSJ}"/>
+                                <DataGridTextColumn Header="所属井组" Binding="{Binding SSTPJ}"/>
+                                <DataGridTextColumn Header="年含水上升率(%)" Binding="{Binding NHSSSL}"/>
                                 <DataGridTemplateColumn HeaderStyle="{StaticResource YJXGPJ_CSQ}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -130,42 +130,46 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                                 <Label FontSize="13" FontWeight="Black" Content="统计"/>
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
-                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Label FontSize="10" FontWeight="Black" Content="措施前"/>
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <Label Content="月产液量:"/>
-                                            <Label Name="Csq_ycy_sum" Content="0"/>
-                                        </StackPanel>
-                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <Label Content="月产油量:"/>
-                                            <Label Name="Csq_ycyl_sum" Content="0"/>
-                                        </StackPanel>
-                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <Label Content="化学剂浓度:"/>
-                                            <Label Name="Csq_hxj_tj" Content="0"/>
-                                        </StackPanel>
-                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <Label Content="综合含水:"/>
-                                            <Label Name="Csq_zhhs_tj" Content="0"/>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <Label Content="月产液量:"/>
+                                                <Label Name="Csq_ycy_sum" Content="0"/>
+                                            </StackPanel>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <Label Content="月产油量:"/>
+                                                <Label Name="Csq_ycyl_sum" Content="0"/>
+                                            </StackPanel>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <Label Content="化学剂浓度:"/>
+                                                <Label Name="Csq_hxj_tj" Content="0"/>
+                                            </StackPanel>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <Label Content="综合含水:"/>
+                                                <Label Name="Csq_zhhs_tj" Content="0"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </StackPanel>
-                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Label FontSize="10" FontWeight="Black" Content="措施后"/>
                                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <Label Content="月产液量:"/>
-                                            <Label Name="Csh_ycy_sum" Content="0"/>
-                                        </StackPanel>
-                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <Label Content="月产油量:"/>
-                                            <Label Name="Csh_ycyl_sum" Content="0"/>
-                                        </StackPanel>
-                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <Label Content="化学剂浓度:"/>
-                                            <Label Name="Csh_hxj_tj" Content="0"/>
-                                        </StackPanel>
-                                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <Label Content="综合含水:"/>
-                                            <Label Name="Csh_zhhs_tj" Content="0"/>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <Label Content="月产液量:"/>
+                                                <Label Name="Csh_ycy_sum" Content="0"/>
+                                            </StackPanel>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <Label Content="月产油量:"/>
+                                                <Label Name="Csh_ycyl_sum" Content="0"/>
+                                            </StackPanel>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <Label Content="化学剂浓度:"/>
+                                                <Label Name="Csh_hxj_tj" Content="0"/>
+                                            </StackPanel>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <Label Content="综合含水:"/>
+                                                <Label Name="Csh_zhhs_tj" Content="0"/>
+                                            </StackPanel>
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
@@ -218,12 +222,6 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
                         <TextBlock VerticalAlignment="Center" Text="系列选择：" />
                         <ComboBox Name="HZtype" Width="100" ItemsSource="{Binding Source={StaticResource HZLXKey}}" />
-                            <!--<ComboBoxItem  Content="月产油" Tag="YCY"/>
-                            <ComboBoxItem Content="月产液" Tag="YCYL"/>
-                            <ComboBoxItem Content="含水" Tag="HS"/>
-                            <ComboBoxItem Content="化学剂浓度" Tag="HXJND"/>
-                            <ComboBoxItem Content="累计增油" Tag="LJZY"/>
-                        </ComboBox>-->
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Button Name="DrawGraph" Content="绘制" Click="DrawGraph_Click"/>
@@ -231,14 +229,12 @@
                     </StackPanel>
                 </StackPanel>
                 <Grid Grid.Row="1">
-                    <!--<WindowsFormsHost Name="wfh">
-                        <wfc:Chart />
-                    </WindowsFormsHost>-->
                     <tk:Chart Name="MyToolKit" Height="auto" Visibility="Collapsed"/>
                 </Grid>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button>图形输出</Button>
-                    <Button>继续</Button>
+                    <Button Name="Btn_img_export" Click="Btn_img_export_Click">图形输出</Button>
+                    <Button Name="Btn_return" Click="Btn_return_Click">返回</Button>
+                    <Button Name="Btn_close" Click="Btn_close_Click">关闭</Button>
                 </StackPanel>
             </Grid>
         </GroupBox>

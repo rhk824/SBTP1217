@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SBTP.View.XGYC;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -176,5 +177,9 @@ namespace SBTP
             pageContainer.NavigationService.Navigate(page);
         }
 
+        private void Test_Click(object sender, RoutedEventArgs e)
+        {
+            new Window1().ShowDialog();
+        }
     }
 }

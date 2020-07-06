@@ -76,6 +76,9 @@ namespace SBTP.BLL
 
         private void Compute_YL()
         {
+            //油密度
+            double ym = Data.DatHelper.readQkcs().Ym == 0 ? 1 : Data.DatHelper.readQkcs().Ym;
+
             //计算水井体积量，水井体积量=月注水量+月注母液量
             TJL_sj = new double[List_sj.Count];
             for (int i = 0; i < List_sj.Count; i++)
@@ -87,7 +90,7 @@ namespace SBTP.BLL
             TJL_yj = new double[List_yj.Count];
             for (int i = 0; i < List_yj.Count; i++)
             {
-                TJL_yj[i] = Convert.ToDouble(string.IsNullOrEmpty(List_yj[i].YCYL) ? "0" : List_yj[i].YCYL) +
+                TJL_yj[i] = Convert.ToDouble(string.IsNullOrEmpty(List_yj[i].YCYL) ? "0" : List_yj[i].YCYL) / ym +
                       Convert.ToDouble(string.IsNullOrEmpty(List_yj[i].YCSL) ? "0" : List_yj[i].YCSL);
             }
         }
