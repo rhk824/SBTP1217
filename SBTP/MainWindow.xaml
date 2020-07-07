@@ -60,7 +60,7 @@
                 <MenuItem Header="油井效果评价" Name="XGPJ_YJXGPJ"/>
             </MenuItem>
             <MenuItem Name="HelpBtn" Header="帮助" Click="Help_Click"/>
-            <MenuItem Name="TestBtn" Header="测试" Click="Test_Click"/>
+            <!--<MenuItem Name="TestBtn" Header="测试" Click="Test_Click"/>-->
         </Menu>
         <Grid Grid.IsSharedSizeScope="True">
             <Frame x:Name="pageContainer" ScrollViewer.CanContentScroll="True" NavigationUIVisibility="Hidden" />

@@ -113,7 +113,7 @@ namespace SBTP.View.JCXZ
         private void Btn_Compute_Click(object sender, RoutedEventArgs e)
         {
             if (getList() == false) return;
-            
+            outContainer.Visibility = Visibility.Visible;
             string canshu = "";
             if (rb_tj.IsChecked == true) { canshu = "TJ"; }
             if (rb_yl.IsChecked == true) { canshu = "YL"; }
@@ -149,8 +149,6 @@ namespace SBTP.View.JCXZ
                     addWell_YL(yjh,"YJ", bll.TJL_yj);
                 }
             }
-            //this.DataGrid1.ItemsSource = list;
-            outContainer.Visibility = Visibility.Visible;
             drawConvas();            
             setListBox2();
             selectListBox2();
@@ -381,10 +379,13 @@ namespace SBTP.View.JCXZ
         private void drawLine(string sjh, string yjh, double data, Color color)
         {
             if (!wells.TryGetValue(sjh, out _) || !wells.TryGetValue(yjh, out _)) return;
-            Line line = new Line();
-            //line.Stroke = Brushes.Black;            
-            line.Stroke = new SolidColorBrush(color);
-            line.StrokeThickness = Math.Abs(data) * lineWidth;
+            Line line = new Line
+            {            
+                Stroke = new SolidColorBrush(color),
+                StrokeThickness = Math.Abs(data) * lineWidth
+            };
+            if (data < 0)
+                line.StrokeDashArray = new DoubleCollection() { 2, 4 };
 
             Well_ZB well_sj = wells[sjh];
             Well_ZB well_yj = wells[yjh];
@@ -395,9 +396,11 @@ namespace SBTP.View.JCXZ
             line.ToolTip = data;
             myConvas.Children.Add(line);
 
-            Label lb = new Label();
-            lb.FontSize = 8;
-            lb.Content = data;
+            Label lb = new Label
+            {
+                FontSize = 8,
+                Content = data
+            };
             Canvas.SetLeft(lb, (well_sj.ZB_X + well_yj.ZB_X) / 2 - X_min);
             Canvas.SetTop(lb, (well_sj.ZB_Y + well_yj.ZB_Y) / 2 - Y_min);
             this.myConvas.Children.Add(lb);

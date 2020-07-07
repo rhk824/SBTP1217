@@ -22,6 +22,6 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
-        <DataGrid Name="Wells" Grid.Row="1"  ItemsSource="{Binding DataSource,Mode=TwoWay}" HorizontalAlignment="Center" IsReadOnly="True" CanUserReorderColumns="False"/>
+        <DataGrid Name="Wells" Grid.Row="1"  ItemsSource="{Binding DataSource,Mode=TwoWay}" IsReadOnly="True" CanUserReorderColumns="False"/>
     </Grid>
 </Window>

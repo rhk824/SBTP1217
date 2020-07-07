@@ -432,13 +432,8 @@
     <Compile Include="View\XGPJ\YJXGPJ.xaml.cs">
       <DependentUpon>YJXGPJ.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\XGYC\AgeRangeRule.cs" />
-    <Compile Include="View\XGYC\MyDataSource.cs" />
     <Compile Include="View\XGYC\SC.xaml.cs">
       <DependentUpon>SC.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\XGYC\Window1.xaml.cs">
-      <DependentUpon>Window1.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\XGYC\ZR.xaml.cs">
       <DependentUpon>ZR.xaml</DependentUpon>
@@ -732,10 +727,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\XGYC\SC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\XGYC\Window1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

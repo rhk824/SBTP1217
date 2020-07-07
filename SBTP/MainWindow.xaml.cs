@@ -176,10 +176,5 @@ namespace SBTP
             Page page = (Page)assembly.CreateInstance(pagename);
             pageContainer.NavigationService.Navigate(page);
         }
-
-        private void Test_Click(object sender, RoutedEventArgs e)
-        {
-            new Window1().ShowDialog();
-        }
     }
 }

@@ -12,6 +12,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -183,9 +184,6 @@ namespace SBTP.View.CSSJ
         List<jcxx_tpcxx_model> baseData;
         List<jcxx_tpcls_model> tpcHistory;
         List<jcxx_tpjxx_model> tpjInfo;
-        public double Radius_min = 33;
-        public double Radius_max = 70;
-        public double Jcjj = 0;
         //调剖剂价格
         List<jcxx_jgxx_model> tpjJg;
         //储层物性
@@ -220,13 +218,6 @@ namespace SBTP.View.CSSJ
             tpjnd = Data.DatHelper.TPJND_Read();
             zcjzs = Data.DatHelper.read_zcjz();
 
-            var myBindingExpression = radius_end.GetBindingExpression(TextBox.TextProperty);
-            DataFormatRule rule = myBindingExpression.ParentBinding.ValidationRules.First() as DataFormatRule;
-            rule.JCJJ_RADIUS = 75;
-            myBindingExpression = radius_start.GetBindingExpression(TextBox.TextProperty);
-            //DataFormatRule rule = myBindingExpression.ParentBinding.ValidationRules.First() as DataFormatRule;
-            //rule.JCJJ_RADIUS = 75;
-
             if (baseData != null)
                 baseData.ForEach(x => dataSource.Add(x.jh));
         }
@@ -256,15 +247,38 @@ namespace SBTP.View.CSSJ
 
         private void btn_left_Click(object sender, RoutedEventArgs e)
         {
-            JqxxyhModel jqxxyhModel = jqxx_grid.SelectedItem as JqxxyhModel;
-            dataSource.Add(jqxxyhModel.JH);
-            jqxxyhModels.Remove(jqxxyhModel);
+            var select = jqxx_grid.SelectedItems;
+            for (int i = 0; i < select.Count; i++)
+            {
+                JqxxyhModel jqxxyhModel = select[i] as JqxxyhModel;
+                dataSource.Add(jqxxyhModel.JH);
+                jqxxyhModels.Remove(jqxxyhModel);
+            }         
         }
 
-        private  async void YHCalculation_Click(object sender, RoutedEventArgs e)
-        {            
+        private List<string> checkRadius()
+        {
+            List<string> radius = new List<string>();
+            jqxxyhModels.ToList().ForEach(x =>
+            {
+                var item = zcjzs.Find(y => y.JH.Equals(x.JH) && y.AverageDistance / 2 < double.Parse(radius_end.Text));
+                if (item != null)
+                    radius.Add(item.JH);
+            });
+            return radius;
+        }
+
+        private async void YHCalculation_Click(object sender, RoutedEventArgs e)
+        {
             if (tpcHistory.Count == 0 || tpjInfo.Count == 0 || tpjJg.Count == 0) { MessageBox.Show("DAT文件数据缺失,请检查后重试！"); return; }
             if (jqxxyhModels.Count == 0) { MessageBox.Show("请选择调剖井!"); return; }
+            var unMathchedWells = checkRadius();
+            if (unMathchedWells.Count != 0)
+            {
+                MessageBox.Show(string.Join(",", unMathchedWells.ToArray()) + "井的注采半径小于优化半径！请调整优化半径");
+                return;
+            }
+
             DataTable waterwellmonth = new DataTable();
             if (getWaterWellMonth().Rows.Count != 0)
                 waterwellmonth = getWaterWellMonth();
@@ -273,20 +287,26 @@ namespace SBTP.View.CSSJ
                 MessageBox.Show("水井井史数据为空");
                 return;
             }
-
-            string tpbj = radius_start.Text;
+            //内径            
+            string tpbj_n = radius_start.Text;
+            //外径
+            string tpbj_w = radius_end.Text;
+            //步长
+            string bc = this.step.Text;
+            string tpbj = tpbj_n;
             double radius = double.Parse(radius_start.Text);
-            while ((radius += double.Parse(step.Text)) < double.Parse(radius_end.Text))
+            while ((radius += double.Parse(bc)) < double.Parse(radius_end.Text))
             {
-                if (Math.Abs(radius - double.Parse(radius_end.Text)) <= double.Parse(step.Text))
+                if (Math.Abs(radius - double.Parse(radius_end.Text)) <= double.Parse(bc))
                     tpbj += "," + radius.ToString() + "," + radius_end.Text;
                 else
                     tpbj += "," + radius.ToString();
             }
             List<string> tpbj_collection = tpbj.Split(',').ToList();
+
             foreach (JqxxyhModel item in jqxxyhModels)
             {
-                this.loading.Visibility = Visibility.Visible;
+                this.loading.Visibility = Visibility.Visible;                
                 //吸液强度集合
                 List<KeyValuePair<string, double>> XYQDs = new List<KeyValuePair<string, double>>();
                 //调前吸液量集合
@@ -305,9 +325,6 @@ namespace SBTP.View.CSSJ
                 //调剖剂有效期
                 double YXQ = tpj_table.Rows.Count == 0 ? 1 : double.Parse(tpj_table.Rows[0]["SXQ"].ToString());
                 double rw = 0.1;
-                string bj_min = radius_start.Text;
-                string bj_max = radius_end.Text;
-                string bj_step = step.Text;
                 foreach (string i in tpbj_collection)
                 {
                     //调后增注段日吸水量
@@ -344,13 +361,13 @@ namespace SBTP.View.CSSJ
                 }
                 //计算机器学习参数
                 //过水倍数
-                double GSBS = para * T_jqns * 10000 / (2 * T_sqts * tpcinfo.zzhd * 10);
+                double GSBS = T_sqts == 0 ? 0 : para * T_jqns * 10000 / (2 * T_sqts * tpcinfo.zzhd * 10);
                 //油饱和度
                 double YBHD = tpcxx.ybhd / 100;
                 //渗透率极差
-                double STLJC = FDDSTL*10 / ZZDSTL;
+                double STLJC = FDDSTL * 10 / ZZDSTL;
                 //过聚倍数
-                double GJBS = para * T_jqns * 10000 / (2 * T_jqts * tpcinfo.zzhd * 10);
+                double GJBS = T_jqts == 0 ? 0 : para * T_jqns * 10000 / (2 * T_jqts * tpcinfo.zzhd * 10);
 
                 ////过水倍数
                 //double GSBS = 0.41;
@@ -371,7 +388,7 @@ namespace SBTP.View.CSSJ
                     {
                         double xyqd = XYQDs[i].Value;
                         //double xyqd = 10;
-                        string cmd = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}", GSBS, YBHD, STLJC, GJBS, xyqd.ToString(), bj_min, bj_max, bj_step);
+                        string cmd = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}", GSBS, YBHD, STLJC, GJBS, xyqd.ToString(), tpbj_n, tpbj_w, bc);
                         string cmdResult = RunCMD.run_python(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"py\deliverables\demo.py"), cmd).Trim();
                         if (i == XYQDs.Count - 1)
                             result += cmdResult;
@@ -393,7 +410,9 @@ namespace SBTP.View.CSSJ
                     List<string> resultArray = cmdresults[k].Trim().Replace('(', ',').Replace(')', ',').Replace('[', ',').Replace(']', ',').Replace(' ', ',').Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                     for (int i = 0; i < resultArray.Count; i += 2)
                     {
-                        if (double.Parse(XYQDs[k].Key).Equals(double.Parse(resultArray[i])))
+                        string key = resultArray[i];
+                        //if (!new Regex(@"^\d+$").IsMatch(key)) break;
+                        if (double.Parse(XYQDs[k].Key).Equals(double.Parse(key)))
                             zyList.Add(new Point(double.Parse(resultArray[i]), Math.Round(double.Parse(resultArray[i + 1]) * tpcinfo.zzhd * ljsl * ljxs * Data.DatHelper.readQkcs().Ym / 4, 3)));
                     }
                 }
@@ -406,7 +425,7 @@ namespace SBTP.View.CSSJ
                 item.tpjnd = tpjnd.Find(x => x.JH.Equals(item.JH));
                 item.Bjandzy = zyList;
                 item.TPBJ = "(" + tpbj + ")";
-                item.ZY = PointToString(zyList);                          
+                item.ZY = zyList.Count == 0 ? string.Empty : PointToString(zyList);
             }
         }
         /// <summary>
