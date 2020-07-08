@@ -1,5 +1,6 @@
 ﻿using Common;
 using Maticsoft.DBUtility;
+using SBTP.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,10 +21,20 @@ namespace SBTP.View.TPJ
     {
         private DataTable y_table;
         private List<CheckBox> CheckBoxes = new List<CheckBox>();
+        private qkcs param;
         public LXXZ()
         {
             InitializeComponent();
+            param = Data.DatHelper.readQkcs();
             this.Loaded += new RoutedEventHandler(GetYtable);
+            this.Loaded += LXXZ_Loaded;
+        }
+
+        private void LXXZ_Loaded(object sender, RoutedEventArgs e)
+        {
+            Temprature.Text = param.Ycwd.ToString();
+            TDS.Text = param.Yckhd.ToString();
+            PH.Text = param.Ycph.ToString();
         }
 
         private void Search()

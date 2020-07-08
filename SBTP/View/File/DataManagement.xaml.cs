@@ -1,5 +1,6 @@
 ﻿using Common;
 using Maticsoft.DBUtility;
+using SBTP.Model;
 using SBTP.TPJtables;
 using System;
 using System.Collections;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -72,6 +74,11 @@ namespace SBTP.View.File
             RightClickMenu.Items.Add(Remote_Import);
             RightClickMenu.Items.Add(Delete);
 
+            ContextMenu TpjRightClickMenu = new ContextMenu();
+            MenuItem Tpj_Import = new MenuItem() { Header = "新增调剖剂" };
+            Tpj_Import.Click += Tpj_Import_Click;
+            TpjRightClickMenu.Items.Add(Tpj_Import);
+
             foreach (TreeViewItem item in csq.Items)
             {
                 item.ContextMenu = RightClickMenu;
@@ -79,6 +86,10 @@ namespace SBTP.View.File
             foreach (TreeViewItem item in csh.Items)
             {
                 item.ContextMenu = RightClickMenu;
+            }
+            foreach (TreeViewItem item in xt.Items)
+            {
+                item.ContextMenu = TpjRightClickMenu;
             }
             ContextMenu RightClickMenuGruop = new ContextMenu();
             MenuItem Batch_Import = new MenuItem() { Header = "批量导入" };
@@ -93,6 +104,24 @@ namespace SBTP.View.File
             csq.ContextMenu = RightClickMenuGruop;
             csh.ContextMenu = RightClickMenuGruop;
         }
+
+        private void Tpj_Import_Click(object sender, RoutedEventArgs e)
+        {
+            TreeViewItem parent = ContextMenuService.GetPlacementTarget(LogicalTreeHelper.GetParent(sender as MenuItem)) as TreeViewItem;
+            if (parent != null)
+            {
+                Yttpj yttpj = new Yttpj();
+                Type t = yttpj.GetType();
+                TypeInfo ti = t.GetTypeInfo();
+                //doTpjImport(parent.Name);
+            }
+        }
+
+        private void doTpjImport(string tablename)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 多表导入
         /// </summary>

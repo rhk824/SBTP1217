@@ -302,6 +302,9 @@
     <Compile Include="View\File\SelectColumnCondition.xaml.cs">
       <DependentUpon>SelectColumnCondition.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\File\TpjImport.xaml.cs">
+      <DependentUpon>TpjImport.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Graphic\Isogram.xaml.cs">
       <DependentUpon>Isogram.xaml</DependentUpon>
     </Compile>
@@ -551,6 +554,10 @@
     <Page Include="View\File\SelectColumnCondition.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\File\TpjImport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Graphic\Isogram.xaml">
       <SubType>Designer</SubType>
