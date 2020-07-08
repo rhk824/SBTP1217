@@ -227,10 +227,6 @@ namespace SBTP.View.XGPJ
         #endregion
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:命名样式", Justification = "<挂起>")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:集合属性应为只读", Justification = "<挂起>")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:添加只读修饰符", Justification = "<挂起>")]
     /// <summary>
     /// TPJXGPJ.xaml 的交互逻辑
     /// </summary>
@@ -445,7 +441,7 @@ namespace SBTP.View.XGPJ
             run_comment_st.Text = Unity.DateTimeToString(comment_st, "yyyy年MM月");
             run_comment_et.Text = Unity.DateTimeToString(comment_et, "yyyy年MM月");
 
-            var query = DBContext.GetList_WATER_WELL_MONTH_zt1()
+            var query = DBContext.db_water_well_month__zt1()
                 .Where(p => p.NY >= comment_st && p.NY <= comment_et)
                 .OrderBy(p => p.NY).ToList();
 
@@ -453,10 +449,10 @@ namespace SBTP.View.XGPJ
             {
                 foreach (var item in tpxgModels)
                 {
-                    var query_item = query.Where(p => p.JH == item.JH).ToList();
+                    List<Model.DB_WATER_WELL_MONTH> query_item = query.Where(p => p.JH == item.JH && p.YZSL > 0 && p.YY >0).ToList();
                     if (query_item.Any())
                     {
-                        item.THZS = (double)query_item.Sum(p => p.YZSL);
+                        item.THZS = (double)query_item.Sum(p => p.YZSL / p.TS);
                         item.THXSFS = 0;    //用户输入
                         item.THYL = (double)(query_item.Sum(p => p.YZSL) / query_item.Sum(p => p.TS));
                         item.THXSZS = (double)query_item.Average(p => p.YZSL / p.TS / p.YY);

@@ -12,12 +12,8 @@ namespace SBTP.Common
 {
     class DBContext
     {
-
-        /// <summary>
-        /// 获取小层数据（措施前）
-        /// </summary>
-        /// <returns></returns>
-        public static List<DB_XCSJ> GetList_XCSJ()
+        #region 小层数据
+        public static List<DB_XCSJ> db_xcsj__zt0()
         {
             List<DB_XCSJ> list = new List<DB_XCSJ>();
 
@@ -46,12 +42,39 @@ namespace SBTP.Common
 
             return list;
         }
+        public static List<DB_XCSJ> db_xcsj__skqk_zt0()
+        {
+            List<DB_XCSJ> list = new List<DB_XCSJ>();
 
-        /// <summary>
-        /// 获取油井井史数据（措施前）
-        /// </summary>
-        /// <returns></returns>
-        public static List<DB_OIL_WELL_MONTH> GetList_OIL_WELL_MONTH()
+            using (DataSet ds = DbHelperOleDb.Query("select * from oil_well_c where skqk<>\"\" and zt=0"))
+            {
+                DataTable dt = ds.Tables[0];
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    list.Add(new DB_XCSJ()
+                    {
+                        JH = Unity.ToString(dt.Rows[i]["JH"]),
+                        YCZ = Unity.ToString(dt.Rows[i]["YCZ"]),
+                        XCXH = Unity.ToString(dt.Rows[i]["XCXH"]),
+                        XCH = Unity.ToString(dt.Rows[i]["XCH"]),
+                        SYDS = Unity.ToDecimal(dt.Rows[i]["SYDS"]),
+                        SYHD = Unity.ToDecimal(dt.Rows[i]["SYHD"]),
+                        YXHD = Unity.ToDecimal(dt.Rows[i]["YXHD"]),
+                        STL = Unity.ToDecimal(dt.Rows[i]["STL"]),
+                        SKQK = Unity.ToString(dt.Rows[i]["SKQK"]),
+                        HYBHD = Unity.ToDecimal(dt.Rows[i]["HYBHD"]),
+                        KXD = Unity.ToDecimal(dt.Rows[i]["KXD"]),
+                        ZT = Unity.ToInt(dt.Rows[i]["ZT"])
+                    });
+                }
+            }
+
+            return list;
+        }
+        #endregion
+
+        #region 油井井史
+        public static List<DB_OIL_WELL_MONTH> db_oil_well_month__zt0()
         {
             List<DB_OIL_WELL_MONTH> list = new List<DB_OIL_WELL_MONTH>();
 
@@ -67,27 +90,19 @@ namespace SBTP.Common
                         TS = Unity.ToDecimal(dt.Rows[i]["TS"]),
                         YCYL = Unity.ToDecimal(dt.Rows[i]["YCYL"]),
                         YCSL = Unity.ToDecimal(dt.Rows[i]["YCSL"]),
-                        DYM = Unity.ToDecimal(dt.Rows[i]["DYM"]),
-                        YY = Unity.ToDecimal(dt.Rows[i]["YY"]),
-                        TY = Unity.ToDecimal(dt.Rows[i]["TY"]),
                         LY = Unity.ToDecimal(dt.Rows[i]["LY"]),
                         ZT = Unity.ToDecimal(dt.Rows[i]["ZT"]),
-                        CCJHWND = Unity.ToDecimal(dt.Rows[i]["CCJHWND"]),
-                        LJCYL = Unity.ToDecimal(dt.Rows[i]["LJCYL"]),
-                        LJCSL = Unity.ToDecimal(dt.Rows[i]["LJCSL"]),
-                        HS = Unity.ToDecimal(dt.Rows[i]["HS"])
+                        CCJHWND = Unity.ToDecimal(dt.Rows[i]["CCJHWND"])
                     });
                 }
             }
             
             return list;
         }
+        #endregion
 
-        /// <summary>
-        /// 获取水井井史数据（措施前）
-        /// </summary>
-        /// <returns></returns>
-        public static List<DB_WATER_WELL_MONTH> GetList_WATER_WELL_MONTH()
+        #region 水井井史
+        public static List<DB_WATER_WELL_MONTH> db_water_well_month__zt0()
         {
             List<DB_WATER_WELL_MONTH> list = new List<DB_WATER_WELL_MONTH>();
 
@@ -106,11 +121,6 @@ namespace SBTP.Common
                         PZCDS = Unity.ToDecimal(dt.Rows[i]["PZCDS"]),
                         YZMYL = Unity.ToDecimal(dt.Rows[i]["YZMYL"]),
                         YY = Unity.ToDecimal(dt.Rows[i]["YY"]),
-                        TY = Unity.ToDecimal(dt.Rows[i]["TY"]),
-                        LY = Unity.ToDecimal(dt.Rows[i]["LY"]),
-                        LZMYL = Unity.ToDecimal(dt.Rows[i]["LZMYL"]),
-                        LJZSL = Unity.ToDecimal(dt.Rows[i]["LJZSL"]),
-                        LJZJL = Unity.ToDecimal(dt.Rows[i]["LJZJL"]),
                         ZT = Unity.ToDecimal(dt.Rows[i]["ZT"]),
                     });
                 }
@@ -118,12 +128,7 @@ namespace SBTP.Common
 
             return list;
         }
-
-        /// <summary>
-        /// 获取水井井史数据（措施后）
-        /// </summary>
-        /// <returns></returns>
-        public static List<DB_WATER_WELL_MONTH> GetList_WATER_WELL_MONTH_zt1()
+        public static List<DB_WATER_WELL_MONTH> db_water_well_month__zt1()
         {
             List<DB_WATER_WELL_MONTH> list = new List<DB_WATER_WELL_MONTH>();
 
@@ -142,11 +147,6 @@ namespace SBTP.Common
                         PZCDS = Unity.ToDecimal(dt.Rows[i]["PZCDS"]),
                         YZMYL = Unity.ToDecimal(dt.Rows[i]["YZMYL"]),
                         YY = Unity.ToDecimal(dt.Rows[i]["YY"]),
-                        TY = Unity.ToDecimal(dt.Rows[i]["TY"]),
-                        LY = Unity.ToDecimal(dt.Rows[i]["LY"]),
-                        LZMYL = Unity.ToDecimal(dt.Rows[i]["LZMYL"]),
-                        LJZSL = Unity.ToDecimal(dt.Rows[i]["LJZSL"]),
-                        LJZJL = Unity.ToDecimal(dt.Rows[i]["LJZJL"]),
                         ZT = Unity.ToDecimal(dt.Rows[i]["ZT"]),
                     });
                 }
@@ -154,8 +154,10 @@ namespace SBTP.Common
 
             return list;
         }
+        #endregion
 
-        public static List<DB_PC_XTPK_STATUS> GetList_PC_XTPK_STATUS()
+        #region 调剖剂
+        public static List<DB_PC_XTPK_STATUS> db_pc_xtpk_status()
         {
             List<DB_PC_XTPK_STATUS> list = new List<DB_PC_XTPK_STATUS>();
             using (DataSet ds = DbHelperOleDb.Query("select * from pc_xtpk_status where zt = 0"))
@@ -189,7 +191,7 @@ namespace SBTP.Common
             }
             return list;
         }
-        public static List<DB_PC_XTPL_STATUS> GetList_PC_XTPL_STATUS()
+        public static List<DB_PC_XTPL_STATUS> db_pc_xtpl_status()
         {
             List<DB_PC_XTPL_STATUS> list = new List<DB_PC_XTPL_STATUS>();
             using (DataSet ds = DbHelperOleDb.Query("select * from pc_xtpl_status where zt = 0"))
@@ -219,7 +221,7 @@ namespace SBTP.Common
             }
             return list;
         }
-        public static List<DB_PC_XTPY_STATUS> GetList_PC_XTPY_STATUS()
+        public static List<DB_PC_XTPY_STATUS> db_pc_xtpy_status()
         {
             List<DB_PC_XTPY_STATUS> list = new List<DB_PC_XTPY_STATUS>();
             using (DataSet ds = DbHelperOleDb.Query("select * from pc_xtpy_status where zt = 0"))
@@ -274,6 +276,7 @@ namespace SBTP.Common
             }
             return list;
         }
+        #endregion
 
     }
 }

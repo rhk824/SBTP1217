@@ -53,6 +53,7 @@
                 <MenuItem Header="生产井深部调剖效果预测" Name="XGYC_SC" />
             </MenuItem>
             <MenuItem Header="施工设计" MenuItem.Click="Menu_Click">
+                <MenuItem Header="快速生成" Click="miKSSC_Click" />
                 <MenuItem Header="方案生成" Name="SGSJ_MainPage" />
             </MenuItem>
             <MenuItem Header="效果评价" MenuItem.Click="Menu_Click">

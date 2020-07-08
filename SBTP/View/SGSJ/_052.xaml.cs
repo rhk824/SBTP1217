@@ -34,32 +34,54 @@ namespace SBTP.View.SGSJ
         {
             InitializeComponent();
             this.bll = bll;
-            tb.Text = bll.BookMarks["text_052"];
-            this.Loaded += _052_Loaded;
+            this.bll.init_052();
+            DataContext = this.bll;
+            tb.Text = this.bll.BookMarks["text_052"];
+            _052_Loaded();
         }
 
-        private void _052_Loaded(object sender, RoutedEventArgs e)
+        private void _052_Loaded()
         {
-            bll.Init052();
-            //dg.DataContext = bll.dt021;
+            if (bll.oc_052.Any())
+            {
+                grid_area.Children.Clear();
+                var groups = bll.oc_052.GroupBy(p => p.JH);
+                foreach (var group in groups)
+                {
+                    grid_area.Children.Add(creatGrid(new List<CSSJ.DssjModel>(group.Select(p=>new CSSJ.DssjModel() { 
+                        GX_NAME = p.GXMC,
+                        BL = (double)p.BL,
+                        YL = (double)p.YL,
+                        YN = Math.Round((double)p.YTND, 0),
+                        KN = Math.Round((double)p.KLND, 0),
+                        KJ = Math.Round((double)p.KLMS, 0),
+                        XN = Math.Round((double)p.XYND, 0),
+                        ZRSD = Math.Round((double)p.PL, 1),
+                        ZRTS = Math.Round((double)p.SGZQ, 1),
+                        DLND = Math.Round((double)p.DLND, 1),
+                        ZRYL = Math.Round((double)p.ZRYL, 2)
+                    })), group.Key));
+                }
+            }
         }
-
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            bll.update052();
-            DataContext = bll.well_info;
-            grid_area.Children.Clear();
+            if (!bll.update_052(out string message))
+            {
+                MessageBox.Show(message);
+                return;
+            }
+            _052_Loaded();
+            //DataContext = bll.well_info;
+            //grid_area.Children.Clear();
             tb.Text = $"深部调剖段按照前置段塞、主段塞、封口段塞、替挤段塞等工序设计。参考以往矿场应用情况，逐一对每口调剖井进行设计。" +
                $"总调剖剂用量{Unity.ToDecimal(bll.Tags["总调剖剂用量"]).ToString("0.##")}m3。";
-            //tb.Text = $"深部调剖段按照前置段塞、主段塞、封口段塞、替挤段塞等工序设计。参考以往矿场应用情况，逐一对每口调剖井进行设计。" +
-            //   $"总调剖剂用量{bll.Tags["总调剖剂用量"]}m3。";
 
-            foreach (var item in bll.well_info)
-            {
-                grid_area.Children.Add(creatGrid(item.Value, item.Key));
-            }
-            //dg.DataContext = bll.dt052;
+            //foreach (var item in bll.well_info)
+            //{
+            //    grid_area.Children.Add(creatGrid(item.Value, item.Key));
+            //}
         }
 
         private StackPanel creatGrid(List<CSSJ.DssjModel> dssjModels, string wellname)
@@ -84,11 +106,11 @@ namespace SBTP.View.SGSJ
                 { "液体浓度（mg/L）", "YN" },
                 { "颗粒浓度（mg/L）", "KN" },
                 { "颗粒目数（目）", "KJ" },
-                { "携液浓度（mg/L）", "KJ" },
+                { "携液浓度（mg/L）", "XN" },
                 { "排量（m3/d）", "ZRSD" },
                 { "施工周期（d）", "ZRTS" },
-                { "当量粘度（mP.s）", "ZRTS" },
-                { "注入压力", "ZRYL" }
+                { "当量粘度（mPa.s）", "DLND" },
+                { "注入压力（MPa）", "ZRYL" }
             };
 
             foreach (KeyValuePair<string, string> item in paras)
@@ -108,6 +130,7 @@ namespace SBTP.View.SGSJ
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             bll.update_bookmark("text_052", tb.Text);
+            bll.save_052();
             MessageBox.Show("操作成功");
         }
 

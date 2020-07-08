@@ -28,17 +28,17 @@
                     <StackPanel>
                         <TextBox x:Name="tb" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
                             <TextBlock>调剖井调后效果预测</TextBlock>
-                        <DataGrid x:Name="dg" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg" ItemsSource="{Binding oc_061}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
+                                <DataGridTextColumn Header="井号" Binding="{Binding JH}"/>
 
                                 <DataGridTemplateColumn HeaderStyle="{StaticResource dgHeader_sgsj_yc_tpq}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding tpq_zryl, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding TQ_ZRYL, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding tpq_sxszs, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding TQ_SXSZS, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -48,9 +48,9 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding tph_zryl, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding TH_ZRYL, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding tph_sxszs, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding TH_SXSZS, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -60,9 +60,9 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding zf_zryl, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding ZF_ZRYL, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding zf_sxszs, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding ZF_SXSZS, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>

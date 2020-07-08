@@ -176,5 +176,15 @@ namespace SBTP
             pageContainer.NavigationService.Navigate(page);
         }
 
+        private void miKSSC_Click(object sender, RoutedEventArgs e)
+        {
+            BLL.sgsj_bll bll = new BLL.sgsj_bll();
+            if (!bll.KSSC(out string message))
+            {
+                MessageBox.Show(message);
+                return;
+            }
+            MessageBox.Show("操作成功");
+        }
     }
 }

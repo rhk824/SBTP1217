@@ -37,14 +37,12 @@ namespace SBTP.View.XGPJ
             Wells.DisplayMemberPath = "JH";
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:丢失范围之前释放对象", Justification = "<挂起>")]
         private void CreateChart(string jh, string start, string end)
         {
             MyToolKit.Series.Clear();
             var start_time = DateTime.Parse(start);
             var end_time = DateTime.Parse(end);
-            var query = DBContext.GetList_WATER_WELL_MONTH()
+            var query = DBContext.db_water_well_month__zt0()
                 .Where(p =>p.JH == jh && p.NY >= start_time && p.NY <= end_time).OrderBy(p => p.NY).ToList();
 
             Dictionary<string, decimal> points_1 = new Dictionary<string, decimal>(); //日注液量（m3/d）

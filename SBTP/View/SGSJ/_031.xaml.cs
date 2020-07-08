@@ -36,46 +36,36 @@ namespace SBTP.View.SGSJ
         {
             InitializeComponent();
             this.bll = bll;
-            tb1.Text = bll.BookMarks["text_03"];
-            tb2.Text = bll.BookMarks["text_031"];
+            this.bll.init_031();
+            tb1.Text = this.bll.BookMarks["text_03"];
+            tb2.Text = this.bll.BookMarks["text_031"];
             DataContext = this.bll;
-            this.Loaded += _031_Loaded;
-        }
-
-        private void _031_Loaded(object sender, RoutedEventArgs e)
-        {
-            bll.Init031();
-            dg.DataContext = bll.dt031;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
             string path = Environment.CurrentDirectory + @"\ImageRecognition\jwt.png";
-            if (!bll.update03())
+            if (!bll.update_03(out string message))
             {
                 MessageBox.Show("操作失败：需要确保“目标区域设计概况-开发状况”已获得水井数量，再执行次操作。");
+                return;
+            }
+
+            if (!bll.update_031(out message))
+            {
+                MessageBox.Show(message);
                 return;
             }
 
             tb1.Text = $"通过视吸水指数、吸水剖面和含水等因素综合分析，" +
                 $"选定调剖井{Unity.ToDecimal(bll.Tags["调剖井数"]).ToString("0.##")}口，" +
                 $"占总注入井数{Unity.ToDecimal(bll.Tags["占总注入井数"]).ToString("0.##")}%。";
-            //tb1.Text = $"通过视吸水指数、吸水剖面和含水等因素综合分析，" +
-            //    $"选定调剖井{bll.Tags["调剖井数"]}口，" +
-            //    $"占总注入井数{bll.Tags["占总注入井数"]}%。";
-
-            bll.update031();
             tb2.Text = $"经统计，" +
                 $"选定调剖井平均日注水{Unity.ToDecimal(bll.Tags["选定调剖井平均日注水"]).ToString("0.##")}m3/d，" +
                 $"平均注水压力{Unity.ToDecimal(bll.Tags["平均注水压力"]).ToString("0.##")}MPa，" +
                 $"平均视吸水指数{Unity.ToDecimal(bll.Tags["平均视吸水指数"]).ToString("0.##")}m3/d.MPa，" +
                 $"平均综合含水{Unity.ToDecimal(bll.Tags["平均综合含水"]).ToString("0.##")}%。";
-            //tb2.Text = $"经统计，" +
-            //    $"选定调剖井平均日注水{bll.Tags["选定调剖井平均日注水"]}m3/d，" +
-            //    $"平均注水压力{bll.Tags["平均注水压力"]}MPa，" +
-            //    $"平均视吸水指数{bll.Tags["平均视吸水指数"]}m3/d.MPa，" +
-            //    $"平均综合含水{bll.Tags["平均综合含水"]}%。";
 
             //BitmapImage bi = new BitmapImage(new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "img.png")));
             //img.Source = bi;
@@ -86,14 +76,13 @@ namespace SBTP.View.SGSJ
             utils.SaveCanvas(size, canvas, 96, path);
             Uri uri = new Uri(path, UriKind.RelativeOrAbsolute);
             img.Source = new BitmapImage(uri);
-            dg.DataContext = bll.dt031;
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             bll.update_bookmark("text_03", tb1.Text);
             bll.update_bookmark("text_031", tb2.Text);
-            DbHelperOleDb.UpdateTable("sgsj_031", (DataTable)dg.DataContext);
+            bll.save_031();
             MessageBox.Show("操作成功");
         }
 

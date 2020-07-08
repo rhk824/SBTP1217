@@ -33,30 +33,30 @@
                     </TextBox>
                 </GroupBox>
                 <GroupBox Header="水井">
-                    <DataGrid x:Name="dg_ww" ColumnWidth="*" ItemsSource="{Binding}">
+                    <DataGrid x:Name="dg_ww" ColumnWidth="*" ItemsSource="{Binding oc_0221}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="累计注水" Binding="{Binding ljzs, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="累注聚量" Binding="{Binding ljzj, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="水井井数" Binding="{Binding sjjs, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="月注聚量" Binding="{Binding yzyl, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="注聚浓度" Binding="{Binding jhwnd, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="单井平均日注" Binding="{Binding pjrz, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="平均注水压力" Binding="{Binding zsyl, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="视吸水指数" Binding="{Binding sxszs, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="累计注水（m3）" Binding="{Binding LJZS, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="累注聚量（m3）" Binding="{Binding LJZJ, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="水井井数（口）" Binding="{Binding SJJS, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="月注聚量（m3）" Binding="{Binding YZYL, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="注聚浓度（mg/L）" Binding="{Binding JHWND, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="单井平均日注（m3/d）" Binding="{Binding PJRZ, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="平均注水压力（MPa）" Binding="{Binding ZSYL, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="视吸水指数（m3/d.MPa）" Binding="{Binding SXSZS, StringFormat={}{0:0.##}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>
                 <GroupBox Header="油井">
-                    <DataGrid x:Name="dg_ow" ColumnWidth="*" ItemsSource="{Binding}">
+                    <DataGrid x:Name="dg_ow" ColumnWidth="*" ItemsSource="{Binding oc_0222}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="累计产液" Binding="{Binding ljcy1, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="累计产油" Binding="{Binding ljcy2, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="油井井数" Binding="{Binding yjjs, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="月产液" Binding="{Binding ycy1, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="月产油" Binding="{Binding ycy2, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="综合含水" Binding="{Binding zhhs, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="单井日产液" Binding="{Binding rcy1, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="单井日产油" Binding="{Binding rcy2, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="累计产液（m3）" Binding="{Binding LJCY1, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="累计产油（t）" Binding="{Binding LJCY2, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="油井井数（口）" Binding="{Binding YJJS, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="月产液（m3）" Binding="{Binding YCY1, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="月产油（t）" Binding="{Binding YCY2, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="综合含水（%）" Binding="{Binding ZHHS, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="单井日产液（m3/d）" Binding="{Binding RCY1, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="单井日产油（t/d）" Binding="{Binding RCY2, StringFormat={}{0:0.##}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>

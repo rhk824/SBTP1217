@@ -34,20 +34,20 @@
 
                         </TextBox>
                         <TextBlock Text="吸水剖面测试结果数据表" />
-                        <DataGrid x:Name="dg" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg" ItemsSource="{Binding oc_032}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
-                                <DataGridTextColumn Header="调剖层" Binding="{Binding tpc}"/>
+                                <DataGridTextColumn Header="井号" Binding="{Binding JH}"/>
+                                <DataGridTextColumn Header="调剖层" Binding="{Binding TPC}"/>
 
                                 <DataGridTemplateColumn HeaderStyle="{StaticResource dgHeader_sgsj_tpc_tpc}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding tpc_hd, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding TPC_HD, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding tpc_xsl, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding TPC_XSL, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding tpc_xsfs, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding TPC_XSFS, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -57,11 +57,11 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding fdd_hd, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding FDD_HD, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding fdd_xsl, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding FDD_XSL, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding fdd_xsfs, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding FDD_XSFS, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -71,11 +71,11 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding zzd_hd, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding ZZD_HD, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding zzd_xsl, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding ZZD_XSL, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                                 <Rectangle Style="{StaticResource line_cell_style}" />
-                                                <TextBlock Text="{Binding zzd_xsfs, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
+                                                <TextBlock Text="{Binding ZZD_XSFS, StringFormat={}{0:0.##}}" Style="{StaticResource txt_cell_style}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
