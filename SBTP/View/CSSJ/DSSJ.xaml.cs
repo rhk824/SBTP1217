@@ -372,7 +372,7 @@ namespace SBTP.View.CSSJ
             //聚合物粘度
             ZrylParams.jn = double.Parse(TQZRND.Text);
             //幂指数
-            ZrylParams.m = qkcs.Mvalue;
+            ZrylParams.m = qkcs.Lb;
             //吸液分数
             ZrylParams.tpcxyfs = jcxx_Tpcxx_Models.Find(x => x.jh.Equals(jh)).zrfs / 100;
             //日注液量

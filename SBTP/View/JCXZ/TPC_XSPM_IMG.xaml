@@ -65,7 +65,9 @@
             </GroupBox.Header>
             <DataGrid ItemsSource="{Binding oc_xspm}">
                 <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Tpcm}" Header="调剖层名称"/>
                     <DataGridTextColumn Binding="{Binding depth}" Header="对应深度" />
+                    <DataGridTextColumn Binding="{Binding YXHD}" Header="有效厚度" />
                     <DataGridTextColumn Binding="{Binding area}" Header="波峰面积" />
                     <DataGridTextColumn Binding="{Binding ntc}" Header="拟调层" />
                     <DataGridTextColumn Binding="{Binding ndd}" Header="拟堵段" />

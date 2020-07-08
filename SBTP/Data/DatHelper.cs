@@ -99,9 +99,6 @@ namespace SBTP.Data
             inputStr += "**LAYER CHOICE\r\n";
             inputStr += "*TPC // 井号 调剖层 有效厚度顶深 有效厚度 注入分数 增注厚度 增注比例 增注入分数 连通数量 方法 测试日期 标识\r\n";
             inputStr += "*JZLT // 水井 油井 层位 砂岩厚度 有效厚度 渗透率\r\n";
-            inputStr += "*TPC1 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段\r\n";
-            inputStr += "*TPC2 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段\r\n";
-            inputStr += "*TPC3 // 井号 油层组 小层号 小层序号 砂岩顶深 有效厚度 渗透率 地层系数 拟调层 拟堵段\r\n";
             inputStr += "/LAYER CHOICE\r\n";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -165,7 +162,7 @@ namespace SBTP.Data
         private static void CheckRLS0()
         {
             string inputStr = "**QKCS 区块参数\r\n";
-            inputStr += "*QKXZ // 温度  矿化度  ph  油藏压力\r\n";
+            inputStr += "*QKXZ // 温度  矿化度  ph  油藏压力 油饱和度\r\n";
             inputStr += "/QKXZ\r\n";
             inputStr += "*QTFS // 驱替类型 驱替液浓度  工作粘度\r\n";
             inputStr += "/QTFS\r\n";
@@ -173,7 +170,7 @@ namespace SBTP.Data
             inputStr += "/QTLB\r\n";
             inputStr += "*QTXS // 残余油饱和度  水相相渗端点值\r\n";
             inputStr += "/QTXS\r\n";
-            inputStr += "*OTHERS // 水粘度 油粘度 聚合物粘度 油密度 幂指数\r\n";
+            inputStr += "*OTHERS // 水粘度 油粘度 油密度 幂指数\r\n";
             inputStr += "/OTHERS\r\n";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS0.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -239,8 +236,8 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
             {
                 string inputStr = "**QKCS 区块参数\r\n";
-                inputStr += "*QKXZ // 温度  矿化度  ph  油藏压力\r\n";
-                inputStr += qkcs.Ycwd + "\t" + qkcs.Yckhd + "\t" + qkcs.Ycph + "\t" + qkcs.Ycyl + "\r\n";
+                inputStr += "*QKXZ // 温度  矿化度  ph  油藏压力 油饱和度\r\n";
+                inputStr += qkcs.Ycwd + "\t" + qkcs.Yckhd + "\t" + qkcs.Ycph + "\t" + qkcs.Ycyl + "\t" + qkcs.Ybhd+ "\r\n";
                 inputStr += "/QKXZ\r\n";
                 inputStr += "*QTFS // 驱替类型 驱替液浓度  工作粘度\r\n";
                 inputStr += qkcs.Fs + "\t" + qkcs.Qtn + "\t" + qkcs.Qtgn + "\r\n";
@@ -251,8 +248,8 @@ namespace SBTP.Data
                 inputStr += "*QTXS // 残余油饱和度  水相相渗端点值\r\n";
                 inputStr += qkcs.Cyybhd + "\t" + qkcs.Sxxsddz + "\r\n";
                 inputStr += "/QTXS\r\n";
-                inputStr += "*OTHERS // 水粘度 油粘度 聚合物粘度 油密度 幂指数\r\n";
-                inputStr += qkcs.Sn + "\t" + qkcs.Yn + "\t" + qkcs.Jn + "\t" + qkcs.Ym + "\t" + qkcs.Mvalue + "\r\n";
+                inputStr += "*OTHERS // 水粘度 油粘度 油密度 幂指数\r\n";
+                inputStr += qkcs.Sn + "\t" + qkcs.Yn + "\t" + qkcs.Ym + "\t" + qkcs.Mvalue + "\r\n";
                 inputStr += "/OTHERS\r\n";
                 sw.Write(inputStr);
             }
@@ -278,6 +275,7 @@ namespace SBTP.Data
                 qkcs.Yckhd = double.Parse(vs[1]);
                 qkcs.Ycph = double.Parse(vs[2]);
                 qkcs.Ycyl = double.Parse(vs[3]);
+                qkcs.Ybhd = double.Parse(vs[4]);
             }
             if (!data[qtfs_index + 1].ToString().Contains("/QTFS"))
             {
@@ -306,9 +304,9 @@ namespace SBTP.Data
                 string[] vs = data[other_index + 1].ToString().Split('\t');
                 qkcs.Sn = double.Parse(vs[0]);
                 qkcs.Yn = double.Parse(vs[1]);
-                qkcs.Jn = double.Parse(vs[2]);
-                qkcs.Ym = double.Parse(vs[3]);
-                qkcs.Mvalue = double.Parse(vs[4]);
+                //qkcs.Jn = double.Parse(vs[2]);
+                qkcs.Ym = double.Parse(vs[2]);
+                qkcs.Mvalue = double.Parse(vs[3]);
             }
 
             return qkcs;
@@ -827,7 +825,7 @@ namespace SBTP.Data
                 List<string> newLines = new List<string>();
                 //读取RLS1.DAT，提取文件结构，保存在数组
                 int startIndex = lines.IndexOf("*JZLT // 水井 油井 层位 砂岩厚度 有效厚度 渗透率");
-                int endIndex = lines.IndexOf("*TPC1 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段");
+                int endIndex = lines.IndexOf("/LAYER CHOICE");
                 //移除相关数据
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -844,97 +842,6 @@ namespace SBTP.Data
                     newData.Add(row_str.ToString());
                 }
                 newData.Add("/JZLT\r\n");
-                newLines.InsertRange(startIndex + 1, newData);
-                sw.Write(string.Join("", newLines.ToArray()));
-                Flag = true;
-                return Flag;
-            }
-        }
-        /// <summary>
-        /// 保存调剖层的吸水剖面数据
-        /// </summary>
-        /// <returns></returns>
-        public static bool save_tpc_xspm(List<tpc_xspm_model> xspm_data)
-        {
-            bool Flag = false;
-            CheckRLS1();
-            List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT"));
-            using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", false, Encoding.UTF8))
-            {
-                List<string> newLines = new List<string>();
-                //读取RLS1.DAT，提取文件结构，保存在数组
-                int startIndex = lines.IndexOf("*TPC1 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段");
-                int endIndex = lines.IndexOf("*TPC2 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段");
-                //移除相关数据
-                lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
-                lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
-                List<string> newData = new List<string>();
-                foreach (tpc_xspm_model item in xspm_data)
-                {
-                    StringBuilder row_str = new StringBuilder();
-                    row_str.AppendFormat("{0}\t", item.JH);
-                    row_str.AppendFormat("{0}\t", item.YCZ);
-                    row_str.AppendFormat("{0}\t", item.XCH);
-                    row_str.AppendFormat("{0}\t", item.JSXH);
-                    row_str.AppendFormat("{0}\t", item.CSRQ);
-                    row_str.AppendFormat("{0}\t", item.JDDS1);
-                    row_str.AppendFormat("{0}\t", item.YXHD);
-                    row_str.AppendFormat("{0}\t", item.ZRBFS);
-                    row_str.AppendFormat("{0}\t", item.ntc);
-                    row_str.AppendFormat("{0}\r\n", item.ndd);
-                    newData.Add(row_str.ToString());
-                }
-                newData.Add("/TPC1\r\n");
-                newLines.InsertRange(startIndex + 1, newData);
-                sw.Write(string.Join("", newLines.ToArray()));
-                Flag = true;
-                return Flag;
-            }
-        }
-        /// <summary>
-        /// 保存调剖层的吸水剖面（图像识别）数据
-        /// </summary>
-        /// <returns></returns>
-        public static bool save_tpc_xspm_img(List<tpc_xspm_model> data)
-        {
-            bool Flag = false;
-            return Flag;
-        }
-        /// <summary>
-        /// 保存调剖层的小层数据
-        /// </summary>
-        /// <returns></returns>
-        public static bool save_tpc_xcsj(List<tpc_xcsj_model> xcsj_data)
-        {
-            bool Flag = false;
-            CheckRLS1();
-            List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT"));
-            using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", false, Encoding.UTF8))
-            {
-                List<string> newLines = new List<string>();
-                //读取RLS1.DAT，提取文件结构，保存在数组
-                int startIndex = lines.IndexOf("*TPC3 // 井号 油层组 小层号 小层序号 砂岩顶深 有效厚度 渗透率 地层系数 拟调层 拟堵段");
-                int endIndex = lines.IndexOf("/LAYER CHOICE");
-                //移除相关数据
-                lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
-                lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
-                List<string> newData = new List<string>();
-                foreach (tpc_xcsj_model item in xcsj_data)
-                {
-                    string rowStr = "";
-                    rowStr += item.JH + "\t";
-                    rowStr += item.YCZ + "\t";
-                    rowStr += item.XCH + "\t";
-                    rowStr += item.XCXH + "\t";
-                    rowStr += item.SYDS + "\t";
-                    rowStr += item.SYHD + "\t";
-                    rowStr += item.STL + "\t";
-                    rowStr += item.dcxs + "\t";
-                    rowStr += item.ntc + "\t";
-                    rowStr += item.ndd + "\r\n";
-                    newData.Add(rowStr);
-                }
-                newData.Add("/TPC3\r\n");
                 newLines.InsertRange(startIndex + 1, newData);
                 sw.Write(string.Join("", newLines.ToArray()));
                 Flag = true;

@@ -40,15 +40,21 @@ namespace SBTP.View.JCXZ
         string file_path = System.AppDomain.CurrentDomain.BaseDirectory + @"py\peakpicker\";
         string file_python = "pick_picker.py";
         string file_json = "pick_picker.json";
+        /// <summary>
+        /// 设置调剖层的汇总计算，申请委托接口
+        /// </summary>
+        /// <param name="tpc"></param>
+        public delegate void set_tpc_delegate(tpc_model tpc);
+        /// <summary>
+        /// 汇总计算调剖层
+        /// </summary>
+        public set_tpc_delegate calculate_tpc;
 
 
         public TPC_XSPM_IMG(tpc_bll bll)
         {
             InitializeComponent();
             this.bll = new tpc_xspm_img_bll(bll);
-            //tb_top.Text = "1000";
-            //tb_bottom.Text = "2000";
-            //tb_color.Text = "2";
             DataContext = this.bll;
 
         }
@@ -113,20 +119,8 @@ namespace SBTP.View.JCXZ
 
         private void Btn_add_Click(object sender, RoutedEventArgs e)
         {
-            string directory = App.project_path + @"\Images\";
-            string file_name = bll.tpc.jh;
-            string extension = Path.GetExtension(img_path);
-            string file_path = directory + file_name + extension;
-
-            DirectoryInfo dir;
-            if (!Directory.Exists(directory))
-                dir = Directory.CreateDirectory(directory);
-            else
-                dir = new DirectoryInfo(directory);
-
-            if (System.IO.File.Exists(file_path)) System.IO.File.Delete(file_path);
-
-            System.IO.File.Copy(img_path, file_path);
+            calculate_tpc(bll.calculate_tpc());
+            //MessageBox.Show(Unity.hint(bll.save_data()));
         }
 
         private void Btn_quit_Click(object sender, RoutedEventArgs e)

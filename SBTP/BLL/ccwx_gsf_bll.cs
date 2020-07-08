@@ -115,7 +115,7 @@ namespace SBTP.BLL
                 model.JH = Unity.ToString(dt.Rows[i]["jh"]);
                 model.YCZ = Unity.ToString(dt.Rows[i]["ycz"]);
                 model.XCH = Unity.ToString(dt.Rows[i]["xch"]);
-                model.SYHD = Unity.ToDecimal(dt.Rows[i]["syhd"]);
+                model.XCXH = dt.Rows[i]["xcxh"].ToString();
                 model.YXHD = Unity.ToDecimal(dt.Rows[i]["yxhd"]);
                 model.STL = Unity.ToDecimal(dt.Rows[i]["stl"]);
                 model.zrfs = 0;
@@ -160,8 +160,8 @@ namespace SBTP.BLL
                 model.CSRQ = Unity.DateTimeToString(dt.Rows[i]["csrq"], "yyyy-MM-dd");
                 model.YCZ = Unity.ToString(dt.Rows[i]["ycz"]);
                 model.XCH = Unity.ToString(dt.Rows[i]["xch"]);
+                model.JSXH = Unity.ToInt(dt.Rows[i]["xfch"]);
                 model.JDDS1 = Unity.ToDouble(dt.Rows[i]["jdds1"]);
-                model.JDDS2 = Unity.ToDouble(dt.Rows[i]["jdds2"]);
                 model.ZRBFS = Unity.ToDouble(dt.Rows[i]["zrbfs"]);
                 oc_xspm.Add(model);
             }

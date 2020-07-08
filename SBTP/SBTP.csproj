@@ -192,6 +192,7 @@
     <Compile Include="BLL\tpc_xspm_bll.cs" />
     <Compile Include="BLL\tpc_xspm_img_bll.cs" />
     <Compile Include="BLL\TPJ_BLL.cs" />
+    <Compile Include="BLL\Tpj_Insert_BLL.cs" />
     <Compile Include="BLL\WaterWellMonth.cs" />
     <Compile Include="BLL\WellMapGeneration.cs" />
     <Compile Include="BLL\Well_status.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Model\tpc_model.cs" />
     <Compile Include="Model\tpc_xcsj_model.cs" />
     <Compile Include="Model\tpc_xspm_model.cs" />
+    <Compile Include="Model\TpjBase.cs" />
     <Compile Include="Model\TPJData.cs" />
     <Compile Include="Model\Waterwell_monthModel.cs" />
     <Compile Include="Model\Well_statusModel.cs" />

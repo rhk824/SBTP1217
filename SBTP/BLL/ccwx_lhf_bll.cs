@@ -43,7 +43,6 @@ namespace SBTP.BLL
         /// 自定义压降时间
         /// </summary>
         public string yjDate { set; get; }
-        public static bool? isChecked { set; get; } = null;
         #endregion
 
         public ccwx_lhf_bll(ccwx_tpjing_model tpjing)
@@ -139,16 +138,17 @@ namespace SBTP.BLL
         /// <returns></returns>
         private double calculate_q()
         {
-            if (string.IsNullOrEmpty(tpjing.csrq)) return 0;
-            if (tpjing.IsCustomize)
-                tpjing.csrq = this.yjDate;
-            DateTime time = Convert.ToDateTime(tpjing.csrq);
+            //if (string.IsNullOrEmpty(tpjing.csrq)) return 0;
+            //if (tpjing.IsCustomize)
+            //    tpjing.csrq = this.yjDate;
+            DateTime time = Convert.ToDateTime(this.yjDate);
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * ");
             sql.Append(" from water_well_month ");
             sql.Append(string.Format(" where ZT=0 and jh='{0}' and ny=#{1}# ", tpjing.jh, string.Format("{0:yyyy/MM}", time)));
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
 
+            if (dt.Rows.Count == 0) return 0;
             double yzsl = Unity.ToDouble(dt.Rows[0]["yzsl"]);
             double yzmyl = Unity.ToDouble(dt.Rows[0]["yzmyl"]);
             double days = Unity.ToDouble(dt.Rows[0]["ts"]);

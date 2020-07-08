@@ -36,12 +36,16 @@
                         <TextBox Name="oil_kh" Text="{Binding Yckhd}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="油藏水PH："/>
+                        <TextBlock Text="油藏水(PH)："/>
                         <TextBox Name="oil_ph" Text="{Binding Ycph}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="油藏压力："/>
+                        <TextBlock Text="油藏压力(MPa)："/>
                         <TextBox Name="oil_p" Text="{Binding Ycyl}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="油饱和度(%)："/>
+                        <TextBox Name="oil_bhd" Text="{Binding Ybhd}"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
@@ -54,16 +58,8 @@
                         <TextBox Name="oil_n" Text="{Binding Yn}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="聚合物粘度(mPa.s)："/>
-                        <TextBox Name="j_n" Text="{Binding Jn}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
                         <TextBlock Text="油密度(g/cm3)："/>
                         <TextBox Name="oil_m" Text="{Binding Ym}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="幂指数："/>
-                        <TextBox Name="m_value" Text="{Binding Mvalue}"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
@@ -77,7 +73,7 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="驱替液浓度(mg/L)："/>
-                        <TextBox Name="qt_n" Text="{Binding Qtn}"/>
+                        <TextBox Name="qt_n" Text="{Binding Qtn}" IsEnabled="False"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="驱替液工作粘度(mPa.s)："/>
@@ -95,7 +91,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="最大剪切流速(m/d)："/>
-                        <TextBox Name="jl_max" Text="{Binding Jlmax}"/>
+                        <TextBox Name="jl_max" Text="{Binding Jlmax}" IsEnabled="False"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="流变指数："/>
@@ -103,11 +99,11 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="恢复系数："/>
-                        <TextBox Name="hf" Text="{Binding Hf}"/>
+                        <TextBox Name="hf" Text="{Binding Hf}" IsEnabled="False"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="剪切系数："/>
-                        <TextBox Name="jq" Text="{Binding Jq}"/>
+                        <TextBox Name="jq" Text="{Binding Jq}" IsEnabled="False"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
@@ -118,11 +114,15 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="残余油饱和度："/>
-                        <TextBox Name="cyybhd" Text="{Binding Cyybhd}"/>
+                        <TextBox Name="cyybhd" Text="{Binding Cyybhd}" IsEnabled="False"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="水相相渗端点值："/>
-                        <TextBox Name="sxxsddz" Text="{Binding Sxxsddz}"/>
+                        <TextBox Name="sxxsddz" Text="{Binding Sxxsddz}" IsEnabled="False"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="幂指数："/>
+                        <TextBox Name="m_value" Text="{Binding Mvalue}" IsEnabled="False"/>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>

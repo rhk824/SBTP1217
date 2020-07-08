@@ -40,6 +40,7 @@ namespace SBTP.View.TPJ
         /// <returns></returns>
         public ccwx_tpjing_model calculate()
         {
+
             ccwx_tpjing_model ccwx_Tpjing_Model;
             try
             {
@@ -209,6 +210,11 @@ namespace SBTP.View.TPJ
 
         private void Btn_import_Click(object sender, RoutedEventArgs e)
         {
+            if(string.IsNullOrEmpty(yjDate.Text))
+            {
+                MessageBox.Show("请输入压降测试日期");
+                return;
+            }
             OpenFileDialog op = new OpenFileDialog
             {
                 RestoreDirectory = true,
@@ -249,8 +255,7 @@ namespace SBTP.View.TPJ
             bll.t = Unity.ToDouble(tb_t.Text);
             bll.u = Unity.ToDouble(tb_u.Text);
             bll.b = Unity.ToDouble(tb_b.Text);
-            if (isEnabled.IsChecked == true)
-                bll.yjDate = yjDate.SelectedDate.ToString();
+            bll.yjDate = yjDate.SelectedDate.ToString();
 
             // 计算 ln
             bll.calculate_ln();

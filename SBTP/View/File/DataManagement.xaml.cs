@@ -454,7 +454,7 @@ namespace SBTP.View.File
                     x = 0;
                 newArray.Add(x);
             });
-            newArray.Add(1);
+            newArray[newArray.Count - 1] = 1;
             string key;
             string field;
             ArrayList sqlList = new ArrayList();
@@ -466,12 +466,13 @@ namespace SBTP.View.File
             else if (TableName.Equals("PC_XTPK_STATUS"))
             {
                 key = "MC";
-                field = "(MC,DW,TYRQ,CPSJ,CPBS,PZBS,PZSJ,KYQD,NW,NY,NJ,SYFW,XN,BSB,TXML,SXQ,JG,BZ,ZT)";
+                field = "(MC,DW,TYRQ,CPSJ,CPBS,PZBS,PZSJ,KYQD,NW,NY,NJ,XN,BSB,TXML,SXQ,JG,BZ,ZT)";
+
             }
             else
             {
                 key = "MC";
-                field = "(MC,DW,TYRQ,NW,NY,NJ,SYFW,XN,CN,ZN,GJL,SXQ,JG,BZ,ZT)";
+                field = "(MC,DW,TYRQ,NW,NY,NJ,XN,CN,ZN,GJL,SXQ,JG,BZ,ZT)";
             }
             StringBuilder sqlStr = new StringBuilder();
             sqlStr.Append("select * from " + TableName + " where " + key + "='" + newArray[0] + "'");

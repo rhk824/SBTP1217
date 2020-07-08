@@ -139,6 +139,7 @@
                                 <col:ArrayList>
                                     <sys:String>吸水剖面</sys:String>
                                     <sys:String>小层数据</sys:String>
+                                    <sys:String>图像识别</sys:String>
                                 </col:ArrayList>
                             </DataGridComboBoxColumn.ItemsSource>
                         </DataGridComboBoxColumn>
