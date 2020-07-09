@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SBTP.View.JCXZ"
       xmlns:Loading="clr-namespace:SBTP.BLL"
+      xmlns:Panel="clr-namespace:SBTP.Resource"
       mc:Ignorable="d" Background="#eee"
       Title="jzwsd" MinWidth="1000" MinHeight="520">
     <Page.Resources>
@@ -80,14 +81,14 @@
                     <Loading:Loading />
                 </Grid>-->
                 <GroupBox Grid.Row="1" BorderThickness="2" Margin="2" Header="操作">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,2,0">
+                    <Panel:KbiseczvTom HorizontalAlignment="Stretch" VerticalAlignment="Center" >
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <Label VerticalAlignment="Center" Content="线条数:"/>
                             <TextBox Width="30" Name="line_count" Text="25"/>
                             <Label Content="放缩倍数:"/>
                             <Label Content="{Binding Path=ScaleTimes, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Name="scaleTimes"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,5,0">
+                        <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,5,0">
                             <Label VerticalAlignment="Center" Content="范围:"/>
                             <Label  Name="value_min" Content="___"/>
                             <Label VerticalAlignment="Center" Content="-"/>
@@ -96,13 +97,20 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
                             <Label Content="步长:"/>
                             <Label Name="iso_step" Content="___"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        </StackPanel>-->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Button Content="井距" Click="RadioButton_Checked"/>
                             <Button Content="相位" Click="RadioButton_Checked"/>
                             <Button Content="综合" Click="RadioButton_Checked"/>
                         </StackPanel>
-                    </StackPanel>
+                        <Viewbox Stretch="Uniform">
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock TextAlignment="Center" Text="低" Width="20" Background="White" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Text="中" Width="20" Background="Red" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Text="高" Width="20" Background="DarkBlue" Margin="0,0,0,0"/>
+                            </StackPanel>
+                        </Viewbox>
+                    </Panel:KbiseczvTom>
                 </GroupBox>
             </Grid>
 

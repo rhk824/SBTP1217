@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:core="clr-namespace:System;assembly=mscorlib"
       xmlns:local="clr-namespace:SBTP.View.JCXZ"
+      xmlns:Panel="clr-namespace:SBTP.Resource"
       mc:Ignorable="d" 
       MinWidth="1000" MinHeight="520" Background="#eee"
       Title="tpj">
@@ -103,14 +104,14 @@
                     <StackPanel Name="iso" Orientation="Horizontal"   ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                 </ScrollViewer>
                 <GroupBox Grid.Row="1" BorderThickness="2" Margin="2" Header="操作">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Panel:KbiseczvTom HorizontalAlignment="Stretch" VerticalAlignment="Center" >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,2,0">
                             <Label VerticalAlignment="Center" Content="线条数:"/>
                             <TextBox Width="30" Name="line_count" Text="25"/>
                             <Label Content="放缩倍数:"/>
                             <Label Content="{Binding Path=ScaleTimes, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Name="scaleTimes"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,5,0">
+                        <!--<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,5,0">
                             <Label VerticalAlignment="Center" Content="范围:"/>
                             <Label  Name="value_min" Content="___"/>
                             <Label VerticalAlignment="Center" Content="-"/>
@@ -119,12 +120,19 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
                             <Label Content="步长:"/>
                             <Label Name="iso_step" Content="___"/>
-                        </StackPanel>
+                        </StackPanel>-->
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Button Content="综合含水" Click="GenerateClick"/>
                             <Button Content="视吸水指数" Click="GenerateClick"/>
                         </StackPanel>
-                    </StackPanel>
+                        <Viewbox Stretch="Uniform">
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBlock TextAlignment="Center" Text="低" Width="20" Background="White" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Text="中" Width="20" Background="Red" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Text="高" Width="20" Background="DarkBlue" Margin="0,0,0,0"/>
+                            </StackPanel>
+                        </Viewbox>
+                    </Panel:KbiseczvTom>
                 </GroupBox>
             </Grid>
         </GroupBox>

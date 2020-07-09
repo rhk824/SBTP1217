@@ -442,15 +442,14 @@ namespace SBTP.Data
                         break;
                 }
             }
-            List<string> headerArry = Regex.Split(headerStr, "\\s", RegexOptions.IgnoreCase).ToList<string>();
+            List<string> headerArry = Regex.Split(headerStr, "\\s", RegexOptions.IgnoreCase).ToList();
             headerArry.RemoveRange(0, 3);
 
             string[] table = fileStr.Substring(0, fileStr.Length - 1).Split(',');
 
             for (int i = 0; i < table.Length; i++)
-            {
-                List<string> ow_group = new List<string>();
-                ow_group = table[i].Split('\t').ToList<string>();
+            {                
+                List<string> ow_group = table[i].Split('\t').ToList();
                 ow_group.RemoveRange(0, 3);
                 string[] itemArry = new string[4] { table[i].Split('\t')[0], table[i].Split('\t')[1], table[i].Split('\t')[2], string.Join(",", ow_group) };
 

@@ -31,7 +31,7 @@ namespace SBTP.BLL
         public ccwx_bll()
         {
             oc_tpjing = new ObservableCollection<ccwx_tpjing_model>();
-            //tpjing = new ccwx_tpjing_model();
+            oc_tpjing_info = new ObservableCollection<ccwx_tpjing_model>();
             try
             {
                 loading_data();
@@ -39,8 +39,7 @@ namespace SBTP.BLL
             catch
             {
                 throw;
-            }
-            
+            }       
         }
 
         #region 对接视图层（公共接口）

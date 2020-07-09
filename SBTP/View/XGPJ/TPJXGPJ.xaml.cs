@@ -528,14 +528,14 @@ namespace SBTP.View.XGPJ
                 }
                 tpxgModels.Add(newtpxg);
                 //tpj_list.Items.Remove(select[i]);
-                source.Remove(select.ToString());
+                dataSource.Remove(select[i].ToString());
             }
             tpxgModels = new ObservableCollection<TpxgModel>(tpxgModels.OrderBy(p => p.CSSJ));
-            dataSource.Clear();
-            for (int i = 0; i < source.Count; i++)
-            {
-                dataSource.Add(source[i]);
-            }
+            //dataSource.Clear();
+            //for (int i = 0; i < source.Count; i++)
+            //{
+            //    dataSource.Add(source[i]);
+            //}
 
         }
 

@@ -150,9 +150,5 @@
                 </Viewbox>
             </Grid>
         </Grid>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button>图像曲线保存</Button>
-            <Button>继续</Button>
-        </StackPanel>
     </Grid>
 </Page>

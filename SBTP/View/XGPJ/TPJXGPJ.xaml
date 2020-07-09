@@ -302,7 +302,7 @@
                     <RadioButton GroupName="Graph" Content="生产动态" Click="RadioButton_Click"/>
                     <RadioButton GroupName="Graph" Content="吸水剖面" Click="RadioButton_Click"/>
                 </StackPanel>
-                <Frame Name="Container" Grid.Row="2" />
+                <Frame Name="Container" Grid.Row="1" />
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Button Name="Btn_img_export" Click="Btn_img_export_Click">图形输出</Button>
                     <Button Name="Btn_return" Click="Btn_return_Click">继续</Button>

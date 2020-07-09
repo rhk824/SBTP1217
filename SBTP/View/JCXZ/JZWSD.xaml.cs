@@ -246,9 +246,9 @@ namespace SBTP.View.JCXZ
             };
             scaleTimes.DataContext = isogram;
             KeyValuePair<double, double> range = isogram.GraphicGeneration(out double step);
-            value_min.Content = range.Value;
-            value_max.Content = range.Key;
-            iso_step.Content = Math.Round(step, 5);
+            //value_min.Content = range.Value;
+            //value_max.Content = range.Key;
+            //iso_step.Content = Math.Round(step, 5);
             iso.Children.Add(isogram);
         }
 
