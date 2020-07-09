@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SBTP.BLL;
+using SBTP.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,37 @@ namespace SBTP.View.File
         public TpjImport()
         {
             InitializeComponent();
+        }
+
+        private void submit_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (this.DataContext.GetType().Name.Equals("Tpjyy"))
+                {
+                    Tpj_Insert_BLL.YyjInfoInsert((Tpjyy)DataContext);
+                }
+                else if (this.DataContext.GetType().Name.Equals("Kltpj"))
+                {
+                    Tpj_Insert_BLL.KltpjInsert((Kltpj)DataContext);
+                }
+                else
+                {
+                    Tpj_Insert_BLL.YttpjInsert((Yttpj)DataContext);
+                }
+                MessageBox.Show("录入成功");
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("录入失败！原因：" + ex.Message);
+            }
+
+        }
+
+        private void cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

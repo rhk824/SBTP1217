@@ -5,8 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SBTP.View.File"
         mc:Ignorable="d"
-        Title="TpjImport" Height="450" Width="800">
+        Title="调剖剂信息录入" Height="180" Width="1000" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <GroupBox  Header="调剖剂信息" Name="tpj_info"/>
+        </ScrollViewer>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1">
+            <Button Name="submit" Content="提交" Width="80" Margin="0,0,10,0" Click="submit_Click"/>
+            <Button Name="cancel" Content="取消" Width="80" Margin="10,0,10,0" Click="cancel_Click"/>
+        </StackPanel>
+
     </Grid>
 </Window>

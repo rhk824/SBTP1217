@@ -54,7 +54,7 @@
                     </StackPanel>
                 </GroupBox>
 
-                <GroupBox Name="show_window" Grid.Column="1" Grid.Row="0" Grid.RowSpan="5" BorderThickness="2" Margin="2" Header="数据展示" PreviewKeyDown="Window_KeyDown">
+                <GroupBox Name="show_window" Grid.Column="1" Grid.Row="0" Grid.RowSpan="5" BorderThickness="2" Margin="2" Header="数据展示">
                     <DockPanel Name="sp"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                 </GroupBox>
                 <!--<Grid  Name="loading" Visibility="Collapsed"  Background="LightGray" Opacity="0.5" Grid.Column="1" Grid.Row="0" Grid.RowSpan="5">

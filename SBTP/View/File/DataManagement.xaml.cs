@@ -1,5 +1,6 @@
 ﻿using Common;
 using Maticsoft.DBUtility;
+using SBTP.BLL;
 using SBTP.Model;
 using SBTP.TPJtables;
 using System;
@@ -13,12 +14,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using Folder = System.Windows.Forms;
 
 namespace SBTP.View.File
 {
+    
     /// <summary>
     /// DataManagement.xaml 的交互逻辑
     /// </summary>
@@ -108,18 +111,60 @@ namespace SBTP.View.File
         private void Tpj_Import_Click(object sender, RoutedEventArgs e)
         {
             TreeViewItem parent = ContextMenuService.GetPlacementTarget(LogicalTreeHelper.GetParent(sender as MenuItem)) as TreeViewItem;
-            if (parent != null)
-            {
-                Yttpj yttpj = new Yttpj();
-                Type t = yttpj.GetType();
-                TypeInfo ti = t.GetTypeInfo();
-                //doTpjImport(parent.Name);
-            }
+            if (parent != null) doTpjImport(parent.Name);
         }
 
         private void doTpjImport(string tablename)
         {
-            throw new NotImplementedException();
+            object targetObject = null;
+            DataTable fieldnames = null;
+            switch (tablename)
+            {
+                case "PC_XTPL_STATUS": targetObject = new Yttpj(); fieldnames = Tpj_Insert_BLL.getChineseFieldName(tablename); break;
+                case "PC_XTPK_STATUS": targetObject = new Kltpj(); fieldnames = Tpj_Insert_BLL.getChineseFieldName(tablename); break;
+                case "PC_XTPY_STATUS": targetObject = new Tpjyy(); fieldnames = Tpj_Insert_BLL.getChineseFieldName(tablename); break;
+            }
+            if (targetObject == null || fieldnames == null) return;
+            List<DataRow> dataRows = fieldnames.Rows.OfType<DataRow>().ToList();
+            //获取父类对象类型信息
+            TypeInfo parentType = targetObject.GetType().BaseType.GetTypeInfo();
+            //获取对象类型信息
+            TypeInfo current = targetObject.GetType().GetTypeInfo();
+            //获取类声明字段
+            List<PropertyInfo> properties = parentType.DeclaredProperties.ToList();
+            properties.AddRange(current.DeclaredProperties.ToList());
+
+            //创建控件集合
+            StackPanel parentStack = new StackPanel() { HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center, Orientation = Orientation.Horizontal };
+            foreach (PropertyInfo item in properties)
+            {
+                StackPanel childStack = new StackPanel() { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Orientation = Orientation.Horizontal };
+                DataRow findOne = dataRows.Find(x => x.ItemArray[1].ToString().Equals(item.Name, StringComparison.OrdinalIgnoreCase));
+                if (findOne == null) continue;
+                TextBlock lable = new TextBlock() { Text = findOne.ItemArray[2].ToString() + "：" };
+                FrameworkElement field = null;
+                if(item.Name.Equals("csrq",StringComparison.OrdinalIgnoreCase)|| item.Name.Equals("tyrq", StringComparison.OrdinalIgnoreCase))
+                {
+                    field = new DatePicker() { Width = 100, Margin = new Thickness() { Left = 0, Top = 0, Right = 10, Bottom = 0 },SelectedDateFormat = DatePickerFormat.Short };
+                    Binding binding = new Binding();
+                    binding.Path = new PropertyPath(item.Name);
+                    binding.Mode = BindingMode.TwoWay;
+                    binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                    field.SetBinding(DatePicker.TextProperty, binding);
+                }
+                else
+                {
+                    field = new TextBox() { Width = 50, Margin = new Thickness() { Left = 0, Top = 0, Right = 10, Bottom = 0 } };
+                    field.SetBinding(TextBox.TextProperty, item.Name);
+                }
+                childStack.Children.Add(lable);
+                childStack.Children.Add(field);
+                parentStack.Children.Add(childStack);
+            }
+            TpjImport tpjImport = new TpjImport();
+            tpjImport.tpj_info.Content = parentStack;
+            tpjImport.DataContext = targetObject;
+            tpjImport.ShowDialog();
         }
 
         /// <summary>
@@ -298,18 +343,18 @@ namespace SBTP.View.File
                 string item_node_name = item_node.Name;
                 tPJ_Table = new TPJ_table(TableName = item_node_name);
                 ContextMenu menu = new ContextMenu();
-                MenuItem save_menuItem = new MenuItem
-                {
-                    Header = "保存数据"
-                };
+                //MenuItem save_menuItem = new MenuItem
+                //{
+                //    Header = "保存数据"
+                //};
                 
                 MenuItem delete_menuItem = new MenuItem
                 {
                     Header = "删除数据"
                 };
-                save_menuItem.Click += SaveClick;
+                //save_menuItem.Click += SaveClick;
                 delete_menuItem.Click += DeleteClick;
-                menu.Items.Add(save_menuItem);
+                //menu.Items.Add(save_menuItem);
                 menu.Items.Add(delete_menuItem);
                 tPJ_Table.ContextMenu = menu;
                 sp.Children.Clear();
@@ -423,42 +468,42 @@ namespace SBTP.View.File
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SaveClick(object sender, RoutedEventArgs e)
-        {
-            StringBuilder sqlStr = new StringBuilder();
-            string Key;
-            sqlStr.Append("select * from " + TableName);
-            DataTable dt = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
-            if (!TableName.Equals("PC_XTPY_STATUS"))
-                Key = "MC";
-            else
-                Key = "JH";
-            try
-            {
-                foreach (var item in tPJ_Table.DataGrid1.Items)
-                {
-                    if (item.ToString() == "{NewItemPlaceholder}")
-                        continue;
-                    DataRowView dataRowView = item as DataRowView;
-                    object[] itemArray = dataRowView.Row.ItemArray;
-                    DataRow[] drs = dt.Select(Key + "='" + itemArray[0].ToString() + "'");
-                    if (drs.Length == 0)
-                    {
-                        SaveData(itemArray);
-                    }
-                    else if (!drs[0]["ZT"].ToString().Equals("0"))
-                    {
-                        SaveData(itemArray);
-                    }
-                }
-                MessageBox.Show("更新成功!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-                throw;
-            }
-        }
+        //private void SaveClick(object sender, RoutedEventArgs e)
+        //{
+        //    StringBuilder sqlStr = new StringBuilder();
+        //    string Key;
+        //    sqlStr.Append("select * from " + TableName);
+        //    DataTable dt = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
+        //    if (!TableName.Equals("PC_XTPY_STATUS"))
+        //        Key = "MC";
+        //    else
+        //        Key = "JH";
+        //    try
+        //    {
+        //        foreach (var item in tPJ_Table.DataGrid1.Items)
+        //        {
+        //            if (item.ToString() == "{NewItemPlaceholder}")
+        //                continue;
+        //            DataRowView dataRowView = item as DataRowView;
+        //            object[] itemArray = dataRowView.Row.ItemArray;
+        //            DataRow[] drs = dt.Select(Key + "='" + itemArray[0].ToString() + "'");
+        //            if (drs.Length == 0)
+        //            {
+        //                SaveData(itemArray);
+        //            }
+        //            else if (!drs[0]["ZT"].ToString().Equals("0"))
+        //            {
+        //                SaveData(itemArray);
+        //            }
+        //        }
+        //        MessageBox.Show("更新成功!");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show(ex.ToString());
+        //        throw;
+        //    }
+        //}
 
         /// <summary>
         /// 右键删除事件
@@ -474,56 +519,56 @@ namespace SBTP.View.File
         /// 调剖剂数据录入
         /// </summary>
         /// <param name="itemArray"></param>
-        private void SaveData(object[] itemArray)
-        {
-            List<object> newArray = new List<object>();
-            itemArray.ToList().ForEach(x =>
-            {
-                if (x == DBNull.Value)
-                    x = 0;
-                newArray.Add(x);
-            });
-            newArray[newArray.Count - 1] = 1;
-            string key;
-            string field;
-            ArrayList sqlList = new ArrayList();
-            if (TableName.Equals("PC_XTPY_STATUS"))
-            {
-                key = "JH";
-                field = "(JH,QK,CSRQ,WD,KHD,SJD,QYFS,TPSJ,ZYHD,CSBHD,TCHD,TCSJC,LTFX,SJHD,TSTL,ZSTL,YQD,KXD,KHBJ,BJ,TGSL,TGJL,TXSBL,YMC,GMC,YYL,YND,GYL,GND,GLJ,SGTS,YLSF,JXSJ,HSSJ,XJFD,YXQ,ZY,BZ,ZT)";
-            }
-            else if (TableName.Equals("PC_XTPK_STATUS"))
-            {
-                key = "MC";
-                field = "(MC,DW,TYRQ,CPSJ,CPBS,PZBS,PZSJ,KYQD,NW,NY,NJ,XN,BSB,TXML,SXQ,JG,BZ,ZT)";
+        //private void SaveData(object[] itemArray)
+        //{
+        //    List<object> newArray = new List<object>();
+        //    itemArray.ToList().ForEach(x =>
+        //    {
+        //        if (x == DBNull.Value)
+        //            x = 0;
+        //        newArray.Add(x);
+        //    });
+        //    newArray[newArray.Count - 1] = 1;
+        //    string key;
+        //    string field;
+        //    ArrayList sqlList = new ArrayList();
+        //    if (TableName.Equals("PC_XTPY_STATUS"))
+        //    {
+        //        key = "JH";
+        //        field = "(JH,QK,CSRQ,WD,KHD,SJD,QYFS,TPSJ,ZYHD,CSBHD,TCHD,TCSJC,LTFX,SJHD,TSTL,ZSTL,YQD,KXD,KHBJ,BJ,TGSL,TGJL,TXSBL,YMC,GMC,YYL,YND,GYL,GND,GLJ,SGTS,YLSF,JXSJ,HSSJ,XJFD,YXQ,ZY,BZ,ZT)";
+        //    }
+        //    else if (TableName.Equals("PC_XTPK_STATUS"))
+        //    {
+        //        key = "MC";
+        //        field = "(MC,DW,TYRQ,CPSJ,CPBS,PZBS,PZSJ,KYQD,NW,NY,NJ,XN,BSB,TXML,SXQ,JG,BZ,ZT)";
 
-            }
-            else
-            {
-                key = "MC";
-                field = "(MC,DW,TYRQ,NW,NY,NJ,XN,CN,ZN,GJL,SXQ,JG,BZ,ZT)";
-            }
-            StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("select * from " + TableName + " where " + key + "='" + newArray[0] + "'");
-            bool isExist = DbHelperOleDb.ExecuteReader(sqlStr.ToString()).HasRows;
-            if (isExist)
-            {
-                sqlStr.Clear();
-                sqlStr.Append("delete from " + TableName + " where " + key + "='" + newArray[0] + "'");
-                sqlList.Add(sqlStr.ToString());
-            }
-            sqlStr.Clear();
-            sqlStr.Append("insert into " + TableName + " " + field + " values (" + string.Join(",", newArray) + ")");
-            sqlList.Add(sqlStr.ToString());
-            try
-            {
-                DbHelperOleDb.ExecuteSqlTran(sqlList);
-            }
-            catch
-            {
-                throw;
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        key = "MC";
+        //        field = "(MC,DW,TYRQ,NW,NY,NJ,XN,CN,ZN,GJL,SXQ,JG,BZ,ZT)";
+        //    }
+        //    StringBuilder sqlStr = new StringBuilder();
+        //    sqlStr.Append("select * from " + TableName + " where " + key + "='" + newArray[0] + "'");
+        //    bool isExist = DbHelperOleDb.ExecuteReader(sqlStr.ToString()).HasRows;
+        //    if (isExist)
+        //    {
+        //        sqlStr.Clear();
+        //        sqlStr.Append("delete from " + TableName + " where " + key + "='" + newArray[0] + "'");
+        //        sqlList.Add(sqlStr.ToString());
+        //    }
+        //    sqlStr.Clear();
+        //    sqlStr.Append("insert into " + TableName + " " + field + " values (" + string.Join(",", newArray) + ")");
+        //    sqlList.Add(sqlStr.ToString());
+        //    try
+        //    {
+        //        DbHelperOleDb.ExecuteSqlTran(sqlList);
+        //    }
+        //    catch
+        //    {
+        //        throw;
+        //    }
+        //}
 
         #region TreeView 鼠标右击事件
         /// <summary>
@@ -683,18 +728,18 @@ namespace SBTP.View.File
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HandleKeyDownEvent(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.S && (Keyboard.Modifiers & (ModifierKeys.Control)) == (ModifierKeys.Control))
-            {
-                SaveClick(null, null);
-            }
-        }
+        //private void HandleKeyDownEvent(object sender, KeyEventArgs e)
+        //{
+        //    if (e.Key == Key.S && (Keyboard.Modifiers & (ModifierKeys.Control)) == (ModifierKeys.Control))
+        //    {
+        //        SaveClick(null, null);
+        //    }
+        //}
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler)HandleKeyDownEvent);
-        }
+        //private void Window_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    AddHandler(Keyboard.KeyDownEvent, (KeyEventHandler)HandleKeyDownEvent);
+        //}
 
 
         private TreeViewItem GetParentObjectEx<TreeViewItem>(DependencyObject obj) where TreeViewItem : FrameworkElement
