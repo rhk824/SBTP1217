@@ -205,9 +205,19 @@ namespace SBTP.BLL
                 init_021();
                 if (oc_021.Count > 0)
                 {
+                    sgsj_model_021 model = oc_021.First();
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref missing, ref missing, "tb021");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = $"表2.1 目标设计区域油层状况{model.JS.ToString()}口井";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_021.Count + 1;
                     int column = 3;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb021");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -218,13 +228,16 @@ namespace SBTP.BLL
                     table.Cell(1, 2).Range.Text = "有效厚度";
                     table.Cell(1, 3).Range.Text = "渗透率";
                     int rr = 2;
-                    foreach (var item in oc_021)
-                    {
-                        table.Cell(rr, 1).Range.Text = item.JH;
-                        table.Cell(rr, 2).Range.Text = item.YXHD.ToString("0.##");
-                        table.Cell(rr, 3).Range.Text = item.STL.ToString("0.##");
-                        rr++;
-                    }
+                    table.Cell(rr, 1).Range.Text = model.JH;
+                    table.Cell(rr, 2).Range.Text = model.YXHD.ToString("0.##");
+                    table.Cell(rr, 3).Range.Text = model.STL.ToString("0.##");
+                    //foreach (var item in oc_021)
+                    //{
+                    //    table.Cell(rr, 1).Range.Text = item.JH;
+                    //    table.Cell(rr, 2).Range.Text = item.YXHD.ToString("0.##");
+                    //    table.Cell(rr, 3).Range.Text = item.STL.ToString("0.##");
+                    //    rr++;
+                    //}
                 }
                 #endregion
 
@@ -233,9 +246,18 @@ namespace SBTP.BLL
                 init_0222();
                 if (oc_0221.Count > 0 && oc_0222.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb022");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表2.2 目前目标设计区域开发状况";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = 8;
                     int column = 5;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb022");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -288,9 +310,18 @@ namespace SBTP.BLL
                 init_031();
                 if (oc_031.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb031");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表3.1 调剖井组状况";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_031.Count + 1;
                     int column = 6;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb031");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -321,9 +352,18 @@ namespace SBTP.BLL
                 init_032();
                 if (oc_032.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb032");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表3.2 吸水剖面测试结果数据表";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_032.Count + 2;
                     int column = 11;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb032");
                     Word.Table tb032 = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     tb032.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     tb032.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -383,9 +423,18 @@ namespace SBTP.BLL
                 init_033();
                 if (oc_033.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb033");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表3.3 调剖层段连通状况";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_033.Count + 1;
                     int column = 5;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb033");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -426,9 +475,18 @@ namespace SBTP.BLL
                 init_04();
                 if (oc_04.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb04");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表4.1 调剖井调剖剂浓度设计";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_04.Count + 1;
                     int column = 6;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb04");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -459,9 +517,18 @@ namespace SBTP.BLL
                 init_0511();
                 if (oc_0511.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb0511");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表5.1 调剖费用价格";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_0511.Count + 1;
                     int column = 6;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb0511");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -492,9 +559,18 @@ namespace SBTP.BLL
                 init_0512();
                 if (oc_0512.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb0512");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表5.2 调剖半径设计表";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_0512.Count + 1;
                     int column = 6;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb0512");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -528,9 +604,19 @@ namespace SBTP.BLL
                 if (oc_052.Any())
                 {
                     doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb052");
+
                     var groups = oc_052.GroupBy(p => p.JH);
+                    int ii = 1;
                     foreach (var group in groups)
                     {
+                        app.Selection.Range.InsertParagraph();
+                        Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                        oPara0.Range.Text = $"表5.3.{ii} {group.Key}井调剖段塞设计（第{ii}口井）";
+                        oPara0.Range.Select();
+                        oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                        oPara0.Range.InsertParagraphAfter();
+                        app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                         int row = group.Count() + 1;
                         int column = 11;
                         Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
@@ -566,9 +652,10 @@ namespace SBTP.BLL
                             table.Cell(rr, 11).Range.Text = item.ZRYL.ToString("0.##");
                             rr++;
                         }
-                        table.Cell(rr - 1, 11).Range.Select();
+                        table.Cell(rr - 1, column).Range.Select();
                         app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
                         app.Selection.TypeParagraph();
+                        ii++;
                     }
                 }
                 #endregion
@@ -577,9 +664,18 @@ namespace SBTP.BLL
                 init_053();
                 if (oc_053.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb053");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表5.4 药剂用量";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_053.Count + 1;
                     int column = 4;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb053");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -606,9 +702,18 @@ namespace SBTP.BLL
                 init_061();
                 if (oc_061.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb061");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表6.1 调剖井调后效果预测";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_061.Count + 2;
                     int column = 7;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb061");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -648,9 +753,18 @@ namespace SBTP.BLL
                 init_062();
                 if (oc_062.Count > 0)
                 {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb062");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表6.2 调后增油效果预测";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
                     int row = oc_062.Count + 1;
                     int column = 4;
-                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb062");
                     Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
                     table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
                     table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
@@ -665,9 +779,9 @@ namespace SBTP.BLL
                     foreach (var item in oc_062)
                     {
                         table.Cell(rr, 1).Range.Text = item.TPJZ;
-                        table.Cell(rr, 1).Range.Text = item.YJZY.ToString("0.##");
-                        table.Cell(rr, 1).Range.Text = item.KSJXSJ.ToString("0.##");
-                        table.Cell(rr, 1).Range.Text = item.TCB.ToString("0.##");
+                        table.Cell(rr, 2).Range.Text = item.YJZY.ToString("0.##");
+                        table.Cell(rr, 3).Range.Text = item.KSJXSJ.ToString("0.##");
+                        table.Cell(rr, 4).Range.Text = item.TCB.ToString("0.##");
                         rr++;
                     }
                 }
@@ -763,7 +877,8 @@ namespace SBTP.BLL
                     JH = dt.Rows[i]["jh"].ToString(),
                     SYHD = Unity.ToDecimal(dt.Rows[i]["syhd"]),
                     YXHD = Unity.ToDecimal(dt.Rows[i]["yxhd"]),
-                    STL = Unity.ToDecimal(dt.Rows[i]["stl"])
+                    STL = Unity.ToDecimal(dt.Rows[i]["stl"]),
+                    JS = Unity.ToDecimal(dt.Rows[i]["js"])
                 };
                 oc_021.Add(model);
             }
@@ -808,7 +923,8 @@ namespace SBTP.BLL
             {
                 JH = BookMarks["cover_2"],
                 YXHD = list.Average(p => p.YXHD),
-                STL = last_stl_numerator / last_stl_denominator
+                STL = last_stl_numerator / last_stl_denominator,
+                JS = list.Count
             };
             oc_021.Add(last_model);
 

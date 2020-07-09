@@ -17,6 +17,7 @@ namespace SBTP.Model
         private decimal yxhd;
         private decimal stl;
         private decimal kxd;
+        private decimal js;
         #endregion
 
         #region 公有
@@ -63,6 +64,15 @@ namespace SBTP.Model
             {
                 kxd = value;
                 NotifyPropertyChanged("KXD");
+            }
+        }
+        public decimal JS
+        {
+            get { return js; }
+            set
+            {
+                js = value;
+                NotifyPropertyChanged("js");
             }
         }
         #endregion
