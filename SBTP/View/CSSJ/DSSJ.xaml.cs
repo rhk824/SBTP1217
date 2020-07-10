@@ -873,7 +873,7 @@ namespace SBTP.View.CSSJ
         private void btn_return_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Unity.GetAncestor<MainWindow>(this);
-            mainWindow.Skip(this.GetType().Namespace + ".KSJS");
+            mainWindow.Skip(this.GetType().Namespace + ".TPYLYH");
         }
     }
 }

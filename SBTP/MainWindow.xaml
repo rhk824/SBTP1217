@@ -44,8 +44,8 @@
             <MenuItem Header="参数设计" MenuItem.Click="Menu_Click">
                 <MenuItem Header="基础信息" Name="CSSJ_JCXX" />
                 <MenuItem Header="调剖用量优化" Name="CSSJ_TPYLYH" />
-                <MenuItem Header="调剖用量快速计算" Name="CSSJ_KSJS" />
                 <MenuItem Header="调剖段塞设计" Name="CSSJ_DSSJ" />
+                <MenuItem Header="调剖用量快速计算" Name="CSSJ_KSJS" />
             </MenuItem>
             <MenuItem Header="效果预测" MenuItem.Click="Menu_Click">
                 <MenuItem Header="注入井深部调剖效果预测" Name="XGYC_ZR" />

@@ -99,16 +99,10 @@ namespace SBTP.View.CSSJ
             MessageBox.Show("保存成功！");
         }
 
-        private void btn_next_Click(object sender, RoutedEventArgs e)
+        private void Btn_close_Click(object sender, RoutedEventArgs e)
         {
             var mainWindow = Unity.GetAncestor<MainWindow>(this);
-            mainWindow.Skip(this.GetType().Namespace + ".DSSJ");
-        }
-
-        private void btn_return_Click(object sender, RoutedEventArgs e)
-        {
-            var mainWindow = Unity.GetAncestor<MainWindow>(this);
-            mainWindow.Skip(this.GetType().Namespace + ".TPYLYH");
+            mainWindow.Skip(" ");
         }
     }
 

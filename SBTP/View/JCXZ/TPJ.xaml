@@ -24,9 +24,9 @@
 
     <Grid Grid.IsSharedSizeScope="True" Name="Tpj_Grid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
@@ -121,15 +121,15 @@
                             <Label Content="步长:"/>
                             <Label Name="iso_step" Content="___"/>
                         </StackPanel>-->
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Button Content="综合含水" Click="GenerateClick"/>
                             <Button Content="视吸水指数" Click="GenerateClick"/>
                         </StackPanel>
                         <Viewbox Stretch="Uniform">
                             <StackPanel Orientation="Horizontal" >
-                                <TextBlock TextAlignment="Center" Text="低" Width="20" Background="White" Margin="0,0,0,0"/>
-                                <TextBlock TextAlignment="Center" Text="中" Width="20" Background="Red" Margin="0,0,0,0"/>
-                                <TextBlock TextAlignment="Center" Text="高" Width="20" Background="DarkBlue" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Width="20" Background="White" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Width="20" Background="Red" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Width="20" Background="DarkBlue" Margin="0,0,0,0"/>
                             </StackPanel>
                         </Viewbox>
                     </Panel:KbiseczvTom>

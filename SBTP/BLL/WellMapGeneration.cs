@@ -120,7 +120,7 @@ namespace SBTP.BLL
                 Canvas.SetLeft(label, i.Value.X - offsetLeft+20);
                 Canvas.SetTop(label, i.Value.Y - offsetTop+20);
             }
-            //添加调剖井
+            //添加水井
             foreach (var i in ExcWsdPoints)
             {
                 RoundButton point = new RoundButton()

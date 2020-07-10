@@ -105,9 +105,9 @@
                         </StackPanel>
                         <Viewbox Stretch="Uniform">
                             <StackPanel Orientation="Horizontal" >
-                                <TextBlock TextAlignment="Center" Text="低" Width="20" Background="White" Margin="0,0,0,0"/>
-                                <TextBlock TextAlignment="Center" Text="中" Width="20" Background="Red" Margin="0,0,0,0"/>
-                                <TextBlock TextAlignment="Center" Text="高" Width="20" Background="DarkBlue" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Width="20" Background="White" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Width="20" Background="Red" Margin="0,0,0,0"/>
+                                <TextBlock TextAlignment="Center" Width="20" Background="DarkBlue" Margin="0,0,0,0"/>
                             </StackPanel>
                         </Viewbox>
                     </Panel:KbiseczvTom>
