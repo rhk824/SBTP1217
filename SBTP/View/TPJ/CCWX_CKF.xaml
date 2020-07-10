@@ -29,7 +29,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="油层组" Binding="{Binding YCZ}"/>
                         <DataGridTextColumn Header="小层号" Binding="{Binding XCH}"/>
-                        <DataGridTextColumn Header="砂岩厚度" Binding="{Binding SYHD}"/>
+                        <DataGridTextColumn Header="小层序号" Binding="{Binding XCXH}"/>
                         <DataGridTextColumn Header="有效厚度" Binding="{Binding YXHD}"/>
                         <DataGridTextColumn Header="渗透率" Binding="{Binding STL}"/>
                         <DataGridTextColumn Header="含油饱和度" Binding="{Binding HYBHD}"/>

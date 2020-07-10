@@ -42,29 +42,25 @@
                 </DataGrid>
 
                 <StackPanel Grid.Column="1" Grid.Row="0" VerticalAlignment="Top">
-                    <CheckBox Name="isEnabled" IsChecked="{Binding isChecked}">
-                        <CheckBox.Content>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="自定义压降测试日期"/>
-                                <DatePicker Name="yjDate" SelectedDate="{x:Static sys:DateTime.Now}" date:DatePickerCalendar.IsMonthYear="true" date:DatePickerDateFormat.DateFormat="yyyy/MM" IsEnabled="{Binding ElementName=isEnabled,Path=IsChecked,Mode=OneWay}"/>
-                            </StackPanel>
-                        </CheckBox.Content>
-                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontSize="10">时间(h)</TextBlock>
+                        <TextBlock Text="压降测试日期"/>
+                        <DatePicker Name="yjDate" date:DatePickerCalendar.IsMonthYear="true" date:DatePickerDateFormat.DateFormat="yyyy/MM"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock>时间(h)</TextBlock>
                         <TextBox Name="tb_t" Text="3600" Width="40" Height="20" FontSize="10"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontSize="10">粘度(mPa·s)</TextBlock>
+                        <TextBlock>粘度(mPa·s)</TextBlock>
                         <TextBox Name="tb_u" Text="{Binding u}" Width="40" Height="20" FontSize="10"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock FontSize="10">体积系数</TextBlock>
+                        <TextBlock>体积系数</TextBlock>
                         <TextBox Name="tb_b" Text="1" Width="40" Height="20" FontSize="10"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom">
-                    <Button Name="btn_import" Content="导入" Click="Btn_import_Click" />
+                    <Button Name="btn_import" Content="导入压降数据" Click="Btn_import_Click" />
                     <Button Name="btn_calculation" Content="计算Ln值" Click="btn_calculation_Click" IsEnabled="False"/>
                     <Button Name="btn_draw" Content="绘图" Click="Btn_draw_Click" IsEnabled="False"/>
                 </StackPanel>

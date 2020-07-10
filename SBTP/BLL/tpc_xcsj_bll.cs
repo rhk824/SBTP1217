@@ -77,7 +77,8 @@ namespace SBTP.BLL
             tpc_xcsj_model first_model = list.First();
             tpc_xcsj_model last_model = list.Last();
             double yxhd = (double)list.Sum(p => p.YXHD);
-            double dcxs = (double)list.Sum(p => p.dcxs);
+            double dcxs_ntc = list.Sum(p => p.dcxs);
+            double dcxs_sum = oc_xcsj.Sum(x => x.dcxs);
 
             // 拟堵段数据（条件查询：拟调层和拟堵段）
             List<tpc_xcsj_model> list_ndd = oc_xcsj.Where(p => p.ntc == 1 && p.ndd == 1).ToList();
@@ -91,22 +92,12 @@ namespace SBTP.BLL
                 cd = first_model.YCZ + " " + first_model.XCH + " " + first_model.XCXH + "~" + last_model.YCZ + " " + last_model.XCH + " " + last_model.XCXH,
                 yxhd = yxhd,
                 yxhd_ds = (double)first_model.SYDS,
-                zrfs = (dcxs_ndd / dcxs) * 100,
+                zrfs = dcxs_ntc / dcxs_sum * 100,
                 zzhd = yxhd - yxhd_ndd,
                 zzbl = yxhd == 0 ? 0 : (yxhd - yxhd_ndd) / yxhd,
-                zzrfs = 0,
+                zzrfs = (dcxs_ntc - dcxs_ndd) / dcxs_sum * 100,
                 bs_string = "小层数据"
             };
-        }
-
-        /// <summary>
-        /// 保存数据
-        /// </summary>
-        /// <returns></returns>
-        public bool save_data()
-        {
-            if (oc_xcsj == null) return false;
-            return DatHelper.save_tpc_xcsj(oc_xcsj.ToList());
         }
 
         #endregion

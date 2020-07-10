@@ -192,6 +192,7 @@
     <Compile Include="BLL\tpc_xspm_bll.cs" />
     <Compile Include="BLL\tpc_xspm_img_bll.cs" />
     <Compile Include="BLL\TPJ_BLL.cs" />
+    <Compile Include="BLL\Tpj_Insert_BLL.cs" />
     <Compile Include="BLL\WaterWellMonth.cs" />
     <Compile Include="BLL\WellMapGeneration.cs" />
     <Compile Include="BLL\Well_status.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="BLL\zcjz_bll.cs" />
     <Compile Include="Common\Converter\TPC_Converter.cs" />
     <Compile Include="Common\Converter\ZCJZ_Converter.cs" />
+    <Compile Include="Common\DataFormatRule.cs" />
     <Compile Include="Common\DBContext.cs" />
     <Compile Include="Common\RunCMD.cs" />
     <Compile Include="Common\Unity.cs" />
@@ -237,6 +239,7 @@
     <Compile Include="Model\tpc_model.cs" />
     <Compile Include="Model\tpc_xcsj_model.cs" />
     <Compile Include="Model\tpc_xspm_model.cs" />
+    <Compile Include="Model\TpjBase.cs" />
     <Compile Include="Model\TPJData.cs" />
     <Compile Include="Model\Waterwell_monthModel.cs" />
     <Compile Include="Model\Well_statusModel.cs" />
@@ -299,6 +302,9 @@
     </Compile>
     <Compile Include="View\File\SelectColumnCondition.xaml.cs">
       <DependentUpon>SelectColumnCondition.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\File\TpjImport.xaml.cs">
+      <DependentUpon>TpjImport.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Graphic\Isogram.xaml.cs">
       <DependentUpon>Isogram.xaml</DependentUpon>
@@ -549,6 +555,10 @@
     <Page Include="View\File\SelectColumnCondition.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\File\TpjImport.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Graphic\Isogram.xaml">
       <SubType>Designer</SubType>

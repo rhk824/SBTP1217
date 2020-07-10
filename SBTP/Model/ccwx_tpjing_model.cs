@@ -22,7 +22,7 @@ namespace SBTP.Model
         private double _r2;
         private double _fddkxd;
         private double _zzdkxd;
-        private double _ybhd = Data.DatHelper.readQkcs().Cyybhd;
+        private double _ybhd = Data.DatHelper.readQkcs().Ybhd;
         private int _calculate_type;
         private string _csrq;
         private int _bs;

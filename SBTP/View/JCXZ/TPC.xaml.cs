@@ -80,6 +80,7 @@ namespace SBTP.View.JCXZ
         private void Btn_xspm_img_Click(object sender, RoutedEventArgs e)
         {
             TPC_XSPM_IMG win = new TPC_XSPM_IMG(bll);
+            win.calculate_tpc = set_tpc;
             win.ShowDialog();
         }
 

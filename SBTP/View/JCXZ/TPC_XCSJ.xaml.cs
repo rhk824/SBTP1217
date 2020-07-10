@@ -57,7 +57,6 @@ namespace SBTP.View.JCXZ
         private void Btn_add_Click(object sender, RoutedEventArgs e)
         {
             calculate_tpc(bll.calculate_tpc());
-            MessageBox.Show(Unity.hint(bll.save_data()));
         }
 
         private void Btn_quit_Click(object sender, RoutedEventArgs e)
@@ -97,7 +96,7 @@ namespace SBTP.View.JCXZ
                 DataPoint point = new DataPoint();
                 point.XValue = i;
                 point.YValues = new double[] { (double)list[i].STL };
-                point.AxisLabel = string.Format("{0}{1}{2}({3})", list[i].YCZ, list[i].XCH, list[i].XCXH, list[i].YXHD);
+                point.AxisLabel = string.Format("{0} {1}/{2} ({3})", list[i].YCZ, list[i].XCH, list[i].XCXH, list[i].YXHD);
                 point.Label = list[i].STL.ToString();
                 series.Points.Add(point);
             }

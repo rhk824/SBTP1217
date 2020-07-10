@@ -70,8 +70,7 @@
                     <Button Name="Btn_Import" Content="批量导入" Click="Btn_Import_Click" />
                     <Button Name="Btn_Compute" Content="计算" Click="Btn_Compute_Click" />
                     <Button Name="Btn_Save" Content="保存" Click="Btn_Save_Click"/>
-                    <Button Name="btn_next" Content="继续" Click="btn_next_Click"/>
-                    <Button Name="btn_return" Content="返回" Click="btn_return_Click"/>
+                    <Button Name="Btn_close" Content="关闭" Click="Btn_close_Click"/>
                 </StackPanel>
 
             </Grid>

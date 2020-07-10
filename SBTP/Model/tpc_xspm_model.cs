@@ -16,6 +16,7 @@ namespace SBTP.Model
         //private double _hd;
         private int _ndd;
         private int _ntc;
+        private string tpcm;
 
         #region Property Getters And Setters
 
@@ -30,18 +31,7 @@ namespace SBTP.Model
             }
         }
 
-        /// <summary>
-        /// 厚度（井段底深-井段顶深）
-        /// </summary>
-        public double hd
-        {
-            get
-            {
-                decimal jdds1 = Convert.ToDecimal(JDDS1);
-                decimal jdds2 = Convert.ToDecimal(JDDS2);
-                return (double)(jdds2 - jdds1);
-            }
-        }
+
 
         /// <summary>
         /// 对应深度
@@ -94,6 +84,10 @@ namespace SBTP.Model
                 NotifyPropertyChanged("ntc");
             }
         }
+        /// <summary>
+        /// 层名
+        /// </summary>
+        public string Tpcm { get => tpcm; set => tpcm = value; }
 
         #endregion
     }

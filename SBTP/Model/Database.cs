@@ -675,7 +675,6 @@ namespace SBTP.Model
         private string _xch;
         private int _jsxh;
         private double _jdds1;
-        private double _jdds2;
         private double _hd;
         private double _yxhd;
         private double _zrbfs;
@@ -747,7 +746,7 @@ namespace SBTP.Model
         }
 
         /// <summary>
-        /// 解释序号
+        /// 细分层号
         /// </summary>
         public int JSXH
         {
@@ -769,32 +768,6 @@ namespace SBTP.Model
             {
                 _jdds1 = value;
                 NotifyPropertyChanged("JDDS1");
-            }
-        }
-
-        /// <summary>
-        /// 井段底深
-        /// </summary>
-        public double JDDS2
-        {
-            get { return _jdds2; }
-            set
-            {
-                _jdds2 = value;
-                NotifyPropertyChanged("JDDS2");
-            }
-        }
-
-        /// <summary>
-        /// 砂岩厚度
-        /// </summary>
-        public double HD
-        {
-            get { return _hd; }
-            set
-            {
-                _hd = value;
-                NotifyPropertyChanged("HD");
             }
         }
 

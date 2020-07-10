@@ -1,4 +1,5 @@
 ﻿using Common;
+using SBTP.Data;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
@@ -59,6 +60,40 @@ namespace SBTP.BLL
             }
         }
 
+        /// <summary>
+        /// 汇总计算调剖层相关信息，并返回一个调剖层实体
+        /// </summary>
+        /// <returns></returns>
+        public tpc_model calculate_tpc()
+        {
+            // 拟调层数据
+            List<tpc_xspm_model> list = oc_xspm.Where(p => p.ntc == 1).ToList();
+            tpc_xspm_model first_model = list.First();
+            tpc_xspm_model last_model = list.Last();
+            double yxhd = list.Sum(p => p.YXHD);
+            double zrfs = list.Sum(p => p.area) / oc_xspm.Sum(x => x.area) * 100;
+            double yxhdds = list.Min(x => x.depth);
+
+            // 拟堵段数据（条件查询：拟调层和拟堵段）
+            List<tpc_xspm_model> list_ndd = oc_xspm.Where(p => p.ntc == 1 && p.ndd == 1).ToList();
+            double yxhd_ndd = list_ndd.Sum(p => p.YXHD);
+            double zrfs_ndd = list_ndd.Sum(p => p.area) / oc_xspm.Sum(x => x.area) * 100; ;
+
+            // 返回调剖层实体
+            return new tpc_model()
+            {
+                jh = tpc.jh,
+                cd = first_model.Tpcm + "~" + last_model.Tpcm,
+                yxhd = yxhd,
+                yxhd_ds = Math.Round(yxhdds, 1),
+                zrfs = Math.Round(zrfs, 2),
+                zzhd = yxhd - yxhd_ndd,
+                zzbl = yxhd == 0 ? 0 : ((yxhd - yxhd_ndd) / yxhd) * 100,
+                zzrfs = Math.Round(zrfs - zrfs_ndd, 2),
+                bs_string = "图像识别",
+                csrq = DateTime.Now.ToShortDateString()
+            };
+        }
         #endregion
 
         #region 本类内部的方法，为公共接口做辅助服务

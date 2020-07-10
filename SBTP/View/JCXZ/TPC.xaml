@@ -139,6 +139,7 @@
                                 <col:ArrayList>
                                     <sys:String>吸水剖面</sys:String>
                                     <sys:String>小层数据</sys:String>
+                                    <sys:String>图像识别</sys:String>
                                 </col:ArrayList>
                             </DataGridComboBoxColumn.ItemsSource>
                         </DataGridComboBoxColumn>
@@ -172,7 +173,6 @@
                         <DataGridTextColumn Binding="{Binding sj}" Header="水井"/>
                         <DataGridTextColumn Binding="{Binding yj}" Header="油井"/>
                         <DataGridTextColumn Binding="{Binding cw}" Header="层位"/>
-                        <DataGridTextColumn Binding="{Binding syhd}" Header="砂岩厚度"/>
                         <DataGridTextColumn Binding="{Binding yxhd}" Header="有效厚度"/>
                         <DataGridTextColumn Binding="{Binding stl, StringFormat={}{0:F2}}" Header="渗透率"/>
                     </DataGrid.Columns>

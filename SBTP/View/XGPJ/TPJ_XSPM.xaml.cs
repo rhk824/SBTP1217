@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 using Common;
+using SBTP.Data;
+using System.Collections.Generic;
+using SBTP.BLL;
 
 namespace SBTP.View.XGPJ
 {
@@ -22,16 +25,22 @@ namespace SBTP.View.XGPJ
     public partial class TPJ_XSPM : Page
     {
         ObservableCollection<TpxgModel> TpxgModels;
+        Dictionary<string, ObservableCollection<string>> csqWellcsrqs;
+        Dictionary<string, ObservableCollection<string>> cshWellcsrqs;
         object CSQ_RadioButtonSender = null;
         object CSH_RadioButtonSender = null;
+        private TPJXGPJ tpj;
+        string[] tpjpara;
         public TPJ_XSPM()
         {
             InitializeComponent();
         }
-        public TPJ_XSPM(ObservableCollection<TpxgModel> tpxgModels)
+        public TPJ_XSPM(TPJXGPJ pJXGPJ)
         {
             InitializeComponent();
-            TpxgModels = tpxgModels;
+            tpj = pJXGPJ;
+            TpxgModels = pJXGPJ.tpxgModels;
+            tpjpara = DatHelper.TPJParaRead();
             this.Loaded += ListInitialize;
             csq_date.Checked += new RoutedEventHandler(CSQ_Radio_Checked);
             csq_img.Checked += new RoutedEventHandler(CSQ_Radio_Checked);
@@ -49,6 +58,32 @@ namespace SBTP.View.XGPJ
             Wells.DisplayMemberPath = "JH";
         }
 
+        private void getSelectDate()
+        {
+            DateTime csq_start = DateTime.Parse(tpjpara[1]);
+            DateTime csq_end = DateTime.Parse(tpjpara[2]);
+            DateTime csh_start = tpj.comment_st;
+            DateTime csh_end = tpj.comment_et;
+            csqWellcsrqs = new Dictionary<string, ObservableCollection<string>>();
+            cshWellcsrqs = new Dictionary<string, ObservableCollection<string>>();
+            foreach (var item in TpxgModels)
+            {
+                DataTable csqTable = XspmMonth.QueryDitinctDate(csq_start.ToShortDateString(), csq_end.ToShortDateString(), item.JH, 0);
+                DataTable cshTable = XspmMonth.QueryDitinctDate(csh_start.ToShortDateString(), csh_end.ToShortDateString(), item.JH, 1);
+                ObservableCollection<string> csqdatecollect = new ObservableCollection<string>();
+                ObservableCollection<string> cshdatecollect = new ObservableCollection<string>();
+                foreach (DataRow row in csqTable.Rows)
+                {
+                    csqdatecollect.Add(DateTime.Parse(row[0].ToString()).ToShortDateString());
+                }
+                foreach (DataRow row in cshTable.Rows)
+                {
+                    cshdatecollect.Add(DateTime.Parse(row[0].ToString()).ToShortDateString());
+                }
+                csqWellcsrqs.Add(item.JH, csqdatecollect);
+                cshWellcsrqs.Add(item.JH, cshdatecollect);
+            }
+        }
 
         /// <summary>
         /// 生成图表
@@ -70,20 +105,17 @@ namespace SBTP.View.XGPJ
             chartArea.AxisY.Interval = 2;
             chartArea.AxisX.ScaleView.Size = 10;
 
-            if (string.IsNullOrWhiteSpace(cssj))
-            {
-                chartArea = null;
-                return null;
-            }
             Random random = new Random();
             //将日期yyyy/MM转化为yyyy/MM/dd格式
             cssj += "/1";
-            StringBuilder sqlStr = new StringBuilder("select * from XSPM_MONTH where zt=0 and JH='" + jh + "'");
-            if (cs_name.Equals("csq_date"))
-                sqlStr.Append(" AND DateDiff('d',CSRQ,'" + cssj + "')>=0 AND DateDiff('d','" + time + "',CSRQ)>=0 order by CSRQ");
+            string sqlStr = "select * from XSPM_MONTH where zt={0} and JH='" + jh + "'";
+            if (cs_name.Equals("csq_DateList"))
+                sqlStr = string.Format(sqlStr, 0);
             else
-                sqlStr.Append(" AND DateDiff('d',CSRQ,'" + time + "')>=0 AND DateDiff('d','" + cssj + "',CSRQ)>=0 order by CSRQ");
-            DataTable column_data = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
+                sqlStr = string.Format(sqlStr, 1);
+            sqlStr += " AND CSRQ =#" + time + "#";
+
+            DataTable column_data = DbHelperOleDb.Query(sqlStr).Tables[0];
             Series series = new Series
             {
                 ChartType = SeriesChartType.Bar,
@@ -113,23 +145,16 @@ namespace SBTP.View.XGPJ
         private void DrawLines_Click(object sender, RoutedEventArgs e)
         {
             if (Wells.SelectedItem == null) return;
-            if (string.IsNullOrWhiteSpace((Wells.SelectedItem as TpxgModel).CSSJ)) return;
 
             if (CSQ_RadioButtonSender is RadioButton btn1)
             {
                 if (btn1.Name == "csq_date")
                 {
-                    if (string.IsNullOrWhiteSpace(csq_Date.Text)) return;
-                    if (DateTime.Compare(Convert.ToDateTime((Wells.SelectedItem as TpxgModel).CSSJ + "/1"), Convert.ToDateTime(csq_Date.Text)) <= 0)
-                    {
-                        MessageBox.Show("措施前日期需小于措施时间！");
-                        return;
-                    }
+                    if (string.IsNullOrWhiteSpace(csq_DateList.Text)) return;
                     CSQ_Img.Children.Clear();
-                    //CSQ_Img.Child = null;
                    WindowsFormsHost windowsFormsHost = new WindowsFormsHost();
                     Chart MyToolKit1 = new Chart();
-                    MyToolKit1.Series.Add(CreateChart("csq_date", (Wells.SelectedItem as TpxgModel).JH, csq_Date.Text, out ChartArea chartArea));
+                    MyToolKit1.Series.Add(CreateChart("csq_DateList", (Wells.SelectedItem as TpxgModel).JH, csq_DateList.Text, out ChartArea chartArea));
                     MyToolKit1.ChartAreas.Add(chartArea);
                     windowsFormsHost.Child = MyToolKit1;
                     //CSQ_Img.Child = windowsFormsHost;
@@ -155,17 +180,11 @@ namespace SBTP.View.XGPJ
             {
                 if (btn2.Name == "csh_date")
                 {
-                    if (string.IsNullOrWhiteSpace(csh_Date.Text)) return;
-                    if (DateTime.Compare(Convert.ToDateTime((Wells.SelectedItem as TpxgModel).CSSJ + "/1"), Convert.ToDateTime(csh_Date.Text)) >= 0)
-                    {
-                        MessageBox.Show("措施后日期需大于措施时间！");
-                        return;
-                    }
-
+                    if (string.IsNullOrWhiteSpace(csh_DateList.Text)) return;
                     CSH_Img.Children.Clear();
                     WindowsFormsHost windowsFormsHost = new WindowsFormsHost();
                     Chart MyToolKit2 = new Chart();
-                    MyToolKit2.Series.Add(CreateChart("csh_date", (Wells.SelectedItem as TpxgModel).JH, csh_Date.Text, out ChartArea chartArea));
+                    MyToolKit2.Series.Add(CreateChart("csh_DateList", (Wells.SelectedItem as TpxgModel).JH, csh_DateList.Text, out ChartArea chartArea));
                     MyToolKit2.ChartAreas.Add(chartArea);
                     windowsFormsHost.Child = MyToolKit2;
                     CSH_Img.Children.Add(windowsFormsHost);
@@ -249,6 +268,14 @@ namespace SBTP.View.XGPJ
                 else
                     csh_Path.Text = op.FileName;
             }
+        }
+
+        private void Wells_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string jh = (e.AddedItems[0] as TpxgModel).JH;
+            getSelectDate();
+            csq_DateList.ItemsSource = csqWellcsrqs[jh];
+            csh_DateList.ItemsSource = cshWellcsrqs[jh];
         }
     }
 }

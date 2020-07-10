@@ -56,22 +56,18 @@ namespace Maticsoft.DBUtility
         /// <returns>影响的记录数</returns>
         public static int ExecuteSql(string SQLString)
         {
-            using (OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path));
+            using OleDbCommand cmd = new OleDbCommand(SQLString, connection);
+            try
             {
-                using (OleDbCommand cmd = new OleDbCommand(SQLString, connection))
-                {
-                    try
-                    {
-                        connection.Open();
-                        int rows = cmd.ExecuteNonQuery();
-                        return rows;
-                    }
-                    catch (System.Data.OleDb.OleDbException E)
-                    {
-                        connection.Close();
-                        throw new Exception(E.Message);
-                    }
-                }
+                connection.Open();
+                int rows = cmd.ExecuteNonQuery();
+                return rows;
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                connection.Close();
+                throw new Exception(E.Message);
             }
         }
         /// <summary>
@@ -80,31 +76,29 @@ namespace Maticsoft.DBUtility
         /// <param name="SQLStringList">多条SQL语句</param>		
         public static void ExecuteSqlTran(ArrayList SQLStringList)
         {
-            using (OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path));
+            conn.Open();
+            OleDbCommand cmd = new OleDbCommand();
+            cmd.Connection = conn;
+            OleDbTransaction tx = conn.BeginTransaction();
+            cmd.Transaction = tx;
+            try
             {
-                conn.Open();
-                OleDbCommand cmd = new OleDbCommand();
-                cmd.Connection = conn;
-                OleDbTransaction tx = conn.BeginTransaction();
-                cmd.Transaction = tx;
-                try
+                for (int n = 0; n < SQLStringList.Count; n++)
                 {
-                    for (int n = 0; n < SQLStringList.Count; n++)
+                    string strsql = SQLStringList[n].ToString();
+                    if (strsql.Trim().Length > 1)
                     {
-                        string strsql = SQLStringList[n].ToString();
-                        if (strsql.Trim().Length > 1)
-                        {
-                            cmd.CommandText = strsql;
-                            cmd.ExecuteNonQuery();
-                        }
+                        cmd.CommandText = strsql;
+                        cmd.ExecuteNonQuery();
                     }
-                    tx.Commit();
                 }
-                catch (OleDbException E)
-                {
-                    tx.Rollback();
-                    throw new Exception(E.Message);
-                }
+                tx.Commit();
+            }
+            catch (OleDbException E)
+            {
+                tx.Rollback();
+                throw new Exception(E.Message);
             }
         }
         /// <summary>
@@ -115,27 +109,25 @@ namespace Maticsoft.DBUtility
         /// <returns>影响的记录数</returns>
         public static int ExecuteSql(string SQLString, string content)
         {
-            using (OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path));
+            OleDbCommand cmd = new OleDbCommand(SQLString, connection);
+            OleDbParameter myParameter = new OleDbParameter("@content", OleDbType.VarChar);
+            myParameter.Value = content;
+            cmd.Parameters.Add(myParameter);
+            try
             {
-                OleDbCommand cmd = new OleDbCommand(SQLString, connection);
-                OleDbParameter myParameter = new OleDbParameter("@content", OleDbType.VarChar);
-                myParameter.Value = content;
-                cmd.Parameters.Add(myParameter);
-                try
-                {
-                    connection.Open();
-                    int rows = cmd.ExecuteNonQuery();
-                    return rows;
-                }
-                catch (System.Data.OleDb.OleDbException E)
-                {
-                    throw new Exception(E.Message);
-                }
-                finally
-                {
-                    cmd.Dispose();
-                    connection.Close();
-                }
+                connection.Open();
+                int rows = cmd.ExecuteNonQuery();
+                return rows;
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                throw new Exception(E.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                connection.Close();
             }
         }
         /// <summary>
@@ -146,27 +138,25 @@ namespace Maticsoft.DBUtility
         /// <returns>影响的记录数</returns>
         public static int ExecuteSqlInsertImg(string strSQL, byte[] fs)
         {
-            using (OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path));
+            OleDbCommand cmd = new OleDbCommand(strSQL, connection);
+            OleDbParameter myParameter = new OleDbParameter("@fs", OleDbType.Binary);
+            myParameter.Value = fs;
+            cmd.Parameters.Add(myParameter);
+            try
             {
-                OleDbCommand cmd = new OleDbCommand(strSQL, connection);
-                OleDbParameter myParameter = new OleDbParameter("@fs", OleDbType.Binary);
-                myParameter.Value = fs;
-                cmd.Parameters.Add(myParameter);
-                try
-                {
-                    connection.Open();
-                    int rows = cmd.ExecuteNonQuery();
-                    return rows;
-                }
-                catch (OleDbException E)
-                {
-                    throw new Exception(E.Message);
-                }
-                finally
-                {
-                    cmd.Dispose();
-                    connection.Close();
-                }
+                connection.Open();
+                int rows = cmd.ExecuteNonQuery();
+                return rows;
+            }
+            catch (OleDbException E)
+            {
+                throw new Exception(E.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                connection.Close();
             }
         }
 
@@ -177,29 +167,25 @@ namespace Maticsoft.DBUtility
         /// <returns>查询结果（object）</returns>
         public static object GetSingle(string SQLString)
         {
-            using (OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path));
+            using OleDbCommand cmd = new OleDbCommand(SQLString, connection);
+            try
             {
-                using (OleDbCommand cmd = new OleDbCommand(SQLString, connection))
+                connection.Open();
+                object obj = cmd.ExecuteScalar();
+                if ((Object.Equals(obj, null)) || (Object.Equals(obj, System.DBNull.Value)))
                 {
-                    try
-                    {
-                        connection.Open();
-                        object obj = cmd.ExecuteScalar();
-                        if ((Object.Equals(obj, null)) || (Object.Equals(obj, System.DBNull.Value)))
-                        {
-                            return null;
-                        }
-                        else
-                        {
-                            return obj;
-                        }
-                    }
-                    catch (System.Data.OleDb.OleDbException e)
-                    {
-                        connection.Close();
-                        throw new Exception(e.Message);
-                    }
+                    return null;
                 }
+                else
+                {
+                    return obj;
+                }
+            }
+            catch (System.Data.OleDb.OleDbException e)
+            {
+                connection.Close();
+                throw new Exception(e.Message);
             }
         }
         /// <summary>
@@ -230,21 +216,19 @@ namespace Maticsoft.DBUtility
         /// <returns>DataSet</returns>
         public static DataSet Query(string SQLString)
         {
-            using (OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path));
+            DataSet ds = new DataSet();
+            try
             {
-                DataSet ds = new DataSet();
-                try
-                {
-                    connection.Open();
-                    OleDbDataAdapter command = new OleDbDataAdapter(SQLString, connection);
-                    command.Fill(ds, "ds");
-                }
-                catch (OleDbException ex)
-                {
-                    throw new Exception(ex.Message);
-                }
-                return ds;
+                connection.Open();
+                OleDbDataAdapter command = new OleDbDataAdapter(SQLString, connection);
+                command.Fill(ds, "ds");
             }
+            catch (OleDbException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return ds;
         }
 
 
@@ -259,22 +243,18 @@ namespace Maticsoft.DBUtility
         /// <returns>影响的记录数</returns>
         public static int ExecuteSql(string SQLString, params OleDbParameter[] cmdParms)
         {
-            using (OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path));
+            using OleDbCommand cmd = new OleDbCommand();
+            try
             {
-                using (OleDbCommand cmd = new OleDbCommand())
-                {
-                    try
-                    {
-                        PrepareCommand(cmd, connection, null, SQLString, cmdParms);
-                        int rows = cmd.ExecuteNonQuery();
-                        cmd.Parameters.Clear();
-                        return rows;
-                    }
-                    catch (System.Data.OleDb.OleDbException E)
-                    {
-                        throw new Exception(E.Message);
-                    }
-                }
+                PrepareCommand(cmd, connection, null, SQLString, cmdParms);
+                int rows = cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+                return rows;
+            }
+            catch (System.Data.OleDb.OleDbException E)
+            {
+                throw new Exception(E.Message);
             }
         }
 
@@ -284,32 +264,28 @@ namespace Maticsoft.DBUtility
         /// <param name="SQLStringList">SQL语句的哈希表（key为sql语句，value是该语句的OleDbParameter[]）</param>
         public static void ExecuteSqlTran(Hashtable SQLStringList)
         {
-            using (OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path));
+            conn.Open();
+            using OleDbTransaction trans = conn.BeginTransaction();
+            OleDbCommand cmd = new OleDbCommand();
+            try
             {
-                conn.Open();
-                using (OleDbTransaction trans = conn.BeginTransaction())
+                //循环
+                foreach (DictionaryEntry myDE in SQLStringList)
                 {
-                    OleDbCommand cmd = new OleDbCommand();
-                    try
-                    {
-                        //循环
-                        foreach (DictionaryEntry myDE in SQLStringList)
-                        {
-                            string cmdText = myDE.Key.ToString();
-                            OleDbParameter[] cmdParms = (OleDbParameter[])myDE.Value;
-                            PrepareCommand(cmd, conn, trans, cmdText, cmdParms);
-                            int val = cmd.ExecuteNonQuery();
-                            cmd.Parameters.Clear();
+                    string cmdText = myDE.Key.ToString();
+                    OleDbParameter[] cmdParms = (OleDbParameter[])myDE.Value;
+                    PrepareCommand(cmd, conn, trans, cmdText, cmdParms);
+                    int val = cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
 
-                            trans.Commit();
-                        }
-                    }
-                    catch
-                    {
-                        trans.Rollback();
-                        throw;
-                    }
+                    trans.Commit();
                 }
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
             }
         }
 
@@ -321,56 +297,52 @@ namespace Maticsoft.DBUtility
         public static int ExecuteSqlTran(List<DictionaryEntry> SQLStringList, string TableName)
         {
             int val = 0;
-            using (OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path));
+            conn.Open();
+            using OleDbTransaction trans = conn.BeginTransaction();
+            OleDbCommand cmd = new OleDbCommand();
+            try
             {
-                conn.Open();
-                using (OleDbTransaction trans = conn.BeginTransaction())
+                foreach (DictionaryEntry myDE in SQLStringList)
                 {
-                    OleDbCommand cmd = new OleDbCommand();
-                    try
+                    string cmdText = myDE.Key.ToString();
+                    StringBuilder sqlStr = new StringBuilder("select * from " + TableName + " where JH=@JH");
+                    OleDbParameter[] cmdParms = (OleDbParameter[])myDE.Value;
+                    List<OleDbParameter> parameters = new List<OleDbParameter>();
+                    parameters.Add(new OleDbParameter("@JH", cmdParms[0].Value));
+
+                    if (!TableName.Equals("WELL_STATUS") && !TableName.Equals("OIL_WELL_C"))
                     {
-                        foreach (DictionaryEntry myDE in SQLStringList)
+                        if (TableName.Equals("XSPM_MONTH"))
                         {
-                            string cmdText = myDE.Key.ToString();
-                            StringBuilder sqlStr = new StringBuilder("select * from " + TableName + " where JH=@JH");
-                            OleDbParameter[] cmdParms = (OleDbParameter[])myDE.Value;
-                            List<OleDbParameter> parameters = new List<OleDbParameter>();
-                            parameters.Add(new OleDbParameter("@JH", cmdParms[0].Value));
-
-                            if (!TableName.Equals("WELL_STATUS") && !TableName.Equals("OIL_WELL_C"))
-                            {
-                                if (TableName.Equals("XSPM_MONTH"))
-                                {
-                                    //sqlStr.Append(" and DateDiff('d',CSRQ,'@CSRQ')=0 ");
-                                    sqlStr.Append(" and CSRQ=@CSRQ");
-                                    parameters.Add(new OleDbParameter("@CSRQ",Convert.ToDateTime(cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@CSRQ"))].Value.ToString()).ToString("yyyy/MM/dd")));
-                                }
-                                else
-                                {
-                                    sqlStr.Append(" and NY=@NY");
-                                    parameters.Add(new OleDbParameter("@NY", Convert.ToDateTime(cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@NY"))].Value.ToString()).ToString("yyyy/MM")));
-                                }
-                                sqlStr.Append(" and ZT=@ZT");
-                                parameters.Add(new OleDbParameter("@ZT", cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@ZT"))].Value));
-
-
-                            }
-                            if (!Exists(sqlStr.ToString(), parameters.ToArray()))
-                            {
-                                PrepareCommand(cmd, conn, trans, cmdText, cmdParms);
-                                val += cmd.ExecuteNonQuery();
-                                cmd.Parameters.Clear();
-                            }
+                            //sqlStr.Append(" and DateDiff('d',CSRQ,'@CSRQ')=0 ");
+                            sqlStr.Append(" and CSRQ=@CSRQ");
+                            parameters.Add(new OleDbParameter("@CSRQ", Convert.ToDateTime(cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@CSRQ"))].Value.ToString()).ToString("yyyy/MM/dd")));
                         }
-                        trans.Commit();
-                        return val;
+                        else
+                        {
+                            sqlStr.Append(" and NY=@NY");
+                            parameters.Add(new OleDbParameter("@NY", Convert.ToDateTime(cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@NY"))].Value.ToString()).ToString("yyyy/MM")));
+                        }
+                        sqlStr.Append(" and ZT=@ZT");
+                        parameters.Add(new OleDbParameter("@ZT", cmdParms[cmdParms.ToList().FindIndex(x => x.ParameterName.Equals("@ZT"))].Value));
+
+
                     }
-                    catch
+                    if (!Exists(sqlStr.ToString(), parameters.ToArray()))
                     {
-                        trans.Rollback();
-                        throw;
+                        PrepareCommand(cmd, conn, trans, cmdText, cmdParms);
+                        val += cmd.ExecuteNonQuery();
+                        cmd.Parameters.Clear();
                     }
                 }
+                trans.Commit();
+                return val;
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
             }
         }
 
@@ -381,29 +353,25 @@ namespace Maticsoft.DBUtility
         /// <returns>查询结果（object）</returns>
         public static object GetSingle(string SQLString, params OleDbParameter[] cmdParms)
         {
-            using (OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path));
+            using OleDbCommand cmd = new OleDbCommand();
+            try
             {
-                using (OleDbCommand cmd = new OleDbCommand())
+                PrepareCommand(cmd, connection, null, SQLString, cmdParms);
+                object obj = cmd.ExecuteScalar();
+                cmd.Parameters.Clear();
+                if ((Object.Equals(obj, null)) || (Object.Equals(obj, System.DBNull.Value)))
                 {
-                    try
-                    {
-                        PrepareCommand(cmd, connection, null, SQLString, cmdParms);
-                        object obj = cmd.ExecuteScalar();
-                        cmd.Parameters.Clear();
-                        if ((Object.Equals(obj, null)) || (Object.Equals(obj, System.DBNull.Value)))
-                        {
-                            return null;
-                        }
-                        else
-                        {
-                            return obj;
-                        }
-                    }
-                    catch (System.Data.OleDb.OleDbException e)
-                    {
-                        throw new Exception(e.Message);
-                    }
+                    return null;
                 }
+                else
+                {
+                    return obj;
+                }
+            }
+            catch (System.Data.OleDb.OleDbException e)
+            {
+                throw new Exception(e.Message);
             }
         }
 
@@ -437,25 +405,21 @@ namespace Maticsoft.DBUtility
         /// <returns>DataSet</returns>
         public static DataSet Query(string SQLString, params OleDbParameter[] cmdParms)
         {
-            using (OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection connection = new OleDbConnection(string.Format(connectionString, App.project_path));
+            OleDbCommand cmd = new OleDbCommand();
+            PrepareCommand(cmd, connection, null, SQLString, cmdParms);
+            using OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            try
             {
-                OleDbCommand cmd = new OleDbCommand();
-                PrepareCommand(cmd, connection, null, SQLString, cmdParms);
-                using (OleDbDataAdapter da = new OleDbDataAdapter(cmd))
-                {
-                    DataSet ds = new DataSet();
-                    try
-                    {
-                        da.Fill(ds, "ds");
-                        cmd.Parameters.Clear();
-                    }
-                    catch (OleDbException ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-                    return ds;
-                }
+                da.Fill(ds, "ds");
+                cmd.Parameters.Clear();
             }
+            catch (OleDbException ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return ds;
         }
 
         private static void PrepareCommand(OleDbCommand cmd, OleDbConnection conn, OleDbTransaction trans, string cmdText, OleDbParameter[] cmdParms)
@@ -474,7 +438,7 @@ namespace Maticsoft.DBUtility
             }
         }
 
-        /// <summary>
+       /// <summary>
         /// 对Datatable数据进行批量更新处理
         /// </summary>
         /// <param name="tableName">Access表名称</param>
@@ -503,30 +467,28 @@ namespace Maticsoft.DBUtility
                 }
             }
         }
-
+      
         private static void ExcuteSql(string sqlStr)
         {
-            using (OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path)))
+            using OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path));
+            try
             {
-                try
-                {
-                    conn.Open();
-                    OleDbCommand comm = conn.CreateCommand();
-                    comm.CommandText = sqlStr;
-                    comm.Connection = conn;
-                    comm.ExecuteNonQuery();
-                    comm.Dispose();
-                    conn.Close();
-                }
-                catch (Exception)
-                {
-                    //MessageBox.Show(e.Message.ToString());
-                    conn.Close();
-                }
-                finally
-                {
-                    conn.Close();
-                }
+                conn.Open();
+                OleDbCommand comm = conn.CreateCommand();
+                comm.CommandText = sqlStr;
+                comm.Connection = conn;
+                comm.ExecuteNonQuery();
+                comm.Dispose();
+                conn.Close();
+            }
+            catch (Exception)
+            {
+                //MessageBox.Show(e.Message.ToString());
+                conn.Close();
+            }
+            finally
+            {
+                conn.Close();
             }
         }
 

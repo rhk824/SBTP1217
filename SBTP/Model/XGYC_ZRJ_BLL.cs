@@ -110,6 +110,7 @@ namespace SBTP.BLL
 
         public void YuCe()
         {
+            if (tpcl == null || tpcxx == null || tpcyh == null) return;
             //调后调剖层吸液量
             double Qz = tpcyh.Thzzdrxsl;
             //最小剪流速度

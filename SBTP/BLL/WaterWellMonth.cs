@@ -4,6 +4,7 @@ using SBTP.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.OleDb;
 using System.Linq;
 using System.Text;
@@ -109,6 +110,18 @@ namespace SBTP.BLL
         {
             string sql = "Select Min(NY) from WATER_WELL_MONTH where zt=0 and YZMYL>0 and jh='" + jh + "'";
             return DbHelperOleDb.GetSingle(sql).ToString();
+        }
+
+        public static double dayCountCal(string jh, string start, string end)
+        {
+            double ts_sum = 0;
+            string sql = "Select TS from WATER_WELL_MONTH where NY>=#" + start + "# and NY<=#" + end + "# and YY>0 and YZSL>0 and zt=1 and jh='" + jh + "'";
+            DataTable dt = DbHelperOleDb.Query(sql).Tables[0];
+            foreach (DataRow item in dt.Rows)
+            {
+                ts_sum += double.Parse(item[0].ToString());
+            }
+            return ts_sum;
         }
 
     }

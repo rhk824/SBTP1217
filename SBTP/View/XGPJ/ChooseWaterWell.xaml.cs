@@ -25,10 +25,12 @@ namespace SBTP.View.XGPJ
     {
         public DataTable WaterWellsCollection { set; get; } = new DataTable();
         public DataTable DataSource { set; get; } = new DataTable();
-        public ChooseWaterWell()
+        private TPJXGPJ tpjxgpj;
+        public ChooseWaterWell(TPJXGPJ parent)
         {
             InitializeComponent();
             DataContext = this;
+            tpjxgpj = parent;
             WaterWellsCollection = SelectWell();
             DataSource = WaterWellsCollection.Copy();
         }
@@ -51,7 +53,7 @@ namespace SBTP.View.XGPJ
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Wells.SelectedItems.OfType<DataRowView>().ToList().ForEach(x => TPJXGPJ.tpxgModels.Add(new TpxgModel()
+            Wells.SelectedItems.OfType<DataRowView>().ToList().ForEach(x => tpjxgpj.tpxgModels.Add(new TpxgModel()
             {
                 JH = x.Row.ItemArray[0].ToString(),
                 //TPCM = "",

@@ -187,6 +187,7 @@ namespace SBTP.Data
             int startIndex = lines.FindIndex(x => x.Contains("*JZXG"));
             for (int i = startIndex + 1; i < lines.Count; i++)
             {
+                if (lines[i].Contains("/JZXG")) break;
                 string[] vs = lines[i].Split('\t');
                 if (vs[0] == "/JZXG") break;
                 list.Add(new XGYC_SCJ_BLL()

@@ -65,7 +65,7 @@
                         <TextBlock Text="调剖效果统计表" FontSize="18" FontFamily="黑体"/>
                     </StackPanel>
 
-                    <DataGrid Name="tpxg_datagrid" Grid.Row="1" LoadingRow="DataGrid_LoadingRow" RowHeaderWidth="0" ItemsSource="{Binding}" HeadersVisibility="Column" CanUserAddRows="False">
+                    <DataGrid Name="tpxg_datagrid" Grid.Row="1" LoadingRow="DataGrid_LoadingRow" RowHeaderWidth="0" ItemsSource="{Binding tpxgModels}" HeadersVisibility="Column" CanUserAddRows="False">
                         <DataGrid.Columns>
 
                             <DataGridTemplateColumn Header="序号">
@@ -159,7 +159,7 @@
                             </DataGridTextColumn>
                             <!-- 调前表头终止 -->
 
-                            <!-- 调前表头开始 -->
+                            <!-- 调后表头开始 -->
                             <DataGridTextColumn Binding="{Binding THZS, StringFormat={}{0:F2}}">
                                 <DataGridTextColumn.Header>
                                     <StackPanel>
@@ -196,9 +196,9 @@
                                     </StackPanel>
                                 </DataGridTextColumn.Header>
                             </DataGridTextColumn>
-                            <!-- 调前表头终止 -->
+                            <!-- 调后表头终止 -->
 
-                            <!-- 调前表头开始 -->
+                            <!-- 差值表头开始 -->
                             <DataGridTextColumn Binding="{Binding CZZS, StringFormat={}{0:F2}}">
                                 <DataGridTextColumn.Header>
                                     <StackPanel>
@@ -235,14 +235,14 @@
                                     </StackPanel>
                                 </DataGridTextColumn.Header>
                             </DataGridTextColumn>
-                            <!-- 调前表头终止 -->
+                            <!-- 差值表头终止 -->
 
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </Border>
             <Border BorderBrush="LightGray" BorderThickness="1"  Grid.Row="1">
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Horizontal">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Left" Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="13" FontWeight="Black">调前统计</TextBlock>
                         <TextBlock>平均注水量：</TextBlock>
@@ -254,7 +254,7 @@
                         <TextBlock>平均视吸水指数：</TextBlock>
                         <TextBlock x:Name="tb_tq_sxszs">0</TextBlock>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="50,0,0,0">
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="13" FontWeight="Black">调后统计</TextBlock>
                         <TextBlock>平均注水量：</TextBlock>
                         <TextBlock x:Name="tb_th_zsl">0</TextBlock>
@@ -265,7 +265,7 @@
                         <TextBlock>平均视吸水指数：</TextBlock>
                         <TextBlock x:Name="tb_th_sxszs">0</TextBlock>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="50,0,0,0">
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock FontSize="13" FontWeight="Black">差值统计</TextBlock>
                         <TextBlock>平均注水量：</TextBlock>
                         <TextBlock x:Name="tb_cz_zsl">0</TextBlock>
@@ -296,12 +296,18 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <RadioButton GroupName="Graph" Content="生产动态" Click="RadioButton_Click"/>
                     <RadioButton GroupName="Graph" Content="吸水剖面" Click="RadioButton_Click"/>
                 </StackPanel>
                 <Frame Name="Container" Grid.Row="1" />
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Name="Btn_img_export" Click="Btn_img_export_Click">图形输出</Button>
+                    <Button Name="Btn_return" Click="Btn_return_Click">继续</Button>
+                    <Button Name="Btn_close" Click="Btn_close_Click">关闭</Button>
+                </StackPanel>
             </Grid>
         </GroupBox>
     </Grid>

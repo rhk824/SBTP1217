@@ -25,8 +25,8 @@ namespace SBTP
         {
             AbsoluteExpiration = DateTimeOffset.Now.AddDays(365)
         };
-        public static string PythonHome = @"D:\Anaconda3\envs\sbtp";
-        //public static string PythonHome = Path.Combine(System.Windows.Forms.Application.StartupPath, "sbtp_env");
+        //public static string PythonHome = @"D:\Anaconda3\envs\sbtp";
+        public static string PythonHome = Path.Combine(System.Windows.Forms.Application.StartupPath, "sbtp_env");
         public static string sgsj_doc = Path.Combine(System.Windows.Forms.Application.StartupPath, "sgsj.doc"); // 施工设计书模板文件
 
         public static bool is_debug = false; // 调试模式（正式版发布时，删掉此变量及相关调试代码，全项目搜 --->  #region 调试模式  <---）
@@ -56,10 +56,9 @@ namespace SBTP
         {
             RegistryKey hklm = Registry.LocalMachine;
             RegistryKey excelKey;
+            excelKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Jet\4.0\Engines\Excel", true);
             if (Environment.Is64BitOperatingSystem)
-                excelKey = hklm.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Jet\4.0\Engines\Excel",true);
-            else
-                excelKey = hklm.OpenSubKey(@"SOFTWARE\Microsoft\Jet\4.0\Engines\Excel",true);
+                excelKey = hklm.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Jet\4.0\Engines\Excel",true);           
             excelKey.SetValue("TypeGuessRows",0);
         }
 

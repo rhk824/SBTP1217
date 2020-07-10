@@ -57,16 +57,15 @@
                     <TextBlock Text="{Binding ElementName=lb_tpc, Path=SelectedItem.jh}" />
                     <TextBlock Text="井" />
                     <TextBlock Text="{Binding ElementName=lb_csrq, Path=SelectedItem.CSRQ}" />
-                    <TextBlock Text="时间吸水剖面" />
+                    <TextBlock Text="吸水剖面" />
                 </StackPanel>
             </GroupBox.Header>
             <DataGrid ItemsSource="{Binding oc_xspm}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding YCZ}" Header="油层组" />
                     <DataGridTextColumn Binding="{Binding XCH}" Header="小层号" />
-                    <DataGridTextColumn Binding="{Binding JSXH}" Header="解释序号" />
+                    <DataGridTextColumn Binding="{Binding JSXH}" Header="小层序号" />
                     <DataGridTextColumn Binding="{Binding JDDS1, StringFormat={}{0:F2}}" Header="井段顶深" />
-                    <!--<DataGridTextColumn Binding="{Binding hd}" Header="厚度" />-->
                     <DataGridTextColumn Binding="{Binding YXHD}" Header="有效厚度" />
                     <DataGridTextColumn Binding="{Binding ZRBFS, StringFormat={}{0:F1}}" Header="注入百分数" />
                     <DataGridTextColumn Binding="{Binding ntc}" Header="拟调层" />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SBTP.View.XGYC;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -175,7 +176,7 @@ namespace SBTP
             Page page = (Page)assembly.CreateInstance(pagename);
             pageContainer.NavigationService.Navigate(page);
         }
-
+        
         private void miKSSC_Click(object sender, RoutedEventArgs e)
         {
             BLL.sgsj_bll bll = new BLL.sgsj_bll();
