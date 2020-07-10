@@ -814,8 +814,12 @@ namespace SBTP.BLL
                     if (dic_xtpj_report.ContainsKey(dict_tpji["YTTPJ"]))
                     {
                         byte[] vs = dic_xtpj_report[dict_tpji["YTTPJ"]];
-                        string file = ConvertWord(vs);
-                        copy_doc(file);
+                        object file = ConvertWord(vs);
+
+                        Word.Document newDoc = copy_doc(file);
+                        newDoc.ActiveWindow.Selection.WholeStory();
+                        newDoc.ActiveWindow.Selection.Copy();
+
                         doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref missing, ref missing, "xn041");
                         app.Selection.Range.InsertParagraph();
                         app.Selection.Range.Paste();
@@ -824,8 +828,12 @@ namespace SBTP.BLL
                     if (dic_xtpj_report.ContainsKey(dict_tpji["KLTPJ"]))
                     {
                         byte[] vs = dic_xtpj_report[dict_tpji["KLTPJ"]];
-                        string file = ConvertWord(vs);
-                        copy_doc(file);
+                        object file = ConvertWord(vs);
+
+                        Word.Document newDoc = copy_doc(file);
+                        newDoc.ActiveWindow.Selection.WholeStory();
+                        newDoc.ActiveWindow.Selection.Copy();
+
                         doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref missing, ref missing, "xn042");
                         app.Selection.Range.InsertParagraph();
                         app.Selection.Range.Paste();
@@ -834,7 +842,26 @@ namespace SBTP.BLL
                 #endregion
 
                 #region 根据书签插入图片
+                string imgPath = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";
+                if (File.Exists(imgPath))
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref missing, ref missing, "img03");
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "图3.1 调剖井分布图";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
 
+                    object linkToFile = false;
+                    object saveWithDocument = true;
+                    object range = app.Selection.Range;
+                    doc.InlineShapes.AddPicture(imgPath, ref linkToFile, ref saveWithDocument, ref range);
+                    app.Selection.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    doc.InlineShapes[1].ScaleWidth = 80;
+                    doc.InlineShapes[1].ScaleHeight = 80;
+                }
                 #endregion
 
                 doc.Save();
@@ -2505,6 +2532,42 @@ namespace SBTP.BLL
                 }
             }
         }
+        private Word.Document copy_doc(object sorceDocPath)
+        {
+            object objDocType = Word.WdDocumentType.wdTypeDocument;
+            object type = Word.WdBreakType.wdSectionBreakContinuous;
+
+            //Word应用程序变量    
+            Word.Application wordApp;
+            //Word文档变量 
+            Word.Document newWordDoc;
+
+            object readOnly = false;
+            object isVisible = false;
+
+            //初始化 
+            //由于使用的是COM库，因此有许多变量需要用Missing.Value代替 
+            wordApp = new Word.Application();
+
+            Object Nothing = System.Reflection.Missing.Value;
+
+            //wordDoc = wordApp.Documents.Add(ref Nothing, ref Nothing, ref Nothing, ref Nothing);     
+            newWordDoc = wordApp.Documents.Add(ref Nothing, ref Nothing, ref Nothing, ref Nothing);
+
+            Word.Document openWord;
+            openWord = wordApp.Documents.Open(ref sorceDocPath, ref Nothing, ref readOnly, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref isVisible, ref Nothing, ref Nothing, ref Nothing, ref Nothing);
+            openWord.Select();
+            openWord.Sections[1].Range.Copy();
+
+            object start = 0;
+            Word.Range newRang = newWordDoc.Range(ref start, ref start);
+
+            //插入换行符    
+            //newWordDoc.Sections[1].Range.InsertBreak(ref type); 
+            newWordDoc.Sections[1].Range.PasteAndFormat(Word.WdRecoveryType.wdPasteDefault);
+            openWord.Close(ref Nothing, ref Nothing, ref Nothing);
+            return newWordDoc;
+        }
 
         private string ConvertWord(byte[] data)
         {
@@ -2522,5 +2585,6 @@ namespace SBTP.BLL
             }
             return filepath;
         }
+
     }
 }
