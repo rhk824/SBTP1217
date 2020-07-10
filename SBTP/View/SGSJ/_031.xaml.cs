@@ -49,7 +49,7 @@ namespace SBTP.View.SGSJ
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            string path = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";
+            string path = imgTempPath;
             if (!bll.update_03(out string message))
             {
                 MessageBox.Show(message);
@@ -86,6 +86,7 @@ namespace SBTP.View.SGSJ
             bll.update_bookmark("text_03", tb1.Text);
             bll.update_bookmark("text_031", tb2.Text);
             bll.save_031();
+            save_img();
             MessageBox.Show("操作成功");
         }
 
@@ -97,7 +98,6 @@ namespace SBTP.View.SGSJ
 
         private void check_img()
         {
-            string imgPath = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";
             if (System.IO.File.Exists(imgPath))
             {
                 Uri uri = new Uri(imgPath);
@@ -107,7 +107,10 @@ namespace SBTP.View.SGSJ
 
         private void save_img()
         {
-            var imgBmp = img.Source;
+            if (string.IsNullOrEmpty(imgTempPath))
+            {
+                System.IO.File.Copy(imgTempPath, imgPath);
+            }
         }
     }
 }
