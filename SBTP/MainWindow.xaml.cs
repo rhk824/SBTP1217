@@ -167,7 +167,8 @@ namespace SBTP
         }
         private void Quit_Click(object sender, RoutedEventArgs e)
         {
-            App.Current.Shutdown();
+            this.Close();
+            //App.Current.Shutdown();
         }
 
         public void Skip(string pagename)
