@@ -29,10 +29,10 @@
                         
                         <TextBlock>调剖费用价格（用户填写）</TextBlock>
 
-                        <DataGrid x:Name="dg1" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg1" ItemsSource="{Binding oc_0511}">
                             <DataGrid.Columns>
                                 
-                                <DataGridTextColumn Binding="{Binding yy, StringFormat={}{0:0.##}}">
+                                <DataGridTextColumn Binding="{Binding YY, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <StackPanel>
                                             <TextBlock>原油</TextBlock>
@@ -41,7 +41,7 @@
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
 
-                                <DataGridTextColumn Binding="{Binding yttpj, StringFormat={}{0:0.##}}">
+                                <DataGridTextColumn Binding="{Binding YTTPJ, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <StackPanel>
                                             <TextBlock>1000mg/L液体调剖剂</TextBlock>
@@ -50,7 +50,7 @@
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
 
-                                <DataGridTextColumn Binding="{Binding kltpj, StringFormat={}{0:0.##}}">
+                                <DataGridTextColumn Binding="{Binding KLTPJ, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <StackPanel>
                                             <TextBlock>颗粒调剖剂</TextBlock>
@@ -59,28 +59,28 @@
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
 
-                                <DataGridTextColumn Binding="{Binding xdy, StringFormat={}{0:0.##}}">
+                                <DataGridTextColumn Binding="{Binding XDY, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <StackPanel>
                                             <TextBlock>携带液</TextBlock>
-                                            <TextBlock>（元/t）</TextBlock>
-                                        </StackPanel>
-                                    </DataGridTextColumn.Header>
-                                </DataGridTextColumn>
-
-                                <DataGridTextColumn Binding="{Binding sgf, StringFormat={}{0:0.##}}">
-                                    <DataGridTextColumn.Header>
-                                        <StackPanel>
-                                            <TextBlock>施工费</TextBlock>
                                             <TextBlock>（元/m3）</TextBlock>
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
 
-                                <DataGridTextColumn Binding="{Binding qt, StringFormat={}{0:0.##}}">
+                                <DataGridTextColumn Binding="{Binding SGF, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <StackPanel>
                                             <TextBlock>施工费</TextBlock>
+                                            <TextBlock>（元/口）</TextBlock>
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Binding="{Binding QT, StringFormat={}{0:0.##}}">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel>
+                                            <TextBlock>其他</TextBlock>
                                             <TextBlock>（元）</TextBlock>
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
@@ -91,20 +91,20 @@
 
                         <TextBox x:Name="tb2" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
 
-                        <DataGrid x:Name="dg2" ItemsSource="{Binding}" HeadersVisibility="Column" RowHeaderWidth="0">
+                        <DataGrid x:Name="dg2" ItemsSource="{Binding oc_0512}" HeadersVisibility="Column" RowHeaderWidth="0" LoadingRow="DataGrid_LoadingRow">
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn  Width="55" Header="编号">
+                                <DataGridTemplateColumn Header="编号">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type DataGridRow}}, Path=Header}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"></TextBlock>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="井号" Binding="{Binding jh, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="优选半径（m）" Binding="{Binding yxbj, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="投产比" Binding="{Binding tcb, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="增油量（t）" Binding="{Binding zyl, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="调剖剂用量（m3）" Binding="{Binding tpjyl, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="井号" Binding="{Binding JH, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="优选半径（m）" Binding="{Binding YXBJ, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="投产比" Binding="{Binding TCB, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="增油量（t）" Binding="{Binding ZYL, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="调剖剂用量（m3）" Binding="{Binding TPJYL, StringFormat={}{0:0.##}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         

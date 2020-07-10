@@ -27,12 +27,12 @@
                     <StackPanel>
                         <TextBox x:Name="tb" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
                         <TextBlock>调后增油效果预测</TextBlock>
-                        <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding oc_062}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="井组" Binding="{Binding tpjz}"/>
-                                <DataGridTextColumn Header="增油（t）" Binding="{Binding yjzy, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="初见效时间（月）" Binding="{Binding ksjxsj, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="投产比" Binding="{Binding tcb, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="井组" Binding="{Binding TPJZ}"/>
+                                <DataGridTextColumn Header="增油（t）" Binding="{Binding YJZY, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="初见效时间（月）" Binding="{Binding KSJXSJ, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="投产比" Binding="{Binding TCB, StringFormat={}{0:0.##}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>

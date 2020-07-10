@@ -76,7 +76,6 @@ namespace SBTP.Data
             return true;
         }
 
-
         #region 注入井深部调剖效果预测
         public static bool save_xgyc_zrj(List<XGYC_ZRJ_BLL> list)
         {
@@ -130,7 +129,7 @@ namespace SBTP.Data
                     CSQ_DXYL = Unity.ToDouble(vs[4]),
                     CSQ_SXSZS = Unity.ToDouble(vs[5]),                   
                     CSQ_TPCZRFS = Unity.ToDouble(vs[6]),
-                    CSH_YL = Unity.ToInt(vs[7]),
+                    CSH_YL = Unity.ToDouble(vs[7]),
                     CSH_SXSZS = Unity.ToDouble(vs[8]),
                     CSH_TPCZRFS = Unity.ToDouble(vs[9])
                 });
@@ -145,7 +144,6 @@ namespace SBTP.Data
             return item;
         }
         #endregion
-
 
         #region 生产井深部调剖效果预测
         public static bool save_xgyc_scj(List<XGYC_SCJ_BLL> list)
@@ -181,7 +179,7 @@ namespace SBTP.Data
         /// 读取生产井预测
         /// </summary>
         /// <returns></returns>
-        public static List<XGYC_SCJ_BLL> read_XGYC_SCJ()
+        public static List<XGYC_SCJ_BLL> read_xgyc_scj()
         {
             CheckRLS();
             List<XGYC_SCJ_BLL> list = new List<XGYC_SCJ_BLL>();
@@ -191,6 +189,7 @@ namespace SBTP.Data
             {
                 if (lines[i].Contains("/JZXG")) break;
                 string[] vs = lines[i].Split('\t');
+                if (vs[0] == "/JZXG") break;
                 list.Add(new XGYC_SCJ_BLL()
                 {
                     JZ = Unity.ToString(vs[0]),
@@ -206,11 +205,6 @@ namespace SBTP.Data
         }
 
         #endregion
-
-
-
-
-
 
     }
 }

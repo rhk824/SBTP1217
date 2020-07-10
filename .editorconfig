@@ -2,3 +2,21 @@
 
 # CA1062: 验证公共方法的参数
 dotnet_diagnostic.CA1062.severity = suggestion
+
+# IDE1006: 命名样式
+dotnet_diagnostic.IDE1006.severity = none
+
+# CA1707: 标识符不应包含下划线
+dotnet_diagnostic.CA1707.severity = none
+
+# CA2227: 集合属性应为只读
+dotnet_diagnostic.CA2227.severity = none
+
+# CA1305: 指定 IFormatProvider
+dotnet_diagnostic.CA1305.severity = none
+
+# CA1051: 不要声明可见实例字段
+dotnet_diagnostic.CA1051.severity = none
+
+# CA1303: 请不要将文本作为本地化参数传递
+dotnet_diagnostic.CA1303.severity = none

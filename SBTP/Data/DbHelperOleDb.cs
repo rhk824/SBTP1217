@@ -438,39 +438,36 @@ namespace Maticsoft.DBUtility
             }
         }
 
-        /// <summary>
+       /// <summary>
         /// 对Datatable数据进行批量更新处理
         /// </summary>
         /// <param name="tableName">Access表名称</param>
         /// <param name="dt">数据内容</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:检查 SQL 查询是否存在安全漏洞", Justification = "<挂起>")]
-        public static void ExcuteTableSql(string tableName, DataTable dt)
+        public static void ExcuteTableSql(DataTable dt)
         {
-            using OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path));
-            List<string> columnList = new List<string>();
-            foreach (DataColumn one in dt.Columns)
+            using (OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path)))
             {
-                columnList.Add(one.ColumnName);
-            }
-            using (OleDbDataAdapter adapter = new OleDbDataAdapter())
-            {
-                adapter.SelectCommand = new OleDbCommand("select * from " + tableName, conn);
-                using (OleDbCommandBuilder builder = new OleDbCommandBuilder(adapter))
+                List<string> columnList = new List<string>();
+                foreach (DataColumn one in dt.Columns)
                 {
-                    adapter.InsertCommand = builder.GetInsertCommand();
-                    foreach (string one in columnList)
+                    columnList.Add(one.ColumnName);
+                }
+                using (OleDbDataAdapter adapter = new OleDbDataAdapter())
+                {
+                    adapter.SelectCommand = new OleDbCommand("select * from " + dt.TableName, conn);
+                    using (OleDbCommandBuilder builder = new OleDbCommandBuilder(adapter))
                     {
-                        adapter.InsertCommand.Parameters.Add(new OleDbParameter(one, dt.Columns[one].DataType));
+                        adapter.InsertCommand = builder.GetInsertCommand();
+                        foreach (string one in columnList)
+                        {
+                            adapter.InsertCommand.Parameters.Add(new OleDbParameter(one, dt.Columns[one].DataType));
+                        }
+                        adapter.Update(dt);
                     }
-                    adapter.Update(dt);
                 }
             }
         }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA2100:检查 SQL 查询是否存在安全漏洞", Justification = "<挂起>")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:不捕获常规异常类型", Justification = "<挂起>")]
+      
         private static void ExcuteSql(string sqlStr)
         {
             using OleDbConnection conn = new OleDbConnection(string.Format(connectionString, App.project_path));
@@ -503,14 +500,14 @@ namespace Maticsoft.DBUtility
         {
             string strcomm = $"delete * from {tableName}";
             ExcuteSql(strcomm);
-            //string strIter = $"alter table {tableName} column id counter (1, 1)";
-            //ExcuteSql(strIter);
+            string strIter = $"alter table {tableName} column id counter (1, 1)";
+            ExcuteSql(strIter);
         }
 
-        public static void UpdateTable(string tableName, DataTable dt)
+        public static void UpdateTable(DataTable dt)
         {
-            ClearDataTable(tableName);
-            ExcuteTableSql(tableName, dt);
+            ClearDataTable(dt.TableName);
+            ExcuteTableSql(dt);
         }
 
         #endregion

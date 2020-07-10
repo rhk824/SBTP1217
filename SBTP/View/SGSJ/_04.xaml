@@ -33,14 +33,14 @@
 
                         </TextBox>
                         <TextBlock>调剖井调剖剂浓度设计</TextBlock>
-                        <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding oc_04}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
-                                <DataGridTextColumn Header="液体剂浓度（mg/L）" Binding="{Binding ytjnd, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="颗粒剂浓度（mg/L）" Binding="{Binding kljnd, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="颗粒直径（目）" Binding="{Binding klzj, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="携带液浓度（mg/L）" Binding="{Binding xdynd, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="用量比" Binding="{Binding ylb, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="井号" Binding="{Binding JH}"/>
+                                <DataGridTextColumn Header="液体剂浓度（mg/L）" Binding="{Binding YTJND, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="颗粒剂浓度（mg/L）" Binding="{Binding KLJND, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="颗粒直径（目）" Binding="{Binding KLZJ, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="携带液浓度（mg/L）" Binding="{Binding XDYND, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="用量比" Binding="{Binding YLB, StringFormat={}{0:0.##}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>

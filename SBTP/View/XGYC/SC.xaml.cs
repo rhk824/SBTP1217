@@ -40,7 +40,7 @@ namespace SBTP.View.XGYC
         {
             List<string> temp_list = DatHelper.Read_GXSJ();
             List_scj = new ObservableCollection<XGYC_SCJ_BLL>();
-            var datasource = DatHelper_RLS4.read_XGYC_SCJ();
+            var datasource = DatHelper_RLS4.read_xgyc_scj();
             if (datasource.Count > 0)
                 datasource.ForEach(x => List_scj.Add(x));
             if (temp_list == null | temp_list.Count == 0) return;

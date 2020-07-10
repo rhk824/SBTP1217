@@ -228,10 +228,6 @@ namespace SBTP.View.XGPJ
         #endregion
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1707:标识符不应包含下划线", Justification = "<挂起>")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:命名样式", Justification = "<挂起>")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:集合属性应为只读", Justification = "<挂起>")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:添加只读修饰符", Justification = "<挂起>")]
     /// <summary>
     /// TPJXGPJ.xaml 的交互逻辑
     /// </summary>
@@ -457,7 +453,7 @@ namespace SBTP.View.XGPJ
             run_comment_et.Text = Unity.DateTimeToString(comment_et, "yyyy年MM月");
             string[] date = DatHelper.TPJParaRead();
 
-            var query = DBContext.GetList_WATER_WELL_MONTH_zt1()
+            var query = DBContext.db_water_well_month__zt1()
                 .Where(p => p.NY >= comment_st && p.NY <= comment_et)
                 .OrderBy(p => p.NY).ToList();
 

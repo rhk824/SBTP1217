@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace SBTP.Data
 {
-    public class DatHelper
+    public static class DatHelper
     {
         private static string datPath = @"{0}\RLS";
         private static string rls3 = "RLS3.DAT";
@@ -202,7 +202,7 @@ namespace SBTP.Data
                 {
                     foreach (string line in lines)
                     {
-                        if (f_line.Equals(line))
+                        if (f_line == line)
                         {
                             i++;
                             break;
@@ -568,6 +568,54 @@ namespace SBTP.Data
                 well_table.ImportRow(dr);
             }
             return well_table;
+        }
+        public static DataTable wsd_read()
+        {
+            string fileStr = "";
+            string readStr = " ";
+            List<string> group_list = new List<string>();
+            if (!File.Exists(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT")) { return null; }
+            using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+            {
+                while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
+                {
+                    if (readStr.Contains("**COMPLEMENT GROUP"))
+                    {
+                        while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
+                        {
+                            if (!readStr.Substring(0, 1).Contains('*') && !readStr.Substring(0, 1).Contains('/'))
+                                fileStr += readStr + ",";
+                            if (readStr.Contains("/COMPLEMENT GROUP"))
+                                break;
+                        }
+                    }
+                    else if (readStr.Contains("**PROFILE CONTROL WELL"))
+                        break;
+                }
+            }
+            //完善度数据
+            string[] table = fileStr.Substring(0, fileStr.Length - 1).Split(',');
+            DataTable dt = new DataTable();
+            dt.Columns.Add("WELL", Type.GetType("System.String"));
+            dt.Columns.Add("XWJJD", Type.GetType("System.String"));
+            dt.Columns.Add("JJJYD", Type.GetType("System.String"));
+            dt.Columns.Add("PWL", Type.GetType("System.String"));
+            dt.Columns.Add("WSCD", Type.GetType("System.String"));
+            dt.Columns.Add("WSJBS", Type.GetType("System.String"));
+            for (int i = 0; i < table.Length; i++)
+            {
+                string[] newArry = table[i].Split('\t');
+                DataRow dr = dt.NewRow();
+                dr["WELL"] = newArry[0];
+                dr["XWJJD"] = newArry[1];
+                dr["JJJYD"] = newArry[2];
+                dr["PWL"] = newArry[3];
+                dr["WSCD"] = newArry[4];
+                dr["WSJBS"] = newArry[5];
+                dt.Rows.Add(dr);
+            }
+            return dt;
         }
 
         #endregion

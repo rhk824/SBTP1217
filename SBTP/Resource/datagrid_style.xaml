@@ -460,7 +460,7 @@
                         <TextBlock Text="调剖层" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
                         <TextBlock Text="厚度（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
                         <TextBlock Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
-                            <Run Text="吸水量（" />
+                            <Run Text="吸水量（m" />
                             <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
                             <Run Text="/d）"/>
                         </TextBlock>
@@ -498,7 +498,7 @@
                         <TextBlock Text="封堵段" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
                         <TextBlock Text="厚度（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
                         <TextBlock Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
-                            <Run Text="吸水量（" />
+                            <Run Text="吸水量（m" />
                             <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
                             <Run Text="/d）"/>
                         </TextBlock>
@@ -536,7 +536,7 @@
                         <TextBlock Text="增注段" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
                         <TextBlock Text="厚度（m）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
                         <TextBlock Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1">
-                            <Run Text="吸水量（" />
+                            <Run Text="吸水量（m" />
                             <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
                             <Run Text="/d）"/>
                         </TextBlock>
@@ -570,8 +570,14 @@
 
                         <!--名称设置-->
                         <TextBlock Text="调剖前" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
-                        <TextBlock Text="注入压力" Style="{StaticResource txt_header_2_style}" Grid.Row="1" />
-                        <TextBlock Text="视吸水指数" Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}" />
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Style="{StaticResource txt_header_2_style}">注入压力</TextBlock>
+                            <TextBlock Style="{StaticResource txt_header_2_style}">（MPa）</TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <TextBlock Style="{StaticResource txt_header_2_style}">视吸水指数</TextBlock>
+                            <TextBlock Style="{StaticResource txt_header_2_style}">（m3/d.MPa）</TextBlock>
+                        </StackPanel>
                         <!--<TextBlock Text="注入压力（MPa）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
                         <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
                             <Run Text="视吸水指数（m" />
@@ -607,8 +613,14 @@
 
                         <!--名称设置-->
                         <TextBlock Text="调剖后" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
-                        <TextBlock Text="注入压力" Style="{StaticResource txt_header_2_style}" Grid.Row="1" />
-                        <TextBlock Text="视吸水指数" Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}" />
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Style="{StaticResource txt_header_2_style}">注入压力</TextBlock>
+                            <TextBlock Style="{StaticResource txt_header_2_style}">（MPa）</TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <TextBlock Style="{StaticResource txt_header_2_style}">视吸水指数</TextBlock>
+                            <TextBlock Style="{StaticResource txt_header_2_style}">（m3/d.MPa）</TextBlock>
+                        </StackPanel>
                         <!--<TextBlock Text="注入压力（MPa）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
                         <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
                             <Run Text="视吸水指数（m" />
@@ -644,8 +656,14 @@
 
                         <!--名称设置-->
                         <TextBlock Text="增幅" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="2" />
-                        <TextBlock Text="注入压力" Style="{StaticResource txt_header_2_style}" Grid.Row="1" />
-                        <TextBlock Text="视吸水指数" Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}" />
+                        <StackPanel Grid.Row="1">
+                            <TextBlock Style="{StaticResource txt_header_2_style}">注入压力</TextBlock>
+                            <TextBlock Style="{StaticResource txt_header_2_style}">（MPa）</TextBlock>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1">
+                            <TextBlock Style="{StaticResource txt_header_2_style}">视吸水指数</TextBlock>
+                            <TextBlock Style="{StaticResource txt_header_2_style}">（m3/d.MPa）</TextBlock>
+                        </StackPanel>
                         <!--<TextBlock Text="注入压力（MPa）" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
                         <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource txt_header_2_style}">
                             <Run Text="视吸水指数（m" />

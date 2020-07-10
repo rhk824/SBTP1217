@@ -1,15 +1,24 @@
 ﻿using com.google.protobuf;
 using Common;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.Office.CustomUI;
 using Maticsoft.DBUtility;
+using Microsoft.Scripting.Utils;
+using nu.xom.jaxen.expr.iter;
 using SBTP.Common;
+using SBTP.Data;
 using SBTP.Model;
 using SBTP.View.CSSJ;
+using SBTP.View.JCXZ;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Word = Microsoft.Office.Interop.Word;
@@ -25,19 +34,19 @@ namespace SBTP.BLL
         public Dictionary<string, string> BookMarks { get; set; }
         public Dictionary<string, string> Tags { get; set; }
 
-        public DataTable dt021 { get; set; }
-        public DataTable dt0221 { get; set; }
-        public DataTable dt0222 { get; set; }
-        public DataTable dt031 { get; set; }
-        public DataTable dt032 { get; set; }
-        public DataTable dt033 { get; set; }
-        public DataTable dt04 { get; set; }
-        public DataTable dt0511 { get; set; }
-        public DataTable dt0512 { get; set; }
-        public DataTable dt052 { get; set; }
-        public DataTable dt053 { get; set; }
-        public DataTable dt061 { get; set; }
-        public DataTable dt062 { get; set; }
+        public ObservableCollection<sgsj_model_021> oc_021 { get; set; } = new ObservableCollection<sgsj_model_021>();
+        public ObservableCollection<sgsj_model_0221> oc_0221 { get; set; } = new ObservableCollection<sgsj_model_0221>();
+        public ObservableCollection<sgsj_model_0222> oc_0222 { get; set; } = new ObservableCollection<sgsj_model_0222>();
+        public ObservableCollection<sgsj_model_031> oc_031 { get; set; } = new ObservableCollection<sgsj_model_031>();
+        public ObservableCollection<sgsj_model_032> oc_032 { get; set; } = new ObservableCollection<sgsj_model_032>();
+        public ObservableCollection<sgsj_model_033> oc_033 { get; set; } = new ObservableCollection<sgsj_model_033>();
+        public ObservableCollection<sgsj_model_04> oc_04 { get; set; } = new ObservableCollection<sgsj_model_04>();
+        public ObservableCollection<sgsj_model_0511> oc_0511 { get; set; } = new ObservableCollection<sgsj_model_0511>();
+        public ObservableCollection<sgsj_model_0512> oc_0512 { get; set; } = new ObservableCollection<sgsj_model_0512>();
+        public ObservableCollection<sgsj_model_052> oc_052 { get; set; } = new ObservableCollection<sgsj_model_052>();
+        public ObservableCollection<sgsj_model_053> oc_053 { get; set; } = new ObservableCollection<sgsj_model_053>();
+        public ObservableCollection<sgsj_model_061> oc_061 { get; set; } = new ObservableCollection<sgsj_model_061>();
+        public ObservableCollection<sgsj_model_062> oc_062 { get; set; } = new ObservableCollection<sgsj_model_062>();
 
         public Dictionary<string, List<DssjModel>> well_info;
         #endregion
@@ -46,168 +55,9 @@ namespace SBTP.BLL
         {
             init_bookmarks();
             init_tags();
-            //init_table();
         }
 
         #region 初始化视图所用数据，及数据结构
-        /// <summary>
-        /// 初始化表格
-        /// </summary>
-        private void init_table()
-        {
-            dt021 = new DataTable();
-            dt021.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("syhd", typeof(decimal)),
-                new DataColumn("yxhd", typeof(decimal)),
-                new DataColumn("stl", typeof(decimal)),
-                new DataColumn("kxd", typeof(decimal)),
-            });
-
-            dt0221 = new DataTable();
-            dt0221.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("ljzs", typeof(decimal)),
-                new DataColumn("ljzj", typeof(decimal)),
-                new DataColumn("sjjs", typeof(decimal)),
-                new DataColumn("yzyl", typeof(decimal)),
-                new DataColumn("jhwnd", typeof(decimal)),
-                new DataColumn("pjrz", typeof(decimal)),
-                new DataColumn("zsyl", typeof(decimal)),
-                new DataColumn("sxszs", typeof(decimal)),
-            });
-
-            dt0222 = new DataTable();
-            dt0222.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("ljcy1", typeof(decimal)),
-                new DataColumn("ljcy2", typeof(decimal)),
-                new DataColumn("yjjs", typeof(decimal)),
-                new DataColumn("ycy1", typeof(decimal)),
-                new DataColumn("ycy2", typeof(decimal)),
-                new DataColumn("zhhs", typeof(decimal)),
-                new DataColumn("rcy1", typeof(decimal)),
-                new DataColumn("rcy2", typeof(decimal)),
-            });
-
-            dt031 = new DataTable();
-            dt031.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("wscd", typeof(decimal)),
-                new DataColumn("sxszs", typeof(decimal)),
-                new DataColumn("rzyl", typeof(decimal)),
-                new DataColumn("zsyl", typeof(decimal)),
-                new DataColumn("zhhs", typeof(decimal)),
-            });
-
-            dt032 = new DataTable();
-            dt032.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("tpc", typeof(string)),
-                new DataColumn("tpc_hd", typeof(decimal)),
-                new DataColumn("tpc_xsl", typeof(decimal)),
-                new DataColumn("tpc_xsfs", typeof(decimal)),
-                new DataColumn("fdd_hd", typeof(decimal)),
-                new DataColumn("fdd_xsl", typeof(decimal)),
-                new DataColumn("fdd_xsfs", typeof(decimal)),
-                new DataColumn("zzd_hd", typeof(decimal)),
-                new DataColumn("zzd_xsl", typeof(decimal)),
-                new DataColumn("zzd_xsfs", typeof(decimal)),
-            });
-
-            dt033 = new DataTable();
-            dt033.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("sj", typeof(string)),
-                new DataColumn("tpc", typeof(string)),
-                new DataColumn("yj", typeof(string)),
-                new DataColumn("syhd", typeof(decimal)),
-                new DataColumn("yxhd", typeof(decimal)),
-                new DataColumn("stl", typeof(decimal)),
-            });
-
-            dt04 = new DataTable();
-            dt04.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("ytjnd", typeof(decimal)),
-                new DataColumn("kljnd", typeof(decimal)),
-                new DataColumn("klzj", typeof(decimal)),
-                new DataColumn("xdynd", typeof(decimal)),
-                new DataColumn("ylb", typeof(decimal)),
-            });
-
-            dt0511 = new DataTable();
-            dt0511.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("yy", typeof(decimal)),
-                new DataColumn("yttpj", typeof(decimal)),
-                new DataColumn("kltpj", typeof(decimal)),
-                new DataColumn("xdy", typeof(decimal)),
-                new DataColumn("sgf", typeof(decimal)),
-                new DataColumn("qt", typeof(decimal)),
-            });
-
-            dt0512 = new DataTable();
-            dt0512.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("bh", typeof(string)),
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("tpbj", typeof(decimal)),
-                new DataColumn("tcb", typeof(decimal)),
-                new DataColumn("yxbj", typeof(decimal)),
-                new DataColumn("zyl", typeof(decimal)),
-                new DataColumn("tpkxtj", typeof(decimal)),
-            });
-
-            dt052 = new DataTable();
-            dt052.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("xh", typeof(string)),
-                new DataColumn("dsmc", typeof(string)),
-                new DataColumn("bl", typeof(decimal)),
-                new DataColumn("tj", typeof(decimal)),
-                new DataColumn("njnd", typeof(decimal)),
-                new DataColumn("klnd", typeof(decimal)),
-                new DataColumn("ms", typeof(decimal)),
-                new DataColumn("rz", typeof(decimal)),
-                new DataColumn("ts", typeof(decimal)),
-                new DataColumn("yjyl", typeof(decimal)),
-            });
-
-            dt053 = new DataTable();
-            dt053.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("yl1", typeof(decimal)),
-                new DataColumn("yl2", typeof(decimal)),
-            });
-
-            dt061 = new DataTable();
-            dt061.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("xh", typeof(string)),
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("tpq_zryl", typeof(decimal)),
-                new DataColumn("tpq_sxszs", typeof(decimal)),
-                new DataColumn("tph_zryl", typeof(decimal)),
-                new DataColumn("tph_sxszs", typeof(decimal)),
-                new DataColumn("zf_zryl", typeof(decimal)),
-                new DataColumn("zf_sxszs", typeof(decimal)),
-            });
-
-            dt062 = new DataTable();
-            dt062.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("tpjz", typeof(string)),
-                new DataColumn("yjzy", typeof(decimal)),
-                new DataColumn("ksjxsj", typeof(decimal)),
-                new DataColumn("tcb", typeof(decimal)),
-            });
-        }
 
         /// <summary>
         /// 初始化书签
@@ -215,7 +65,8 @@ namespace SBTP.BLL
         /// <returns></returns>
         private void init_bookmarks()
         {
-            DataTable dt = DbHelperOleDb.Query("select * from sgsj_bookmarks").Tables[0];
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_bookmarks");
+            DataTable dt = ds.Tables[0];
             this.BookMarks = new Dictionary<string, string>();
             for (int i = 0; i < dt.Rows.Count; i++)
             {
@@ -229,7 +80,8 @@ namespace SBTP.BLL
         /// <returns></returns>
         private void init_tags()
         {
-            DataTable dt = DbHelperOleDb.Query("select * from sgsj_tags").Tables[0];
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_tags");
+            DataTable dt = ds.Tables[0];
             this.Tags = new Dictionary<string, string>();
             for (int i = 0; i < dt.Rows.Count; i++)
             {
@@ -241,7 +93,8 @@ namespace SBTP.BLL
         private Dictionary<string, string> get_bookmarks()
         {
             Dictionary<string, string> bookmarks = new Dictionary<string, string>();
-            DataTable dt = DbHelperOleDb.Query("select * from sgsj_bookmarks").Tables[0];
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_bookmarks");
+            DataTable dt = ds.Tables[0];
             bookmarks = new Dictionary<string, string>();
             for (int i = 0; i < dt.Rows.Count; i++)
             {
@@ -283,6 +136,7 @@ namespace SBTP.BLL
         public bool WordEstblish(string tempDoc, string targetDoc)
         {
             bool result = false;
+
             try
             {
                 //获取书签表数据
@@ -301,22 +155,27 @@ namespace SBTP.BLL
             {
                 string message = ex.Message;
             }
+
             return result;
         }
 
-        private bool ExportWord(string tempDoc, string targetDoc, Dictionary<string, string> tags)
+        private bool ExportWord(string tempDoc, string targetDoc, Dictionary<string, string> bookmarks)
         {
             bool result = false;
 
-            Word.Application app = new Word.Application(); 
+            Word.Application app = new Word.Application();
             System.IO.File.Copy(tempDoc, targetDoc); //将“方案模板”拷贝到目标路径
             Word.Document doc = new Word.Document();
             try
             {
                 object Obj_FileName = targetDoc;
-                object Visible = false;
+                object Visible = true;
                 object ReadOnly = false;
                 object missing = System.Reflection.Missing.Value;
+                object oMissing = Missing.Value;
+                object wdLine = Word.WdUnits.wdLine;
+                object wdGTB = Word.WdGoToItem.wdGoToBookmark;
+                object ncount = 1;
 
                 // 打开文件
                 doc = app.Documents.Open(ref Obj_FileName, ref missing, ref ReadOnly, ref missing,
@@ -325,30 +184,625 @@ namespace SBTP.BLL
                     ref missing, ref missing, ref missing,
                     ref missing);
                 doc.Activate();
-                #region 声明参数
-                if (tags.Count > 0)
+
+                #region 根据标签插入文本
+                if (bookmarks.Count > 0)
                 {
-                    object what = Word.WdGoToItem.wdGoToBookmark;
                     object WordMarkName;
-                    foreach (var item in tags)
+                    foreach (var item in bookmarks)
                     {
                         WordMarkName = item.Key;
-                        doc.ActiveWindow.Selection.GoTo(ref what, ref missing, ref missing, ref WordMarkName); // 光标转到书签位置
-                        doc.ActiveWindow.Selection.TypeText(item.Value); // 插入的内容，插入位置是 word 模板中书签定位的位置
-                        //doc.ActiveWindow.Selection.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter; // 设置当前定位书签位置插入内容的格式
+                        doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref missing, ref missing, ref WordMarkName); // 光标转到书签位置
+                        doc.ActiveWindow.Selection.TypeText(item.Value); //插入的内容，插入位置是 word 模板中书签定位的位置
+                                                                         //doc.ActiveWindow.Selection.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter; // 设置当前定位书签位置插入内容的格式
                     }
                 }
                 #endregion
+
+                #region 根据标签插入表格
+
+                #region 021
+                init_021();
+                if (oc_021.Count > 0)
+                {
+                    sgsj_model_021 model = oc_021.First();
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref missing, ref missing, "tb021");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = $"表2.1 目标设计区域油层状况{model.JS.ToString()}口井";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_021.Count + 1;
+                    int column = 3;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //赋值
+                    table.Cell(1, 1).Range.Text = "井号";
+                    table.Cell(1, 2).Range.Text = "有效厚度";
+                    table.Cell(1, 3).Range.Text = "渗透率";
+                    int rr = 2;
+                    table.Cell(rr, 1).Range.Text = model.JH;
+                    table.Cell(rr, 2).Range.Text = model.YXHD.ToString("0.##");
+                    table.Cell(rr, 3).Range.Text = model.STL.ToString("0.##");
+                    //foreach (var item in oc_021)
+                    //{
+                    //    table.Cell(rr, 1).Range.Text = item.JH;
+                    //    table.Cell(rr, 2).Range.Text = item.YXHD.ToString("0.##");
+                    //    table.Cell(rr, 3).Range.Text = item.STL.ToString("0.##");
+                    //    rr++;
+                    //}
+                }
+                #endregion
+
+                #region 022
+                init_0221();
+                init_0222();
+                if (oc_0221.Count > 0 && oc_0222.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb022");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表2.2 目前目标设计区域开发状况";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = 8;
+                    int column = 5;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //合并单元格
+                    table.Cell(1, 1).Merge(table.Cell(4, 1));
+                    table.Cell(5, 1).Merge(table.Cell(8, 1));
+                    //赋值
+                    sgsj_model_0221 m1 = oc_0221.First();
+                    sgsj_model_0222 m2 = oc_0222.First();
+                    table.Cell(1, 1).Range.Text = "油井";
+                    table.Cell(1, 2).Range.Text = "累计产液\r\n（m3）";
+                    table.Cell(1, 3).Range.Text = "累计产油\r\n（t）";
+                    table.Cell(1, 4).Range.Text = "油井井数\r\n（口）";
+                    table.Cell(1, 5).Range.Text = "月产液\r\n（m3）";
+                    table.Cell(2, 2).Range.Text = m2.LJCY1.ToString("0.##");
+                    table.Cell(2, 3).Range.Text = m2.LJCY2.ToString("0.##");
+                    table.Cell(2, 4).Range.Text = m2.YJJS.ToString("0.##");
+                    table.Cell(2, 5).Range.Text = m2.YCY1.ToString("0.##");
+                    table.Cell(3, 2).Range.Text = "月产油\r\n（t）";
+                    table.Cell(3, 3).Range.Text = "综合含水\r\n（%）";
+                    table.Cell(3, 4).Range.Text = "单井日产液\r\n（m3/d）";
+                    table.Cell(3, 5).Range.Text = "单井日产油\r\n（t/d）";
+                    table.Cell(4, 2).Range.Text = m2.YCY2.ToString("0.##");
+                    table.Cell(4, 3).Range.Text = m2.ZHHS.ToString("0.##");
+                    table.Cell(4, 4).Range.Text = m2.RCY1.ToString("0.##");
+                    table.Cell(4, 5).Range.Text = m2.RCY2.ToString("0.##");
+                    table.Cell(5, 1).Range.Text = "水井";
+                    table.Cell(5, 2).Range.Text = "累计注水\r\n（m3）";
+                    table.Cell(5, 3).Range.Text = "累注聚量\r\n（m3）";
+                    table.Cell(5, 4).Range.Text = "水井井数\r\n（口）";
+                    table.Cell(5, 5).Range.Text = "月注聚量\r\n（m3）";
+                    table.Cell(6, 2).Range.Text = m1.LJZS.ToString("0.##");
+                    table.Cell(6, 3).Range.Text = m1.LJZJ.ToString("0.##");
+                    table.Cell(6, 4).Range.Text = m1.SJJS.ToString("0.##");
+                    table.Cell(6, 5).Range.Text = m1.YZYL.ToString("0.##");
+                    table.Cell(7, 2).Range.Text = "注聚浓度\r\n（mg/L）";
+                    table.Cell(7, 3).Range.Text = "单井平均日注\r\n（m3/d）";
+                    table.Cell(7, 4).Range.Text = "平均注水压力\r\n（MPa）";
+                    table.Cell(7, 5).Range.Text = "视吸水指数\r\n（m3/d.MPa）";
+                    table.Cell(8, 2).Range.Text = "";
+                    table.Cell(8, 3).Range.Text = m1.PJRZ.ToString("0.##");
+                    table.Cell(8, 4).Range.Text = m1.ZSYL.ToString("0.##");
+                    table.Cell(8, 5).Range.Text = m1.SXSZS.ToString("0.##");
+                }
+                #endregion
+
+                #region 031
+                init_031();
+                if (oc_031.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb031");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表3.1 调剖井组状况";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_031.Count + 1;
+                    int column = 6;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //赋值
+                    table.Cell(1, 1).Range.Text = "井号";
+                    table.Cell(1, 2).Range.Text = "完善程度";
+                    table.Cell(1, 3).Range.Text = "视吸水指数\r\n（m3/MPa.d）";
+                    table.Cell(1, 4).Range.Text = "日注液量\r\n（m3/d）";
+                    table.Cell(1, 5).Range.Text = "注水压力\r\n（MPa）";
+                    table.Cell(1, 6).Range.Text = "综合含水\r\n（%）";
+                    int rr = 2;
+                    foreach (var item in oc_031)
+                    {
+                        table.Cell(rr, 1).Range.Text = item.JH;
+                        table.Cell(rr, 2).Range.Text = item.WSCD.ToString("0.##");
+                        table.Cell(rr, 3).Range.Text = item.SXSZS.ToString("0.##");
+                        table.Cell(rr, 4).Range.Text = item.RZYL.ToString("0.##");
+                        table.Cell(rr, 5).Range.Text = item.ZSYL.ToString("0.##");
+                        table.Cell(rr, 6).Range.Text = item.ZHHS.ToString("0.##");
+                        rr++;
+                    }
+                }
+                #endregion
+
+                #region 032
+                init_032();
+                if (oc_032.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb032");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表3.2 吸水剖面测试结果数据表";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_032.Count + 2;
+                    int column = 11;
+                    Word.Table tb032 = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    tb032.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    tb032.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    tb032.Range.Font.Bold = 0;
+                    tb032.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //合并单元格
+                    tb032.Cell(1, 1).Merge(tb032.Cell(2, 1));
+                    tb032.Cell(1, 2).Merge(tb032.Cell(2, 2));
+                    tb032.Cell(1, 3).Merge(tb032.Cell(1, 5));
+                    tb032.Cell(1, 4).Merge(tb032.Cell(1, 6));
+                    tb032.Cell(1, 5).Merge(tb032.Cell(1, 7));
+                    tb032.Cell(row, 1).Merge(tb032.Cell(row, 2));
+                    //赋值
+                    tb032.Cell(1, 1).Range.Text = "井号";
+                    tb032.Cell(1, 2).Range.Text = "调剖层";
+                    tb032.Cell(1, 3).Range.Text = "调剖层";
+                    tb032.Cell(1, 4).Range.Text = "封堵段";
+                    tb032.Cell(1, 5).Range.Text = "增注段";
+                    tb032.Cell(2, 3).Range.Text = "厚度\r\n（m）";
+                    tb032.Cell(2, 4).Range.Text = "吸水量\r\n（m3/d）";
+                    tb032.Cell(2, 5).Range.Text = "吸水分数\r\n（%）";
+                    tb032.Cell(2, 6).Range.Text = "厚度\r\n（m）";
+                    tb032.Cell(2, 7).Range.Text = "吸水量\r\n（m3/d）";
+                    tb032.Cell(2, 8).Range.Text = "吸水分数\r\n（%）";
+                    tb032.Cell(2, 9).Range.Text = "厚度\r\n（m）";
+                    tb032.Cell(2, 10).Range.Text = "吸水量\r\n（m3/d）";
+                    tb032.Cell(2, 11).Range.Text = "吸水分数\r\n（%）";
+                    int rr = 3;
+                    foreach (var item in oc_032)
+                    {
+                        int cc = 1;
+                        if (item.JH == "合计：")
+                        {
+                            tb032.Cell(rr, cc).Range.Text = item.JH;
+                            cc -= 1;
+                        }
+                        else
+                        {
+                            tb032.Cell(rr, cc).Range.Text = item.JH;
+                            tb032.Cell(rr, cc + 1).Range.Text = item.TPC;
+                        }
+                        tb032.Cell(rr, cc + 2).Range.Text = item.TPC_HD.ToString("0.##");
+                        tb032.Cell(rr, cc + 3).Range.Text = item.TPC_XSL.ToString("0.##");
+                        tb032.Cell(rr, cc + 4).Range.Text = item.TPC_XSFS.ToString("0.##");
+                        tb032.Cell(rr, cc + 5).Range.Text = item.FDD_HD.ToString("0.##");
+                        tb032.Cell(rr, cc + 6).Range.Text = item.FDD_XSL.ToString("0.##");
+                        tb032.Cell(rr, cc + 7).Range.Text = item.FDD_XSFS.ToString("0.##");
+                        tb032.Cell(rr, cc + 8).Range.Text = item.ZZD_HD.ToString("0.##");
+                        tb032.Cell(rr, cc + 9).Range.Text = item.ZZD_XSL.ToString("0.##");
+                        tb032.Cell(rr, cc + 10).Range.Text = item.ZZD_XSFS.ToString("0.##");
+                        rr++;
+                    }
+                }
+                #endregion
+
+                #region 033
+                init_033();
+                if (oc_033.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb033");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表3.3 调剖层段连通状况";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_033.Count + 1;
+                    int column = 5;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //合并单元格
+                    table.Cell(row, 1).Merge(table.Cell(row, 3));
+                    //赋值
+                    table.Cell(1, 1).Range.Text = "水井";
+                    table.Cell(1, 2).Range.Text = "调剖层";
+                    table.Cell(1, 3).Range.Text = "油井";
+                    table.Cell(1, 4).Range.Text = "有效厚度\r\n（m）";
+                    table.Cell(1, 5).Range.Text = "渗透率\r\n（um2）";
+                    int rr = 2;
+                    foreach (var item in oc_033)
+                    {
+                        int cc = 1;
+                        if (item.SJ == "平均：")
+                        {
+                            table.Cell(rr, cc).Range.Text = item.SJ;
+                            cc -= 2;
+                        }
+                        else
+                        {
+                            table.Cell(rr, cc).Range.Text = item.SJ;
+                            table.Cell(rr, cc + 1).Range.Text = item.TPC;
+                            table.Cell(rr, cc + 2).Range.Text = item.YJ;
+                        }
+
+                        table.Cell(rr, cc + 3).Range.Text = item.YXHD.ToString("0.##");
+                        table.Cell(rr, cc + 4).Range.Text = item.STL.ToString("0.##");
+                        rr++;
+                    }
+                }
+                #endregion
+
+                #region 04
+                init_04();
+                if (oc_04.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb04");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表4.1 调剖井调剖剂浓度设计";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_04.Count + 1;
+                    int column = 6;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //赋值
+                    table.Cell(1, 1).Range.Text = "井号";
+                    table.Cell(1, 2).Range.Text = "液体剂浓度\r\n（mg/L）";
+                    table.Cell(1, 3).Range.Text = "颗粒剂浓度\r\n（mg/L）";
+                    table.Cell(1, 4).Range.Text = "颗粒直径\r\n（目）";
+                    table.Cell(1, 5).Range.Text = "携带液浓度\r\n（mg/L）";
+                    table.Cell(1, 6).Range.Text = "用量比";
+                    int rr = 2;
+                    foreach (var item in oc_04)
+                    {
+                        table.Cell(rr, 1).Range.Text = item.JH;
+                        table.Cell(rr, 2).Range.Text = item.YTJND.ToString("0.##");
+                        table.Cell(rr, 3).Range.Text = item.KLJND.ToString("0.##");
+                        table.Cell(rr, 4).Range.Text = item.KLZJ.ToString("0.##");
+                        table.Cell(rr, 5).Range.Text = item.XDYND.ToString("0.##");
+                        table.Cell(rr, 6).Range.Text = item.YLB.ToString("0.##");
+                        rr++;
+                    }
+                }
+                #endregion
+
+                #region 0511
+                init_0511();
+                if (oc_0511.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb0511");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表5.1 调剖费用价格";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_0511.Count + 1;
+                    int column = 6;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //赋值
+                    table.Cell(1, 1).Range.Text = "原油\r\n（元/t）";
+                    table.Cell(1, 2).Range.Text = "1000mg/L 液体调剖剂\r\n（元/m3）";
+                    table.Cell(1, 3).Range.Text = "颗粒调剖剂\r\n（元/t）";
+                    table.Cell(1, 4).Range.Text = "携带液\r\n（元/m3）";
+                    table.Cell(1, 5).Range.Text = "施工费\r\n（元/口）";
+                    table.Cell(1, 6).Range.Text = "其他\r\n（元）";
+                    int rr = 2;
+                    foreach (var item in oc_0511)
+                    {
+                        table.Cell(rr, 1).Range.Text = item.YY.ToString("0.##");
+                        table.Cell(rr, 2).Range.Text = item.YTTPJ.ToString("0.##");
+                        table.Cell(rr, 3).Range.Text = item.KLTPJ.ToString("0.##");
+                        table.Cell(rr, 4).Range.Text = item.XDY.ToString("0.##");
+                        table.Cell(rr, 5).Range.Text = item.SGF.ToString("0.##");
+                        table.Cell(rr, 6).Range.Text = item.QT.ToString("0.##");
+                        rr++;
+                    }
+                }
+                #endregion
+
+                #region 0512
+                init_0512();
+                if (oc_0512.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb0512");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表5.2 调剖半径设计表";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_0512.Count + 1;
+                    int column = 6;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //赋值
+                    table.Cell(1, 1).Range.Text = "编号";
+                    table.Cell(1, 2).Range.Text = "井号";
+                    table.Cell(1, 3).Range.Text = "优选半径（m）";
+                    table.Cell(1, 4).Range.Text = "投产比";
+                    table.Cell(1, 5).Range.Text = "增油量（m3）";
+                    table.Cell(1, 6).Range.Text = "调剖剂用量（m3）";
+                    int rr = 2;
+                    int xx = 1;
+                    foreach (var item in oc_0512)
+                    {
+                        table.Cell(rr, 1).Range.Text = xx.ToString();
+                        table.Cell(rr, 2).Range.Text = item.JH;
+                        table.Cell(rr, 3).Range.Text = item.YXBJ.ToString("0.##");
+                        table.Cell(rr, 4).Range.Text = item.TCB.ToString("0.##");
+                        table.Cell(rr, 5).Range.Text = item.ZYL.ToString("0.##");
+                        table.Cell(rr, 6).Range.Text = item.TPJYL.ToString("0.##");
+                        rr++;
+                        xx++;
+                    }
+                }
+                #endregion
+
+                #region 052
+                init_052();
+                if (oc_052.Any())
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb052");
+
+                    var groups = oc_052.GroupBy(p => p.JH);
+                    int ii = 1;
+                    foreach (var group in groups)
+                    {
+                        app.Selection.Range.InsertParagraph();
+                        Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                        oPara0.Range.Text = $"表5.3.{ii} {group.Key}井调剖段塞设计（第{ii}口井）";
+                        oPara0.Range.Select();
+                        oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                        oPara0.Range.InsertParagraphAfter();
+                        app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                        int row = group.Count() + 1;
+                        int column = 11;
+                        Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                        table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                        table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                        table.Range.Font.Bold = 0;
+                        table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                        //赋值
+                        table.Cell(1, 1).Range.Text = "工序名称";
+                        table.Cell(1, 2).Range.Text = "比例\r\n（%）";
+                        table.Cell(1, 3).Range.Text = "用量\r\n（m3）";
+                        table.Cell(1, 4).Range.Text = "液体浓度\r\n（mg/L）";
+                        table.Cell(1, 5).Range.Text = "颗粒浓度\r\n（mg/L）";
+                        table.Cell(1, 6).Range.Text = "颗粒目数\r\n（目）";
+                        table.Cell(1, 7).Range.Text = "携液浓度\r\n（mg/L）";
+                        table.Cell(1, 8).Range.Text = "排量\r\n（m3/d）";
+                        table.Cell(1, 9).Range.Text = "施工周期\r\n（d）";
+                        table.Cell(1, 10).Range.Text = "当量粘度\r\n（mPa.s）";
+                        table.Cell(1, 11).Range.Text = "注入压力\r\n（MPa）";
+                        int rr = 2;
+                        foreach (var item in group)
+                        {
+                            table.Cell(rr, 1).Range.Text = item.GXMC.ToString();
+                            table.Cell(rr, 2).Range.Text = item.BL.ToString();
+                            table.Cell(rr, 3).Range.Text = item.YL.ToString();
+                            table.Cell(rr, 4).Range.Text = item.YTND.ToString("0");
+                            table.Cell(rr, 5).Range.Text = item.KLND.ToString("0");
+                            table.Cell(rr, 6).Range.Text = item.KLMS.ToString("0");
+                            table.Cell(rr, 7).Range.Text = item.XYND.ToString("0");
+                            table.Cell(rr, 8).Range.Text = item.PL.ToString("0.#");
+                            table.Cell(rr, 9).Range.Text = item.SGZQ.ToString("0.#");
+                            table.Cell(rr, 10).Range.Text = item.DLND.ToString("0.#");
+                            table.Cell(rr, 11).Range.Text = item.ZRYL.ToString("0.##");
+                            rr++;
+                        }
+                        table.Cell(rr - 1, column).Range.Select();
+                        app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+                        app.Selection.TypeParagraph();
+                        ii++;
+                    }
+                }
+                #endregion
+
+                #region 053
+                init_053();
+                if (oc_053.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb053");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表5.4 药剂用量";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_053.Count + 1;
+                    int column = 4;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //赋值
+                    table.Cell(1, 1).Range.Text = "井号";
+                    table.Cell(1, 2).Range.Text = "液体剂主剂干粉用量（t）";
+                    table.Cell(1, 3).Range.Text = "颗粒型用量（t）";
+                    table.Cell(1, 4).Range.Text = "携带液用量（t）";
+                    int rr = 2;
+                    foreach (var item in oc_053)
+                    {
+                        table.Cell(rr, 1).Range.Text = item.JH;
+                        table.Cell(rr, 2).Range.Text = item.YL1.ToString("0.#");
+                        table.Cell(rr, 3).Range.Text = item.YL2.ToString("0.#");
+                        table.Cell(rr, 4).Range.Text = item.YL3.ToString("0.#");
+                        rr++;
+                    }
+                }
+                #endregion
+
+                #region 061
+                init_061();
+                if (oc_061.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb061");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表6.1 调剖井调后效果预测";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_061.Count + 2;
+                    int column = 7;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //合并单元格
+                    table.Cell(1, 2).Merge(table.Cell(1, 3));
+                    table.Cell(1, 3).Merge(table.Cell(1, 4));
+                    table.Cell(1, 4).Merge(table.Cell(1, 5));
+                    //赋值
+                    table.Cell(1, 1).Range.Text = "井号";
+                    table.Cell(1, 2).Range.Text = "调剖前";
+                    table.Cell(1, 3).Range.Text = "调剖后";
+                    table.Cell(1, 4).Range.Text = "增幅";
+                    table.Cell(2, 2).Range.Text = "注入压力";
+                    table.Cell(2, 3).Range.Text = "视吸水指数";
+                    table.Cell(2, 4).Range.Text = "注入压力";
+                    table.Cell(2, 5).Range.Text = "视吸水指数";
+                    table.Cell(2, 6).Range.Text = "注入压力";
+                    table.Cell(2, 7).Range.Text = "视吸水指数";
+                    int rr = 3; //rr = row - (oc_061.Count - 1)
+                    foreach (var item in oc_061)
+                    {
+                        table.Cell(rr, 1).Range.Text = item.JH;
+                        table.Cell(rr, 2).Range.Text = item.TQ_ZRYL.ToString("0.##");
+                        table.Cell(rr, 3).Range.Text = item.TQ_SXSZS.ToString("0.##");
+                        table.Cell(rr, 4).Range.Text = item.TH_ZRYL.ToString("0.##");
+                        table.Cell(rr, 5).Range.Text = item.TH_SXSZS.ToString("0.##");
+                        table.Cell(rr, 6).Range.Text = item.ZF_ZRYL.ToString("0.##");
+                        table.Cell(rr, 7).Range.Text = item.ZF_SXSZS.ToString("0.##");
+                        rr++;
+                    }
+                }
+                #endregion
+
+                #region 062
+                init_062();
+                if (oc_062.Count > 0)
+                {
+                    doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref oMissing, ref oMissing, "tb062");
+
+                    app.Selection.Range.InsertParagraph();
+                    Word.Paragraph oPara0 = app.Selection.Range.Paragraphs.Add(ref oMissing);
+                    oPara0.Range.Text = "表6.2 调后增油效果预测";
+                    oPara0.Range.Select();
+                    oPara0.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+                    oPara0.Range.InsertParagraphAfter();
+                    app.Selection.MoveDown(ref wdLine, ref ncount, ref oMissing);
+
+                    int row = oc_062.Count + 1;
+                    int column = 4;
+                    Word.Table table = doc.Tables.Add(app.Selection.Range, row, column, ref oMissing, ref oMissing);
+                    table.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Borders.InsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                    table.Range.Font.Bold = 0;
+                    table.PreferredWidthType = Word.WdPreferredWidthType.wdPreferredWidthAuto;
+                    //赋值
+                    table.Cell(1, 1).Range.Text = "井组";
+                    table.Cell(1, 2).Range.Text = "增油\r\n（t）";
+                    table.Cell(1, 3).Range.Text = "初见效时间\r\n（月）";
+                    table.Cell(1, 4).Range.Text = "投产比";
+                    int rr = 2;
+                    foreach (var item in oc_062)
+                    {
+                        table.Cell(rr, 1).Range.Text = item.TPJZ;
+                        table.Cell(rr, 2).Range.Text = item.YJZY.ToString("0.##");
+                        table.Cell(rr, 3).Range.Text = item.KSJXSJ.ToString("0.##");
+                        table.Cell(rr, 4).Range.Text = item.TCB.ToString("0.##");
+                        rr++;
+                    }
+                }
+                #endregion
+
+
+                #endregion
+
                 // 输出完毕后关闭 doc 对象
                 object isSave = true;
                 doc.Close(ref isSave, ref missing, ref missing);
                 result = true;
+
             }
-            catch
+            catch (Exception e)
             {
                 doc.Close();
-            }
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
 
+            }
             return result;
         }
 
@@ -359,8 +813,8 @@ namespace SBTP.BLL
         {
             message = string.Empty;
 
-            var oilList = DBContext.GetList_OIL_WELL_MONTH();
-            var waterList = DBContext.GetList_WATER_WELL_MONTH();
+            var oilList = DBContext.db_oil_well_month__zt0();
+            var waterList = DBContext.db_water_well_month__zt0();
 
             if (!oilList.Any() && !waterList.Any())
             {
@@ -376,7 +830,7 @@ namespace SBTP.BLL
             }
 
             var oil_ny = oil_list.First().NY;
-            var water_list = waterList.Where(p => p.NY == oil_ny).ToList();
+            var water_list = waterList.Where(p => p.NY == oil_ny).OrderBy(p => p.NY).ToList();
             if (!water_list.Any())
             {
                 message = "水井井史中未检测到相应的油井井史最早时间，检查时间字段";
@@ -398,197 +852,157 @@ namespace SBTP.BLL
             {
                 cy_message = "三次采油";
             }
+            var water_ny = water_list.Where(p => p.YZMYL > 0).First().NY;
 
             update_tag("前言_油井井史最早时间", Unity.DateTimeToString(oil_ny, "yyyy年MM月"));
             update_tag("前言_采油次数", cy_message);
+            update_tag("前言_聚驱时间", Unity.DateTimeToString(water_ny, "yyyy年MM月"));
 
             message = "操作成功";
             return true;
         }
         #endregion
 
-        #region 02
-        public void Init021()
+        #region 021
+        public void init_021()
         {
-            dt021 = new DataTable();
-            dt021.Columns.AddRange(new DataColumn[]
+            oc_021.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_021");
+            DataTable dt = ds.Tables[0];
+
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("syhd", typeof(decimal)),
-                new DataColumn("yxhd", typeof(decimal)),
-                new DataColumn("stl", typeof(decimal)),
-                new DataColumn("kxd", typeof(decimal)),
-            });
-            
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_021"))
-            {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_021 model = new sgsj_model_021
                 {
-                    DataRow dr = this.dt021.NewRow();
-                    dr["jh"] = dt.Rows[i]["jh"].ToString();
-                    dr["syhd"] = Unity.ToDecimal(dt.Rows[i]["syhd"]);
-                    dr["yxhd"] = Unity.ToDecimal(dt.Rows[i]["yxhd"]);
-                    dr["stl"] = Unity.ToDecimal(dt.Rows[i]["stl"]);
-                    this.dt021.Rows.Add(dr);
-                }
+                    JH = dt.Rows[i]["jh"].ToString(),
+                    SYHD = Unity.ToDecimal(dt.Rows[i]["syhd"]),
+                    YXHD = Unity.ToDecimal(dt.Rows[i]["yxhd"]),
+                    STL = Unity.ToDecimal(dt.Rows[i]["stl"]),
+                    JS = Unity.ToDecimal(dt.Rows[i]["js"])
+                };
+                oc_021.Add(model);
             }
         }
-        public bool Update021(out string message)
+        public bool update_021(out string message)
         {
-            this.dt021.Clear();
+            oc_021.Clear();
 
-            StringBuilder sql = new StringBuilder();
-            sql.Append(" select * ");
-            sql.Append(" from oil_well_c ");
-            sql.Append(" where skqk<>\"_\" and skqk<>\"\" and zt=0 ");
-
-            using (DataSet ds = DbHelperOleDb.Query(sql.ToString()))
+            #region 数据源
+            List<DB_XCSJ> xcsj = DBContext.db_xcsj__skqk_zt0();
+            if (!xcsj.Any())
             {
-                #region 数据源
-                DataTable dt = ds.Tables[0];
-                if (dt.Rows.Count == 0)
-                {
-                    message = "未获取到小层数据，请检查数据导入及射孔情况是否正确";
-                    return false;
-                }
-
-                qkcs qkcsdata = Data.DatHelper.readQkcs();
-                #endregion
-
-                #region 更新表格
-
-                IEnumerable<IGrouping<string, DataRow>> groups = dt.Rows.Cast<DataRow>().GroupBy<DataRow, string>(dr => dr["jh"].ToString());
-
-                foreach (IGrouping<string, DataRow> group in groups)
-                {
-                    DataRow dr = this.dt021.NewRow();
-                    decimal stl_numerator = group.Sum(dr => Unity.ToDecimal(dr["stl"]) * Unity.ToDecimal(dr["yxhd"]));
-                    decimal stl_denominator = group.Sum(dr => Unity.ToDecimal(dr["yxhd"]));
-                    decimal kxd_numerator = group.Sum(dr => Unity.ToDecimal(dr["kxd"]) * Unity.ToDecimal(dr["yxhd"]));
-                    decimal kxd_denominator = stl_denominator;
-                    dr["jh"] = group.Key;
-                    dr["syhd"] = group.Average(dr => Unity.ToDecimal(dr["syhd"]));
-                    dr["yxhd"] = group.Average(dr => Unity.ToDecimal(dr["yxhd"]));
-                    dr["stl"] = stl_numerator / stl_denominator;
-                    dr["kxd"] = kxd_numerator / kxd_denominator;
-                    this.dt021.Rows.Add(dr);
-                }
-
-                decimal last_syhd = dt.AsEnumerable().Average(dr => Unity.ToDecimal(dr["syhd"]));
-                decimal last_yxhd = dt.AsEnumerable().Average(dr => Unity.ToDecimal(dr["yxhd"]));
-                decimal last_stl_numerator = dt.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["stl"]) * Unity.ToDecimal(dr["yxhd"]));
-                decimal last_stl_denominator = dt.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["yxhd"]));
-                decimal last_stl = last_stl_numerator / last_stl_denominator;
-
-                DataRow last_dr = this.dt021.NewRow();
-                last_dr["jh"] = "均值";
-                last_dr["syhd"] = last_syhd;
-                last_dr["yxhd"] = last_yxhd;
-                last_dr["stl"] = last_stl;
-                this.dt021.Rows.Add(last_dr);
-                #endregion
-
-                #region 更新标签
-
-                // 孔隙度
-                //decimal kxd_numerator = dt.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["kxd"]) * Unity.ToDecimal(dr["yxhd"]));
-                //decimal kxd_denominator = last_stl_denominator;
-                //decimal kxd = kxd_numerator / kxd_denominator;
-                decimal kxd = dt.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["kxd"]) * Unity.ToDecimal(dr["yxhd"])) / last_stl_denominator;
-
-                // 埋藏深度
-                decimal mcsd = dt.AsEnumerable().Average(dr => Unity.ToDecimal(dr["syds"]));
-
-                update_tag("埋藏深度", Unity.DecimalToString(mcsd));
-                update_tag("砂岩厚度", Unity.DecimalToString(last_syhd));
-                update_tag("有效厚度", Unity.DecimalToString(last_yxhd));
-                update_tag("渗透率", Unity.DecimalToString(last_stl));
-                update_tag("孔隙度", Unity.DecimalToString(kxd));
-                update_tag("油层温度", Unity.DecimalToString((decimal)qkcsdata.Ycwd));
-                update_tag("地层水矿化度", Unity.DecimalToString((decimal)qkcsdata.Yckhd));
-                update_tag("酸碱度PH", Unity.DecimalToString((decimal)qkcsdata.Ycph));
-                this.Tags = replace_empty_tags(this.Tags);
-
-                #endregion
+                message = "未获取到小层数据，请检查数据导入及射孔情况是否正确";
+                return false;
             }
+            qkcs qkcs = Data.DatHelper.readQkcs();
+            #endregion
+
+            #region 更新
+            List<sgsj_model_021> list = new List<sgsj_model_021>();
+            var groups = xcsj.GroupBy(p => p.JH);
+            foreach (var group in groups)
+            {
+                var stl_numerator = group.Sum(p => p.STL * p.YXHD);
+                var stl_denominator = group.Sum(p => p.YXHD);
+                var kxd_numerator = group.Sum(p => p.KXD * p.YXHD);
+                var kxd_denominator = stl_denominator;
+
+                sgsj_model_021 model = new sgsj_model_021();
+                model.JH = group.Key;
+                model.YXHD = stl_denominator;
+                model.STL = stl_numerator / stl_denominator;
+                model.KXD = kxd_numerator / kxd_denominator;
+
+                list.Add(model);
+            }
+
+            var last_stl_numerator = list.Sum(p => p.STL * p.YXHD);
+            var last_stl_denominator = list.Sum(p => p.YXHD);
+
+            sgsj_model_021 last_model = new sgsj_model_021
+            {
+                JH = BookMarks["cover_2"],
+                YXHD = list.Average(p => p.YXHD),
+                STL = last_stl_numerator / last_stl_denominator,
+                JS = list.Count
+            };
+            oc_021.Add(last_model);
+
+            var kxd = oc_021.Sum(p => p.KXD * p.YXHD) / last_stl_denominator;
+            var mcsd = xcsj.Average(p => p.SYDS);
+
+            update_tag("埋藏深度", mcsd.ToString());
+            update_tag("有效厚度", last_model.YXHD.ToString());
+            update_tag("渗透率", last_model.STL.ToString());
+            update_tag("孔隙度", kxd.ToString());
+            update_tag("油层温度", qkcs.Ycwd.ToString());
+            update_tag("地层水矿化度", qkcs.Yckhd.ToString());
+            update_tag("酸碱度PH", qkcs.Ycph.ToString());
+            this.Tags = replace_empty_tags(this.Tags);
+
+            #endregion
 
             message = "操作成功";
             return true;
         }
-        public void Init0221()
+        public void save_021()
         {
-            dt0221 = new DataTable();
-            dt0221.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("ljzs", typeof(decimal)),
-                new DataColumn("ljzj", typeof(decimal)),
-                new DataColumn("sjjs", typeof(decimal)),
-                new DataColumn("yzyl", typeof(decimal)),
-                new DataColumn("jhwnd", typeof(decimal)),
-                new DataColumn("pjrz", typeof(decimal)),
-                new DataColumn("zsyl", typeof(decimal)),
-                new DataColumn("sxszs", typeof(decimal)),
-            });
+            using DataTable dt = ListToDataTable(oc_021.ToList());
+            dt.TableName = "sgsj_021";
+            DbHelperOleDb.UpdateTable(dt);
+        }
+        #endregion
 
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_0221"))
+        #region 0221 0222
+        public void init_0221()
+        {
+            oc_0221.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_0221");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_0221 model = new sgsj_model_0221
                 {
-                    DataRow dr = this.dt0221.NewRow();
-                    dr["ljzs"] = Unity.ToDecimal(dt.Rows[i]["ljzs"]);
-                    dr["ljzj"] = Unity.ToDecimal(dt.Rows[i]["ljzj"]);
-                    dr["sjjs"] = Unity.ToDecimal(dt.Rows[i]["sjjs"]);
-                    dr["yzyl"] = Unity.ToDecimal(dt.Rows[i]["yzyl"]);
-                    dr["jhwnd"] = Unity.ToDecimal(dt.Rows[i]["jhwnd"]);
-                    dr["pjrz"] = Unity.ToDecimal(dt.Rows[i]["pjrz"]);
-                    dr["zsyl"] = Unity.ToDecimal(dt.Rows[i]["zsyl"]);
-                    dr["sxszs"] = Unity.ToDecimal(dt.Rows[i]["sxszs"]);
-                    this.dt0221.Rows.Add(dr);
-                }
+                    LJZS = Unity.ToDecimal(dt.Rows[i]["ljzs"]),
+                    LJZJ = Unity.ToDecimal(dt.Rows[i]["ljzj"]),
+                    SJJS = Unity.ToDecimal(dt.Rows[i]["sjjs"]),
+                    YZYL = Unity.ToDecimal(dt.Rows[i]["yzyl"]),
+                    PJRZ = Unity.ToDecimal(dt.Rows[i]["pjrz"]),
+                    ZSYL = Unity.ToDecimal(dt.Rows[i]["zsyl"]),
+                    SXSZS = Unity.ToDecimal(dt.Rows[i]["sxszs"])
+                };
+                oc_0221.Add(model);
             }
         }
-        public void Init0222()
+        public void init_0222()
         {
-            dt0222 = new DataTable();
-            dt0222.Columns.AddRange(new DataColumn[]
+            oc_0222.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_0222");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                new DataColumn("ljcy1", typeof(decimal)),
-                new DataColumn("ljcy2", typeof(decimal)),
-                new DataColumn("yjjs", typeof(decimal)),
-                new DataColumn("ycy1", typeof(decimal)),
-                new DataColumn("ycy2", typeof(decimal)),
-                new DataColumn("zhhs", typeof(decimal)),
-                new DataColumn("rcy1", typeof(decimal)),
-                new DataColumn("rcy2", typeof(decimal)),
-            });
-
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_0222"))
-            {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_0222 model = new sgsj_model_0222
                 {
-                    DataRow dr = this.dt0222.NewRow();
-                    dr["ljcy1"] = Unity.ToDecimal(dt.Rows[i]["ljcy1"]);
-                    dr["ljcy2"] = Unity.ToDecimal(dt.Rows[i]["ljcy2"]);
-                    dr["yjjs"] = Unity.ToDecimal(dt.Rows[i]["yjjs"]);
-                    dr["ycy1"] = Unity.ToDecimal(dt.Rows[i]["ycy1"]);
-                    dr["ycy2"] = Unity.ToDecimal(dt.Rows[i]["ycy2"]);
-                    dr["zhhs"] = Unity.ToDecimal(dt.Rows[i]["zhhs"]);
-                    dr["rcy1"] = Unity.ToDecimal(dt.Rows[i]["rcy1"]);
-                    dr["rcy2"] = Unity.ToDecimal(dt.Rows[i]["rcy2"]);
-                    this.dt0222.Rows.Add(dr);
-                }
+                    LJCY1 = Unity.ToDecimal(dt.Rows[i]["ljcy1"]),
+                    LJCY2 = Unity.ToDecimal(dt.Rows[i]["ljcy2"]),
+                    YJJS = Unity.ToDecimal(dt.Rows[i]["yjjs"]),
+                    YCY1 = Unity.ToDecimal(dt.Rows[i]["ycy1"]),
+                    YCY2 = Unity.ToDecimal(dt.Rows[i]["ycy2"]),
+                    ZHHS = Unity.ToDecimal(dt.Rows[i]["zhhs"]),
+                    RCY1 = Unity.ToDecimal(dt.Rows[i]["rcy1"]),
+                    RCY2 = Unity.ToDecimal(dt.Rows[i]["rcy2"])
+                };
+                oc_0222.Add(model);
             }
         }
-        public bool update022(out string message)
+        public bool update_022(out string message)
         {
-            this.dt0221.Clear();
-            this.dt0222.Clear();
+            oc_0221.Clear();
+            oc_0222.Clear();
 
-            var ows = DBContext.GetList_OIL_WELL_MONTH();
-            var wws = DBContext.GetList_WATER_WELL_MONTH();
+            var ows = DBContext.db_oil_well_month__zt0();
+            var wws = DBContext.db_water_well_month__zt0();
+            var rls1_tpjxx = DatHelper.TPJDataRead();
 
             if (ows.Count == 0 && wws.Count == 0)
             {
@@ -636,24 +1050,25 @@ namespace SBTP.BLL
             var pjrz = yzyl / wws_zhsj.Sum(p => p.TS);
 
             // ⑩ 聚合物浓度均值：水井井史最后时间，所有井注聚浓度（ZRYND）的和/井数；（计算开井的井）,小数1位，mg/L（最后时间、开井）
-            var jhwnd = wws_zhsj.Sum(p => p.ZRYND) / sjkjs;
+            //var jhwnd = wws_zhsj.Sum(p => p.ZRYND) / sjkjs;
 
             // ⑪ 平均注水压力：水井井史最后时间，所有井油压（YY）的和/井数；（计算开井的井）,小数1位，MPa（最后时间、开井）
             var zsyl = wws_zhsj.Sum(p => p.YY) / sjkjs;
 
             // ⑫ 视吸水指数：水井井史最后时间，月注液量⑧/（油压*SCTS）的和/井数；（计算月注水量>0井）m3/d.MPa ,小数3位（最后时间，月注水量>0）
-            var query_yzsl_gt_0 = wws_zhsj.Where(p => p.YZSL > 0);
-            var sxszs1 = yzyl;
-            var sxszs2 = query_yzsl_gt_0.Sum(p => p.YY * p.TS);
-            var sxszs3 = query_yzsl_gt_0.Count();
-            var sxszs = sxszs1 / sxszs2 / sxszs3;
+            var sxszs = rls1_tpjxx.AsEnumerable().Average(dr => Unity.ToDecimal(dr["awi"]));
+            //var query_yzsl_gt_0 = wws_zhsj.Where(p => p.YZSL > 0);
+            //var sxszs1 = yzyl;
+            //var sxszs2 = query_yzsl_gt_0.Sum(p => p.YY * p.TS);
+            //var sxszs3 = query_yzsl_gt_0.Count();
+            //var sxszs = sxszs1 / sxszs2 / sxszs3;
 
             #endregion
 
             #region 油井
 
             // ③ 累计产液：所有井(月产油量YCYL/原油密度（RSL0.DAT）+月产水量YCSL)之和/10000，小数4位，单位104m3
-            var yymd = 0.92m; // 待办：由于无法获取rsl0.dat的原油密度，暂设置固定值0.92
+            var yymd = 0.92m; //todo：由于无法获取rsl0.dat的原油密度，暂设置固定值0.92
             var ljcy1 = ows.Sum(p => p.YCYL / yymd + p.YCSL);
             ljcy1 /= 10000;
 
@@ -697,28 +1112,31 @@ namespace SBTP.BLL
 
             #region 表格
 
-            DataRow dr1 = this.dt0221.NewRow();
-            dr1["ljzs"] = ljzs;
-            dr1["ljzj"] = ljzj;
-            dr1["sjjs"] = sjjs;
-            dr1["yzyl"] = yzyl;
-            dr1["jhwnd"] = jhwnd;
-            dr1["pjrz"] = pjrz;
-            dr1["zsyl"] = zsyl;
-            dr1["sxszs"] = sxszs;
-            this.dt0221.Rows.Add(dr1);
+            sgsj_model_0221 model0221 = new sgsj_model_0221()
+            {
+                LJZS = ljzs,
+                LJZJ = ljzj,
+                SJJS = sjjs,
+                YZYL = yzyl,
+                //JHWND = jhwnd,
+                PJRZ = pjrz,
+                ZSYL = zsyl,
+                SXSZS = sxszs
+            };
+            oc_0221.Add(model0221);
 
-            DataRow dr2 = this.dt0222.NewRow();
-            dr2["ljcy1"] = ljcy1;
-            dr2["ljcy2"] = ljcy2;
-            dr2["yjjs"] = yjjs;
-            dr2["ycy1"] = ycy1;
-            dr2["ycy2"] = ycy2;
-            dr2["zhhs"] = zhhs;
-            dr2["rcy1"] = rcy1;
-            dr2["rcy2"] = rcy2;
-            this.dt0222.Rows.Add(dr2);
-
+            sgsj_model_0222 model0222 = new sgsj_model_0222()
+            {
+                LJCY1 = ljcy1,
+                LJCY2 = ljcy2,
+                YJJS = yjjs,
+                YCY1 = ycy1,
+                YCY2 = ycy2,
+                ZHHS = zhhs,
+                RCY1 = rcy1,
+                RCY2 = rcy2
+            };
+            oc_0222.Add(model0222);
             #endregion
 
             #region 更新标签
@@ -731,7 +1149,7 @@ namespace SBTP.BLL
             update_tag("水井开井数", Unity.IntToString(sjkjs));
             update_tag("水井月注液量", Unity.DecimalToString(yzyl));
             update_tag("水井日注量", Unity.DecimalToString(pjrz));
-            update_tag("水井聚合物浓度", Unity.DecimalToString(jhwnd));
+            //update_tag("水井聚合物浓度", Unity.DecimalToString(jhwnd));
             update_tag("水井注水压力", Unity.DecimalToString(zsyl));
             update_tag("水井视吸水指数", Unity.DecimalToString(sxszs));
             update_tag("油井月产液量", Unity.DecimalToString(ycy1));
@@ -748,235 +1166,246 @@ namespace SBTP.BLL
             message = "操作成功";
             return true;
         }
+        public void save_0221()
+        {
+            using DataTable dt = ListToDataTable(oc_0221.ToList());
+            dt.TableName = "sgsj_0221";
+            DbHelperOleDb.UpdateTable(dt);
+        }
+        public void save_0222()
+        {
+            using DataTable dt = ListToDataTable(oc_0222.ToList());
+            dt.TableName = "sgsj_0222";
+            DbHelperOleDb.UpdateTable(dt);
+        }
         #endregion
 
         #region 03
-        public bool update03()
+        public bool update_03(out string message)
         {
-            if (string.IsNullOrEmpty(Tags["水井井数"])) return false;
-            DataTable dt = Data.DatHelper.TPJDataRead();
-            int num = dt.Select("JG='1'").Count();
-            update_tag("调剖井数", num.ToString());
-            double a = num;
-            double b = utils.to_int(Tags["水井井数"]);
-            double c = (a / b) * 100;
-            update_tag("占总注入井数", c.ToString());
+            if (string.IsNullOrEmpty(Tags["水井井数"]))
+            {
+                message = "需要确保“目标区域设计概况-开发状况”章节已获得水井数量，再执行次操作。";
+                return false;
+            }
+
+            using (DataTable dt = DatHelper.TPJDataRead())
+            {
+                double a = dt.Select("JG='1'").Length;
+                double b = utils.to_int(Tags["水井井数"]);
+                double c = (a / b) * 100;
+
+                update_tag("调剖井数", a.ToString());
+                update_tag("占总注入井数", c.ToString());
+            }
+
+            message = "操作成功";
             return true;
         }
-        public void Init031()
+        #endregion
+
+        #region 031
+        public void init_031()
         {
-            dt031 = new DataTable();
-            dt031.Columns.AddRange(new DataColumn[]
+            oc_031.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_031");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("wscd", typeof(decimal)),
-                new DataColumn("sxszs", typeof(decimal)),
-                new DataColumn("rzyl", typeof(decimal)),
-                new DataColumn("zsyl", typeof(decimal)),
-                new DataColumn("zhhs", typeof(decimal)),
-            });
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_031"))
-            {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_031 model = new sgsj_model_031
                 {
-                    DataRow dr = this.dt031.NewRow();
-                    dr["jh"] = dt.Rows[i]["jh"].ToString();
-                    dr["wscd"] = Unity.ToDecimal(dt.Rows[i]["wscd"]);
-                    dr["sxszs"] = Unity.ToDecimal(dt.Rows[i]["sxszs"]);
-                    dr["rzyl"] = Unity.ToDecimal(dt.Rows[i]["rzyl"]);
-                    dr["zsyl"] = Unity.ToDecimal(dt.Rows[i]["zsyl"]);
-                    dr["zhhs"] = Unity.ToDecimal(dt.Rows[i]["zhhs"]);
-                    this.dt031.Rows.Add(dr);
-                }
+                    JH = dt.Rows[i]["jh"].ToString(),
+                    WSCD = Unity.ToDecimal(dt.Rows[i]["wscd"]),
+                    SXSZS = Unity.ToDecimal(dt.Rows[i]["sxszs"]),
+                    RZYL = Unity.ToDecimal(dt.Rows[i]["rzyl"]),
+                    ZSYL = Unity.ToDecimal(dt.Rows[i]["zsyl"]),
+                    ZHHS = Unity.ToDecimal(dt.Rows[i]["zhhs"]),
+                };
+                oc_031.Add(model);
             }
         }
-        public bool Update031(out string message)
+        public bool update_031(out string message)
         {
+            oc_031.Clear();
+
             #region 数据源
-            string[] tpj_para = Data.DatHelper.TPJParaRead();
-            DataTable tpj_data = Data.DatHelper.TPJDataRead();
-            DataTable wsd_data = Data.DatHelper.WsdRead();
-            var wws = DBContext.GetList_WATER_WELL_MONTH();
-            var ows = DBContext.GetList_OIL_WELL_MONTH();
+            //调剖井选择数据，及参数
+            using DataTable tpjs_data = Data.DatHelper.TPJDataRead();
+            string[] tpj_para = Data.DatHelper.TPJParaRead();   //todo: 未判断数据有效性
+            if (tpjs_data == null)
+            {
+                message = "未获取到调剖井选择数据（rls1.dat: **PROFILE CONTROL WELL *TWELL）";
+                return false;
+            }
+            List<DataRow> tpjs = tpjs_data.AsEnumerable().Where(dr => dr["jg"].Equals("1")).ToList();
+
+            //井组完善度数据
+            using DataTable wsd_data = DatHelper.wsd_read();
+            if (wsd_data == null)
+            {
+                message = "未获取井组完善度数据（rls1.dat **COMPLEMENT GROUP *COMPW）";
+                return false;
+            }
+
+            //水井井史
+            List<DB_WATER_WELL_MONTH> wws = DBContext.db_water_well_month__zt0();
+            if (!wws.Any())
+            {
+                message = "未获取到水井井史数据（Access: WATER_WELL_MONTH）";
+                return false;
+            }
             #endregion
 
-            #region 表格
+            #region 更新操作
+            var comment_st = DateTime.Parse(tpj_para[1]);
+            var comment_et = DateTime.Parse(tpj_para[2]);
+            wws = wws.Where(p => p.NY >= comment_st && p.NY <= comment_et).ToList();
+
+            foreach (DataRow dr in tpjs)
+            {
+                var jh = dr["jh"].ToString();
+                DataRow wscd = wsd_data.AsEnumerable().Where(p => p["well"].Equals(jh)).First();
+                var wws_well = wws.Where(p => p.JH == jh).Where(p => p.YZSL > 0 || p.YZMYL > 0).ToList();
+
+                sgsj_model_031 model = new sgsj_model_031();
+                model.JH = jh;
+                model.WSCD = Unity.ToDecimal(wscd["wscd"]);
+                model.SXSZS = Unity.ToDecimal(dr["awi"]);
+                model.RZYL = wws_well.Average(p => (p.YZSL + p.YZMYL) / p.TS);
+                model.ZSYL = wws_well.Average(p => p.YY);
+                model.ZHHS = Unity.ToDecimal(dr["ZHHS"]) * 100;
+                oc_031.Add(model);
+            }
+
+            //使用注水压力求平均视吸水指数
+            decimal sxszs_numerator = oc_031.Sum(p => p.SXSZS * p.ZSYL);
+            decimal sxszs_denominator = oc_031.Sum(p => p.ZSYL);
+            //decimal sxszs = sxszs_numerator / sxszs_denominator;
+            decimal sxszs = oc_031.Average(p => p.SXSZS);
+
+            sgsj_model_031 last_model = new sgsj_model_031();
+            last_model.JH = "均值：";
+            last_model.WSCD = oc_031.Average(p => p.WSCD);
+            last_model.SXSZS = sxszs;
+            last_model.RZYL = oc_031.Average(p => p.RZYL);
+            last_model.ZSYL = oc_031.Average(p => p.ZSYL);
+            last_model.ZHHS = oc_031.Average(p => p.ZHHS);
+            oc_031.Add(last_model);
+
+            update_tag("选定调剖井平均日注水", last_model.RZYL.ToString());
+            update_tag("平均注水压力", last_model.ZSYL.ToString());
+            update_tag("平均视吸水指数", last_model.SXSZS.ToString());
+            update_tag("平均综合含水", last_model.ZHHS.ToString());
+            this.Tags = replace_empty_tags(this.Tags);
             #endregion
 
             message = "操作成功";
             return true;
         }
-        public void update031()
+        public void save_031()
         {
-            this.dt031.Clear();
-
-            #region 数据源
-            string[] tpj_para = Data.DatHelper.TPJParaRead();
-            DataTable tpj_data = Data.DatHelper.TPJDataRead();
-            DataTable wsd_data = Data.DatHelper.WsdRead();
-            string[] tpj_para_read = Data.DatHelper.TPJParaRead();
-            DataTable dt_ww = DbHelperOleDb.Query($"select jh, (sum(yzsl+yzmyl)/30) as rzyl, avg(yy) as avg_yy from water_well_month where ny between #{tpj_para_read[1]}# and #{tpj_para_read[2]}#  and ZT=0 group by jh").Tables[0]; //todo：日注液量，综合含水*100
-            DataTable dt_ow = DbHelperOleDb.Query($"select sum(ycsl)/sum(ycyl) from oil_well_month where ny between #{tpj_para_read[1]}# and #{tpj_para_read[2]}# and ZT=0").Tables[0];
-            #endregion
-
-            #region 更新表格
-            var data = from tpj in tpj_data.AsEnumerable()
-                       from wsd in wsd_data.AsEnumerable()
-                       where tpj.Field<string>("JH") == wsd.Field<string>("水井井号")
-                       && tpj.Field<string>("JG") == "1"
-                       select new
-                       {
-                           jh = tpj.Field<string>("JH"),
-                           sxszs = tpj.Field<string>("AWI"),
-                           zhhs = tpj.Field<string>("ZHHS"),
-                           jg = tpj.Field<string>("JG"),
-                       };
-
-            foreach (var obj in data)
-            {
-                DataRow dr = this.dt031.NewRow();
-                dr["jh"] = obj.jh;
-                dr["wscd"] = 1;
-                dr["sxszs"] = obj.sxszs;
-                dr["zhhs"] = obj.zhhs;
-                dr["rzyl"] = 0;
-                dr["zsyl"] = 0;
-
-                for (int i = 0; i < dt_ww.Rows.Count; i++)
-                {
-                    if (dr["jh"].ToString() == dt_ww.Rows[i]["jh"].ToString())
-                    {
-                        dr["rzyl"] = dt_ww.Rows[i]["rzyl"].ToString();
-                        dr["zsyl"] = dt_ww.Rows[i]["avg_yy"].ToString();
-                    }
-                }
-
-                this.dt031.Rows.Add(dr);
-            }
-            #endregion
-
-            #region 更新标签
-
-            //平均视吸水指数
-            double sxszs_numerator = this.dt031.Rows.Cast<DataRow>().Sum(dr => utils.to_double(dr["sxszs"]) * utils.to_double(dr["zsyl"]));
-            double sxszs_denominator = this.dt031.Rows.Cast<DataRow>().Sum(dr => utils.to_double(dr["zsyl"]));
-            double sxszs = sxszs_numerator / sxszs_denominator;
-
-            update_tag("选定调剖井平均日注水", this.dt031.Rows.Cast<DataRow>().Average(dr => utils.to_double(dr["rzyl"])).ToString());
-            update_tag("平均注水压力", this.dt031.Rows.Cast<DataRow>().Average(dr => utils.to_double(dr["zsyl"])).ToString());
-            update_tag("平均视吸水指数", sxszs.ToString());
-            update_tag("平均综合含水", dt_ow.Rows[0][0].ToString());
-            this.Tags = replace_empty_tags(this.Tags);
-
-            #endregion
+            using DataTable dt = ListToDataTable(oc_031.ToList());
+            dt.TableName = "sgsj_031";
+            DbHelperOleDb.UpdateTable(dt);
         }
-        public void Init032()
-        {
-            dt032 = new DataTable();
-            dt032.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("tpc", typeof(string)),
-                new DataColumn("tpc_hd", typeof(decimal)),
-                new DataColumn("tpc_xsl", typeof(decimal)),
-                new DataColumn("tpc_xsfs", typeof(decimal)),
-                new DataColumn("fdd_hd", typeof(decimal)),
-                new DataColumn("fdd_xsl", typeof(decimal)),
-                new DataColumn("fdd_xsfs", typeof(decimal)),
-                new DataColumn("zzd_hd", typeof(decimal)),
-                new DataColumn("zzd_xsl", typeof(decimal)),
-                new DataColumn("zzd_xsfs", typeof(decimal)),
-            });
 
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_032"))
+        #endregion
+
+        #region 032
+        public void init_032()
+        {
+            oc_032.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_032");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_032 model = new sgsj_model_032
                 {
-                    DataRow dr = this.dt032.NewRow();
-                    dr["jh"] = dt.Rows[i]["jh"].ToString();
-                    dr["tpc"] = dt.Rows[i]["tpc"].ToString();
-                    dr["tpc_hd"] = Unity.ToDecimal(dt.Rows[i]["tpc_hd"]);
-                    dr["tpc_xsl"] = Unity.ToDecimal(dt.Rows[i]["tpc_xsl"]);
-                    dr["tpc_xsfs"] = Unity.ToDecimal(dt.Rows[i]["tpc_xsfs"]);
-                    dr["fdd_hd"] = Unity.ToDecimal(dt.Rows[i]["fdd_hd"]);
-                    dr["fdd_xsl"] = Unity.ToDecimal(dt.Rows[i]["fdd_xsl"]);
-                    dr["fdd_xsfs"] = Unity.ToDecimal(dt.Rows[i]["fdd_xsfs"]);
-                    dr["zzd_hd"] = Unity.ToDecimal(dt.Rows[i]["zzd_hd"]);
-                    dr["zzd_xsl"] = Unity.ToDecimal(dt.Rows[i]["zzd_xsl"]);
-                    dr["zzd_xsfs"] = Unity.ToDecimal(dt.Rows[i]["zzd_xsfs"]);
-                    this.dt032.Rows.Add(dr);
-                }
+                    JH = dt.Rows[i]["jh"].ToString(),
+                    TPC = dt.Rows[i]["tpc"].ToString(),
+                    TPC_HD = Unity.ToDecimal(dt.Rows[i]["tpc_hd"]),
+                    TPC_XSL = Unity.ToDecimal(dt.Rows[i]["tpc_xsl"]),
+                    TPC_XSFS = Unity.ToDecimal(dt.Rows[i]["tpc_xsfs"]),
+                    FDD_HD = Unity.ToDecimal(dt.Rows[i]["fdd_hd"]),
+                    FDD_XSL = Unity.ToDecimal(dt.Rows[i]["fdd_xsl"]),
+                    FDD_XSFS = Unity.ToDecimal(dt.Rows[i]["fdd_xsfs"]),
+                    ZZD_HD = Unity.ToDecimal(dt.Rows[i]["zzd_hd"]),
+                    ZZD_XSL = Unity.ToDecimal(dt.Rows[i]["zzd_xsl"]),
+                    ZZD_XSFS = Unity.ToDecimal(dt.Rows[i]["zzd_xsfs"]),
+                };
+                oc_032.Add(model);
             }
         }
-        public bool update032(out string message)
+        public bool update_032(out string message)
         {
-            Init031();
-            if (dt031.Rows.Count == 0)
+            init_031();
+            if (!oc_031.Any())
             {
                 message = "“调剖井概况-吸水剖面测试结果数据表”产生数据后，再执行此操作";
                 return false;
             }
-            dt032.Clear();
+
+            oc_032.Clear();
 
             #region 数据源
             List<tpc_model> list_tpc = Data.DatHelper.read_tpc();
             #endregion
 
             #region 更新表格
-            foreach (tpc_model model in list_tpc)
+            foreach (var item in list_tpc)
             {
-                DataRow dr = dt032.NewRow();
-                dr["jh"] = model.jh;
-                dr["tpc"] = model.cd;
+                var rzyl = oc_031.Where(p => p.JH == item.jh).First().RZYL;
+                var fdd_xsfs = (decimal)item.zrfs - (decimal)item.zzrfs;
 
-                decimal rzyl = (from DataRow r in dt031.Rows where r.Field<string>("jh") == model.jh select r.Field<decimal>("rzyl")).FirstOrDefault();
+                sgsj_model_032 model = new sgsj_model_032()
+                {
+                    JH = item.jh,
+                    TPC = item.cd,
 
-                dr["tpc_hd"] = model.yxhd;
-                dr["tpc_xsl"] = rzyl * (decimal)model.zrfs;
-                dr["tpc_xsfs"] = model.zrfs;
+                    TPC_HD = (decimal)item.yxhd,
+                    TPC_XSL = (rzyl * (decimal)item.zrfs) / 100,
+                    TPC_XSFS = (decimal)item.zrfs,
 
-                double fdd_xsfs = model.zrfs - model.zzrfs;
-                dr["fdd_hd"] = model.yxhd - model.zzhd;
-                dr["fdd_xsl"] = rzyl * (decimal)fdd_xsfs;
-                dr["fdd_xsfs"] = fdd_xsfs;
+                    FDD_HD = (decimal)item.yxhd - (decimal)item.zzhd,
+                    FDD_XSL = (rzyl * fdd_xsfs)/ 100,
+                    FDD_XSFS = fdd_xsfs,
 
-                dr["zzd_hd"] = model.zzhd;
-                dr["zzd_xsl"] = rzyl * (decimal)model.zzrfs;
-                dr["zzd_xsfs"] = model.zzrfs;
-
-                dt032.Rows.Add(dr);
+                    ZZD_HD = (decimal)item.zzhd,
+                    ZZD_XSL = (rzyl * (decimal)item.zzrfs)/100,
+                    ZZD_XSFS = (decimal)item.zzrfs,
+                };
+                oc_032.Add(model);
             }
-            
-            decimal tpc_xsfs_numerator = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["tpc_xsl"]) * Unity.ToDecimal(dr["tpc_xsfs"]));
-            decimal tpc_xsfs_denominator = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["tpc_xsl"]));
-            decimal fdd_xsfs_numerator = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["fdd_xsl"]) * Unity.ToDecimal(dr["fdd_xsfs"]));
-            decimal fdd_xsfs_denominator = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["fdd_xsl"]));
 
-            decimal avg_tpc_hd = dt032.AsEnumerable().Average(dr => Unity.ToDecimal(dr["tpc_hd"]));
-            decimal avg_tpc_xsl = dt032.AsEnumerable().Average(dr => Unity.ToDecimal(dr["tpc_xsl"]));
+            int tpcjs = oc_032.Count;
+            decimal tpc_xsfs_numerator = oc_032.Sum(p => p.TPC_XSFS * p.TPC_XSFS);
+            decimal tpc_xsfs_denominator = oc_032.Sum(p => p.TPC_XSL);
+            decimal fdd_xsfs_numerator = oc_032.Sum(p => p.FDD_XSL * p.FDD_XSFS);
+            decimal fdd_xsfs_denominator = oc_032.Sum(p => p.FDD_XSL);
+
+            decimal avg_tpc_hd = oc_032.Average(p => p.TPC_HD);
+            decimal avg_tpc_xsl = oc_032.Average(p => p.TPC_XSL);
             decimal jq_tpc_xsfs = tpc_xsfs_numerator / tpc_xsfs_denominator;
-            decimal avg_fdd_hd = dt032.AsEnumerable().Average(dr => Unity.ToDecimal(dr["fdd_hd"]));
-            decimal avg_fdd_xsl = dt032.AsEnumerable().Average(dr => Unity.ToDecimal(dr["fdd_xsl"]));
+            decimal avg_fdd_hd = oc_032.Average(p => p.FDD_HD);
+            decimal avg_fdd_xsl = oc_032.Average(p => p.FDD_XSL);
             decimal jq_hdd_xsfs = fdd_xsfs_numerator / fdd_xsfs_denominator;
 
-            DataRow last_dr = dt032.NewRow();
-            last_dr["jh"] = "合计：";
-            last_dr["tpc_hd"] = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["tpc_hd"]));
-            last_dr["tpc_xsl"] = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["tpc_xsl"]));
-            last_dr["tpc_xsfs"] = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["tpc_xsfs"]));
-            last_dr["fdd_hd"] = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["fdd_hd"]));
-            last_dr["fdd_xsl"] = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["fdd_xsl"]));
-            last_dr["fdd_xsfs"] = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["fdd_xsfs"]));
-            last_dr["zzd_hd"] = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["zzd_hd"]));
-            last_dr["zzd_xsl"] = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["zzd_xsl"]));
-            last_dr["zzd_xsfs"] = dt032.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["zzd_xsfs"]));
-            dt032.Rows.Add(last_dr);
-            #endregion
+            sgsj_model_032 last_model = new sgsj_model_032()
+            {
+                JH = "合计：",
+                TPC_HD = oc_032.Sum(p => p.TPC_HD),
+                TPC_XSL = oc_032.Sum(p => p.TPC_XSL),
+                TPC_XSFS = oc_032.Average(p => p.TPC_XSFS),
+                FDD_HD = oc_032.Sum(p => p.FDD_HD),
+                FDD_XSL = oc_032.Sum(p => p.FDD_XSL),
+                FDD_XSFS = oc_032.Average(p => p.FDD_XSFS),
+                ZZD_HD = oc_032.Sum(p => p.ZZD_HD),
+                ZZD_XSL = oc_032.Sum(p => p.ZZD_XSL),
+                ZZD_XSFS = oc_032.Average(p => p.ZZD_XSFS)
+            };
+            oc_032.Add(last_model);
 
-            #region 更新标签
-            update_tag("调剖层井数", Unity.ToString(dt032.Rows.Count));
+            update_tag("调剖层井数", tpcjs.ToString());
             update_tag("调剖层厚度平均值", Unity.DecimalToString(avg_tpc_hd));
             update_tag("调剖层吸水量平均值", Unity.DecimalToString(avg_tpc_xsl));
             update_tag("调剖层吸水分数加权", Unity.DecimalToString(jq_tpc_xsfs));
@@ -989,132 +1418,127 @@ namespace SBTP.BLL
             message = "操作成功";
             return true;
         }
-        public void Init033()
+        public void save_032()
         {
-            dt033 = new DataTable();
-            dt033.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("sj", typeof(string)),
-                new DataColumn("tpc", typeof(string)),
-                new DataColumn("yj", typeof(string)),
-                new DataColumn("syhd", typeof(decimal)),
-                new DataColumn("yxhd", typeof(decimal)),
-                new DataColumn("stl", typeof(decimal)),
-            });
+            using DataTable dt = ListToDataTable(oc_032.ToList());
+            dt.TableName = "sgsj_032";
+            DbHelperOleDb.UpdateTable(dt);
+        }
+        #endregion
 
+        #region 033
+        public void init_033()
+        {
+            oc_033.Clear();
             using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_033"))
             {
                 DataTable dt = ds.Tables[0];
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    DataRow dr = this.dt033.NewRow();
-                    dr["sj"] = dt.Rows[i]["sj"].ToString();
-                    dr["tpc"] = dt.Rows[i]["tpc"].ToString();
-                    dr["yj"] = dt.Rows[i]["yj"].ToString();
-                    dr["syhd"] = Unity.ToDecimal(dt.Rows[i]["syhd"]);
-                    dr["yxhd"] = Unity.ToDecimal(dt.Rows[i]["yxhd"]);
-                    dr["stl"] = Unity.ToDecimal(dt.Rows[i]["stl"]);
-                    this.dt033.Rows.Add(dr);
+                    sgsj_model_033 model = new sgsj_model_033()
+                    {
+                        SJ = dt.Rows[i]["sj"].ToString(),
+                        TPC = dt.Rows[i]["tpc"].ToString(),
+                        YJ = dt.Rows[i]["yj"].ToString(),
+                        SYHD = Unity.ToDecimal(dt.Rows[i]["syhd"]),
+                        YXHD = Unity.ToDecimal(dt.Rows[i]["yxhd"]),
+                        STL = Unity.ToDecimal(dt.Rows[i]["stl"])
+                    };
+                    oc_033.Add(model);
                 }
             }
         }
-        public void update033()
+        public bool update_033(out string message)
         {
-            this.dt033.Clear();
+            //todo 连通方向（文字）
+            oc_033.Clear();
 
             #region 数据源
             List<tpc_model> tpc_data = Data.DatHelper.read_tpc();
             List<tpc_jzlt_model> jzlt_data = Data.DatHelper.read_jzlt();
+            if (tpc_data == null)
+            {
+                message = "未获得调剖层数据";
+                return false;
+            }
+
             #endregion
 
             #region 更新表格
-            var data = from tpc in tpc_data.AsEnumerable()
-                       from jzlt in jzlt_data.AsEnumerable()
-                       where tpc.jh == jzlt.sj && tpc.bs_string != ""
-                       select new
-                       {
-                           sj = tpc.jh,
-                           bs = tpc.bs_string,
-                           tpc = jzlt.cw,
-                           yj = jzlt.yj,
-                           syhd = jzlt.syhd,
-                           yxhd = jzlt.yxhd,
-                           stl = jzlt.stl
-                       };
-            foreach (var obj in data)
+
+            foreach (var jzlt in jzlt_data)
             {
-                DataRow dr = this.dt033.NewRow();
-                dr["sj"] = obj.sj;
-                dr["tpc"] = obj.tpc;
-                dr["yj"] = obj.yj;
-                dr["syhd"] = obj.syhd;
-                dr["yxhd"] = obj.yxhd;
-                dr["stl"] = obj.stl;
-                this.dt033.Rows.Add(dr);
+                sgsj_model_033 model = new sgsj_model_033()
+                {
+                    SJ = jzlt.sj,
+                    TPC = jzlt.cw,
+                    YJ = jzlt.yj,
+                    SYHD = (decimal)jzlt.syhd,
+                    YXHD = (decimal)jzlt.yxhd,
+                    STL = (decimal)jzlt.stl
+                };
+                oc_033.Add(model);
             }
 
-            double stl1 = this.dt033.Rows.Cast<DataRow>().Sum(r => utils.to_double(r["yxhd"]) * utils.to_double(r["stl"]));
-            double stl2 = this.dt033.Rows.Cast<DataRow>().Sum(r => utils.to_double(r["yxhd"]));
-            double stl = stl1 / stl2;
-            DataRow last_r = this.dt033.NewRow();
-            last_r["sj"] = "平均";
-            last_r["tpc"] = "";
-            last_r["yj"] = "";
-            last_r["syhd"] = this.dt033.Rows.Cast<DataRow>().Average(r => utils.to_double(r["syhd"]));
-            last_r["yxhd"] = this.dt033.Rows.Cast<DataRow>().Average(r => utils.to_double(r["yxhd"]));
-            last_r["stl"] = stl;
-            this.dt033.Rows.Add(last_r);
+            decimal stl1 = oc_033.Sum(p => p.YXHD * p.STL);
+            decimal stl2 = oc_033.Sum(p => p.YXHD);
+            decimal stl = stl1 / stl2;
+
+            var query_yj = oc_033.Select(p => p.YJ).ToList();
+            var query_lt = tpc_data.Average(p => p.ltsl);
+
+            sgsj_model_033 last_model = new sgsj_model_033()
+            {
+                SJ = "平均：",
+                SYHD = oc_033.Average(p => p.SYHD),
+                YXHD = oc_033.Average(p => p.YXHD),
+                STL = stl,
+            };
+            oc_033.Add(last_model);
             #endregion
 
             #region 更新标签
-            EnumerableRowCollection<string> yj_query = from m in this.dt033.AsEnumerable()
-                                                       orderby m.Field<string>("yj")
-                                                       select m.Field<string>("yj");
-            IEnumerable<int> ltsl_query = from m in tpc_data
-                                          select m.ltsl;
-
-            update_tag("调剖井连通油井数", yj_query.Distinct().Count().ToString());
-            update_tag("调剖井连通油井砂岩厚度平均值", last_r["syhd"].ToString());
-            update_tag("调剖井连通油井有效厚度平均值", last_r["yxhd"].ToString());
-            update_tag("调剖井连通方向个数", ltsl_query.Average().ToString());
+            update_tag("调剖井连通油井数", query_yj.Distinct().Count().ToString());
+            update_tag("调剖井连通油井砂岩厚度平均值", last_model.SYHD.ToString());
+            update_tag("调剖井连通油井有效厚度平均值", last_model.YXHD.ToString());
+            update_tag("调剖井连通方向个数", query_lt.ToString());   //求平均值
             this.Tags = replace_empty_tags(this.Tags);
+
+            message = "操作成功";
+            return true;
             #endregion
+        }
+        public void save_033()
+        {
+            using DataTable dt = ListToDataTable(oc_033.ToList());
+            dt.TableName = "sgsj_033";
+            DbHelperOleDb.UpdateTable(dt);
         }
         #endregion
 
         #region 04
-        public void Init04()
+        public void init_04()
         {
-            dt04 = new DataTable();
-            dt04.Columns.AddRange(new DataColumn[]
+            oc_04.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_04");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("ytjnd", typeof(decimal)),
-                new DataColumn("kljnd", typeof(decimal)),
-                new DataColumn("klzj", typeof(decimal)),
-                new DataColumn("xdynd", typeof(decimal)),
-                new DataColumn("ylb", typeof(decimal)),
-            });
-
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_04"))
-            {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_04 model = new sgsj_model_04()
                 {
-                    DataRow dr = this.dt04.NewRow();
-                    dr["jh"] = dt.Rows[i]["jh"].ToString();
-                    dr["ytjnd"] = Unity.ToDecimal(dt.Rows[i]["ytjnd"]);
-                    dr["kljnd"] = Unity.ToDecimal(dt.Rows[i]["kljnd"]);
-                    dr["klzj"] = Unity.ToDecimal(dt.Rows[i]["klzj"]);
-                    dr["xdynd"] = Unity.ToDecimal(dt.Rows[i]["xdynd"]);
-                    dr["ylb"] = Unity.ToDecimal(dt.Rows[i]["ylb"]);
-                    this.dt04.Rows.Add(dr);
-                }
+                    JH = dt.Rows[i]["jh"].ToString(),
+                    YTJND = Unity.ToDecimal(dt.Rows[i]["ytjnd"]),
+                    KLJND = Unity.ToDecimal(dt.Rows[i]["kljnd"]),
+                    KLZJ = Unity.ToDecimal(dt.Rows[i]["klzj"]),
+                    XDYND = Unity.ToDecimal(dt.Rows[i]["xdynd"]),
+                    YLB = Unity.ToDecimal(dt.Rows[i]["ylb"])
+                };
+                oc_04.Add(model);
             }
         }
-        public bool update04(out string message)
+        public bool update_04(out string message)
         {
-            this.dt04.Clear();
+            oc_04.Clear();
 
             #region 数据源
 
@@ -1139,14 +1563,14 @@ namespace SBTP.BLL
                 return false;
             }
 
-            var xtpk_source = DBContext.GetList_PC_XTPK_STATUS();
+            var xtpk_source = DBContext.db_pc_xtpk_status();
             if (!xtpk_source.Any())
             {
                 message = "未获取到体膨调剖剂数据，请检查数据是否导入数据库中";
                 return false;
             }
 
-            var xtpl_source = DBContext.GetList_PC_XTPL_STATUS();
+            var xtpl_source = DBContext.db_pc_xtpl_status();
             if (!xtpl_source.Any())
             {
                 message = "未获取到液体调剖剂数据，请检查数据是否导入数据库中";
@@ -1188,80 +1612,80 @@ namespace SBTP.BLL
             #region 表格
             //string yt_name = "";
             //string kl_name = "";
-            foreach (var model in tpjnd_source)
+            foreach (var tpjnd in tpjnd_source)
             {
-                DataRow dr = this.dt04.NewRow();
-                List<DssjModel> dssjInfo = Data.DatHelper.ReadGXSJ(model.JH);
+                List<DssjModel> dssjInfo = Data.DatHelper.ReadGXSJ(tpjnd.JH);
                 decimal yl_sum = dssjInfo.Sum(x => Unity.ToDecimal(x.YL));
-                dr["jh"] = model.JH;
-                dr["ytjnd"] = model.YTND;
-                dr["kljnd"] = model.KLND;
-                dr["klzj"] = model.KLLJ;
-                dr["xdynd"] = yl_sum == 0 ? 0 : dssjInfo.Sum(x => Unity.ToDecimal(x.XN) * Unity.ToDecimal(x.YL)) / yl_sum;
-                dr["ylb"] = 0; //todo：“rsl2.dat *tpjnd”没有用量比
-                this.dt04.Rows.Add(dr);
-                //yt_name += tpjInfo.Find(x => x.jh.Equals(model.JH)).ytmc + "、";
-                //kl_name += tpjInfo.Find(x => x.jh.Equals(model.JH)).klmc + "、";
+                sgsj_model_04 model = new sgsj_model_04()
+                {
+                    JH = tpjnd.JH,
+                    YTJND = (decimal)tpjnd.YTND,
+                    KLJND = (decimal)tpjnd.KLND,
+                    KLZJ = (decimal)tpjnd.KLLJ,
+                    //XDYND = yl_sum == 0 ? 0 : dssjInfo.Sum(x => Unity.ToDecimal(x.XN) * Unity.ToDecimal(x.YL)) / yl_sum, //todo 用量计算
+                    XDYND = (decimal)tpjnd.XDYND,
+                    YLB = (decimal)tpjnd.YTYLFS,
+                };
+                oc_04.Add(model);
             }
 
-            DataRow last_dr = this.dt04.NewRow();
-            last_dr["jh"] = "平均";
-            last_dr["ytjnd"] = this.dt04.AsEnumerable().Average(dr => Unity.ToDecimal(dr["ytjnd"]));
-            last_dr["kljnd"] = this.dt04.AsEnumerable().Average(dr => Unity.ToDecimal(dr["kljnd"]));
-            last_dr["xdynd"] = this.dt04.AsEnumerable().Average(dr => Unity.ToDecimal(dr["xdynd"]));
-            last_dr["ylb"] = 0; //todo：无法获取用量比，则无法计算其均值
-            this.dt04.Rows.Add(last_dr);
+            sgsj_model_04 last_model = new sgsj_model_04()
+            {
+                JH = "平均：",
+                YTJND = oc_04.Average(p => p.YTJND),
+                KLJND = oc_04.Average(p => p.KLJND),
+                KLZJ = oc_04.Average(p => p.KLZJ),
+                XDYND = oc_04.Average(p => p.XDYND),
+                YLB = oc_04.Average(p => p.YLB)
+            };
+            oc_04.Add(last_model);
             #endregion
 
             #region 标签
             update_tag("液体剂公司", ytj_gs);
             update_tag("液体剂名称", ytj_mc);
-            update_tag("液体剂使用浓度平均值", Unity.DecimalToString((decimal)last_dr["ytjnd"]));
+            update_tag("液体剂使用浓度平均值", last_model.YTJND.ToString());
             update_tag("颗粒剂公司", klj_gs);
             update_tag("颗粒剂名称", klj_mc);
-            update_tag("颗粒剂使用浓度平均值", Unity.DecimalToString((decimal)last_dr["kljnd"]));
-            update_tag("两者体积比", Unity.DecimalToString((decimal)last_dr["ylb"]));    
+            update_tag("颗粒剂使用浓度平均值", last_model.KLJND.ToString());
+            update_tag("两者体积比", last_model.YLB.ToString());
             this.Tags = replace_empty_tags(this.Tags);
             #endregion
 
             message = "操作成功";
             return true;
         }
+        public void save_04()
+        {
+            using DataTable dt = ListToDataTable(oc_04.ToList());
+            dt.TableName = "sgsj_04";
+            DbHelperOleDb.UpdateTable(dt);
+        }
         #endregion
 
-        #region 05
-        public void Init0511()
+        #region 0511
+        public void init_0511()
         {
-            dt0511 = new DataTable();
-            dt0511.Columns.AddRange(new DataColumn[]
+            oc_0511.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_0511");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                new DataColumn("yy", typeof(decimal)),
-                new DataColumn("yttpj", typeof(decimal)),
-                new DataColumn("kltpj", typeof(decimal)),
-                new DataColumn("xdy", typeof(decimal)),
-                new DataColumn("sgf", typeof(decimal)),
-                new DataColumn("qt", typeof(decimal)),
-            });
-
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_0511"))
-            {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_0511 model = new sgsj_model_0511()
                 {
-                    DataRow dr = this.dt0511.NewRow();
-                    dr["yy"] = Unity.ToDecimal(dt.Rows[i]["yy"]);
-                    dr["yttpj"] = Unity.ToDecimal(dt.Rows[i]["yttpj"]);
-                    dr["kltpj"] = Unity.ToDecimal(dt.Rows[i]["kltpj"]);
-                    dr["xdy"] = Unity.ToDecimal(dt.Rows[i]["xdy"]);
-                    dr["sgf"] = Unity.ToDecimal(dt.Rows[i]["sgf"]);
-                    dr["qt"] = Unity.ToDecimal(dt.Rows[i]["qt"]);
-                    this.dt0511.Rows.Add(dr);
-                }
+                    YY = Unity.ToDecimal(dt.Rows[i]["yy"]),
+                    YTTPJ = Unity.ToDecimal(dt.Rows[i]["yttpj"]),
+                    KLTPJ = Unity.ToDecimal(dt.Rows[i]["kltpj"]),
+                    XDY = Unity.ToDecimal(dt.Rows[i]["xdy"]),
+                    SGF = Unity.ToDecimal(dt.Rows[i]["sgf"]),
+                    QT = Unity.ToDecimal(dt.Rows[i]["qt"]),
+                };
+                oc_0511.Add(model);
             }
         }
-        public bool update0511(out string message)
+        public bool update_0511(out string message)
         {
-            this.dt0511.Clear();
+            oc_0511.Clear();
 
             List<jcxx_jgxx_model> jgxx_data = Data.DatHelper.read_jcxx_jgxx();
             if (!jgxx_data.Any())
@@ -1270,51 +1694,53 @@ namespace SBTP.BLL
                 return false;
             }
 
-            foreach (jcxx_jgxx_model model in jgxx_data)
+            foreach (var jgxx in jgxx_data)
             {
-                DataRow dr = this.dt0511.NewRow();
-                dr["yy"] = model.yy;
-                dr["yttpj"] = model.yttpj;
-                dr["kltpj"] = model.kltpj;
-                dr["xdy"] = model.xdyfj;
-                dr["sgf"] = model.sg;
-                dr["qt"] = model.qt;
-                this.dt0511.Rows.Add(dr);
+                sgsj_model_0511 model = new sgsj_model_0511()
+                {
+                    YY = (decimal)jgxx.yy,
+                    YTTPJ = (decimal)jgxx.yttpj,
+                    KLTPJ = (decimal)jgxx.kltpj,
+                    XDY = (decimal)jgxx.xdyfj,
+                    SGF = (decimal)jgxx.sg,
+                    QT = (decimal)jgxx.qt,
+                };
+                oc_0511.Add(model);
             }
 
             message = "操作成功";
             return true;
         }
-        public void Init0512()
+        public void save_0511()
         {
-            dt0512 = new DataTable();
-            dt0512.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("yxbj", typeof(decimal)),
-                new DataColumn("tcb", typeof(decimal)),
-                new DataColumn("zyl", typeof(decimal)),
-                new DataColumn("tpjyl", typeof(decimal))
-            });
+            using DataTable dt = ListToDataTable(oc_0511.ToList());
+            dt.TableName = "sgsj_0511";
+            DbHelperOleDb.UpdateTable(dt);
+        }
+        #endregion
 
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_0512"))
+        #region 0512
+        public void init_0512()
+        {
+            oc_0512.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_0512");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_0512 model = new sgsj_model_0512()
                 {
-                    DataRow dr = this.dt0512.NewRow();
-                    dr["jh"] = dt.Rows[i]["jh"].ToString();
-                    dr["yxbj"] = Unity.ToDecimal(dt.Rows[i]["yxbj"]);
-                    dr["tcb"] = Unity.ToDecimal(dt.Rows[i]["tcb"]);
-                    dr["zyl"] = Unity.ToDecimal(dt.Rows[i]["zyl"]);
-                    dr["tpjyl"] = Unity.ToDecimal(dt.Rows[i]["tpjyl"]);
-                    this.dt0512.Rows.Add(dr);
-                }
+                    JH = dt.Rows[i]["jh"].ToString(),
+                    YXBJ = Unity.ToDecimal(dt.Rows[i]["yxbj"]),
+                    TCB = Unity.ToDecimal(dt.Rows[i]["tcb"]),
+                    ZYL = Unity.ToDecimal(dt.Rows[i]["zyl"]),
+                    TPJYL = Unity.ToDecimal(dt.Rows[i]["tpjyl"]),
+                };
+                oc_0512.Add(model);
             }
         }
-        public bool update0512(out string message)
+        public bool update_0512(out string message)
         {
-            dt0512.Clear();
+            oc_0512.Clear();
             var stcs = SBTP.Data.DatHelper.ReadSTCS();
             if (!stcs.Any())
             {
@@ -1322,322 +1748,501 @@ namespace SBTP.BLL
                 return false;
             }
 
-            foreach (JqxxyhModel model in stcs)
+            foreach (var item in stcs)
             {
-                DataRow dr = dt0512.NewRow();
-                dr["jh"] = model.JH;
-                dr["yxbj"] = model.YHBJ;
-                dr["tcb"] = model.TCB;
-                dr["zyl"] = model.YHZY;
-                dr["tpjyl"] = model.TPJYL;
-                dt0512.Rows.Add(dr);
+                sgsj_model_0512 model = new sgsj_model_0512()
+                {
+                    JH = item.JH,
+                    YXBJ = Unity.ToDecimal(item.YHBJ),
+                    TCB = Unity.ToDecimal(item.TCB),
+                    ZYL = Unity.ToDecimal(item.YHZY),
+                    TPJYL = Unity.ToDecimal(item.TPJYL)
+                };
+                oc_0512.Add(model);
             }
+
+            sgsj_model_0512 last_model = new sgsj_model_0512()
+            {
+                JH = "平均：",
+                YXBJ = oc_0512.Average(p=>p.YXBJ),
+                TCB = oc_0512.Average(p => p.TCB),
+                ZYL = oc_0512.Average(p => p.ZYL),
+                TPJYL = oc_0512.Average(p => p.TPJYL)
+            };
+            oc_0512.Add(last_model);
 
             message = "操作成功";
             return true;
         }
-        public void Init052()
+        public void save_0512()
         {
-            dt052 = new DataTable();
-            dt052.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("xh", typeof(string)),
-                new DataColumn("dsmc", typeof(string)),
-                new DataColumn("bl", typeof(decimal)),
-                new DataColumn("tj", typeof(decimal)),
-                new DataColumn("njnd", typeof(decimal)),
-                new DataColumn("klnd", typeof(decimal)),
-                new DataColumn("ms", typeof(decimal)),
-                new DataColumn("rz", typeof(decimal)),
-                new DataColumn("ts", typeof(decimal)),
-                new DataColumn("yjyl", typeof(decimal)),
-            });
+            using DataTable dt = ListToDataTable(oc_0512.ToList());
+            dt.TableName = "sgsj_0512";
+            DbHelperOleDb.UpdateTable(dt);
+        }
+        #endregion
 
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_052"))
+        #region 052
+        public void init_052()
+        {
+            oc_052.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_052");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_052 model = new sgsj_model_052()
                 {
-                    DataRow dr = this.dt052.NewRow();
-                    dr["xh"] = dt.Rows[i]["xh"].ToString();
-                    dr["dsmc"] = dt.Rows[i]["dsmc"].ToString();
-                    dr["bl"] = Unity.ToDecimal(dt.Rows[i]["bl"]);
-                    dr["tj"] = Unity.ToDecimal(dt.Rows[i]["tj"]);
-                    dr["njnd"] = Unity.ToDecimal(dt.Rows[i]["njnd"]);
-                    dr["klnd"] = Unity.ToDecimal(dt.Rows[i]["klnd"]);
-                    dr["ms"] = Unity.ToDecimal(dt.Rows[i]["ms"]);
-                    dr["rz"] = Unity.ToDecimal(dt.Rows[i]["rz"]);
-                    dr["ts"] = Unity.ToDecimal(dt.Rows[i]["ts"]);
-                    dr["yjyl"] = Unity.ToDecimal(dt.Rows[i]["yjyl"]);
-                    this.dt052.Rows.Add(dr);
-                }
+                    JH = dt.Rows[i]["jh"].ToString(),
+                    GXMC = dt.Rows[i]["gxmc"].ToString(),
+                    BL = Unity.ToDecimal(dt.Rows[i]["bl"]),
+                    YL = Unity.ToDecimal(dt.Rows[i]["yl"]),
+                    YTND = Unity.ToDecimal(dt.Rows[i]["ytnd"]),
+                    KLND = Unity.ToDecimal(dt.Rows[i]["klnd"]),
+                    KLMS = Unity.ToDecimal(dt.Rows[i]["klms"]),
+                    XYND = Unity.ToDecimal(dt.Rows[i]["xynd"]),
+                    PL = Unity.ToDecimal(dt.Rows[i]["pl"]),
+                    SGZQ = Unity.ToDecimal(dt.Rows[i]["sgzq"]),
+                    DLND = Unity.ToDecimal(dt.Rows[i]["dlnd"]),
+                    ZRYL = Unity.ToDecimal(dt.Rows[i]["zryl"])
+                };
+                oc_052.Add(model);
             }
         }
-        public void update052()
+
+        //public bool update_052(out string message)
+        //{
+        //    oc_052.Clear();
+        //    List<string> well_names = Data.DatHelper.Read_GXSJ();
+
+        //    //调剖井信息（名称，工序集）
+        //    well_info = new Dictionary<string, List<DssjModel>>();
+        //    foreach (var item in well_names)
+        //    {
+        //        var gxsj = Data.DatHelper.ReadGXSJ(item);
+        //        foreach (var i1 in gxsj)
+        //        {
+        //            i1.ZRTS = Math.Round(i1.ZRTS, 1);
+        //            i1.DLND = Math.Round(i1.DLND, 1);
+        //            i1.ZRYL = Math.Round(i1.ZRYL, 1);
+        //        }
+        //        List<DssjModel> model = new List<DssjModel>();
+
+        //        DssjModel dssj = new DssjModel();
+        //        dssj.GX_NAME = "合计：";
+        //        dssj.BL = gxsj.Sum(p => p.BL);
+        //        dssj.YL = gxsj.Sum(p => p.YL);
+        //        dssj.YN = Math.Round(gxsj.Where(p => p.YN != 0).Sum(p => p.YL * p.YN) / dssj.YL, 0);
+        //        dssj.KN = Math.Round(gxsj.Where(p => p.KN != 0).Sum(p => p.YL * p.KN) / dssj.YL, 0);
+        //        dssj.XN = Math.Round(gxsj.Where(p => p.XN != 0).Sum(p => p.YL * p.XN) / dssj.YL, 0);
+        //        dssj.KJ = Math.Round(gxsj.Where(p => p.KJ != 0).Average(p => p.KJ), 0);
+        //        dssj.ZRSD = Math.Round(gxsj.Where(p => p.ZRSD != 0).Average(p => p.ZRSD), 1);
+        //        dssj.ZRTS = Math.Round(gxsj.Sum(p => p.ZRTS), 1);
+        //        dssj.DLND = Math.Round(gxsj.Where(p => p.DLND != 0).Average(p => p.DLND), 1);
+        //        dssj.ZRYL = Math.Round(gxsj.Average(p => p.ZRYL), 1);
+        //        gxsj.Add(dssj);
+        //        well_info.Add(item, gxsj);
+        //    }
+
+        //    update_tag("总调剖剂用量", Data.DatHelper.ReadSTCS().Sum(x => double.Parse(x.TPJYL)).ToString());
+        //    this.Tags = replace_empty_tags(this.Tags);
+        //    message = "操作成功";
+        //    return true;
+        //}
+
+        public bool update_052(out string message)
         {
-            this.dt052.Clear();
+            oc_052.Clear();
+
             #region 数据源
             List<string> well_names = Data.DatHelper.Read_GXSJ();
-            //调剖井信息（名称，工序集）
-            well_info = new Dictionary<string, List<DssjModel>>();
-            foreach (var item in well_names)
+            #endregion
+
+            #region 表格
+
+            //基本数据
+            foreach (string well in well_names)
             {
-                var gxsj = Data.DatHelper.ReadGXSJ(item);
-                List<DssjModel> model = new List<DssjModel>();
-
-                DssjModel dssj = new DssjModel();
-                dssj.GX_NAME = "合计：";
-                dssj.BL = gxsj.Sum(p => p.BL);
-                dssj.YL = gxsj.Sum(p => p.YL);
-                dssj.YN = Math.Round(gxsj.Sum(p => p.YL * p.YN) / dssj.YL, 0);
-                dssj.KN = Math.Round(gxsj.Sum(p => p.YL * p.KN) / dssj.YL, 0);
-                dssj.XN = Math.Round(gxsj.Sum(p => p.YL * p.XN) / dssj.YL, 0);
-                dssj.KJ = Math.Round(gxsj.Average(p => p.KJ), 0);
-                dssj.ZRSD = Math.Round(gxsj.Average(p => p.ZRSD), 1);
-                dssj.ZRTS = Math.Round(gxsj.Sum(p => p.ZRTS), 1);
-                dssj.DLND = Math.Round(gxsj.Average(p => p.DLND), 1);
-                gxsj.Add(dssj);
-                well_info.Add(item, gxsj);
+                var data = Data.DatHelper.ReadGXSJ(well);
+                foreach (var item in data)
+                {
+                    sgsj_model_052 model = new sgsj_model_052()
+                    {
+                        JH = well,
+                        GXMC = item.GX_NAME,
+                        BL = Unity.ToDecimal(item.BL),
+                        YL = Unity.ToDecimal(item.YL),
+                        YTND = Unity.ToDecimal(item.YN),
+                        KLND = Unity.ToDecimal(item.KN),
+                        KLMS = Unity.ToDecimal(item.KJ),
+                        XYND = Unity.ToDecimal(item.XN),
+                        PL = Unity.ToDecimal(item.ZRSD),
+                        SGZQ = Unity.ToDecimal(item.ZRTS),
+                        DLND = Unity.ToDecimal(item.DLND),
+                        ZRYL = Unity.ToDecimal(item.ZRYL),
+                    };
+                    oc_052.Add(model);
+                }
             }
+
+            //统计数据
+            foreach (string well in well_names)
+            {
+                List<sgsj_model_052> list = oc_052.Where(p => p.JH == well).ToList();
+                var yl = list.Sum(p => p.YL);
+
+                oc_052.Add(new sgsj_model_052()
+                {
+                    JH = well,
+                    GXMC = "合计：",
+                    BL = list.Sum(p => p.BL),
+                    YL = yl,
+                    YTND = list.Where(p => p.YTND != 0).Sum(p => p.YL * p.YTND) / yl,
+                    KLND = list.Where(p => p.KLND != 0).Sum(p => p.YL * p.KLND) / yl,
+                    KLMS = list.Where(p => p.KLMS != 0).Average(p => p.KLMS),
+                    XYND = list.Where(p => p.XYND != 0).Sum(p => p.YL * p.XYND) / yl,
+                    PL = list.Where(p => p.PL != 0).Average(p => p.PL),
+                    SGZQ = list.Sum(p => p.SGZQ),
+                    DLND = list.Where(p => p.DLND != 0).Average(p => p.DLND),
+                    ZRYL = list.Average(p => p.ZRYL),
+                });
+            }
+
             #endregion
 
-            #region 更新表格
-
-            #endregion
-
-            #region 更新标签
+            #region 标签
             update_tag("总调剖剂用量", Data.DatHelper.ReadSTCS().Sum(x => double.Parse(x.TPJYL)).ToString());
             this.Tags = replace_empty_tags(this.Tags);
             #endregion
-        }
-        public void Init053()
-        {
-            dt053 = new DataTable();
-            dt053.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("yl1", typeof(decimal)),
-                new DataColumn("yl2", typeof(decimal)),
-            });
 
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_053"))
+            message = "操作成功";
+            return true;
+        }
+
+        public void save_052()
+        {
+            using DataTable dt = ListToDataTable(oc_052.ToList());
+            dt.TableName = "sgsj_052";
+            DbHelperOleDb.UpdateTable(dt);
+        }
+        #endregion
+
+        #region 053
+        public void init_053()
+        {
+            oc_053.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_053");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_053 model = new sgsj_model_053()
                 {
-                    DataRow dr = this.dt053.NewRow();
-                    dr["jh"] = dt.Rows[i]["jh"].ToString();
-                    dr["yl1"] = Unity.ToDecimal(dt.Rows[i]["yl1"]);
-                    dr["yl2"] = Unity.ToDecimal(dt.Rows[i]["yl2"]);
-                    this.dt053.Rows.Add(dr);
-                }
+                    JH = dt.Rows[i]["jh"].ToString(),
+                    YL1 = Unity.ToDecimal(dt.Rows[i]["yl1"]),
+                    YL2 = Unity.ToDecimal(dt.Rows[i]["yl2"]),
+                    YL3 = Unity.ToDecimal(dt.Rows[i]["yl3"]),
+                };
+                oc_053.Add(model);
             }
         }
-        public void update053()
+        //public bool update_053(out string message)
+        //{
+        //    oc_053.Clear();
+
+        //    #region 数据源
+        //    List<string> well_names = Data.DatHelper.Read_GXSJ();
+        //    //调剖井信息（名称，工序集）
+        //    well_info = new Dictionary<string, List<DssjModel>>();
+        //    foreach (var item in well_names)
+        //    {
+        //        well_info.Add(item, Data.DatHelper.ReadGXSJ(item));
+        //    }
+        //    //读取调剖剂信息
+        //    List<jcxx_tpjxx_model> tpjInfo = Data.DatHelper.read_jcxx_tpjxx();
+        //    //调剖剂名称及用量
+        //    Dictionary<string, double> tpjs = new Dictionary<string, double>();
+
+        //    foreach (var item in well_info)
+        //    {
+        //        //调剖井液剂用量
+        //        double yt_sum = Math.Round(item.Value.Sum(x => x.YL * x.YN) / 1000000, 1);
+        //        //调剖井颗粒剂用量
+        //        double kl_sum = Math.Round(item.Value.Sum(x => x.YL * x.KN) / 1000000, 1);
+        //        //液剂名称
+        //        string yt_name = tpjInfo.Find(x => x.jh == item.Key).ytmc;
+        //        //颗粒名称
+        //        string kl_name = tpjInfo.Find(x => x.jh == item.Key).klmc;
+
+        //        //添加同类/不同类液体剂
+        //        if (!tpjs.ContainsKey("yt_" + yt_name))
+        //            tpjs.Add("yt_" + yt_name, yt_sum);
+        //        else
+        //            tpjs["yt_" + yt_name] += yt_sum;
+        //        //添加同类/不同类颗粒剂
+        //        if (!tpjs.ContainsKey("kl_" + kl_name))
+        //            tpjs.Add("kl_" + kl_name, kl_sum);
+        //        else
+        //            tpjs["kl_" + kl_name] += kl_sum;
+
+        //        //更新表格
+        //        sgsj_model_053 model = new sgsj_model_053()
+        //        {
+        //            JH = item.Key,
+        //            YL1 = (decimal)yt_sum,
+        //            YL2 = (decimal)kl_sum
+        //        };
+        //        oc_053.Add(model);
+        //    }
+        //    #endregion
+
+        //    #region 更新标签
+        //    string yt_name_str = "";
+        //    string kl_name_str = "";
+        //    string yt_yl_str = "";
+        //    string kl_yl_str = "";
+        //    foreach (var item in tpjs)
+        //    {
+        //        if (item.Key.Contains("yt"))
+        //        {
+        //            yt_name_str += item.Key.TrimStart("yt_".ToCharArray()) + "、";
+        //            yt_yl_str += item.Value.ToString() + "、";
+        //        }
+        //        else
+        //        {
+        //            kl_name_str += item.Key.TrimStart("kl_".ToCharArray()) + "、";
+        //            kl_yl_str += item.Value.ToString() + "、";
+        //        }
+        //    }
+
+        //    //var yjylzjl = (double.Parse(dt053.Compute("Sum(yl1)", "true").ToString()) + double.Parse(dt053.Compute("Sum(yl2)", "true").ToString())).ToString();
+
+        //    sgsj_model_053 last_model = new sgsj_model_053()
+        //    {
+        //        JH = "合计：",
+        //        YL1 = oc_053.Sum(p => p.YL1),
+        //        YL2 = oc_053.Sum(p => p.YL2)
+        //    };
+        //    oc_053.Add(last_model);
+
+        //    update_tag("药剂用量总剂量", (last_model.YL1 + last_model.YL2).ToString());
+        //    update_tag("药剂用量液体剂名称", yt_name_str);
+        //    update_tag("药剂用量液体剂用量", yt_yl_str);
+        //    update_tag("药剂用量颗粒剂名称", kl_name_str);
+        //    update_tag("药剂用量颗粒剂用量", kl_yl_str);
+        //    this.Tags = replace_empty_tags(this.Tags);
+        //    message = "操作成功";
+        //    return true;
+        //    #endregion
+        //}
+        public bool update_053(out string message)
         {
-            this.dt053.Clear();
+            oc_053.Clear();
+
             #region 数据源
-            List<string> well_names = Data.DatHelper.Read_GXSJ();
-            //调剖井信息（名称，工序集）
-            well_info = new Dictionary<string, List<DssjModel>>();
-            foreach (var item in well_names)
+            List<string> well_names = DatHelper.Read_GXSJ();
+            var tpjmcs = DatHelper.Tpj_Read();
+            if (tpjmcs == null)
             {
-                well_info.Add(item, Data.DatHelper.ReadGXSJ(item));
+                message = "未获取到“rls2.dat **tpjxz * tpj”数据";
+                return false;
             }
-            //读取调剖剂信息
-            List<jcxx_tpjxx_model> tpjInfo = Data.DatHelper.read_jcxx_tpjxx();
-            //调剖剂名称及用量
-            Dictionary<string, double> tpjs = new Dictionary<string, double>();
-
-            foreach (var item in well_info)
-            {
-                //调剖井液剂用量
-                double yt_sum = Math.Round(item.Value.Sum(x => x.YL * x.YN) / 1000000, 1);
-                //调剖井颗粒剂用量
-                double kl_sum = Math.Round(item.Value.Sum(x => x.YL * x.KN) / 1000000, 1);
-                //液剂名称
-                string yt_name = tpjInfo.Find(x => x.jh.Equals(item.Key)).ytmc;
-                //颗粒名称
-                string kl_name = tpjInfo.Find(x => x.jh.Equals(item.Key)).klmc;
-
-                //添加同类/不同类液体剂
-                if (!tpjs.ContainsKey("yt_" + yt_name))
-                    tpjs.Add("yt_" + yt_name, yt_sum);
-                else
-                    tpjs["yt_" + yt_name] += yt_sum;
-                //添加同类/不同类颗粒剂
-                if (!tpjs.ContainsKey("kl_" + kl_name))
-                    tpjs.Add("kl_" + kl_name, kl_sum);
-                else
-                    tpjs["kl_" + kl_name] += kl_sum;
-
-                //更新表格
-                DataRow dr = dt053.NewRow();
-                dr["jh"] = item.Key;
-                dr["yl1"] = yt_sum;
-                dr["yl2"] = kl_sum;
-                dt053.Rows.Add(dr);
-
-            }
-
             #endregion
 
-            #region 更新标签
-            string yt_name_str = "";
-            string kl_name_str = "";
-            string yt_yl_str = "";
-            string kl_yl_str = "";
-            foreach (var item in tpjs)
+            #region 表格
+            foreach (var well in well_names)
             {
-                if (item.Key.Contains("yt"))
+                var gxsj = Data.DatHelper.ReadGXSJ(well);
+                if (gxsj.Any())
                 {
-                    yt_name_str += item.Key.TrimStart("yt_".ToCharArray()) + "、";
-                    yt_yl_str += item.Value.ToString() + "、";
-                }
-                else
-                {
-                    kl_name_str += item.Key.TrimStart("kl_".ToCharArray()) + "、";
-                    kl_yl_str += item.Value.ToString() + "、";
+                    sgsj_model_053 model = new sgsj_model_053()
+                    {
+                        JH = well,
+                        YL1 = (decimal)gxsj.Sum(p => p.YL * p.YN) / 1000000,
+                        YL2 = (decimal)gxsj.Sum(p => p.YL * p.KN) / 1000000,
+                        YL3 = (decimal)gxsj.Sum(p => p.YL * p.XN) / 1000000
+                    };
+                    oc_053.Add(model);
                 }
             }
 
-            //var yjylzjl = (double.Parse(dt053.Compute("Sum(yl1)", "true").ToString()) + double.Parse(dt053.Compute("Sum(yl2)", "true").ToString())).ToString();
+            sgsj_model_053 last_model = new sgsj_model_053()
+            {
+                JH = "合计：",
+                YL1 = oc_053.Sum(p => p.YL1),
+                YL2 = oc_053.Sum(p => p.YL2),
+                YL3 = oc_053.Sum(p => p.YL3)
+            };
+            oc_053.Add(last_model);
+            #endregion
 
-            DataRow last_dr = dt053.NewRow();
-            last_dr["jh"] = "合计：";
-            last_dr["yl1"] = dt053.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["yl1"]));
-            last_dr["yl2"] = dt053.AsEnumerable().Sum(dr => Unity.ToDecimal(dr["yl2"]));
-            dt053.Rows.Add(last_dr);
-
-            update_tag("药剂用量总剂量", (Unity.ToDecimal(last_dr["yl1"]) + Unity.ToDecimal(last_dr["yl2"])).ToString());
-            update_tag("药剂用量液体剂名称", yt_name_str);
-            update_tag("药剂用量液体剂用量", yt_yl_str);
-            update_tag("药剂用量颗粒剂名称", kl_name_str);
-            update_tag("药剂用量颗粒剂用量", kl_yl_str);
+            #region 标签
+            update_tag("药剂用量总剂量", (last_model.YL1 + last_model.YL2 + last_model.YL3).ToString());
+            update_tag("药剂用量液体剂名称", tpjmcs["YTTPJ"]);
+            update_tag("药剂用量液体剂用量", last_model.YL1.ToString());
+            update_tag("药剂用量颗粒剂名称", tpjmcs["KLTPJ"]);
+            update_tag("药剂用量颗粒剂用量", last_model.YL2.ToString());
+            update_tag("药剂用量携带液用量", last_model.YL3.ToString());
             this.Tags = replace_empty_tags(this.Tags);
             #endregion
+
+            message = "操作成功";
+            return true;
+        }
+        public void save_053()
+        {
+            using DataTable dt = ListToDataTable(oc_053.ToList());
+            dt.TableName = "sgsj_053";
+            DbHelperOleDb.UpdateTable(dt);
         }
         #endregion
 
         #region 06
-        public void Init061()
+        public void init_061()
         {
-            dt061 = new DataTable();
-            dt061.Columns.AddRange(new DataColumn[]
+            oc_061.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_061");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                new DataColumn("xh", typeof(string)),
-                new DataColumn("jh", typeof(string)),
-                new DataColumn("tpq_zryl", typeof(decimal)),
-                new DataColumn("tpq_sxszs", typeof(decimal)),
-                new DataColumn("tph_zryl", typeof(decimal)),
-                new DataColumn("tph_sxszs", typeof(decimal)),
-                new DataColumn("zf_zryl", typeof(decimal)),
-                new DataColumn("zf_sxszs", typeof(decimal)),
-            });
-
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_061"))
-            {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_061 model = new sgsj_model_061()
                 {
-                    DataRow dr = this.dt061.NewRow();
-                    dr["xh"] = dt.Rows[i]["xh"].ToString();
-                    dr["jh"] = dt.Rows[i]["jh"].ToString();
-                    dr["tpq_zryl"] = Unity.ToDecimal(dt.Rows[i]["tpq_zryl"]);
-                    dr["tpq_sxszs"] = Unity.ToDecimal(dt.Rows[i]["tpq_sxszs"]);
-                    dr["tph_zryl"] = Unity.ToDecimal(dt.Rows[i]["tph_zryl"]);
-                    dr["tph_sxszs"] = Unity.ToDecimal(dt.Rows[i]["tph_sxszs"]);
-                    dr["zf_zryl"] = Unity.ToDecimal(dt.Rows[i]["zf_zryl"]);
-                    dr["zf_sxszs"] = Unity.ToDecimal(dt.Rows[i]["zf_sxszs"]);
-                    this.dt061.Rows.Add(dr);
-                }
+                    JH = dt.Rows[i]["jh"].ToString(),
+                    TQ_ZRYL = Unity.ToDecimal(dt.Rows[i]["tq_zryl"]),
+                    TQ_SXSZS = Unity.ToDecimal(dt.Rows[i]["tq_sxszs"]),
+                    TH_ZRYL = Unity.ToDecimal(dt.Rows[i]["th_zryl"]),
+                    TH_SXSZS = Unity.ToDecimal(dt.Rows[i]["th_sxszs"]),
+                    ZF_ZRYL = Unity.ToDecimal(dt.Rows[i]["zf_zryl"]),
+                    ZF_SXSZS = Unity.ToDecimal(dt.Rows[i]["zf_sxszs"])
+                };
+                oc_061.Add(model);
             }
         }
-        public void update061()
+        public bool update_061(out string message)
         {
-            this.dt061.Clear();
-
-            #region 数据源
+            oc_061.Clear();
             List<XGYC_ZRJ_BLL> zrj_info = Data.DatHelper_RLS4.read_XGYC_ZRJ();
-            #endregion
+            if (zrj_info.Count == 0)
+            {
+                message = "未获得调剖经效果预测数据";
+                return false;
+            }
 
-            #region 更新表格
-            if (zrj_info.Count == 0) return;
             foreach (var item in zrj_info)
             {
-                DataRow dr = dt061.NewRow();
-                dr["jh"] = item.JH;
-                dr["tpq_zryl"] = item.CSQ_DXYL;
-                dr["tpq_sxszs"] = item.CSQ_SXSZS;
-                dr["tph_zryl"] = item.CSH_YL;
-                dr["tph_sxszs"] = item.CSH_SXSZS;
-                dr["zf_zryl"] = item.CSH_YL - item.CSQ_DXYL;
-                dr["zf_sxszs"] = item.CSH_SXSZS - item.CSQ_SXSZS;
-                dt061.Rows.Add(dr);
-            }
-            #endregion
-
-            #region 更新标签
-            update_tag("调剖井注入压力上升值", (double.Parse(dt061.Compute("Sum(zf_zryl)", "true").ToString()) / dt061.Rows.Count).ToString());
-            update_tag("视吸水指数平均下降值", (double.Parse(dt061.Compute("Sum(zf_sxszs)", "true").ToString()) / dt061.Rows.Count).ToString());
-            this.Tags = replace_empty_tags(this.Tags);
-            #endregion
-
-        }
-        public void Init062()
-        {
-            dt062 = new DataTable();
-            dt062.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("tpjz", typeof(string)),
-                new DataColumn("yjzy", typeof(decimal)),
-                new DataColumn("ksjxsj", typeof(decimal)),
-                new DataColumn("tcb", typeof(decimal)),
-            });
-
-            using (DataSet ds = DbHelperOleDb.Query("select * from sgsj_062"))
-            {
-                DataTable dt = ds.Tables[0];
-                for (int i = 0; i < dt.Rows.Count; i++)
+                sgsj_model_061 model = new sgsj_model_061()
                 {
-                    DataRow dr = this.dt062.NewRow();
-                    dr["tpjz"] = dt.Rows[i]["tpjz"].ToString();
-                    dr["yjzy"] = Unity.ToDecimal(dt.Rows[i]["yjzy"]);
-                    dr["ksjxsj"] = Unity.ToDecimal(dt.Rows[i]["ksjxsj"]);
-                    dr["tcb"] = Unity.ToDecimal(dt.Rows[i]["tcb"]);
-                    this.dt062.Rows.Add(dr);
-                }
+                    JH = item.JH,
+                    TQ_ZRYL = (decimal)item.CSQ_DXYL,
+                    TQ_SXSZS = (decimal)item.CSQ_SXSZS,
+                    TH_ZRYL = (decimal)item.CSH_YL,
+                    TH_SXSZS = (decimal)item.CSH_SXSZS,
+                    ZF_ZRYL = (decimal)item.CSH_YL - (decimal)item.CSQ_DXYL,
+                    ZF_SXSZS = (decimal)item.CSH_SXSZS - (decimal)item.CSQ_SXSZS
+                };
+                oc_061.Add(model);
+            }
+
+            var ssz = oc_061.Sum(p => p.ZF_ZRYL) / oc_061.Count;
+            var xjz = oc_061.Sum(p => p.ZF_SXSZS) / oc_061.Count;
+
+            sgsj_model_061 last_model = new sgsj_model_061()
+            {
+                JH = "平均：",
+                TQ_ZRYL = oc_061.Average(p=>p.TQ_ZRYL),
+                TQ_SXSZS = oc_061.Average(p => p.TQ_SXSZS),
+                TH_ZRYL = oc_061.Average(p => p.TH_ZRYL),
+                TH_SXSZS = oc_061.Average(p => p.TH_SXSZS),
+                ZF_ZRYL = oc_061.Average(p => p.ZF_ZRYL),
+                ZF_SXSZS = oc_061.Average(p => p.ZF_SXSZS)
+            };
+            oc_061.Add(last_model);
+
+            update_tag("调剖井注入压力上升值", ssz.ToString());
+            update_tag("视吸水指数平均下降值", xjz.ToString());
+            this.Tags = replace_empty_tags(this.Tags);
+            message = "操作成功";
+            return true;
+        }
+        public void save_061()
+        {
+            using DataTable dt = ListToDataTable(oc_061.ToList());
+            dt.TableName = "sgsj_061";
+            DbHelperOleDb.UpdateTable(dt);
+        }
+        #endregion
+
+        #region 062
+        public void init_062()
+        {
+            oc_062.Clear();
+            using DataSet ds = DbHelperOleDb.Query("select * from sgsj_062");
+            DataTable dt = ds.Tables[0];
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                sgsj_model_062 model = new sgsj_model_062()
+                {
+                    TPJZ = dt.Rows[i]["tpjz"].ToString(),
+                    YJZY = Unity.ToDecimal(dt.Rows[i]["yjzy"]),
+                    KSJXSJ = Unity.ToDecimal(dt.Rows[i]["ksjxsj"]),
+                    TCB = Unity.ToDecimal(dt.Rows[i]["tcb"])
+                };
+                oc_062.Add(model);
             }
         }
-        public void update062()
+        public bool update_062(out string message)
         {
-            this.dt062.Clear();
+            oc_062.Clear();
 
             #region 数据源
-            List<XGYC_SCJ_BLL> scj_info = Data.DatHelper_RLS4.read_XGYC_SCJ();
-            List<jcxx_jgxx_model> tpj_jg_info = Data.DatHelper.read_jcxx_jgxx();
+            List<XGYC_SCJ_BLL> scj_info = Data.DatHelper_RLS4.read_xgyc_scj();
+            //List<jcxx_jgxx_model> tpj_jg_info = DatHelper.read_jcxx_jgxx();
+            //jcxx_jgxx_model jgxx_model = tpj_jg_info[0];
             #endregion
 
             #region 更新表格
-            if (scj_info.Count == 0) return;
+            if (scj_info.Count == 0)
+            {
+                message = "未获取生产井调剖效果预测数据";
+                return false;
+            }
+
             foreach (var item in scj_info)
             {
-                DataRow dr = dt062.NewRow();
-                dr["tpjz"] = item.JZ;
-                dr["yjzy"] = item.ZY;
-                dr["ksjxsj"] = item.JXSJ;
-                dr["tcb"] = tpj_jg_info[0].yy * item.ZY / (tpj_jg_info[0].sg + tpj_jg_info[0].qt + tpj_jg_info[0].kltpj + tpj_jg_info[0].xdyfj + tpj_jg_info[0].yttpj);
-                dt062.Rows.Add(dr);
+                sgsj_model_062 model = new sgsj_model_062()
+                {
+                    TPJZ = item.JZ,
+                    YJZY = (decimal)item.ZY,
+                    KSJXSJ = (decimal)item.JXSJ,
+                    TCB = (decimal)item.TCB
+                };
+                oc_062.Add(model);
             }
+
+            sgsj_model_062 last_model = new sgsj_model_062()
+            {
+                TPJZ = "统计：",
+                YJZY = oc_062.Sum(p => p.YJZY),
+                KSJXSJ = oc_062.Average(p => p.KSJXSJ),
+                TCB = oc_062.Average(p => p.TCB)
+            };
+            oc_062.Add(last_model);
+            
+
             #endregion
 
             #region 更新标签
-            update_tag("预计增油", double.Parse(dt062.Compute("Sum(yjzy)", "true").ToString()).ToString());
-            update_tag("调剖井组增油平均值", (double.Parse(dt062.Compute("Sum(yjzy)", "true").ToString()) / dt062.Rows.Count).ToString());
-            update_tag("措施后平均见效月数", (double.Parse(dt062.Compute("Sum(ksjxsj)", "true").ToString()) / dt062.Rows.Count).ToString());
-            update_tag("综合投入产出比", (double.Parse(dt062.Compute("Sum(yjzy)", "true").ToString()) * tpj_jg_info[0].yy / (tpj_jg_info[0].sg + tpj_jg_info[0].qt + tpj_jg_info[0].kltpj + tpj_jg_info[0].xdyfj + tpj_jg_info[0].yttpj)).ToString());
+            update_tag("预计增油", last_model.YJZY.ToString());
+            update_tag("措施后平均见效月数", last_model.KSJXSJ.ToString());
+            update_tag("综合投入产出比", last_model.TCB.ToString());
             this.Tags = replace_empty_tags(this.Tags);
+            message = "操作成功";
+            return true;
             #endregion
+        }
+        public void save_062()
+        {
+            using DataTable dt = ListToDataTable(oc_062.ToList());
+            dt.TableName = "sgsj_062";
+            DbHelperOleDb.UpdateTable(dt);
         }
         #endregion
 
@@ -1683,7 +2288,7 @@ namespace SBTP.BLL
             {
                 var zj_time = query.First().NY;
 
-                // 计算累计注水量（单位：10^4m^3）
+                // 计算累计注水量（单位：104m3）
                 var query_before = group.Where(p => p.NY < zj_time);
                 if (query_before.Any())
                 {
@@ -1691,7 +2296,7 @@ namespace SBTP.BLL
                     ljzs /= 10000;
                 }
 
-                // 计算累计注聚量（单位：10^4m^3）
+                // 计算累计注聚量（单位：104m3）
                 var query_after = group.Where(p => p.NY >= zj_time);
                 if (query_after.Any())
                 {
@@ -1708,7 +2313,88 @@ namespace SBTP.BLL
 
             return true;
         }
-        
-        
+
+        public System.Data.DataTable ListToDataTable(IList list)
+        {
+            System.Data.DataTable result = new System.Data.DataTable();
+            if (list.Count > 0)
+            {
+                PropertyInfo[] propertys = list[0].GetType().GetProperties();
+                foreach (PropertyInfo pi in propertys)
+                {
+                    //获取类型
+                    System.Type colType = pi.PropertyType;
+                    //当类型为Nullable<>时
+                    if ((colType.IsGenericType) && (colType.GetGenericTypeDefinition() == typeof(Nullable<>)))
+                    {
+                        colType = colType.GetGenericArguments()[0];
+                    }
+                    result.Columns.Add(pi.Name, colType);
+                }
+                for (int i = 0; i < list.Count; i++)
+                {
+                    ArrayList tempList = new ArrayList();
+                    foreach (PropertyInfo pi in propertys)
+                    {
+                        object obj = pi.GetValue(list[i], null);
+                        tempList.Add(obj);
+                    }
+                    object[] array = tempList.ToArray();
+                    result.LoadDataRow(array, true);
+                }
+            }
+            return result;
+        }
+
+        public DataTable ListToDataTable<T>(List<T> list)
+        {
+            if (list == null || list.Count == 0)
+            {
+                return new DataTable();
+            }
+            //获取T下所有的属性
+            System.Type entityType = list[0].GetType();
+            PropertyInfo[] entityProperties = entityType.GetProperties();
+
+            DataTable dt = new DataTable("data");
+            for (int i = 0; i < entityProperties.Length; i++)
+            {
+                dt.Columns.Add(entityProperties[i].Name);
+            }
+            foreach (var item in list)
+            {
+                if (item.GetType() != entityType)
+                {
+                    throw new Exception("要转换集合元素类型不一致！");
+                }
+                //创建一个用于放所有属性值的数组
+                object[] entityValues = new object[entityProperties.Length];
+                for (int i = 0; i < entityProperties.Length; i++)
+                {
+                    entityValues[i] = entityProperties[i].GetValue(item, null);
+                }
+
+                dt.Rows.Add(entityValues);
+            }
+            return dt;
+        }
+
+        public bool KSSC(out string message)
+        {
+            if (!update_021(out message)) return false;
+            if (!update_022(out message)) return false;
+            if (!update_03(out message)) return false;
+            if (!update_031(out message)) return false;
+            if (!update_032(out message)) return false;
+            if (!update_033(out message)) return false;
+            if (!update_04(out message)) return false;
+            if (!update_0511(out message)) return false;
+            if (!update_0512(out message)) return false;
+            if (!update_052(out message)) return false;
+            if (!update_053(out message)) return false;
+            if (!update_061(out message)) return false;
+            if (!update_062(out message)) return false;
+            return true;
+        }
     }
 }

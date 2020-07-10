@@ -34,12 +34,12 @@
                     </TextBox>
                 </GroupBox>
                 <GroupBox Header="目标设计区域油层状况">
-                    <DataGrid Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
+                    <DataGrid Name="dg" ItemsSource="{Binding oc_021}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
-                            <DataGridTextColumn Header="砂岩厚度" Binding="{Binding syhd, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="有效厚度" Binding="{Binding yxhd, StringFormat={}{0:0.##}}"/>
-                            <DataGridTextColumn Header="渗透率" Binding="{Binding stl, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="井号" Binding="{Binding JH}"/>
+                            <!--<DataGridTextColumn Header="砂岩厚度" Binding="{Binding SYHD, StringFormat={}{0:0.##}}"/>-->
+                            <DataGridTextColumn Header="有效厚度" Binding="{Binding YXHD, StringFormat={}{0:0.##}}"/>
+                            <DataGridTextColumn Header="渗透率" Binding="{Binding STL, StringFormat={}{0:0.##}}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>

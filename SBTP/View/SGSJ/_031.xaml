@@ -48,20 +48,20 @@
 
                         </TextBox>
                         <TextBlock Text="吸水剖面测试结果数据表" />
-                        <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding}">
+                        <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding oc_031}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="井号" Binding="{Binding jh}"/>
-                                <DataGridTextColumn Header="完善程度" Binding="{Binding wscd, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Binding="{Binding sxszs, StringFormat={}{0:0.##}}">
+                                <DataGridTextColumn Header="井号" Binding="{Binding JH}"/>
+                                <DataGridTextColumn Header="完善程度" Binding="{Binding WSCD, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Binding="{Binding SXSZS, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <TextBlock>
                                             <Run Text="视吸水指数（m" />
                                             <Run Text="3" BaselineAlignment="TextTop" FontSize="8" />
-                                            <Run Text="/Mpa.d）"/>
+                                            <Run Text="/MPa.d）"/>
                                         </TextBlock>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding rzyl, StringFormat={}{0:0.##}}">
+                                <DataGridTextColumn Binding="{Binding RZYL, StringFormat={}{0:0.##}}">
                                     <DataGridTextColumn.Header>
                                         <TextBlock>
                                             <Run Text="日注液量（m" />
@@ -70,8 +70,8 @@
                                         </TextBlock>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="注水压力（MPa）" Binding="{Binding zsyl, StringFormat={}{0:0.##}}"/>
-                                <DataGridTextColumn Header="综合含水（%）" Binding="{Binding zhhs, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="注水压力（MPa）" Binding="{Binding ZSYL, StringFormat={}{0:0.##}}"/>
+                                <DataGridTextColumn Header="综合含水（%）" Binding="{Binding ZHHS, StringFormat={}{0:0.##}}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>

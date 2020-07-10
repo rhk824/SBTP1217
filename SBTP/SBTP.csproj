@@ -234,6 +234,7 @@
     <Compile Include="Model\Oil_well_cModel.cs" />
     <Compile Include="Model\ProjectModel.cs" />
     <Compile Include="Model\qkcs.cs" />
+    <Compile Include="Model\sgsj_model.cs" />
     <Compile Include="Model\tpc_jzlt_model.cs" />
     <Compile Include="Model\tpc_model.cs" />
     <Compile Include="Model\tpc_xcsj_model.cs" />
