@@ -2,7 +2,9 @@
 using Common;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing;
+using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Office.CustomUI;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Maticsoft.DBUtility;
 using Microsoft.Scripting.Utils;
 using nu.xom.jaxen.expr.iter;
@@ -17,6 +19,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -166,26 +169,28 @@ namespace SBTP.BLL
             Word.Application app = new Word.Application();
             System.IO.File.Copy(tempDoc, targetDoc); //将“方案模板”拷贝到目标路径
             Word.Document doc = new Word.Document();
+
+            object Obj_FileName = targetDoc;
+            object Visible = true;
+            object ReadOnly = false;
+            object missing = System.Reflection.Missing.Value;
+            object oMissing = Missing.Value;
+            object wdLine = Word.WdUnits.wdLine;
+            object wdGTB = Word.WdGoToItem.wdGoToBookmark;
+            object ncount = 1;
+
+            // 打开文件
+            doc = app.Documents.Open(ref Obj_FileName, ref missing, ref ReadOnly, ref missing,
+                ref missing, ref missing, ref missing, ref missing,
+                ref missing, ref missing, ref missing, ref Visible,
+                ref missing, ref missing, ref missing,
+                ref missing);
+            doc.Activate();
+
             try
             {
-                object Obj_FileName = targetDoc;
-                object Visible = true;
-                object ReadOnly = false;
-                object missing = System.Reflection.Missing.Value;
-                object oMissing = Missing.Value;
-                object wdLine = Word.WdUnits.wdLine;
-                object wdGTB = Word.WdGoToItem.wdGoToBookmark;
-                object ncount = 1;
 
-                // 打开文件
-                doc = app.Documents.Open(ref Obj_FileName, ref missing, ref ReadOnly, ref missing,
-                    ref missing, ref missing, ref missing, ref missing,
-                    ref missing, ref missing, ref missing, ref Visible,
-                    ref missing, ref missing, ref missing,
-                    ref missing);
-                doc.Activate();
-
-                #region 根据标签插入文本
+                #region 根据书签插入文本
                 if (bookmarks.Count > 0)
                 {
                     object WordMarkName;
@@ -199,7 +204,7 @@ namespace SBTP.BLL
                 }
                 #endregion
 
-                #region 根据标签插入表格
+                #region 根据书签插入表格
 
                 #region 021
                 init_021();
@@ -790,18 +795,62 @@ namespace SBTP.BLL
 
                 #endregion
 
-                // 输出完毕后关闭 doc 对象
-                object isSave = true;
-                doc.Close(ref isSave, ref missing, ref missing);
+                #region 根据书签插入性能文档
+                List<string> xn_bookmarks = new List<string>();
+                xn_bookmarks.Add("xn041");
+                xn_bookmarks.Add("xn042");
+
+                Dictionary<string, string> dict_tpji = DatHelper.Tpj_Read();
+                if (dict_tpji.Count > 0)
+                {
+                    using DataSet ds = DbHelperOleDb.Query("select * from PC_XTPJ_REPORT");
+                    DataTable dt = ds.Tables[0];
+                    Dictionary<string, byte[]> dic_xtpj_report = new Dictionary<string, byte[]>();
+                    foreach (var dr in dt.AsEnumerable())
+                    {
+                        dic_xtpj_report.Add(dr["mc"].ToString(), dr["xnbg"] as byte[]);
+                    }
+
+                    if (dic_xtpj_report.ContainsKey(dict_tpji["YTTPJ"]))
+                    {
+                        byte[] vs = dic_xtpj_report[dict_tpji["YTTPJ"]];
+                        string file = ConvertWord(vs);
+                        copy_doc(file);
+                        doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref missing, ref missing, "xn041");
+                        app.Selection.Range.InsertParagraph();
+                        app.Selection.Range.Paste();
+                    }
+
+                    if (dic_xtpj_report.ContainsKey(dict_tpji["KLTPJ"]))
+                    {
+                        byte[] vs = dic_xtpj_report[dict_tpji["KLTPJ"]];
+                        string file = ConvertWord(vs);
+                        copy_doc(file);
+                        doc.ActiveWindow.Selection.GoTo(ref wdGTB, ref missing, ref missing, "xn042");
+                        app.Selection.Range.InsertParagraph();
+                        app.Selection.Range.Paste();
+                    }
+                }
+                #endregion
+
+                #region 根据书签插入图片
+
+                #endregion
+
+                doc.Save();
+                doc.Close(ref oMissing, ref missing, ref missing);
+                app.Quit(ref oMissing, ref oMissing, ref oMissing);
                 result = true;
 
             }
             catch (Exception e)
             {
-                doc.Close();
+                doc.Save();
+                doc.Close(ref oMissing, ref missing, ref missing);
+                app.Quit(ref oMissing, ref oMissing, ref oMissing);
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
-
+                result = false;
             }
             return result;
         }
@@ -2381,20 +2430,97 @@ namespace SBTP.BLL
 
         public bool KSSC(out string message)
         {
-            if (!update_021(out message)) return false;
-            if (!update_022(out message)) return false;
-            if (!update_03(out message)) return false;
-            if (!update_031(out message)) return false;
-            if (!update_032(out message)) return false;
-            if (!update_033(out message)) return false;
-            if (!update_04(out message)) return false;
-            if (!update_0511(out message)) return false;
-            if (!update_0512(out message)) return false;
-            if (!update_052(out message)) return false;
-            if (!update_053(out message)) return false;
-            if (!update_061(out message)) return false;
-            if (!update_062(out message)) return false;
+
+            update_021(out message);
+            save_021();
+
+            update_022(out message);
+            save_0221();
+            save_0222();
+
+            update_03(out message);
+
+            update_031(out message);
+            save_031();
+
+            update_032(out message);
+            save_032();
+
+            update_033(out message);
+            save_033();
+
+            update_04(out message);
+            save_04();
+
+            update_0511(out message);
+            save_0511();
+            update_0512(out message);
+            save_0512();
+
+            update_052(out message);
+            save_052();
+
+            update_053(out message);
+            save_053();
+
+            update_061(out message);
+            save_061();
+
+            update_062(out message);
+            save_062();
+
+            message = "操作完成";
             return true;
+        }
+
+        private void copy_doc(string fileName)
+        {
+            Word.Application app = new Word.Application();
+            Word.Document doc = null;
+
+            object missing = Missing.Value;
+            object File = fileName;
+            object readOnly = false;
+            object isVisible = true;
+            object unknow = System.Type.Missing;
+
+            try
+            {
+                doc = app.Documents.Open(ref File, ref missing, ref readOnly, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref missing, ref isVisible, ref missing, ref missing, ref missing, ref missing);
+                doc.ActiveWindow.Selection.WholeStory();
+                doc.ActiveWindow.Selection.Copy();
+            }
+            finally
+            {
+                if (doc != null)
+                {
+                    doc.Close(ref missing, ref missing, ref missing);
+                    doc = null;
+                }
+
+                if (app != null)
+                {
+                    app.Quit(ref missing, ref missing, ref missing);
+                    app = null;
+                }
+            }
+        }
+
+        private string ConvertWord(byte[] data)
+        {
+            string workpath = Environment.CurrentDirectory;
+            string tempfolder = workpath + @"\_Temp";
+            string filepath = workpath + @"\_Temp\temp.doc";
+            if (!Directory.Exists(tempfolder))
+                Directory.CreateDirectory(tempfolder);
+            if (File.Exists(filepath))
+                File.Delete(filepath);
+            using (FileStream fs = new FileStream(filepath, FileMode.CreateNew))
+            using (BinaryWriter bw = new BinaryWriter(fs))
+            {
+                bw.Write(data, 0, data.Length);
+            }
+            return filepath;
         }
     }
 }

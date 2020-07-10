@@ -25,7 +25,11 @@ namespace SBTP.View.SGSJ
     /// </summary>
     public partial class _031 : Page
     {
+
         sgsj_bll bll;
+
+        private string imgPath = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";      //正式图片：初始化，保存使用的图片
+        private string imgTempPath = App.Project[0].PROJECT_LOCATION + @"\Images\_jwt.png"; //临时图片：更新生成此图片，保存后此图片删除
 
         public _031()
         {
@@ -40,15 +44,15 @@ namespace SBTP.View.SGSJ
             tb1.Text = this.bll.BookMarks["text_03"];
             tb2.Text = this.bll.BookMarks["text_031"];
             DataContext = this.bll;
+            check_img();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
             string path = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";
-            if (!bll.update03())
+            if (!bll.update_03(out string message))
             {
-                MessageBox.Show("操作失败：需要确保“目标区域设计概况-开发状况”已获得水井数量，再执行次操作。");
+                MessageBox.Show(message);
                 return;
             }
 
@@ -68,7 +72,7 @@ namespace SBTP.View.SGSJ
                 $"平均综合含水{Unity.ToDecimal(bll.Tags["平均综合含水"]).ToString("0.##")}%。";
 
             //BitmapImage bi = new BitmapImage(new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "img.png")));
-            //img.Source = bi;
+            //img.Source = bi; 
             //todo：井位图，路径修改在工程目录下
             //todo：井位图，初始化读取工程目录下，是否有历史图片
             Canvas canvas = WellMapGeneration.CreatMap(out Point size);
@@ -89,6 +93,21 @@ namespace SBTP.View.SGSJ
         {
             MainPage page = new MainPage();
             page.Generate();
+        }
+
+        private void check_img()
+        {
+            string imgPath = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";
+            if (System.IO.File.Exists(imgPath))
+            {
+                Uri uri = new Uri(imgPath);
+                img.Source = new BitmapImage(uri);
+            }
+        }
+
+        private void save_img()
+        {
+            var imgBmp = img.Source;
         }
     }
 }
