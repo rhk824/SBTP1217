@@ -25,6 +25,7 @@ namespace SBTP.View.SGSJ
     /// </summary>
     public partial class _031 : Page
     {
+
         sgsj_bll bll;
 
         private string imgPath = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";      //正式图片：初始化，保存使用的图片
@@ -49,9 +50,9 @@ namespace SBTP.View.SGSJ
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
             string path = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";
-            if (!bll.update03())
+            if (!bll.update_03(out string message))
             {
-                MessageBox.Show("操作失败：需要确保“目标区域设计概况-开发状况”已获得水井数量，再执行次操作。");
+                MessageBox.Show(message);
                 return;
             }
 
@@ -71,7 +72,7 @@ namespace SBTP.View.SGSJ
                 $"平均综合含水{Unity.ToDecimal(bll.Tags["平均综合含水"]).ToString("0.##")}%。";
 
             //BitmapImage bi = new BitmapImage(new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "img.png")));
-            //img.Source = bi;
+            //img.Source = bi; 
             //todo：井位图，路径修改在工程目录下
             //todo：井位图，初始化读取工程目录下，是否有历史图片
             Canvas canvas = WellMapGeneration.CreatMap(out Point size);
