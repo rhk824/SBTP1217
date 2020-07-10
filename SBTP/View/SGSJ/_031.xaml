@@ -48,7 +48,7 @@
 
                         </TextBox>
                         <TextBlock Text="吸水剖面测试结果数据表" />
-                        <DataGrid x:Name="dg" ColumnWidth="*" ItemsSource="{Binding oc_031}">
+                        <DataGrid x:Name="dg" ItemsSource="{Binding oc_031}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="井号" Binding="{Binding JH}"/>
                                 <DataGridTextColumn Header="完善程度" Binding="{Binding WSCD, StringFormat={}{0:0.##}}"/>

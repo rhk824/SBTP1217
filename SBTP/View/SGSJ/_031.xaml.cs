@@ -27,6 +27,9 @@ namespace SBTP.View.SGSJ
     {
         sgsj_bll bll;
 
+        private string imgPath = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";      //正式图片：初始化，保存使用的图片
+        private string imgTempPath = App.Project[0].PROJECT_LOCATION + @"\Images\_jwt.png"; //临时图片：更新生成此图片，保存后此图片删除
+
         public _031()
         {
             InitializeComponent();
@@ -40,9 +43,9 @@ namespace SBTP.View.SGSJ
             tb1.Text = this.bll.BookMarks["text_03"];
             tb2.Text = this.bll.BookMarks["text_031"];
             DataContext = this.bll;
+            check_img();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
             string path = Environment.CurrentDirectory + @"\ImageRecognition\jwt.png";
@@ -90,6 +93,21 @@ namespace SBTP.View.SGSJ
         {
             MainPage page = new MainPage();
             page.Generate();
+        }
+
+        private void check_img()
+        {
+            string imgPath = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";
+            if (System.IO.File.Exists(imgPath))
+            {
+                Uri uri = new Uri(imgPath);
+                img.Source = new BitmapImage(uri);
+            }
+        }
+
+        private void save_img()
+        {
+            var imgBmp = img.Source;
         }
     }
 }
