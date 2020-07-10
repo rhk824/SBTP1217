@@ -79,6 +79,7 @@ namespace SBTP.TPJtables
                 DataRow[] dataRows = dataTable.Select("MC='" + item.Row.ItemArray[0].ToString() + "'");
                 if (dataRows.Length > 0 && dataRows[0][1] != null)
                 {
+                    if (DataGrid1.Columns.Count == 0) break;
                     DataGridTemplateColumn templeColumn = DataGrid1.Columns[DataGrid1.Columns.Count - 1] as DataGridTemplateColumn;
                     FrameworkElement element = templeColumn.GetCellContent(DataGrid1.Items[i]);
                     Button currentButton = VisualTreeHelper.GetChild(element, 0) as Button;
@@ -295,18 +296,19 @@ namespace SBTP.TPJtables
             //弹出删除对话框
             if (result == MessageBoxResult.No) return;
             var s = DataGrid1.SelectedItems;
-            foreach (DataRowView item in s)
+            for (int i = 0; i < s.Count; i++)
             {
+                DataRowView item = s[i] as DataRowView;
                 string name;
                 string key;
                 if (tableName.Equals("PC_XTPY_STATUS"))
                 {
-                    name = item.Row.Field<string>("JH");
+                    name = item.Row.ItemArray[0].ToString();
                     key = "JH";
                 }
                 else
                 {
-                    name = item.Row.Field<string>("MC");
+                    name = item.Row.ItemArray[0].ToString();
                     key = "MC";
                 }
                 StringBuilder sqlStr = new StringBuilder();
@@ -315,13 +317,16 @@ namespace SBTP.TPJtables
                 if (!dr[0]["ZT"].ToString().Equals("0"))
                 {
                     DataRowView rowView = (DataRowView)DataGrid1.SelectedItem;
-                    Dispatcher.BeginInvoke(new Action(() => {
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
                         rowView.Delete();
                     }));
                     string sql = string.Format("Delete From {0} Where {2}='{1}'", tableName, name, key);
                     DbHelperOleDb.ExecuteSql(sql);
                     MessageBox.Show("删除成功!");
                 }
+                else
+                    MessageBox.Show("系统数据无法删除！");
             }
         }
     }

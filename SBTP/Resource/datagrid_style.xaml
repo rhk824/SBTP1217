@@ -236,11 +236,23 @@
                         <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="2" />
                         <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="3" />
                         
-                        <TextBlock Text="措施前" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
-                        <TextBlock Text="月产液" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
-                        <TextBlock Text="月产油" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1"/>
-                        <TextBlock Text="化学剂浓度" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
-                        <TextBlock Text="综合含水" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="3" />
+                        <TextBlock Text="措施前" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="4" />
+                        <StackPanel Orientation="Vertical" Grid.Row="1">
+                            <TextBlock Text="月产液" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                            <TextBlock Text="(m³/M)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+                            <TextBlock Text="月产油" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1"/>
+                            <TextBlock Text="(m³/M)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2">
+                            <TextBlock Text="化学剂浓度" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
+                            <TextBlock Text="(mg/L)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="3">
+                            <TextBlock Text="综合含水" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="3" />
+                            <TextBlock Text="(%)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -269,11 +281,23 @@
                         <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="2" />
                         <Border Grid.ColumnSpan="1" Style="{StaticResource border_header_2_2_style}" Grid.Row="1" Grid.Column="3" />
 
-                        <TextBlock Text="措施后" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="3" />
-                        <TextBlock Text="月产液" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
-                        <TextBlock Text="月产油" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1"/>
-                        <TextBlock Text="化学剂浓度" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
-                        <TextBlock Text="综合含水" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="3" />
+                        <TextBlock Text="措施后" Style="{StaticResource txt_header_1_style}" Grid.ColumnSpan="4" />
+                        <StackPanel Orientation="Vertical" Grid.Row="1">
+                            <TextBlock Text="月产液" Style="{StaticResource txt_header_2_style}" Grid.Row="1"/>
+                            <TextBlock Text="(m³/M)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="1">
+                            <TextBlock Text="月产油" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="1"/>
+                            <TextBlock Text="(m³/M)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2">
+                            <TextBlock Text="化学剂浓度" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="2" />
+                            <TextBlock Text="(mg/L)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="3">
+                            <TextBlock Text="综合含水" Style="{StaticResource txt_header_2_style}" Grid.Row="1" Grid.Column="3" />
+                            <TextBlock Text="(%)" Style="{StaticResource txt_header_2_style}"/>
+                        </StackPanel>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

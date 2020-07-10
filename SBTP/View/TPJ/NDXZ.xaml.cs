@@ -68,17 +68,19 @@ namespace SBTP.View.TPJ
         private void bindTpjxx(List<ccwx_tpjing_model> list, List<TPJND_Model> list1)
         {
             List = new ObservableCollection<TPJ>();
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < list1.Count; i++)
             {
+                var target = list.Find(x => x.jh.Equals(list1[i].JH));
+                if (target == null) continue;
                 List.Add(new TPJ()
                 {
-                    JH = list[i].jh,
+                    JH = list1[i].JH,
                     YTMC = list1[i].YTMC,
                     KLMC = list1[i].KLMC,
-                    K1 = list[i].k1,
-                    K2 = list[i].k2,
+                    K1 = target.k1,
+                    K2 = target.k2,
                     YTND = list1[i].YTND,
-                    ZZRFS = list[i].zzrfs,
+                    ZZRFS = target.zzrfs,
                     KLND = list1[i].KLND,
                     KLLJ = list1[i].KLLJ
                 });

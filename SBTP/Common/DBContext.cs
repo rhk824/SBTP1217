@@ -147,7 +147,7 @@ namespace SBTP.Common
                         PZCDS = Unity.ToDecimal(dt.Rows[i]["PZCDS"]),
                         YZMYL = Unity.ToDecimal(dt.Rows[i]["YZMYL"]),
                         YY = Unity.ToDecimal(dt.Rows[i]["YY"]),
-                        ZT = Unity.ToDecimal(dt.Rows[i]["ZT"]),
+                        ZT = Unity.ToDecimal(dt.Rows[i]["ZT"])
                     });
                 }
             }

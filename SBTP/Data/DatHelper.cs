@@ -39,7 +39,7 @@ namespace SBTP.Data
             "/STCS",
             // 调剖段塞设计
             "**TPDSSJ",
-            "*TQZRYND 10",
+            "*TQZRYND 15",
             "*GXSJ 0",
             "/GXSJ",
             "/TPDSSJ"
@@ -71,7 +71,7 @@ namespace SBTP.Data
 
             // 调剖段塞设计
             inputStr.Append("**TPDSSJ\r\n");
-            inputStr.Append("*TQZRYND 10\r\n");
+            inputStr.Append("*TQZRYND 15\r\n");
             inputStr.Append("*GXSJ 0\r\n");
             inputStr.Append("/GXSJ\r\n");
             inputStr.Append("/TPDSSJ\r\n");
@@ -99,9 +99,6 @@ namespace SBTP.Data
             inputStr += "**LAYER CHOICE\r\n";
             inputStr += "*TPC // 井号 调剖层 有效厚度顶深 有效厚度 注入分数 增注厚度 增注比例 增注入分数 连通数量 方法 测试日期 标识\r\n";
             inputStr += "*JZLT // 水井 油井 层位 砂岩厚度 有效厚度 渗透率\r\n";
-            inputStr += "*TPC1 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段\r\n";
-            inputStr += "*TPC2 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段\r\n";
-            inputStr += "*TPC3 // 井号 油层组 小层号 小层序号 砂岩顶深 有效厚度 渗透率 地层系数 拟调层 拟堵段\r\n";
             inputStr += "/LAYER CHOICE\r\n";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -149,7 +146,7 @@ namespace SBTP.Data
             inputStr += "*SJPJ // 井号 调剖层名 措施时间 调前注水 调前吸水分数 调前压力 调前视吸水指数 调后注水 调后吸水分数 调后压力 调后吸水指数 差值注水 差值吸水分数 差值压力 差值吸水指数\r\n";
             inputStr += "/SJPJ\r\n";
             //inputStr += "*YJPJ // 井号 月产液 月产油 化学剂浓度 综合含水 措施后月产液  月产油 化学剂浓度 综合含水 累积增油\r\n";
-            inputStr += "*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井";
+            inputStr += "*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井\r\n";
             inputStr += "/YJPJ\r\n";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -165,7 +162,7 @@ namespace SBTP.Data
         private static void CheckRLS0()
         {
             string inputStr = "**QKCS 区块参数\r\n";
-            inputStr += "*QKXZ // 温度  矿化度  ph  油藏压力\r\n";
+            inputStr += "*QKXZ // 温度  矿化度  ph  油藏压力 油饱和度\r\n";
             inputStr += "/QKXZ\r\n";
             inputStr += "*QTFS // 驱替类型 驱替液浓度  工作粘度\r\n";
             inputStr += "/QTFS\r\n";
@@ -173,7 +170,7 @@ namespace SBTP.Data
             inputStr += "/QTLB\r\n";
             inputStr += "*QTXS // 残余油饱和度  水相相渗端点值\r\n";
             inputStr += "/QTXS\r\n";
-            inputStr += "*OTHERS // 水粘度 油粘度 聚合物粘度 油密度 幂指数\r\n";
+            inputStr += "*OTHERS // 水粘度 油粘度 油密度 幂指数\r\n";
             inputStr += "/OTHERS\r\n";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS0.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
@@ -239,8 +236,8 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
             {
                 string inputStr = "**QKCS 区块参数\r\n";
-                inputStr += "*QKXZ // 温度  矿化度  ph  油藏压力\r\n";
-                inputStr += qkcs.Ycwd + "\t" + qkcs.Yckhd + "\t" + qkcs.Ycph + "\t" + qkcs.Ycyl + "\r\n";
+                inputStr += "*QKXZ // 温度  矿化度  ph  油藏压力 油饱和度\r\n";
+                inputStr += qkcs.Ycwd + "\t" + qkcs.Yckhd + "\t" + qkcs.Ycph + "\t" + qkcs.Ycyl + "\t" + qkcs.Ybhd+ "\r\n";
                 inputStr += "/QKXZ\r\n";
                 inputStr += "*QTFS // 驱替类型 驱替液浓度  工作粘度\r\n";
                 inputStr += qkcs.Fs + "\t" + qkcs.Qtn + "\t" + qkcs.Qtgn + "\r\n";
@@ -251,8 +248,8 @@ namespace SBTP.Data
                 inputStr += "*QTXS // 残余油饱和度  水相相渗端点值\r\n";
                 inputStr += qkcs.Cyybhd + "\t" + qkcs.Sxxsddz + "\r\n";
                 inputStr += "/QTXS\r\n";
-                inputStr += "*OTHERS // 水粘度 油粘度 聚合物粘度 油密度 幂指数\r\n";
-                inputStr += qkcs.Sn + "\t" + qkcs.Yn + "\t" + qkcs.Jn + "\t" + qkcs.Ym + "\t" + qkcs.Mvalue + "\r\n";
+                inputStr += "*OTHERS // 水粘度 油粘度 油密度 幂指数\r\n";
+                inputStr += qkcs.Sn + "\t" + qkcs.Yn + "\t" + qkcs.Ym + "\t" + qkcs.Mvalue + "\r\n";
                 inputStr += "/OTHERS\r\n";
                 sw.Write(inputStr);
             }
@@ -278,6 +275,7 @@ namespace SBTP.Data
                 qkcs.Yckhd = double.Parse(vs[1]);
                 qkcs.Ycph = double.Parse(vs[2]);
                 qkcs.Ycyl = double.Parse(vs[3]);
+                qkcs.Ybhd = double.Parse(vs[4]);
             }
             if (!data[qtfs_index + 1].ToString().Contains("/QTFS"))
             {
@@ -306,9 +304,9 @@ namespace SBTP.Data
                 string[] vs = data[other_index + 1].ToString().Split('\t');
                 qkcs.Sn = double.Parse(vs[0]);
                 qkcs.Yn = double.Parse(vs[1]);
-                qkcs.Jn = double.Parse(vs[2]);
-                qkcs.Ym = double.Parse(vs[3]);
-                qkcs.Mvalue = double.Parse(vs[4]);
+                //qkcs.Jn = double.Parse(vs[2]);
+                qkcs.Ym = double.Parse(vs[2]);
+                qkcs.Mvalue = double.Parse(vs[3]);
             }
 
             return qkcs;
@@ -444,15 +442,14 @@ namespace SBTP.Data
                         break;
                 }
             }
-            List<string> headerArry = Regex.Split(headerStr, "\\s", RegexOptions.IgnoreCase).ToList<string>();
+            List<string> headerArry = Regex.Split(headerStr, "\\s", RegexOptions.IgnoreCase).ToList();
             headerArry.RemoveRange(0, 3);
 
             string[] table = fileStr.Substring(0, fileStr.Length - 1).Split(',');
 
             for (int i = 0; i < table.Length; i++)
-            {
-                List<string> ow_group = new List<string>();
-                ow_group = table[i].Split('\t').ToList<string>();
+            {                
+                List<string> ow_group = table[i].Split('\t').ToList();
                 ow_group.RemoveRange(0, 3);
                 string[] itemArry = new string[4] { table[i].Split('\t')[0], table[i].Split('\t')[1], table[i].Split('\t')[2], string.Join(",", ow_group) };
 
@@ -875,7 +872,7 @@ namespace SBTP.Data
                 List<string> newLines = new List<string>();
                 //读取RLS1.DAT，提取文件结构，保存在数组
                 int startIndex = lines.IndexOf("*JZLT // 水井 油井 层位 砂岩厚度 有效厚度 渗透率");
-                int endIndex = lines.IndexOf("*TPC1 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段");
+                int endIndex = lines.IndexOf("/LAYER CHOICE");
                 //移除相关数据
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
                 lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
@@ -892,97 +889,6 @@ namespace SBTP.Data
                     newData.Add(row_str.ToString());
                 }
                 newData.Add("/JZLT\r\n");
-                newLines.InsertRange(startIndex + 1, newData);
-                sw.Write(string.Join("", newLines.ToArray()));
-                Flag = true;
-                return Flag;
-            }
-        }
-        /// <summary>
-        /// 保存调剖层的吸水剖面数据
-        /// </summary>
-        /// <returns></returns>
-        public static bool save_tpc_xspm(List<tpc_xspm_model> xspm_data)
-        {
-            bool Flag = false;
-            CheckRLS1();
-            List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT"));
-            using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", false, Encoding.UTF8))
-            {
-                List<string> newLines = new List<string>();
-                //读取RLS1.DAT，提取文件结构，保存在数组
-                int startIndex = lines.IndexOf("*TPC1 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段");
-                int endIndex = lines.IndexOf("*TPC2 // 井号 油层组 小层号 解释序号 测试日期 井段顶深 有效厚度 注入百分数 拟调层 拟堵段");
-                //移除相关数据
-                lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
-                lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
-                List<string> newData = new List<string>();
-                foreach (tpc_xspm_model item in xspm_data)
-                {
-                    StringBuilder row_str = new StringBuilder();
-                    row_str.AppendFormat("{0}\t", item.JH);
-                    row_str.AppendFormat("{0}\t", item.YCZ);
-                    row_str.AppendFormat("{0}\t", item.XCH);
-                    row_str.AppendFormat("{0}\t", item.JSXH);
-                    row_str.AppendFormat("{0}\t", item.CSRQ);
-                    row_str.AppendFormat("{0}\t", item.JDDS1);
-                    row_str.AppendFormat("{0}\t", item.YXHD);
-                    row_str.AppendFormat("{0}\t", item.ZRBFS);
-                    row_str.AppendFormat("{0}\t", item.ntc);
-                    row_str.AppendFormat("{0}\r\n", item.ndd);
-                    newData.Add(row_str.ToString());
-                }
-                newData.Add("/TPC1\r\n");
-                newLines.InsertRange(startIndex + 1, newData);
-                sw.Write(string.Join("", newLines.ToArray()));
-                Flag = true;
-                return Flag;
-            }
-        }
-        /// <summary>
-        /// 保存调剖层的吸水剖面（图像识别）数据
-        /// </summary>
-        /// <returns></returns>
-        public static bool save_tpc_xspm_img(List<tpc_xspm_model> data)
-        {
-            bool Flag = false;
-            return Flag;
-        }
-        /// <summary>
-        /// 保存调剖层的小层数据
-        /// </summary>
-        /// <returns></returns>
-        public static bool save_tpc_xcsj(List<tpc_xcsj_model> xcsj_data)
-        {
-            bool Flag = false;
-            CheckRLS1();
-            List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT"));
-            using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", false, Encoding.UTF8))
-            {
-                List<string> newLines = new List<string>();
-                //读取RLS1.DAT，提取文件结构，保存在数组
-                int startIndex = lines.IndexOf("*TPC3 // 井号 油层组 小层号 小层序号 砂岩顶深 有效厚度 渗透率 地层系数 拟调层 拟堵段");
-                int endIndex = lines.IndexOf("/LAYER CHOICE");
-                //移除相关数据
-                lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
-                lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
-                List<string> newData = new List<string>();
-                foreach (tpc_xcsj_model item in xcsj_data)
-                {
-                    string rowStr = "";
-                    rowStr += item.JH + "\t";
-                    rowStr += item.YCZ + "\t";
-                    rowStr += item.XCH + "\t";
-                    rowStr += item.XCXH + "\t";
-                    rowStr += item.SYDS + "\t";
-                    rowStr += item.SYHD + "\t";
-                    rowStr += item.STL + "\t";
-                    rowStr += item.dcxs + "\t";
-                    rowStr += item.ntc + "\t";
-                    rowStr += item.ndd + "\r\n";
-                    newData.Add(rowStr);
-                }
-                newData.Add("/TPC3\r\n");
                 newLines.InsertRange(startIndex + 1, newData);
                 sw.Write(string.Join("", newLines.ToArray()));
                 Flag = true;
@@ -1489,8 +1395,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_tpcjh(List<string> list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path));
             using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
@@ -1519,8 +1425,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_tpcxx(List<jcxx_tpcxx_model> tpcxx_list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path));
             using (StreamWriter sw = new StreamWriter(path, false, Encoding.UTF8))
@@ -1563,8 +1469,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_tpjxx(List<jcxx_tpjxx_model> tpjxx_list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path_string = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path_string));
             using (StreamWriter sw = new StreamWriter(path_string, false, Encoding.UTF8))
@@ -1599,8 +1505,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_tpcls(List<jcxx_tpcls_model> tpcls_list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path_string = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path_string));
             using (StreamWriter sw = new StreamWriter(path_string, false, Encoding.UTF8))
@@ -1640,8 +1546,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static bool save_jcxx_jgxx(List<jcxx_jgxx_model> jcxx_list)
         {
-            if (!check_rls(rls3, rls3_lines)) return false;
-
+            //if (!check_rls(rls3, rls3_lines)) return false;
+            CheckRLS3();
             string path_string = Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3);
             List<string> lines = new List<string>(File.ReadAllLines(path_string));
             using (StreamWriter sw = new StreamWriter(path_string, false, Encoding.UTF8))
@@ -1676,8 +1582,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<string> read_jcxx_tpcjh()
         {
-            List<string> list = new List<string>();
-            if (!check_rls(rls3, rls3_lines)) return list;
+            CheckRLS3();
+            List<string> list = new List<string>();            
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;
@@ -1699,8 +1605,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<jcxx_tpcxx_model> read_jcxx_tpcxx()
         {
+            CheckRLS3();
             List<jcxx_tpcxx_model> list = new List<jcxx_tpcxx_model>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;
@@ -1740,8 +1646,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<jcxx_tpjxx_model> read_jcxx_tpjxx()
         {
+            CheckRLS3();
             List<jcxx_tpjxx_model> list = new List<jcxx_tpjxx_model>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;
@@ -1774,8 +1680,8 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<jcxx_tpcls_model> read_jcxx_tpcls()
         {
+            CheckRLS3();
             List<jcxx_tpcls_model> list = new List<jcxx_tpcls_model>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
             bool flag1 = false;
             bool flag2 = false;
@@ -1792,7 +1698,6 @@ namespace SBTP.Data
                         Jj = Unity.ToDouble(vs[1]),
                         Zcjj = Unity.ToDouble(vs[2]),
                         dqrzl = Unity.ToDouble(vs[3]),
-                        //ysybhd = Unity.ToDouble(vs[4]),
                         ljzsl = Unity.ToDouble(vs[4]),
                         ljzjl = Unity.ToDouble(vs[5]),
                         Sqts = Unity.ToDouble(vs[6]),
@@ -1812,30 +1717,9 @@ namespace SBTP.Data
         /// <returns></returns>
         public static List<jcxx_jgxx_model> read_jcxx_jgxx()
         {
+            CheckRLS3();
             List<jcxx_jgxx_model> list = new List<jcxx_jgxx_model>();
-            //if (!check_rls(rls3, rls3_lines)) return list;
             List<string> lines = new List<string>(File.ReadAllLines(Path.Combine(string.Format(datPath, App.Project[0].PROJECT_LOCATION), rls3)));
-            //bool flag1 = false;
-            //bool flag2 = false;
-            //foreach (string line in lines)
-            //{
-            //if (flag1 == true && flag2 == true)
-            //{
-            //if (line.Contains("/JGXX")) break;
-            //string[] vs = line.Split('\t');
-            //list.Add(new jcxx_jgxx_model()
-            //{
-            //    yttpj = Unity.ToDouble(vs[0]),
-            //    kltpj = Unity.ToDouble(vs[1]),
-            //    xdyfj = Unity.ToDouble(vs[2]),
-            //    yy = Unity.ToDouble(vs[3]),
-            //    sg = Unity.ToDouble(vs[4]),
-            //    qt = Unity.ToDouble(vs[5]),
-            //});
-            //}
-            //if (line.Contains("**JCXX")) flag1 = true;
-            //if (line.Contains("*JGXX")) flag2 = true;
-            //}
             int startIndex = lines.FindIndex(x => x.Contains("*JGXX"));
             for (int i = startIndex + 1; i < lines.Count; i++)
             {
@@ -2179,7 +2063,6 @@ namespace SBTP.Data
             using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", false, Encoding.UTF8))
             {
                 List<string> newLines = new List<string>();
-                //int startIndex = lines.IndexOf("*YJPJ // 井号 月产液 月产油 化学剂浓度 综合含水 措施后月产液  月产油 化学剂浓度 综合含水 累积增油");
                 int startIndex = lines.IndexOf("*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井");
                 int endIndex = lines.IndexOf("/YJPJ");
                 lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
@@ -2190,6 +2073,8 @@ namespace SBTP.Data
                 {
                     StringBuilder sb = new StringBuilder();
                     sb.Append($"{item.JH}\t");
+                    sb.Append($"{item.CSSJ}\t");
+                    sb.Append($"{item.NHSSSL}\t");
                     sb.Append($"{item.CSQYCY}\t");
                     sb.Append($"{item.CSQYCYL}\t");
                     sb.Append($"{item.CSQHXJ}\t");
@@ -2198,7 +2083,8 @@ namespace SBTP.Data
                     sb.Append($"{item.CSHYCYL}\t");
                     sb.Append($"{item.CSHHXJ}\t");
                     sb.Append($"{item.CSHZHHS}\t");
-                    sb.Append($"{item.LJZY}\r\n");
+                    sb.Append($"{item.LJZY}\t");
+                    sb.Append($"{item.SSTPJ}\r\n");
                     newData.Add(sb.ToString());
                 }
                 newLines.InsertRange(startIndex + 1, newData);
@@ -2239,18 +2125,22 @@ namespace SBTP.Data
             dataArry.RemoveAt(dataArry.Count - 1);
             foreach (var item in dataArry)
             {
+                string[] resultArry = item.Split('\t');
                 YjxgModel yjxgModel = new YjxgModel()
                 {
-                    JH = item.Split('\t')[0],
-                    CSQYCY = double.Parse(item.Split('\t')[1]),
-                    CSQYCYL = double.Parse(item.Split('\t')[2]),
-                    CSQHXJ = double.Parse(item.Split('\t')[3]),
-                    CSQZHHS = double.Parse(item.Split('\t')[4]),
-                    CSHYCY = double.Parse(item.Split('\t')[5]),
-                    CSHYCYL = double.Parse(item.Split('\t')[6]),
-                    CSHHXJ = double.Parse(item.Split('\t')[7]),
-                    CSHZHHS = double.Parse(item.Split('\t')[8]),
-                    LJZY = double.Parse(item.Split('\t')[9]),
+                    JH = resultArry[0],
+                    CSSJ = resultArry[1],
+                    NHSSSL = double.Parse(resultArry[2]),
+                    CSQYCY = double.Parse(resultArry[3]),
+                    CSQYCYL = double.Parse(resultArry[4]),
+                    CSQHXJ = double.Parse(resultArry[5]),
+                    CSQZHHS = double.Parse(resultArry[6]),
+                    CSHYCY = double.Parse(resultArry[7]),
+                    CSHYCYL = double.Parse(resultArry[8]),
+                    CSHHXJ = double.Parse(resultArry[9]),
+                    CSHZHHS = double.Parse(resultArry[10]),
+                    LJZY = double.Parse(resultArry[11]),
+                    SSTPJ = resultArry[12]
                 };
                 yjxgModels.Add(yjxgModel);
             }

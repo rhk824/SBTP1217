@@ -8,7 +8,7 @@
       xmlns:calender="clr-namespace:SBTP.View.JCXZ"
       xmlns:tk="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
       mc:Ignorable="d" 
-      xmlns:Loading="clr-namespace:SBTP.BLL"
+      xmlns:Loading="clr-namespace:SBTP.BLL" xmlns:local1="clr-namespace:SBTP.Common"
       d:DesignHeight="520" d:DesignWidth="1000" Background="#eee"
       Title="TPYLYH">
 
@@ -93,8 +93,8 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTemplateColumn Header="井号" CellTemplate="{StaticResource jh}" />
                                 <DataGridTemplateColumn Header="调剖半径" CellTemplate="{StaticResource tpbj}"/>
-                                <DataGridTemplateColumn Header="增油" CellTemplate="{StaticResource zy}"/>
-                                <DataGridComboBoxColumn Header="优化半径" SelectedItemBinding="{Binding YHBJ,UpdateSourceTrigger=PropertyChanged}">
+                                <DataGridTemplateColumn Header="增油(m³)" CellTemplate="{StaticResource zy}"/>
+                                <DataGridComboBoxColumn Header="优化半径(m)" SelectedItemBinding="{Binding YHBJ,UpdateSourceTrigger=PropertyChanged}">
                                     <DataGridComboBoxColumn.EditingElementStyle>
                                         <Style TargetType="ComboBox">
                                             <Setter Property="ItemsSource" Value="{Binding Path=BJS}" />
@@ -109,8 +109,8 @@
                                     </DataGridComboBoxColumn.ElementStyle>
                                 </DataGridComboBoxColumn>
                                 <DataGridTemplateColumn Header="投产比" CellTemplate="{StaticResource tcb}"/>
-                                <DataGridTemplateColumn Header="优化增油" CellTemplate="{StaticResource yhzy}"/>
-                                <DataGridTemplateColumn Header="调剖剂用量" CellTemplate="{StaticResource tpjyl}"/>
+                                <DataGridTemplateColumn Header="优化增油(m³)" CellTemplate="{StaticResource yhzy}"/>
+                                <DataGridTemplateColumn Header="调剖剂用量(m³)" CellTemplate="{StaticResource tpjyl}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <Grid Grid.Row="1" Name="loading" Visibility="Collapsed"  Background="LightGray" Opacity="0.5">
@@ -131,14 +131,14 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,10,0">
                         <TextBlock VerticalAlignment="Center" Text="优化半径范围："/>
-                        <TextBox Name="radius_start" Text="44" Width="50"/>
+                        <TextBox Name="radius_start" Width="50" Text="40"/>
                         <TextBlock VerticalAlignment="Center" Text="-"/>
-                        <TextBox Name="radius_end" Text="55" Width="50"/>
+                        <TextBox Name="radius_end" Width="50" Text="75"/>
                         <TextBlock VerticalAlignment="Center" Text="m"/>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,0,10,0">
                         <TextBlock VerticalAlignment="Center" Text="步长:"/>
-                        <TextBox Name="step" Text="3" Width="50"/>
+                        <TextBox Name="step" Text="5" Width="50"/>
                     </StackPanel>
                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button Content="优化计算" Name="YHCalculation" Click="YHCalculation_Click"/>

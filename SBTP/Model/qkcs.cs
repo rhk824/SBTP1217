@@ -26,8 +26,9 @@ namespace SBTP.Model
         double jq = 0;
         double cyybhd = 0;
         double sxxsddz = 0;
-        double jn = 0;
+        //double jn = 0;
         double mvalue = 0.5;
+        double ybhd = 65;
 
         public double Ycwd { get => ycwd; set { ycwd = value; NotifyPropertyChanged("Ycwd"); } }
         public double Yckhd { get => yckhd; set { yckhd = value; NotifyPropertyChanged("Yckhd"); } }
@@ -47,8 +48,9 @@ namespace SBTP.Model
         public double Cyybhd { get => cyybhd; set { cyybhd = value; NotifyPropertyChanged("Cyybhd"); } }
         public double Sxxsddz { get => sxxsddz; set { sxxsddz = value; NotifyPropertyChanged("Sxxsddz"); } }
 
-        public double Jn { get => jn; set { jn = value; NotifyPropertyChanged("Jn"); } }
+       // public double Jn { get => jn; set { jn = value; NotifyPropertyChanged("Jn"); } }
         public double Mvalue { get => mvalue; set { mvalue = value; NotifyPropertyChanged("Mvalue"); } }
+        public double Ybhd { get => ybhd; set { ybhd = value; NotifyPropertyChanged("Ybhd"); } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

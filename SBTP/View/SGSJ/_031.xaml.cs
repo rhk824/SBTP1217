@@ -48,8 +48,8 @@ namespace SBTP.View.SGSJ
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            string path = Environment.CurrentDirectory + @"\ImageRecognition\jwt.png";
-            if (!bll.update_03(out string message))
+            string path = App.Project[0].PROJECT_LOCATION + @"\Images\jwt.png";
+            if (!bll.update03())
             {
                 MessageBox.Show("操作失败：需要确保“目标区域设计概况-开发状况”已获得水井数量，再执行次操作。");
                 return;
@@ -74,8 +74,7 @@ namespace SBTP.View.SGSJ
             //img.Source = bi;
             //todo：井位图，路径修改在工程目录下
             //todo：井位图，初始化读取工程目录下，是否有历史图片
-            Point size = new Point();
-            Canvas canvas = WellMapGeneration.CreatMap(out size);
+            Canvas canvas = WellMapGeneration.CreatMap(out Point size);
             utils.SaveCanvas(size, canvas, 96, path);
             Uri uri = new Uri(path, UriKind.RelativeOrAbsolute);
             img.Source = new BitmapImage(uri);

@@ -85,9 +85,8 @@ namespace SBTP.BLL
                     JH = Unity.ToString(dt.Rows[i]["jh"]),
                     YCZ = Unity.ToString(dt.Rows[i]["ycz"]),
                     XCH = Unity.ToString(dt.Rows[i]["xch"]),
-                    JSXH = Unity.ToInt(dt.Rows[i]["jsxh"]),
+                    JSXH = Unity.ToInt(dt.Rows[i]["xfch"]),
                     JDDS1 = Unity.ToDouble(dt.Rows[i]["jdds1"]),
-                    JDDS2 = Unity.ToDouble(dt.Rows[i]["jdds2"]),
                     YXHD = Unity.ToDouble(dt.Rows[i]["yxhd"]),
                     ZRBFS = Unity.ToDouble(dt.Rows[i]["zrbfs"])
                 });
@@ -126,16 +125,6 @@ namespace SBTP.BLL
                 bs_string = "吸水剖面",
                 csrq = csrq.CSRQ
             };
-        }
-
-        /// <summary>
-        /// 保存数据
-        /// </summary>
-        /// <returns></returns>
-        public bool save_data()
-        {
-            if (oc_xspm == null) return false;
-            return DatHelper.save_tpc_xspm(oc_xspm.ToList());
         }
 
         #endregion

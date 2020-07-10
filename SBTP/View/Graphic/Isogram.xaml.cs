@@ -95,7 +95,6 @@ namespace SBTP.View.Graphic
 
                 value.ForEach(x => targetPointsCollection.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(x.Key,
                     new KeyValuePair<double, Point>(x.Value.Key, new Point(x.Value.Value.X - min_x + 500, x.Value.Value.Y - min_y + 500)))));
-                //                GraphicGeneration();
             }
             get => targetPointsCollection;
         }
@@ -412,37 +411,24 @@ namespace SBTP.View.Graphic
         {
             foreach (var i in dic)
             {
+                double value = i.Value.Key;
                 var point_ = newTestPoint();
                 point_.ToolTip = new ToolTip
                 {
-                    Content = "井号:" + i.Key + "\r\n" + value_name + ":" + i.Value.Key
+                    Content = "井号:" + i.Key + "\r\n" + value_name + ":" + value.ToString()
                 };
                 TextBlock wellname = new TextBlock()
                 {
-                    Text = i.Key,
+                    Text = "Name:" + i.Key + "\r\n" + "Value:" + value.ToString(),
                     Foreground = Brushes.Blue
                 };
                 Canvas.SetLeft(point_, i.Value.Value.X);
                 Canvas.SetTop(point_, i.Value.Value.Y);
                 Canvas.SetLeft(wellname, i.Value.Value.X);
-                Canvas.SetTop(wellname, i.Value.Value.Y - 20);
+                Canvas.SetTop(wellname, i.Value.Value.Y - 40);
                 myConvas.Children.Add(point_);
                 myConvas.Children.Add(wellname);
             }
-        }
-
-        /// <summary>
-        /// 网格点样式
-        /// </summary>
-        /// <returns></returns>
-        private Ellipse newPoint()
-        {
-            Ellipse newpoint = new Ellipse();
-            newpoint.Height = 10;
-            newpoint.Width = 10;
-            newpoint.Fill = new SolidColorBrush(Colors.Red);
-            newpoint.Stroke = new SolidColorBrush(Colors.Red);
-            return newpoint;
         }
 
         /// <summary>
@@ -451,9 +437,11 @@ namespace SBTP.View.Graphic
         /// <returns></returns>
         private RoundButton newTestPoint()
         {
-            RoundButton roundButton = new RoundButton();
-            roundButton.EllipseDiameter = 30;
-            roundButton.FillColor = Brushes.Blue;
+            RoundButton roundButton = new RoundButton
+            {
+                EllipseDiameter = 30,
+                FillColor = Brushes.Blue
+            };
             return roundButton;
         }
 

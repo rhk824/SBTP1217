@@ -15,11 +15,16 @@ namespace SBTP.BLL
 {
     public class WellMapGeneration
     {
+        //调剖井
         public static Dictionary<string,Point> WsdPoints = new Dictionary<string,Point>();
-
+        //非调剖井
         public static Dictionary<string, Point> ExcWsdPoints = new Dictionary<string, Point>();
+        //油井
+        private static Dictionary<string, Point> oilPoints = new Dictionary<string, Point>();
+        //井组
+        public static List<zcjz_well_model> wellGroup = Data.DatHelper.read_zcjz();
 
-        public static DataTable well_group = Data.DatHelper.Read();
+        public static List<string> tpjs = Data.DatHelper.TPJRead();
 
 
         public static void dataSource()
@@ -27,24 +32,40 @@ namespace SBTP.BLL
             WsdPoints.Clear();
             ExcWsdPoints.Clear();
             //完善度
-            DataTable wsd = Data.DatHelper.WsdRead();
+            //DataTable wsd = Data.DatHelper.WsdRead();
             //井坐标
             DataTable Xys = GetWellLocation();
 
-            foreach (DataRow dr in wsd.Rows)
+            foreach (string jh in tpjs)
             {
-                DataRow[] dataRows = Xys.Select("JH='" + dr[0].ToString() + "'");
+                DataRow[] dataRows = Xys.Select("JH='" + jh + "'");
                 string x = dataRows[0].ItemArray[2].ToString();
                 string y = dataRows[0].ItemArray[3].ToString();
-                WsdPoints.Add(dr[0].ToString(), new Point(double.Parse(x), double.Parse(y)));
+                WsdPoints.Add(jh, new Point(double.Parse(x), double.Parse(y)));
             }
-            var Except = from i in well_group.AsEnumerable() where !(from j in wsd.AsEnumerable() select j.Field<string>("水井井号")).Contains(i.Field<string>("水井井号")) select i;
-            foreach (DataRow item in Except)
+            //非调剖井
+            var Except = from i in wellGroup where !tpjs.Contains(i.JH) select i;
+            foreach (zcjz_well_model item in Except.ToList())
             {
-                DataRow[] dataRows = Xys.Select("JH='" + item[0].ToString() + "'");
-                ExcWsdPoints.Add(item[0].ToString(), new Point(double.Parse(dataRows[0][2].ToString()), double.Parse(dataRows[0][3].ToString())));
+                DataRow[] dataRows = Xys.Select("JH='" + item.JH + "'");
+                ExcWsdPoints.Add(item.JH, new Point(double.Parse(dataRows[0][2].ToString()), double.Parse(dataRows[0][3].ToString())));
             }
-
+            //油井
+            foreach (zcjz_well_model item in wellGroup)
+            {            
+                List<string> oils = item.oil_wells.Split(',').ToList();
+                if (oils.Count != 0)
+                {
+                    foreach (string oil in oils)
+                    {
+                        DataRow[] dataRows = Xys.Select("JH='" + oil + "'");
+                        if (oilPoints.ContainsKey(oil)|| dataRows.Length==0) continue;
+                        string x = dataRows[0].ItemArray[2].ToString();
+                        string y = dataRows[0].ItemArray[3].ToString();
+                        oilPoints.Add(oil, new Point(double.Parse(x), double.Parse(y)));
+                    }
+                }
+            }
         }
 
         public static Canvas CreatMap(out Point size)
@@ -56,6 +77,9 @@ namespace SBTP.BLL
                     total.Add(item.Value);
             if (ExcWsdPoints.Count != 0)
                 foreach (var item in ExcWsdPoints)
+                    total.Add(item.Value);
+            if (oilPoints.Count != 0)
+                foreach (var item in oilPoints)
                     total.Add(item.Value);
 
             if (total.Count == 0)
@@ -76,41 +100,63 @@ namespace SBTP.BLL
                 Visibility = Visibility.Visible,
                 Background = Brushes.LightGray
             };
+            //添加调剖井
             foreach (var i in WsdPoints)
             {
-                RoundButton wsd = new RoundButton()
-                {
-                    EllipseDiameter = 25,
-                    FillColor = Brushes.Green,
-                };
-                Label label = new Label
-                {
-                    FontSize=18,
-                    Content = i.Key
-                };
-                canvas.Children.Add(wsd);
-                canvas.Children.Add(label);
-                Canvas.SetLeft(wsd, i.Value.X - offsetLeft);
-                Canvas.SetTop(wsd, i.Value.Y - offsetTop);
-                Canvas.SetLeft(label, i.Value.X - offsetLeft+20);
-                Canvas.SetTop(label, i.Value.Y - offsetTop+20);
-            }
-            foreach (var i in ExcWsdPoints)
-            {
-                RoundButton wsd = new RoundButton()
+                RoundButton point = new RoundButton()
                 {
                     EllipseDiameter = 25,
                     FillColor = Brushes.Red,
                 };
                 Label label = new Label
                 {
+                    FontSize=18,
+                    Content = i.Key
+                };
+                canvas.Children.Add(point);
+                canvas.Children.Add(label);
+                Canvas.SetLeft(point, i.Value.X - offsetLeft);
+                Canvas.SetTop(point, i.Value.Y - offsetTop);
+                Canvas.SetLeft(label, i.Value.X - offsetLeft+20);
+                Canvas.SetTop(label, i.Value.Y - offsetTop+20);
+            }
+            //添加水井
+            foreach (var i in ExcWsdPoints)
+            {
+                RoundButton point = new RoundButton()
+                {
+                    EllipseDiameter = 25,
+                    FillColor = Brushes.Blue,
+                };
+                Label label = new Label
+                {
                     FontSize = 18,
                     Content = i.Key
                 };
-                canvas.Children.Add(wsd);
+                canvas.Children.Add(point);
                 canvas.Children.Add(label);
-                Canvas.SetLeft(wsd, i.Value.X - offsetLeft);
-                Canvas.SetTop(wsd, i.Value.Y - offsetTop);
+                Canvas.SetLeft(point, i.Value.X - offsetLeft);
+                Canvas.SetTop(point, i.Value.Y - offsetTop);
+                Canvas.SetLeft(label, i.Value.X - offsetLeft + 20);
+                Canvas.SetTop(label, i.Value.Y - offsetTop + 20);
+            }
+            //添加油井
+            foreach (var i in oilPoints)
+            {
+                RoundButton point = new RoundButton()
+                {
+                    EllipseDiameter = 25,
+                    FillColor = Brushes.Black,
+                };
+                Label label = new Label
+                {
+                    FontSize = 18,
+                    Content = i.Key
+                };
+                canvas.Children.Add(point);
+                canvas.Children.Add(label);
+                Canvas.SetLeft(point, i.Value.X - offsetLeft);
+                Canvas.SetTop(point, i.Value.Y - offsetTop);
                 Canvas.SetLeft(label, i.Value.X - offsetLeft + 20);
                 Canvas.SetTop(label, i.Value.Y - offsetTop + 20);
             }

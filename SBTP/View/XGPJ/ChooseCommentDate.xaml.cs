@@ -1,4 +1,5 @@
-﻿using System;
+﻿using edu.stanford.nlp.patterns.surface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +20,18 @@ namespace SBTP.View.XGPJ
     /// </summary>
     public partial class ChooseCommentDate : Window
     {
-        public ChooseCommentDate()
+        private TPJXGPJ TPJXGPJ;
+        public ChooseCommentDate(TPJXGPJ parent)
         {
             InitializeComponent();
+            TPJXGPJ = parent;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (StartTime.Text.Equals(string.Empty) || EndTime.Text.Equals(string.Empty))
+                return;
             TPJXGPJ.comment_st = DateTime.Parse(StartTime.Text);
             TPJXGPJ.comment_et = DateTime.Parse(EndTime.Text);
             Close();

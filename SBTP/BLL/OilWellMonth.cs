@@ -30,16 +30,16 @@ namespace SBTP.BLL
             strSql.Append("insert into OIL_WELL_MONTH (");
             strSql.Append("JH,NY,TS,YCYL,YCSL,LY,CCJHWND,ZT)");
             strSql.Append(" values(");
-            strSql.Append("@JH,@NY,@TS,@YCYL,@YCSL,@DYM,@YY,@TY,@LY,@CCJHWND,@ZT)");
+            strSql.Append("@JH,@NY,@TS,@YCYL,@YCSL,@LY,@CCJHWND,@ZT)");
 
             foreach (Oilwell_monthModel om in modellist)
             {
                 OleDbParameter[] parameters = { 
                    new OleDbParameter("@JH",OleDbType.VarChar,255), 
-                   new OleDbParameter("@NY",OleDbType.DBDate,255),   
-                   new OleDbParameter("@TS",OleDbType.VarChar,255),   
-                   new OleDbParameter("@YCYL",OleDbType.VarChar,255),   
-                   new OleDbParameter("@YCSL",OleDbType.VarChar,255),    
+                   new OleDbParameter("@NY",OleDbType.DBDate,255),
+                   new OleDbParameter("@TS",OleDbType.VarChar,255),
+                   new OleDbParameter("@YCYL",OleDbType.VarChar,255),
+                   new OleDbParameter("@YCSL",OleDbType.VarChar,255),
                    new OleDbParameter("@LY",OleDbType.VarChar,255),
                    new OleDbParameter("@CCJHWND",OleDbType.VarChar,255),
                    new OleDbParameter("@ZT",OleDbType.Integer,255)
@@ -47,10 +47,10 @@ namespace SBTP.BLL
                 parameters[0].Value = om.JH;
                 parameters[1].Value = DateTime.ParseExact(om.NY, Unity.DateMathed(om.NY), null);
                 parameters[2].Value = om.TS;
-                parameters[3].Value = om.YCYL;
-                parameters[4].Value = om.YCSL;
+                parameters[3].Value = Unity.ToDouble(om.YCYL);
+                parameters[4].Value = Unity.ToDouble(om.YCSL);
                 parameters[5].Value = om.LY;
-                parameters[6].Value = om.CCJHWND;
+                parameters[6].Value = Unity.ToDouble(om.CCJHWND);
                 parameters[7].Value = (int)App.Mycache.Get("cszt");
 
                 DictionaryEntry de = new DictionaryEntry();

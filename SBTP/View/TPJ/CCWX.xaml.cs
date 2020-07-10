@@ -253,14 +253,7 @@ namespace SBTP.View.TPJ
                     x.Selected = false;
             });
             bll.tpjing = selectItem;
-            if (rb_lhf.IsChecked == true)
-            {
-                nav_algorithm("lhf");
-                if (selectItem.IsCustomize)
-                    ccwx_lhf_bll.isChecked = true;
-                else
-                    ccwx_lhf_bll.isChecked = false;
-            }
+            if (rb_lhf.IsChecked == true) nav_algorithm("lhf");
             if (rb_gsf.IsChecked == true) nav_algorithm("gsf");
             if (rb_ckf.IsChecked == true) nav_algorithm("ckf");
         }

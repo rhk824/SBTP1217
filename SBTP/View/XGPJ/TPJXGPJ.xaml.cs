@@ -2,6 +2,7 @@
 using Maticsoft.DBUtility;
 using SBTP.BLL;
 using SBTP.Common;
+using SBTP.Data;
 using SBTP.View.TPJ;
 using System;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace SBTP.View.XGPJ
             }
         }
         /// <summary>
-        /// 用量
+        /// 措施日期
         /// </summary>
         public string CSSJ
         {
@@ -82,7 +83,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _TQZS = value;
+                _TQZS = Math.Round(value,3);
                 Changed("TQZS");
             }
         }
@@ -94,7 +95,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _TQXSFS = value;
+                _TQXSFS = Math.Round(value, 3);
                 Changed("TQXSFS");
             }
         }
@@ -106,7 +107,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _TQYL = value;
+                _TQYL = Math.Round(value, 3);
                 Changed("TQYL");
             }
         }
@@ -118,7 +119,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _TQXSZS = value;
+                _TQXSZS = Math.Round(value, 3);
                 Changed("TQXSZS");
             }
         }
@@ -130,7 +131,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _THZS = value;
+                _THZS = Math.Round(value, 3);
                 Changed("THZS");
             }
         }
@@ -142,7 +143,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _THYL = value;
+                _THYL = Math.Round(value, 3);
                 Changed("THYL");
             }
         }
@@ -154,7 +155,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _THXSFS = value;
+                _THXSFS = Math.Round(value, 3);
                 Changed("THXSFS");
             }
         }
@@ -166,7 +167,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _THXSZS = value;
+                _THXSZS = Math.Round(value, 3);
                 Changed("THXSZS");
             }
         }
@@ -178,7 +179,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _CZZS = value;
+                _CZZS = Math.Round(value, 3);
                 Changed("CZZS");
             }
         }
@@ -190,7 +191,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _CZXSFS = value;
+                _CZXSFS = Math.Round(value, 3);
                 Changed("CZXSFS");
             }
         }
@@ -202,7 +203,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _CZYL = value;
+                _CZYL = Math.Round(value, 3);
                 Changed("CZYL");
             }
         }
@@ -214,7 +215,7 @@ namespace SBTP.View.XGPJ
             }
             set
             {
-                _CZXSZS = value;
+                _CZXSZS = Math.Round(value, 3);
                 Changed("CZXSZS");
             }
         }
@@ -230,28 +231,39 @@ namespace SBTP.View.XGPJ
     /// <summary>
     /// TPJXGPJ.xaml 的交互逻辑
     /// </summary>
-    public partial class TPJXGPJ : Page
+    public partial class TPJXGPJ : Page,INotifyPropertyChanged
     {
-        public static ObservableCollection<TpxgModel> tpxgModels { get; set; } = new ObservableCollection<TpxgModel>();
-        ObservableCollection<string> dataSource;
+        private ObservableCollection<TpxgModel> tpxgs;
+        public ObservableCollection<TpxgModel> tpxgModels { get => tpxgs; set { tpxgs = value; Changed("tpxgModels"); } }
+        ObservableCollection<string> dataSource { set; get; }
         //笼统注入井数据集
-        private static DataTable ltzrj;
+        private DataTable ltzrj;
         //分注井数据集
-        private static DataTable fzj;
+        private DataTable fzj;
         //结果集
-        private static DataTable result;
+        private DataTable result;
         private delegate void MethodCollecytion();
         private MethodCollecytion Methods;
 
-        public static DateTime comment_st { get; set; }
-        public static DateTime comment_et { get; set; }
+        #region 属性更改通知
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Changed(string PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+        #endregion
+
+        public DateTime comment_st { get; set; }
+        public DateTime comment_et { get; set; }
+       
 
         public TPJXGPJ()
         {
             InitializeComponent();
-            Methods += Ltzrj_Awi_cal;
-            Methods += Fzj_Awi_cal;
+            DataContext = this;
             this.Loaded += ListInitialize;
+            Methods += Ltzrj_Awi_cal;
+            Methods += Fzj_Awi_cal;          
         }
 
         #region 吸水指数计算
@@ -362,7 +374,7 @@ namespace SBTP.View.XGPJ
         {
             dataSource = new ObservableCollection<string>();
             tpxgModels = new ObservableCollection<TpxgModel>();
-            if (Data.DatHelper.TpjpjRead() != null)
+            if (DatHelper.TpjpjRead() != null)
             {
                 List<string> names = new List<string>();
                 Data.DatHelper.TpjpjRead().ForEach(x => { tpxgModels.Add(x); names.Add(x.JH); });
@@ -371,7 +383,6 @@ namespace SBTP.View.XGPJ
             }
             else
                 Data.DatHelper_RLS4.read_XGYC_ZRJ().ForEach(x => dataSource.Add(x.JH));
-            tpxg_datagrid.DataContext = tpxgModels;
             tpj_list.ItemsSource = dataSource;
         }
 
@@ -381,7 +392,7 @@ namespace SBTP.View.XGPJ
             if ((e.Source as RadioButton).Content.ToString().Equals("生产动态"))
                 Container.NavigationService.Navigate(new TPJ_SCDT(tpxgModels));
             else
-                Container.NavigationService.Navigate(new TPJ_XSPM(tpxgModels));
+                Container.NavigationService.Navigate(new TPJ_XSPM(this));
         }
 
         private void DataGrid_LoadingRow(object sender, DataGridRowEventArgs e)
@@ -436,10 +447,11 @@ namespace SBTP.View.XGPJ
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private void Comment_Click(object sender, RoutedEventArgs e)
         {
-            new ChooseCommentDate().ShowDialog();
+            new ChooseCommentDate(this).ShowDialog();
 
             run_comment_st.Text = Unity.DateTimeToString(comment_st, "yyyy年MM月");
             run_comment_et.Text = Unity.DateTimeToString(comment_et, "yyyy年MM月");
+            string[] date = DatHelper.TPJParaRead();
 
             var query = DBContext.db_water_well_month__zt1()
                 .Where(p => p.NY >= comment_st && p.NY <= comment_et)
@@ -448,11 +460,11 @@ namespace SBTP.View.XGPJ
             if (query.Any())
             {
                 foreach (var item in tpxgModels)
-                {
-                    List<Model.DB_WATER_WELL_MONTH> query_item = query.Where(p => p.JH == item.JH && p.YZSL > 0 && p.YY >0).ToList();
+                {                   
+                    var query_item = query.FindAll(p => p.JH.Equals(item.JH) && !p.YY.Equals(0) && !p.TS.Equals(0)&& !p.YZSL.Equals(0)).ToList();
                     if (query_item.Any())
                     {
-                        item.THZS = (double)query_item.Sum(p => p.YZSL / p.TS);
+                        item.THZS = (double)query_item.Sum(p => p.YZSL+p.YZMYL)/ WaterWellMonth.dayCountCal(item.JH, comment_st.ToShortDateString(),comment_et.ToShortDateString());
                         item.THXSFS = 0;    //用户输入
                         item.THYL = (double)(query_item.Sum(p => p.YZSL) / query_item.Sum(p => p.TS));
                         item.THXSZS = (double)query_item.Average(p => p.YZSL / p.TS / p.YY);
@@ -462,53 +474,7 @@ namespace SBTP.View.XGPJ
                         item.CZXSZS = item.THXSZS - item.TQXSZS;
                     }
                 }
-            }
-
-            
-
-            //int monthCount = int.Parse(string.IsNullOrWhiteSpace(pjys.Text) ? "0" : pjys.Text);
-            //if (tpxgModels.Count == 0 || monthCount == 0) return;
-            //double thzs_sum = 0;
-            //double thyl_sum = 0;
-            //double thawi_sum = 0;
-            //foreach (var item in tpxgModels)
-            //{
-            //    if (string.IsNullOrWhiteSpace(item.CSSJ)) continue;
-            //    DataTable dataTable = Qury(item.CSSJ, monthCount);
-            //    if (dataTable.Rows.Count == 0) continue;
-            //    //获取计算吸水指数的基础数据
-            //    GetDatas(item.CSSJ, monthCount);
-            //    Methods();
-
-            //    if (dataTable == null) continue;
-            //    DataRow[] targetWell = dataTable.Select("JH='" + item.JH + "'");
-            //    DataRow[] targetWellsAwi = result.Select("JH='" + item.JH + "'");
-            //    double lzmyl_n = double.Parse(targetWell[targetWell.Length - 1]["LZMYL"].ToString());
-            //    double ljzsl_n = double.Parse(targetWell[targetWell.Length - 1]["LJZSL"].ToString());
-            //    double lzmyl_1 = double.Parse(targetWell[0]["LZMYL"].ToString());
-            //    double ljzsl_1 = double.Parse(targetWell[0]["LJZSL"].ToString());
-            //    double awi_sum = 0;
-            //    int length = targetWellsAwi.Length;
-            //    foreach (DataRow dataRow in targetWellsAwi)
-            //    {
-            //        if (double.Parse(dataRow["TS"].ToString()) == 0)
-            //            length--;
-            //        else
-            //            awi_sum += double.Parse(dataRow["AWI"].ToString());
-            //    }
-            //    //调后吸水指数
-            //    item.THXSZS = length == 0 ? 0 : Math.Round(awi_sum / length, 3);
-            //    //调后注水
-            //    item.THZS = Math.Round((lzmyl_n + ljzsl_n - lzmyl_1 - ljzsl_1) * 10000 / (monthCount * 30), 3);
-            //    //调后压力
-            //    item.THYL = awi_sum == 0 ? 0 : Math.Round((lzmyl_n + ljzsl_n - lzmyl_1 - ljzsl_1) * 10000 * length / (awi_sum * monthCount * 30), 3);
-            //    thzs_sum += item.THZS;
-            //    thyl_sum += item.THYL;
-            //    thawi_sum += item.THXSZS * item.THYL;
-            //}
-            //thyl_average.Content =Math.Round(thyl_sum / tpxgModels.Count,5);
-            //thzs_average.Content =Math.Round(thzs_sum / tpxgModels.Count,5);
-            //thawi_average.Content = Math.Round(thawi_sum / thyl_sum, 5);
+            }        
         }
 
         private DataTable Qury(string start, int MonthCount)
@@ -530,70 +496,67 @@ namespace SBTP.View.XGPJ
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1307:指定 StringComparison", Justification = "<挂起>")]
         private void btn_right_Click(object sender, RoutedEventArgs e)
-        {
+        {          
             if (tpj_list.SelectedItem == null) return;
+            var select = tpj_list.SelectedItems.OfType<string>().ToList();
             List<string> source = dataSource.ToList();
+            var zryc = DatHelper_RLS4.read_XGYC_ZRJ();
+            var tpcxx = DatHelper.read_jcxx_tpcxx();
 
-            var zryc = Data.DatHelper_RLS4.read_XGYC_ZRJ();
-            var tpcxx = Data.DatHelper.read_jcxx_tpcxx();
-
-            for (int i = 0; i < tpj_list.SelectedItems.Count; i++)
+            for (int i = 0; i < select.Count; i++)
             {
-                var query = zryc.Find(p => p.JH.Equals(tpj_list.SelectedItems[i]));
-                if (query == null)
+                var query = zryc.Find(p => p.JH.Equals(select[i]));
+                TpxgModel newtpxg = new TpxgModel() { JH = select[i].ToString() };
+                if (query != null)
                 {
-                    tpxgModels.Add(new TpxgModel() { JH = tpj_list.SelectedItems[i].ToString() });
-                }
-                else
-                {
-                    string jh = tpj_list.SelectedItems[i].ToString();
+                    string jh = select[i].ToString();
                     double xsfs = 0;
                     var tpcxx_item = tpcxx.Find(p => p.jh.Equals(jh));
                     if (tpcxx_item != null)
                     {
                         xsfs = tpcxx_item.zrfs;
                     }
-                    tpxgModels.Add(new TpxgModel()
-                    {
-                        JH = jh,
-                        TPCM = query.TPCNAME,          //todo：“rls4.dat *zryc”没有调剖层号
-                        TQZS = query.RZYL,          //todo：“rls4.dat *zryc”没有日注液量
-                        TQYL = query.CSQ_DXYL,
-                        TQXSFS = xsfs,
-                        TQXSZS = query.CSQ_SXSZS,
-                    });
+                    newtpxg.TPCM = query.TPCNAME;
+                    newtpxg.TQZS = query.RZYL;
+                    newtpxg.TQYL = query.CSQ_DXYL;
+                    newtpxg.TQXSFS = xsfs;
+                    newtpxg.TQXSZS = query.CSQ_SXSZS;                    
                 }
-                source.Remove(tpj_list.SelectedItems[i].ToString());
+                tpxgModels.Add(newtpxg);
+                //tpj_list.Items.Remove(select[i]);
+                dataSource.Remove(select[i].ToString());
             }
             tpxgModels = new ObservableCollection<TpxgModel>(tpxgModels.OrderBy(p => p.CSSJ));
-            dataSource.Clear();
-            for (int i = 0; i < source.Count; i++)
-            {
-                dataSource.Add(source[i]);
-            }
+            //dataSource.Clear();
+            //for (int i = 0; i < source.Count; i++)
+            //{
+            //    dataSource.Add(source[i]);
+            //}
 
         }
 
         private void btn_left_Click(object sender, RoutedEventArgs e)
         {
-            List<TpxgModel> tpxgs = tpxgModels.ToList();
-            dataSource.Add((tpxg_datagrid.SelectedItem as TpxgModel).JH);
-            tpxgs.Remove(tpxg_datagrid.SelectedItem as TpxgModel);
-            tpxgModels.Clear();
-            for (int j = 0; j < tpxgs.Count; j++)
-                tpxgModels.Add(tpxgs[j]);
+            if (tpxg_datagrid.SelectedItem == null) return;
+            var select = tpxg_datagrid.SelectedItems.OfType<TpxgModel>().ToList();
+            foreach (var item in select)
+            {
+                tpxgModels.Remove(item);
+                dataSource.Add(item.JH);
+            }
+
         }
 
         private void btnNewWell_Click(object sender, RoutedEventArgs e)
         {
-            new ChooseWaterWell().ShowDialog();
+            new ChooseWaterWell(this).ShowDialog();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private void Statistics_Click(object sender, RoutedEventArgs e)
         {
             var data = tpxgModels.ToList();
-
+            if (data == null) return;
             tb_tq_zsl.Text = data.Average(p => p.TQZS).ToString("0.##");
             tb_tq_yl.Text = data.Average(p => p.TQYL).ToString("0.##");
             tb_tq_xsfs.Text = data.Sum(p => p.TQXSFS).ToString("0.##");
@@ -608,6 +571,23 @@ namespace SBTP.View.XGPJ
             tb_cz_yl.Text = data.Average(p => p.CZYL).ToString("0.##");
             tb_cz_xsfs.Text = data.Sum(p => p.CZXSFS).ToString("0.##");
             tb_cz_sxszs.Text = (data.Sum(p => p.CZYL * p.CZXSZS) / data.Sum(p => p.CZYL)).ToString("0.##");
+        }
+
+        private void Btn_img_export_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Btn_return_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(this.GetType().Namespace + ".YJXGPJ");
+        }
+
+        private void Btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            var mainWindow = Unity.GetAncestor<MainWindow>(this);
+            mainWindow.Skip(" ");
         }
     }
 }

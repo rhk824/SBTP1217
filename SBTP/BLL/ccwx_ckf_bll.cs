@@ -90,7 +90,7 @@ namespace SBTP.BLL
                 model.JH = Unity.ToString(dt.Rows[i]["jh"]);
                 model.YCZ = Unity.ToString(dt.Rows[i]["ycz"]);
                 model.XCH = Unity.ToString(dt.Rows[i]["xch"]);
-                model.SYHD  = Unity.ToDecimal(dt.Rows[i]["syhd"]);
+                model.XCXH  = dt.Rows[i]["xcxh"].ToString();
                 model.YXHD  = Unity.ToDecimal(dt.Rows[i]["yxhd"]);
                 model.STL   = Unity.ToDecimal(dt.Rows[i]["stl"]);
                 model.HYBHD = Unity.ToDecimal(dt.Rows[i]["hybhd"]);

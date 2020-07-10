@@ -54,7 +54,6 @@ namespace SBTP.View.TPJ
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //var windows = Application.Current.Windows.OfType<Window>().ToList().FindAll(x => !x.Title.Equals(string.Empty));
             var selecteditems = Wells.SelectedItems.OfType<DataRowView>().ToList();
             if (parentPage.Title.Equals("储层物性动态计算"))
                 selecteditems.ForEach(

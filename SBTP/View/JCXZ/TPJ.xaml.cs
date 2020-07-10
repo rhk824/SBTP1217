@@ -345,9 +345,9 @@ namespace SBTP.View.JCXZ
                             //水嘴类型 0普通12偏心11同心
                             string zsfs = drr[i]["ZSFS"].ToString().Trim();
                             if (string.IsNullOrWhiteSpace(zsfs)) continue;
-                            if (!zsfs.Contains("0") && zsfs.Contains("2"))
+                            if (zsfs.Equals("12"))
                                 coefficient = 2.456877;
-                            if (!zsfs.Contains("0") && !zsfs.Contains("2"))
+                            if (zsfs.Equals("11"))
                                 coefficient = 3.474024;
 
                             var cdsz_ = drr[i]["CDSZ"];
@@ -609,7 +609,7 @@ namespace SBTP.View.JCXZ
                 string zb_x = wells_ZB.Select("JH='" + dm.JH.ToString() + "'")[0]["ZB_X"].ToString();
                 string zb_y = wells_ZB.Select("JH='" + dm.JH.ToString() + "'")[0]["ZB_Y"].ToString();
                 targetPoints.Add(new KeyValuePair<string, KeyValuePair<double, Point>>(dm.JH.ToString(),
-                    new KeyValuePair<double, Point>(double.Parse(dm.AWI.ToString("0.###")),
+                    new KeyValuePair<double, Point>(Math.Round(double.Parse(dm.AWI.ToString())),
                     new Point(double.Parse(zb_x), double.Parse(zb_y)))));
             }
             Graphic.Isogram isogram = new Graphic.Isogram(name, 25)
@@ -618,9 +618,9 @@ namespace SBTP.View.JCXZ
             };
             scaleTimes.DataContext = isogram;
             KeyValuePair<double, double> range = isogram.GraphicGeneration(out double step);
-            value_min.Content = range.Value;
-            value_max.Content = range.Key;
-            iso_step.Content = Math.Round(step, 5);
+            //value_min.Content = range.Value;
+            //value_max.Content = range.Key;
+            //iso_step.Content = Math.Round(step, 5);
             iso.Children.Add(isogram);
         }
 
