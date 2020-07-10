@@ -605,7 +605,11 @@ namespace SBTP.View.File
                 Task closeLoaing = bindGrid.ContinueWith(t => { this.Dispatcher.Invoke(() => { loading.Visibility = Visibility.Collapsed; }); });
                 await closeLoaing;
                 if (sp.Children.Count != 0)
-                    (sp.Children[0] as CSSJtables.csq_table).DataSource = bindGrid.Result;
+                {
+                    CSSJtables.csq_table content = sp.Children[0] as CSSJtables.csq_table;
+                    content.tableName = node_name;
+                    content.DataSource = bindGrid.Result;
+                }
             }
 
         }
@@ -669,7 +673,12 @@ namespace SBTP.View.File
             Task closeLoaing = bindGrid.ContinueWith(t => { this.Dispatcher.Invoke(() => { loading.Visibility = Visibility.Collapsed; }); });
             await closeLoaing;
             if (sp.Children.Count != 0)
-                (sp.Children[0] as CSSJtables.csq_table).DataSource = bindGrid.Result;
+            {
+                CSSJtables.csq_table content = sp.Children[0] as CSSJtables.csq_table;
+                content.tableName = node_name;
+                content.DataSource = bindGrid.Result;
+            }
+               
         }
 
         private int Delete(string table_name)

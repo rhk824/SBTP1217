@@ -173,7 +173,7 @@ namespace SBTP.Common
                         TYRQ = Unity.ToDateTime(dt.Rows[i]["TYRQ"]),
                         CPSJ = Unity.ToDecimal(dt.Rows[i]["CPSJ"]),
                         CPBS = Unity.ToDecimal(dt.Rows[i]["CPBS"]),
-                        PZBS = Unity.ToDecimal(dt.Rows[i]["PZBS"]),
+                        PZBS = Unity.ToDecimal(dt.Rows[i]["ZPBS"]),
                         PZSJ = Unity.ToDecimal(dt.Rows[i]["PZSJ"]),
                         KYQD = Unity.ToDecimal(dt.Rows[i]["KYQD"]),
                         NW = Unity.ToDecimal(dt.Rows[i]["NW"]),

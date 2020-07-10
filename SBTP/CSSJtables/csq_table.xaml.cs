@@ -16,7 +16,7 @@ namespace SBTP.CSSJtables
     /// </summary>
     public partial class csq_table : UserControl
     {
-        private string tableName;
+        public string tableName;
         public DataTable DataSource { set => DataGrid1.DataContext = value == null ? null : Unity.ChangeColumnName(tableName, value); }
 
         public csq_table(string name)

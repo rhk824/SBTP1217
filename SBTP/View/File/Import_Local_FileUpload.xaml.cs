@@ -97,8 +97,7 @@ namespace SBTP.View.File
                         SheetNames.Items.Clear();
                         if (excelSheets.Rows.Count > 0)
                         {
-                            foreach (DataRow dr in excelSheets.Rows)
-                                //SheetNames.Items.Add(dr["TABLE_NAME"].ToString().Substring(0, dr["TABLE_NAME"].ToString().Length - 1));
+                            foreach (DataRow dr in excelSheets.Rows)                               
                                 if (!dr["TABLE_NAME"].ToString().Contains("_"))
                                     SheetNames.Items.Add(dr["TABLE_NAME"].ToString());
                         }
