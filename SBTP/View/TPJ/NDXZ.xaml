@@ -53,7 +53,7 @@
         </GroupBox>
 
         <GroupBox Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Header="应用井信息">
-            <DataGrid Name="DataGrid2" ColumnWidth="*" MouseDoubleClick="DataGrid2_MouseDoubleClick">
+            <DataGrid Name="DataGrid2" IsReadOnly="True" ColumnWidth="*" MouseDoubleClick="DataGrid2_MouseDoubleClick">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="井号" Binding="{Binding JH}" />
                     <DataGridTextColumn Header="液体名称" Binding="{Binding YMC}" />

@@ -54,7 +54,7 @@ namespace SBTP.View.TPJ
             InitializeComponent();
             list_tpj = new ObservableCollection<ccwx_tpjing_model>();
             var ccwx = DatHelper.read_ccwx();
-            var tpjnd = DatHelper.TPJND_Read();
+            List<TPJND_Model> tpjnd = DatHelper.TPJND_Read() ?? new List<TPJND_Model>();
             var NdJh = from i in tpjnd select i.JH;
             if (ccwx != null)
             {
@@ -82,7 +82,8 @@ namespace SBTP.View.TPJ
                     YTND = list1[i].YTND,
                     ZZRFS = target.zzrfs,
                     KLND = list1[i].KLND,
-                    KLLJ = list1[i].KLLJ
+                    KLLJ = list1[i].KLLJ,
+                    XDYND = list1[i].XDYND
                 });
             }
         }
