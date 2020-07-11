@@ -42,7 +42,7 @@ namespace SBTP.BLL
         /// <summary>
         /// 井号
         /// </summary>
-        public string JH { get => jh; set { jh = value;Changed("JH"); } }
+        public string JH { get => jh; set { jh = value; Changed("JH"); } }
         /// <summary>
         /// 井半径
         /// </summary>
@@ -54,11 +54,11 @@ namespace SBTP.BLL
         /// <summary>
         /// 注入液粘度
         /// </summary>
-        public double ZRYND { get => zrynd; set { zrynd = value; Changed("ZRYND"); } }
+        public double ZRYND { get => zrynd; set { zrynd = Math.Round(value, 3); Changed("ZRYND"); } }
         /// <summary>
         /// 日注液量
         /// </summary>
-        public double RZYL { get => rzyl; set { rzyl = value; Changed("RZYL"); } }
+        public double RZYL { get => rzyl; set { rzyl = Math.Round(value, 3); Changed("RZYL"); } }
         /// <summary>
         /// 调剖半径
         /// </summary>
@@ -66,11 +66,11 @@ namespace SBTP.BLL
         /// <summary>
         /// 措施前视吸水指数
         /// </summary>
-        public double CSQ_SXSZS { get => csqsxszs; set { csqsxszs = value; Changed("CSQ_SXSZS"); } }
+        public double CSQ_SXSZS { get => csqsxszs; set { csqsxszs = Math.Round(value, 3); Changed("CSQ_SXSZS"); } }
         /// <summary>
         /// 等效压力 = 日注液量 * 措施前视吸水指数
         /// </summary>
-        public double CSQ_DXYL { get => csqyl; set { csqyl = value; Changed("CSQ_DXYL"); } }
+        public double CSQ_DXYL { get => csqyl; set { csqyl = Math.Round(value, 3); Changed("CSQ_DXYL"); } }
         /// <summary>
         /// 措施前增注段吸液量
         /// </summary>
@@ -78,31 +78,31 @@ namespace SBTP.BLL
         /// <summary>
         /// 措施后视吸水指数
         /// </summary>
-        public double CSH_SXSZS { get => cshsxszs; set { cshsxszs = value; Changed("CSH_SXSZS"); } }
+        public double CSH_SXSZS { get => cshsxszs; set { cshsxszs = Math.Round(value, 3); Changed("CSH_SXSZS"); } }
         /// <summary>
         /// 措施后压力
         /// </summary>
-        public double CSH_YL { get => cshyl; set { cshyl = value; Changed("CSH_YL"); } }
+        public double CSH_YL { get => cshyl; set { cshyl = Math.Round(value, 3); Changed("CSH_YL"); } }
         /// <summary>
         /// 差值视吸水指数
         /// </summary>
-        public double CZ_SXSZS { get => czsxszs; set { czsxszs = value; Changed("CZ_SXSZS"); } }
+        public double CZ_SXSZS { get => czsxszs; set { czsxszs = Math.Round(value, 3); Changed("CZ_SXSZS"); } }
         /// <summary>
         /// 差值压力
         /// </summary>
-        public double CZ_YL { get => czyl; set { czyl = value; Changed("CZ_YL"); } }
+        public double CZ_YL { get => czyl; set { czyl = Math.Round(value, 3); Changed("CZ_YL"); } }
         /// <summary>
         /// 调剖层注入分数
         /// </summary>
-        public double CSQ_TPCZRFS { get => csqzrfs; set { csqzrfs = value; Changed("CSQ_TPCZRFS"); } }
+        public double CSQ_TPCZRFS { get => csqzrfs; set { csqzrfs = Math.Round(value, 3); Changed("CSQ_TPCZRFS"); } }
         /// <summary>
         /// 措施后注入分数
         /// </summary>
-        public double CSH_TPCZRFS { get => cshzrfs; set { cshzrfs = value; Changed("CSH_TPCZRFS"); } }
+        public double CSH_TPCZRFS { get => cshzrfs; set { cshzrfs = Math.Round(value, 3); Changed("CSH_TPCZRFS"); } }
         /// <summary>
         /// 差值注入分数
         /// </summary>
-        public double CZ_ZRFS { get => czzrfs; set { czzrfs = value; Changed("CZ_ZRFS"); } }
+        public double CZ_ZRFS { get => czzrfs; set { czzrfs = Math.Round(value, 3); Changed("CZ_ZRFS"); } }
 
         public string TPCNAME { get => tpcname; set { tpcname = value; Changed("TPCNAME"); } }
         #endregion

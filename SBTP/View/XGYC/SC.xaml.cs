@@ -51,7 +51,7 @@ namespace SBTP.View.XGYC
         //选中井组
         private void btn_right_Click(object sender, RoutedEventArgs e)
         {
-            var cl = LB_jh.SelectedItems;
+            var cl = LB_jh.SelectedItems.OfType<string>().ToList();
             if (cl.Count == 0) { return; }
             for (int i = 0; i < cl.Count; i++)
             {
@@ -128,7 +128,7 @@ namespace SBTP.View.XGYC
 
         private void btn_left_Click(object sender, RoutedEventArgs e)
         {
-            var items = DataGrid1.SelectedItems;
+            var items = DataGrid1.SelectedItems.OfType<XGYC_SCJ_BLL>().ToList();
             for (int i = 0; i < items.Count; i++)
             {
                 XGYC_SCJ_BLL target = items[i] as XGYC_SCJ_BLL;

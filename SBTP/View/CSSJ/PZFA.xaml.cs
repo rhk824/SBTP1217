@@ -181,7 +181,7 @@ namespace SBTP.View.CSSJ
             double ljzsl=0, ljzjl=0, ljts = 0, result = 0;
             string sql = $"select a.ny,a.jh,a.ts,a.yzsl,a.yzmyl,b.cdxh,b.cdyzsl,b.cdyzmyl " +
                 $"from water_well_month a left join fzj_month b on a.jh=b.jh and a.ny=b.ny " +
-                $"where a.ZT=0 and a.jh=\"{jh}\" and b.cdxh=\"{cdxh}\" and a.ny >= #{Convert.ToDateTime(start).ToString("yyyy / MM")}# and a.ny< #{Convert.ToDateTime(end).ToString("yyyy / MM")}# order by a.ny";
+                $"where a.ZT=0 and a.jh=\"{jh}\" and b.cdxh=\"{cdxh}\" and a.ny > #{Convert.ToDateTime(start).ToString("yyyy / MM")}# and a.ny<= #{Convert.ToDateTime(end).ToString("yyyy / MM")}# order by a.ny";
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
             if (dt.Rows.Count == 0)
             {

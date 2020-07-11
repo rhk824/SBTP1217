@@ -284,7 +284,8 @@ namespace SBTP.View.JCXZ
                 MessageBox.Show("无数据源！");
                 return;
             }
-            //PZCDS=1 的情况
+            //油压，天数
+            double yy, ts;
             foreach (DataRow dr in ltzrj.Rows)
             {
                 DataRow drr = result.NewRow();
@@ -292,14 +293,13 @@ namespace SBTP.View.JCXZ
                 drr["NY"] = dr["NY"];
                 drr["TS"] = double.Parse(dr["TS"].ToString());
                 if (double.Parse(dr["YZSL"].ToString()) == 0)
-                {
                     drr["AWI"] = 0;
-                }
                 else
                 {
-                    //TS存在0的情况,待解决
-                    double awi = double.Parse(dr["YZSL"].ToString()) / (double.Parse(dr["YY_"].ToString()) * double.Parse(dr["TS"].ToString()));
-                    drr["AWI"] = double.IsNaN(awi) ? 0 : awi;
+                    yy = string.IsNullOrEmpty(dr["YY_"].ToString()) ? 0 : double.Parse(dr["YY_"].ToString());
+                    ts = string.IsNullOrEmpty(dr["TS"].ToString()) ? 0 : double.Parse(dr["TS"].ToString());
+                    if (yy == 0 || ts == 0) continue;
+                    drr["AWI"] = double.Parse(dr["YZSL"].ToString()) / (yy * ts);
                 }
                 result.Rows.Add(drr);
             }
@@ -365,7 +365,8 @@ namespace SBTP.View.JCXZ
                             //根据水嘴类型计算压力损耗
                             if (!string.IsNullOrEmpty(cdsz_.ToString()) && !cdsz_.ToString().Equals("0"))
                                 sz_loss = Math.Pow(Q / (coefficient * Math.Pow(double.Parse(cdsz_.ToString()), 2)), 2);
-                            double awi = Q / (yy - sz_loss);
+                            if (yy - sz_loss == 0) continue;
+                            double awi = Q / (yy - sz_loss);                   
                             awi_sum += double.IsNaN(awi) ? 0 : awi;
                         }
                         dr_["AWI"] = awi_sum;

@@ -24,18 +24,18 @@
 
     <Grid Grid.IsSharedSizeScope="True" Name="Tpj_Grid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="180"/>
             <ColumnDefinition />
-            <ColumnDefinition Width="500"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
         
-        <GroupBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1" BorderThickness="2" Margin="2" Header="评价时间">
+        <GroupBox Grid.Row="0" Grid.Column="0" BorderThickness="2" Margin="2" Header="评价时间">
             <Grid>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -49,7 +49,7 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="0" Grid.Column="1" Grid.RowSpan="1" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="参考值">
+        <GroupBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="参考值">
             <Grid>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -83,18 +83,18 @@
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" BorderThickness="2" Margin="2" Header="数据">
-            <DataGrid x:Name="dataGrid" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" VirtualizingStackPanel.IsVirtualizing="False">
+            <DataGrid x:Name="dataGrid" VerticalAlignment="Top" ItemsSource="{Binding}" AutoGenerateColumns="False" VirtualizingPanel.IsVirtualizing="False"  HorizontalAlignment="Center">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="水井" Width="80" Binding="{Binding JH}"/>
-                    <DataGridTextColumn Header="视吸水指数" Width="100" Binding="{Binding AWI, StringFormat={}{0:F2}}"/>
-                    <DataGridTextColumn Header="比视吸水指数" Width="100" Binding="{Binding BAWI, StringFormat={}{0:F2}}"/>
-                    <DataGridTextColumn Header="综合含水" Width="100" Binding="{Binding ZHHS, StringFormat={}{0:F2}}"/>
-                    <DataGridTextColumn Header="超标井率" Width="80" Binding="{Binding CBL, StringFormat={}{0:F2}}"/>
-                    <DataGridTextColumn Header="结果" Width="80" Binding="{Binding JG}"/>
+                    <DataGridTextColumn Header="水井" Width="50" Binding="{Binding JH}"/>
+                    <DataGridTextColumn Header="视吸水指数" Width="80" Binding="{Binding AWI, StringFormat={}{0:F2}}"/>
+                    <DataGridTextColumn Header="比视吸水指数" Width="90" Binding="{Binding BAWI, StringFormat={}{0:F2}}"/>
+                    <DataGridTextColumn Header="综合含水" Width="60" Binding="{Binding ZHHS, StringFormat={}{0:F2}}"/>
+                    <DataGridTextColumn Header="超标井率" Width="60" Binding="{Binding CBL, StringFormat={}{0:F2}}"/>
+                    <DataGridTextColumn Header="结果" Width="50" Binding="{Binding JG}"/>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="1" BorderThickness="2" Margin="2" Header="等值图">
+        <GroupBox Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" BorderThickness="2" Margin="2" Header="等值图">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -137,7 +137,7 @@
                 </GroupBox>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="3" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="3" BorderThickness="2" Margin="2" Header="操作">
+        <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="2" Margin="2" Header="操作">
             <Grid VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button x:Name="Save" Content="保存" Click="Save_Click"/>

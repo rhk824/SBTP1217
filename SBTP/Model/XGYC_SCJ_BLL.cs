@@ -45,7 +45,7 @@ namespace SBTP.BLL
         public double TPYXQ { get => tpyxq; set { tpyxq = value; Changed("TPYXQ"); } }
         public double ZY { get => zy; set { zy = Math.Round(value, 3); Changed("ZY"); } }
         public double TCB { get => tcb; set { tcb = Math.Round(value, 3); Changed("TCB"); } }
-        public double JXSJ { get => jxsj; set { jxsj = value; Changed("JXSJ"); } }
+        public double JXSJ { get => jxsj; set { jxsj = Math.Round(value, 3); Changed("JXSJ"); } }
 
         #endregion
 

@@ -177,6 +177,7 @@ namespace SBTP.BLL
                         item.kllj = tpjnd.KLLJ;
                         item.ytmc = tpjnd.YTMC;
                         item.klmc = tpjnd.KLMC;
+                        item.klxdynd = tpjnd.XDYND;
                     }
                 }
             }
