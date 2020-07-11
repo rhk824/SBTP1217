@@ -17,7 +17,7 @@ namespace SBTP.Common
         {
             List<DB_XCSJ> list = new List<DB_XCSJ>();
 
-            using (DataSet ds = DbHelperOleDb.Query("select * from oil_well_c where zt = 0"))
+            using (DataSet ds = DbHelperOleDb.Query("select * from oil_well_c "))
             {
                 DataTable dt = ds.Tables[0];
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -46,7 +46,7 @@ namespace SBTP.Common
         {
             List<DB_XCSJ> list = new List<DB_XCSJ>();
 
-            using (DataSet ds = DbHelperOleDb.Query("select * from oil_well_c where skqk<>\"\" and zt=0"))
+            using (DataSet ds = DbHelperOleDb.Query("select * from oil_well_c where skqk<>\"\" "))
             {
                 DataTable dt = ds.Tables[0];
                 for (int i = 0; i < dt.Rows.Count; i++)

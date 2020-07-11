@@ -404,7 +404,7 @@ namespace SBTP.View.JCXZ
             this.SXSZS.Text = Math.Round(sum / length_, 4).ToString();
 
             StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C where ZT=0 GROUP BY JH");
+            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C GROUP BY JH");
             DataTable yxhd = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
 
             DataTable grid_data = new DataTable("grid_data");
@@ -462,7 +462,7 @@ namespace SBTP.View.JCXZ
             datacollection = new ObservableCollection<TPJData>();
 
             StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C where ZT=0 GROUP BY JH");
+            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C GROUP BY JH");
             DataTable yxhd = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             MC();
 
@@ -543,7 +543,7 @@ namespace SBTP.View.JCXZ
                     current_cell.Background = new SolidColorBrush(Colors.LightGray);
                 }
                 //视吸水指数 浅蓝
-                if (awi >= double.Parse(this.SXSZS.Text))
+                if (awi >= double.Parse(this.SXSZS.Text) + double.Parse(this.SXSZS_Floating_Value1.Text))
                 {
                     TextBlock current_cell = dataGrid.Columns[1].GetCellContent(dataGrid.Items[i]) as TextBlock;
                     current_cell.Background = new SolidColorBrush(Colors.LightBlue);

@@ -39,7 +39,7 @@ namespace SBTP.BLL
             catch
             {
                 throw;
-            }       
+            }
         }
 
         #region 对接视图层（公共接口）
@@ -137,16 +137,16 @@ namespace SBTP.BLL
 
         private void loading_data()
         {
-            if (Data.DatHelper.read_tpc() == null)
+            var tpcinfo = Data.DatHelper.read_tpc();
+            if (tpcinfo == null)
             {
                 throw new Exception("无数据源！");
             }
-            var tpj_info = Data.DatHelper.read_ccwx();
+            List<ccwx_tpjing_model> tpj_info = Data.DatHelper.read_ccwx() ?? new List<ccwx_tpjing_model>();
             var Jh = from i in tpj_info select i.jh;
-            if (tpj_info != null)
-                tpj_info.ForEach(x => oc_tpjing_info.Add(x));
+            tpj_info.ForEach(x => oc_tpjing_info.Add(x));
             // 调剖井列表加载
-            foreach (tpc_model item in Data.DatHelper.read_tpc())
+            foreach (tpc_model item in tpcinfo)
             {
                 if (!Jh.Contains(item.jh))
                     oc_tpjing.Add(new ccwx_tpjing_model()
@@ -164,6 +164,7 @@ namespace SBTP.BLL
                         r2 = 0
                     });
             }
+
         }
 
         #endregion
