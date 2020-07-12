@@ -20,9 +20,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="90"/>
             <RowDefinition/>
-            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -40,7 +39,6 @@
                         <RadioButton VerticalAlignment="Center" GroupName="csq" Name="csq_date">
                             <RadioButton.Content>
                                 <ComboBox Width="100" Name="csq_DateList" IsEnabled="{Binding ElementName=csq_date,Path=IsChecked,Mode=OneWay}"/>
-                                <!--<DatePicker Name="csq_Date" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>-->
                             </RadioButton.Content>
                         </RadioButton>
                         <RadioButton GroupName="csq" Name="csq_img">
@@ -77,7 +75,6 @@
                         <RadioButton GroupName="csh" Name="csh_date" VerticalAlignment="Center">
                             <RadioButton.Content>
                                 <ComboBox Width="100" Name="csh_DateList" IsEnabled="{Binding ElementName=csh_date,Path=IsChecked,Mode=OneWay}"/>
-                                <!--<DatePicker Name="csh_Date" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>-->
                             </RadioButton.Content>
                         </RadioButton>
                         <RadioButton GroupName="csh" Name="csh_img">

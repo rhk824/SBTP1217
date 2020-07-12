@@ -27,7 +27,7 @@
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="300"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -52,7 +52,7 @@
             <Button Name="btn_left" Content="←" Click="btn_left_Click" />
         </StackPanel>
 
-        <Grid Grid.Row="0" Grid.Column="2" Margin="0,2,2,0">
+        <Grid Grid.Row="0" Grid.Column="2" Margin="0,2,2,0" >
             <Grid.Resources>
                 <DataTemplate x:Key="jh">
                     <TextBlock Text="{Binding JH}"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" />
@@ -223,10 +223,7 @@
                         <TextBlock VerticalAlignment="Center" Text="系列选择：" />
                         <ComboBox Name="HZtype" Width="100" ItemsSource="{Binding Source={StaticResource HZLXKey}}" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Name="DrawGraph" Content="绘制" Click="DrawGraph_Click"/>
-                        <Button Content="储存"/>
-                    </StackPanel>
+                    <Button Name="DrawGraph" Content="绘制" Click="DrawGraph_Click"/>
                 </StackPanel>
                 <Grid Grid.Row="1">
                     <tk:Chart Name="MyToolKit" Height="auto" Visibility="Collapsed"/>

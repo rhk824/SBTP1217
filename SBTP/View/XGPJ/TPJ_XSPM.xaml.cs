@@ -95,7 +95,6 @@ namespace SBTP.View.XGPJ
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
         private Series CreateChart(string cs_name, string jh, string time, out ChartArea chartArea)
         {
-            string cssj = TpxgModels.First(x => x.JH.Equals(jh)).CSSJ;
             chartArea = new ChartArea();
             chartArea.Axes[0].MajorGrid.Enabled = false;
             chartArea.Axes[1].MajorGrid.Enabled = false;
@@ -105,9 +104,6 @@ namespace SBTP.View.XGPJ
             chartArea.AxisY.Interval = 2;
             chartArea.AxisX.ScaleView.Size = 10;
 
-            Random random = new Random();
-            //将日期yyyy/MM转化为yyyy/MM/dd格式
-            cssj += "/1";
             string sqlStr = "select * from XSPM_MONTH where zt={0} and JH='" + jh + "'";
             if (cs_name.Equals("csq_DateList"))
                 sqlStr = string.Format(sqlStr, 0);
@@ -123,8 +119,7 @@ namespace SBTP.View.XGPJ
             };
             for (int i = 0; i < column_data.Rows.Count; i++)
             {
-                double xfch = random.NextDouble();
-                string cw = string.Format("{0}_{1}_{2}", 
+                string cw = string.Format("{0} {1} {2}", 
                     column_data.Rows[i]["YCZ"],
                     column_data.Rows[i]["XCH"],
                     column_data.Rows[i]["XFCH"]);
@@ -132,8 +127,7 @@ namespace SBTP.View.XGPJ
                 DataPoint point = new DataPoint
                 {
                     XValue = i,
-                    YValues = new double[] { double.Parse(column_data.Rows[i]["ZRBFS"].ToString()) },
-                    //AxisLabel = string.Format("{0}{1}({2})", column_data.Rows[i]["YCZ"].ToString(), column_data.Rows[i]["XCH"].ToString(), xfch.ToString()),
+                    YValues = new double[] { double.Parse(column_data.Rows[i]["ZRBFS"].ToString()) },                 
                     AxisLabel = $"{cw}({ds})",
                     Label = column_data.Rows[i]["ZRBFS"].ToString()
                 };

@@ -2114,14 +2114,14 @@ namespace SBTP.Data
                             if (readStr.Contains("/YJPJ"))
                                 break;
                             else
-                                fileStr += readStr + ",";
+                                fileStr += readStr + "*";
                         }
                     }
                 }
             }
             if (string.IsNullOrEmpty(fileStr)) return null;
             List<YjxgModel> yjxgModels = new List<YjxgModel>();
-            List<string> dataArry = fileStr.Split(',').ToList();
+            List<string> dataArry = fileStr.Split('*').ToList();
             dataArry.RemoveAt(dataArry.Count - 1);
             foreach (var item in dataArry)
             {

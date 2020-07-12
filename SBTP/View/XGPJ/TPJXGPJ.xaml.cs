@@ -477,17 +477,6 @@ namespace SBTP.View.XGPJ
             }        
         }
 
-        private DataTable Qury(string start, int MonthCount)
-        {            
-            DateTime dateTime = DateTime.ParseExact(start, "yyyy/MM", CultureInfo.CurrentCulture);
-            dateTime = dateTime.AddMonths(MonthCount);
-            string endTimeStr = dateTime.ToString("yyyy/MM", CultureInfo.CurrentCulture);
-            if (start.Equals(endTimeStr)) return null;
-            StringBuilder sqlstr = new StringBuilder("select * from WATER_WELL_MONTH where zt=0 and DateDiff('m',NY,'" + endTimeStr + "')>=0 AND DateDiff('m','" + start + "',NY)>0 ");
-            DataTable dataTable = DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
-            return dataTable;
-        }
-
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             Data.DatHelper.SaveTpjxgpj(tpxgModels.ToList());

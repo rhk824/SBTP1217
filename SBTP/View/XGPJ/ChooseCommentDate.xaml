@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SBTP.View.XGPJ"
         xmlns:calender="clr-namespace:SBTP.View.JCXZ"
         mc:Ignorable="d"
-        Title="评价时间" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="措施后评价时间" SizeToContent="WidthAndHeight" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>

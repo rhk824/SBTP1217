@@ -324,17 +324,8 @@ namespace SBTP.View.CSSJ
                 DataTable tpj_table = getTpjInfoTable(TPJMC);
                 //调剖剂有效期
                 double YXQ = tpj_table.Rows.Count == 0 ? 1 : double.Parse(tpj_table.Rows[0]["SXQ"].ToString());
+                //井径
                 double rw = 0.1;
-                foreach (string i in tpbj_collection)
-                {
-                    //调后增注段日吸水量
-                    double Q_thzzxs = tpcls.dqrzl / (100 - tpcinfo.zrfs) * Math.Log(jz.AverageDistance / 2 / rw) / (Math.Log(double.Parse(i) / rw) / tpcinfo.zzrfs +
-                        Math.Log(jz.AverageDistance / 2 / double.Parse(i)) / tpcinfo.zrfs + Math.Log(jz.AverageDistance / 2 / rw) / (100 - tpcinfo.zzrfs));
-                    tqxyls.Add(new Point(double.Parse(i), Q_thzzxs));
-                    //吸液强度
-                    double xyqd = Q_thzzxs / tpcinfo.zzhd * YXQ / 2;
-                    XYQDs.Add(new KeyValuePair<string, double>(i, xyqd));
-                }
                 //注水总量
                 double Qsl_sum = tpcls.ljzsl;
                 //注聚总量
@@ -359,7 +350,8 @@ namespace SBTP.View.CSSJ
                     case 3: ljxs = 0.89; break;
                     case 4: ljxs = 0.86; break;
                 }
-                //计算机器学习参数
+
+                #region 计算机器学习参数
                 //过水倍数
                 double GSBS = T_sqts == 0 ? 0 : para * T_jqns * 10000 / (2 * T_sqts * tpcinfo.zzhd * 10);
                 //油饱和度
@@ -368,26 +360,25 @@ namespace SBTP.View.CSSJ
                 double STLJC = FDDSTL * 10 / ZZDSTL;
                 //过聚倍数
                 double GJBS = T_jqts == 0 ? 0 : para * T_jqns * 10000 / (2 * T_jqts * tpcinfo.zzhd * 10);
-
-                ////过水倍数
-                //double GSBS = 0.41;
-                ////油饱和度
-                //double YBHD = 0.508;
-                ////渗透率极差
-                //double STLJC = 1.5;
-                ////过聚倍数
-                //double GJBS = 7.17;
-
-                //string bj_min = "60";
-                //string bj_max = "80";
-                //string bj_step = "10";
+                //吸液强度
+                foreach (string i in tpbj_collection)
+                {
+                    //调后增注段日吸水量
+                    double Q_thzzxs = tpcls.dqrzl / (100 - tpcinfo.zrfs) * Math.Log(jz.AverageDistance / 2 / rw) / (Math.Log(double.Parse(i) / rw) / tpcinfo.zzrfs +
+                        Math.Log(jz.AverageDistance / 2 / double.Parse(i)) / tpcinfo.zrfs + Math.Log(jz.AverageDistance / 2 / rw) / (100 - tpcinfo.zzrfs));
+                    tqxyls.Add(new Point(double.Parse(i), Q_thzzxs));
+                    //吸液强度
+                    double xyqd = Q_thzzxs / tpcinfo.zzhd * YXQ / 2;
+                    XYQDs.Add(new KeyValuePair<string, double>(i, xyqd));
+                }
+                #endregion
+                //根据不同半径下的吸液强度计算增油
                 Task<string> runPython = Task.Run(() =>
                 {
                     string result = string.Empty;
                     for (int i = 0; i < XYQDs.Count; i++)
                     {
                         double xyqd = XYQDs[i].Value;
-                        //double xyqd = 10;
                         string cmd = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}", GSBS, YBHD, STLJC, GJBS, xyqd.ToString(), tpbj_n, tpbj_w, bc);
                         string cmdResult = RunCMD.run_python(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"py\deliverables\demo.py"), cmd).Trim();
                         if (i == XYQDs.Count - 1)

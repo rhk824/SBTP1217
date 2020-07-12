@@ -51,7 +51,7 @@ namespace SBTP.View.XGPJ
             foreach (var item in query)
             {
                 var ny = Unity.DateTimeToString(item.NY, "yyyy/MM");
-                points_1.Add(ny, (item.YZSL + item.YZMYL) / item.TS);
+                points_1.Add(ny, item.TS == 0 ? 0 : (item.YZSL + item.YZMYL) / item.TS);
                 points_2.Add(ny, item.YY);
             }
 
@@ -63,7 +63,7 @@ namespace SBTP.View.XGPJ
                 DependentRangeAxis = new LinearAxis()
                 {
                     Orientation = AxisOrientation.Y,
-                    Interval = 0.5,
+                    Interval = 3,
                     Title = "日注液量"
                 }
             };
@@ -75,12 +75,13 @@ namespace SBTP.View.XGPJ
                 DependentRangeAxis = new LinearAxis()
                 {
                     Orientation = AxisOrientation.Y,
-                    Interval = 0.5,
+                    Interval = 3,
                     Title = "压力"
                 }
             };
             lineSeries_1.ItemsSource = points_1;
             lineSeries_2.ItemsSource = points_2;
+            MyToolKit.VerticalContentAlignment = VerticalAlignment.Stretch;
             MyToolKit.Series.Add(lineSeries_1);
             MyToolKit.Series.Add(lineSeries_2);
             MyToolKit.Visibility = Visibility.Visible;

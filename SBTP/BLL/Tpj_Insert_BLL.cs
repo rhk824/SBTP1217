@@ -48,7 +48,7 @@ namespace SBTP.BLL
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into PC_XTPK_STATUS (");
-            strSql.Append("MC,DW,TYRQ,CPSJ,CPBS,ZPBS,PZSJ,KYQD,NW,NY,NJ,XN,BSB,TXML,SXQ,JG,BZ,ZT)");
+            strSql.Append("MC,DW,TYRQ,CPSJ,CPBS,PZBS,PZSJ,KYQD,NW,NY,NJ,XN,BSB,TXML,SXQ,JG,BZ,ZT)");
             strSql.Append(" values(");
             strSql.Append("@MC,@DW,@TYRQ,@CPSJ,@CPBS,@PZBS,@PZSJ,@KYQD,@NW,@NY,@NJ,@XN,@BSB,@TXML,@SXQ,@JG,@BZ,@ZT)");
             OleDbParameter[] parameters = {

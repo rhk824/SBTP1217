@@ -7,6 +7,8 @@ using System.Windows.Forms;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Win32;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace SBTP.View.File
 {
@@ -62,16 +64,18 @@ namespace SBTP.View.File
             if (string.IsNullOrEmpty(project_location)) { System.Windows.MessageBox.Show("请选择工程路径"); return; }
             string directory = project_location + @"\" + project_name;
             App.project_path = directory;
+            //创建工程目录以及Dat文档目录
+            Directory.CreateDirectory(directory + @"\RLS");
+            //复制数据源到新目录
+            System.IO.File.Copy(database_location, directory + @"\SBTP.mdb", true);
+            
+            model = new KeyValuePair<string, string>(project_name, directory);
 
             try
             {
-                if (!icoToStartup(project_name)) return;
-                //创建工程目录以及Dat文档目录
-                Directory.CreateDirectory(directory + @"\RLS");
-                //复制数据源到新目录
-                System.IO.File.Copy(database_location, directory + @"\SBTP.mdb", true);
-                WriteProjectStartup(project_name, directory);
-                model = new KeyValuePair<string, string>(project_name, directory);
+                if (icoToStartup(project_name)) {
+                    WriteProjectStartup(project_name, directory);
+                }
             }
             catch (Exception ex)
             {
@@ -117,11 +121,22 @@ namespace SBTP.View.File
             string p_FileTypeName = ".prj";//文件后缀
             string fileName = System.Windows.Forms.Application.ExecutablePath;// 获取启动了应用程序的可执行文件的路径及文件名
             string startPath = System.Windows.Forms.Application.StartupPath;//获取启动了应用程序的可执行文件的路径
+
+            RegistryAccessRule rule = new RegistryAccessRule(new NTAccount(Environment.UserDomainName, "Administrator"),
+       RegistryRights.FullControl,
+       InheritanceFlags.ContainerInherit,
+       PropagationFlags.InheritOnly,
+       AccessControlType.Allow);
+            RegistrySecurity mSec = new RegistrySecurity();
+            mSec.AddAccessRule(rule);
             try
             {
+                RegistryKey RegKey = Registry.ClassesRoot;
+                RegKey.SetAccessControl(mSec);
+
                 //注册文件类型            　　　　　　　
-                Registry.ClassesRoot.CreateSubKey(p_FileTypeName).SetValue("", strProject, RegistryValueKind.String);
-                using RegistryKey key = Registry.ClassesRoot.CreateSubKey(strProject);
+                RegKey.CreateSubKey(p_FileTypeName).SetValue("", strProject, RegistryValueKind.String);
+                using RegistryKey key = RegKey.CreateSubKey(strProject);
                 //设置图标
                 RegistryKey iconKey = key.CreateSubKey("DefaultIcon");
                 iconKey.SetValue("", startPath + "\\sbtp.ico");
