@@ -294,14 +294,14 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
-                    <RowDefinition/>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition />
+                    <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                     <RadioButton GroupName="Graph" Content="生产动态" Click="RadioButton_Click"/>
                     <RadioButton GroupName="Graph" Content="吸水剖面" Click="RadioButton_Click"/>
                 </StackPanel>
-                <Frame Name="Container" Grid.Row="1"/>
+                <Frame Name="Container" Grid.Row="1" VerticalContentAlignment="Top" VerticalAlignment="Stretch"/>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Button Name="Btn_img_export" Click="Btn_img_export_Click">图形输出</Button>
                     <Button Name="Btn_return" Click="Btn_return_Click">继续</Button>

@@ -46,7 +46,7 @@
                     <DataGridTextColumn Header="增注入分数" Binding="{Binding ZZRFS}" />
                     <DataGridTextColumn Header="颗粒浓度(mg/L)" Binding="{Binding KLND}" />
                     <DataGridTextColumn Header="颗粒粒径(mm)" Binding="{Binding KLLJ}" />
-                    <DataGridTextColumn Header="携带液浓度" Binding="{Binding XDYND}" />
+                    <DataGridTextColumn Header="携带液浓度(mg/L)" Binding="{Binding XDYND}" />
                     <DataGridTextColumn Header="液体剂用量分数(%)" Binding="{Binding YTYLFS}" />
                 </DataGrid.Columns>
             </DataGrid>

@@ -96,7 +96,7 @@ namespace SBTP.View.TPJ
             {
                 string ytmc = item["YMC"].ToString();
                 string gtmc = item["GMC"].ToString();
-                if (ytmc.GetHashCode().Equals(TpjNames["YTTPJ"].GetHashCode()) && gtmc.GetHashCode().Equals(TpjNames["KLTPJ"].GetHashCode()))
+                if (ytmc.GetHashCode().Equals(TpjNames["YTTPJ"].GetHashCode()) || gtmc.GetHashCode().Equals(TpjNames["KLTPJ"].GetHashCode()))
                     yyjDataSource.Rows.Add(item.ItemArray);
             }
             this.DataGrid2.ItemsSource = yyjDataSource.DefaultView;

@@ -1,6 +1,7 @@
 ﻿using Common;
 using SBTP.Model;
 using SBTP.View.CSSJ;
+using SBTP.View.JCXZ;
 using SBTP.View.TPJ;
 using SBTP.View.XGPJ;
 using System;
@@ -19,31 +20,31 @@ namespace SBTP.Data
     {
         private static string datPath = @"{0}\RLS";
         private static string rls3 = "RLS3.DAT";
-        private static string[] rls3_lines =
-        {
-            // 基础信息
-            "**JCXX",
-            "*TPCJH // 井号",
-            "/TPCJH",
-            "*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率 封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径",
-            "/TPCXX",
-            "*TPJXX // 井号 液体剂名称 液体剂浓度 颗粒剂名称 颗粒剂粒径 颗粒剂浓度 携带液浓度",
-            "/TPJXX",
-            "*TPCLS // 井号 井径 注采井距 日注液量 累计注入水量 累计注聚量 累计水驱天数 累计水驱年数 累计聚驱天数 累计聚驱年数",
-            "/TPCLS",
-            "*JGXX // 液体剂价格 固体剂价格 携带剂价格 原油价格 施工价格 其他费用",
-            "/JGXX",
-            "/JCXX",
-            // 调剖用量优化
-            "**STCS // 井号 优化半径 增油 投产比 调剖剂用量 调后增注段日吸水量",
-            "/STCS",
-            // 调剖段塞设计
-            "**TPDSSJ",
-            "*TQZRYND 15",
-            "*GXSJ 0",
-            "/GXSJ",
-            "/TPDSSJ"
-        };
+        //private static string[] rls3_lines =
+        //{
+        //    // 基础信息
+        //    "**JCXX",
+        //    "*TPCJH // 井号",
+        //    "/TPCJH",
+        //    "*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率 封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径",
+        //    "/TPCXX",
+        //    "*TPJXX // 井号 液体剂名称 液体剂浓度 颗粒剂名称 颗粒剂粒径 颗粒剂浓度 携带液浓度",
+        //    "/TPJXX",
+        //    "*TPCLS // 井号 井径 注采井距 日注液量 累计注入水量 累计注聚量 累计水驱天数 累计水驱年数 累计聚驱天数 累计聚驱年数",
+        //    "/TPCLS",
+        //    "*JGXX // 液体剂价格 固体剂价格 携带剂价格 原油价格 施工价格 其他费用",
+        //    "/JGXX",
+        //    "/JCXX",
+        //    // 调剖用量优化
+        //    "**STCS // 井号 优化半径 增油 投产比 调剖剂用量 调后增注段日吸水量",
+        //    "/STCS",
+        //    // 调剖段塞设计
+        //    "**TPDSSJ",
+        //    "*TQZRYND 15",
+        //    "*GXSJ 0",
+        //    "/GXSJ",
+        //    "/TPDSSJ"
+        //};
 
         /// <summary>
         /// RLS3检查
@@ -100,6 +101,8 @@ namespace SBTP.Data
             inputStr += "*TPC // 井号 调剖层 有效厚度顶深 有效厚度 注入分数 增注厚度 增注比例 增注入分数 连通数量 方法 测试日期 标识\r\n";
             inputStr += "*JZLT // 水井 油井 层位 砂岩厚度 有效厚度 渗透率\r\n";
             inputStr += "/LAYER CHOICE\r\n";
+            inputStr += "**YSFX //水井号 油井号 相关系数 关联度\r\n";
+            inputStr += "/YSFX\r\n";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
             using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
             using (StreamWriter sw = new StreamWriter(fs, Encoding.UTF8))
@@ -978,7 +981,7 @@ namespace SBTP.Data
                                 fileStr += readStr + "&";
                         }
                     }
-                    else if (readStr.Contains("*TPC1"))
+                    else if (readStr.Contains("**YSFX"))
                         break;
                 }
             }
@@ -1081,6 +1084,94 @@ namespace SBTP.Data
                     tpc_list.Add(newArry);
             }
             return tpc_list;
+        }
+
+        /// <summary>
+        /// 优势方向存储
+        /// </summary>
+        /// <param name="TPC_data"></param>
+        /// <returns></returns>
+        public static void SaveToDat(List<FenXiModel> Data)
+        {
+            CheckRLS1();
+            List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT"));
+            using StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", false, Encoding.UTF8);
+            List<string> newLines = new List<string>();
+            //读取RLS1.DAT，提取文件结构，保存在数组
+            int startIndex = lines.IndexOf("**YSFX //水井号 油井号 相关系数 关联度");
+            int endIndex = lines.IndexOf("/YSFX");
+            //移除相关数据
+            lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
+            lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
+            List<string> newData = new List<string>();
+            foreach (FenXiModel item in Data)
+            {
+                string rowStr = "";
+                rowStr += item.SJH + "\t";
+                rowStr += item.YJH + "\t";
+                rowStr += item.XGXS + "\t";
+                rowStr += item.GLD + "\r\n";
+                newData.Add(rowStr);
+            }
+            newLines.InsertRange(startIndex + 1, newData);
+            sw.Write(string.Join("", newLines.ToArray()));
+        }
+
+        /// <summary>
+        /// 优势方向读取
+        /// </summary>
+        /// <returns></returns>
+        public static List<FenXiModel> ReadYsfx()
+        {
+            string fileStr = "";
+            string readStr = " ";
+            List<FenXiModel> list = new List<FenXiModel>();
+            if (!File.Exists(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT")) { return null; }
+            using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS1.DAT", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+            {
+                while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
+                {
+                    //if (type.Equals("能量"))
+                    //{
+                    //    if (readStr.Contains("*能量"))
+                    //    {
+                    //        while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
+                    //        {
+                    //            if (readStr.Contains("* 液量"))
+                    //                break;
+                    //            else
+                    //                fileStr += readStr + ",";
+                    //        }
+                    //    }
+                    //}
+                    //else
+                    {
+                        while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
+                        {
+                            if (readStr.Contains("/YSFX"))
+                                break;
+                            else
+                                fileStr += readStr + ",";
+                        }
+                    }
+                }
+            }
+            if (fileStr.Length == 0) return list;
+            string[] table = fileStr.Substring(0, fileStr.Length - 1).Split(',');
+            
+            for (int i = 0; i < table.Length; i++)
+            {
+                string[] newArry = table[i].Split('\t');
+                list.Add(new FenXiModel()
+                {
+                    SJH = newArry[0],
+                    YJH = newArry[1],
+                    XGXS =double.Parse(newArry[2]),
+                    GLD = double.Parse(newArry[3])
+                });
+            }
+            return list;
         }
         #endregion
 

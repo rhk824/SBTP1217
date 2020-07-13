@@ -405,7 +405,7 @@ namespace SBTP.View.JCXZ
             this.SXSZS.Text = Math.Round(sum / length_, 4).ToString();
 
             StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C GROUP BY JH");
+            sqlStr.Append("select JH,SUM(CDbl(YXHD)) as YXHD from OIL_WELL_C where skqk<>'' GROUP BY JH");
             DataTable yxhd = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
 
             DataTable grid_data = new DataTable("grid_data");
@@ -423,6 +423,7 @@ namespace SBTP.View.JCXZ
                         continue;
                     DataRow newdr = grid_data.NewRow();
                     int length = well_months.Length;
+                    if (yxhd.Rows.Count == 0) continue;
                     string yxhd_ = yxhd.Select("JH='" + dr[0].ToString() + "'")[0]["YXHD"].ToString();
                     double awi_sum = 0;
 

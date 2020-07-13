@@ -61,7 +61,7 @@
                         <DataGridTextColumn Header="年含水上升率(%)" Binding="{Binding NHSSSL}"/>
                         <DataGridTextColumn Header="调剖有效期(年)" Binding="{Binding TPYXQ}"/>
                         <DataGridTextColumn Header="增油(m³)" Binding="{Binding ZY}"/>
-                        <DataGridTextColumn Header="见效时间(天)" Binding="{Binding JXSJ}"/>
+                        <DataGridTextColumn Header="见效时间(月)" Binding="{Binding JXSJ}"/>
                         <DataGridTextColumn Header="投产比" Binding="{Binding TCB}"/>
                     </DataGrid.Columns>
                 </DataGrid>

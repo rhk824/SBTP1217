@@ -81,7 +81,7 @@ namespace SBTP.View.XGPJ
             };
             lineSeries_1.ItemsSource = points_1;
             lineSeries_2.ItemsSource = points_2;
-            MyToolKit.VerticalContentAlignment = VerticalAlignment.Stretch;
+            //MyToolKit.Height = parentGrid.ActualHeight - 40;
             MyToolKit.Series.Add(lineSeries_1);
             MyToolKit.Series.Add(lineSeries_2);
             MyToolKit.Visibility = Visibility.Visible;

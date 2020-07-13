@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-
+using System.Linq;
 using SBTP.Data;
 using SBTP.BLL;
 using Maticsoft.DBUtility;
@@ -39,7 +39,7 @@ namespace SBTP.View.JCXZ
         //选中的水井号列表，选中的油井号列表，选中的年月列表
         private List<string> list_sj, list_yj, list_month;
         //分析结果列表
-        private List<FenXiModel> list;
+        private List<FenXiModel> list = new List<FenXiModel>();
         //private List<Well_ZB> wells;
         //选中的水井和油井的地理位置
         private Dictionary<string, Well_ZB> wells;
@@ -59,6 +59,7 @@ namespace SBTP.View.JCXZ
         private void loadData()
         {
             dtable = DatHelper.Read();
+            List<FenXiModel> datasource = DatHelper.ReadYsfx();
             foreach (DataRow dr in dtable.Rows)
             {
                 ListBoxItem item = new ListBoxItem();
@@ -71,12 +72,16 @@ namespace SBTP.View.JCXZ
 
             string temp = WaterWellMonth.getMinDate();
             datePicker1.SelectedDate = DateTime.Parse(temp);
-            //datePicker1.SelectedDate = DateTime.ParseExact(temp,"yyyy/MM",System.Globalization.CultureInfo.CurrentCulture);
-            //datePicker1.Text = DateTime.ParseExact("20180101", "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyyMM");
 
             temp = WaterWellMonth.getMaxDate();
             datePicker2.SelectedDate = DateTime.Parse(temp);
-            //datePicker2.SelectedDate = DateTime.ParseExact(temp, "yyyy/MM", System.Globalization.CultureInfo.CurrentCulture);
+
+            if (datasource.Count > 0)
+            {
+                list = datasource;
+                (from i in datasource select i.SJH).Distinct().ToList().ForEach(x => ListBox2.Items.Add(x));
+            }
+
         }
 
         private bool getList()
@@ -89,18 +94,18 @@ namespace SBTP.View.JCXZ
             { list_sj.Add(lbi.Content.ToString()); }
 
             if (datePicker1.SelectedDate == null)
-            { System.Windows.MessageBox.Show("请选择开始月份"); return false; }
+            { MessageBox.Show("请选择开始月份"); return false; }
 
             if (datePicker2.SelectedDate == null)
-            { System.Windows.MessageBox.Show("请选择结束月份"); return false; }
+            { MessageBox.Show("请选择结束月份"); return false; }
 
             DateTime date_star = datePicker1.SelectedDate.Value;
             DateTime date_end = datePicker2.SelectedDate.Value;
             if (date_star == date_end)
-            { System.Windows.MessageBox.Show("请选择月份起止2个月以上"); return false; }
+            { MessageBox.Show("请选择月份起止2个月以上"); return false; }
 
             if (date_star > date_end)
-            { System.Windows.MessageBox.Show("选择月份起止不正确"); return false; }
+            { MessageBox.Show("选择月份起止不正确"); return false; }
 
             list_month = new List<string>();
             for (DateTime date_temp = date_star; date_temp <= date_end; date_temp = date_temp.AddMonths(+1))
@@ -119,7 +124,8 @@ namespace SBTP.View.JCXZ
             if (rb_yl.IsChecked == true) { canshu = "YL"; }
 
             double qsz = Convert.ToDouble(TB_qsz.Text);
-            list = new List<FenXiModel>();
+            list.Clear();
+            ListBox2.Items.Clear();
             //wells = new List<Well_ZB>();
             wells = new Dictionary<string, Well_ZB>();
             wells_YL = new Dictionary<string, Well_YL>();
@@ -440,18 +446,16 @@ namespace SBTP.View.JCXZ
             if (list_sj.Count == 0) return;
             foreach (string sjh in list_sj)
             {
-                ListBoxItem item = new ListBoxItem();
-                item.Content = sjh;
-                ListBox2.Items.Add(item);
+                ListBox2.Items.Add(sjh);
             }
             this.ListBox2.SelectedIndex = 0;
         }
 
         private void selectListBox2()
         {
-            ListBoxItem lbi = (ListBoxItem)ListBox2.SelectedItem;
+            string lbi = ListBox2.SelectedItem as string;
             if (lbi == null) return;
-            string sjh = lbi.Content.ToString();
+            string sjh = lbi;
             drawChart(sjh);
         }
 
@@ -463,9 +467,9 @@ namespace SBTP.View.JCXZ
 
         private void bindDataGrid()
         {
-            ListBoxItem lbi = (ListBoxItem)ListBox2.SelectedItem;
+            string lbi = ListBox2.SelectedItem.ToString();
             if (lbi == null) return;
-            string sjh = lbi.Content.ToString();
+            string sjh = lbi;
             this.DataGrid1.ItemsSource = list.FindAll(
                 delegate(FenXiModel fx) { return fx.SJH == sjh; }
                 );
@@ -498,6 +502,20 @@ namespace SBTP.View.JCXZ
             //startMovePosition = e.GetPosition((Canvas)sender);
             startMovePosition = e.GetPosition(outContainer);
             isMoving = true;
+        }
+
+        private void Btn_save_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                DatHelper.SaveToDat(list);
+                MessageBox.Show("操作成功！");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("操作失败！原因：" + ex.Message);            
+            }
+           
         }
 
         /// <summary>

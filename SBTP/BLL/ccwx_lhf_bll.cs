@@ -71,7 +71,7 @@ namespace SBTP.BLL
         {
             foreach (ccwx_yajiang_model item in oc_yajiang)
             {
-                item.ln = item.gjsj == 0 ? 0 : Math.Log10((this.t + item.gjsj) / item.gjsj);
+                item.ln = item.gjsj == 0 ? 0 : Math.Log((this.t + item.gjsj) / item.gjsj);
             }
         }
 

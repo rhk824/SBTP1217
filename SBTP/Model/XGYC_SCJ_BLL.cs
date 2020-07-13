@@ -110,10 +110,11 @@ namespace SBTP.BLL
                 }
             }
             string oilDate = tables[0].Rows[MonthNum]["NY"].ToString();
-            this.JXSJ = (DateTime.Parse(getTpjNyByYzmylGt0(jz)) - DateTime.Parse(oilDate)).TotalDays / 30;
+            this.JXSJ = (DateTime.Parse(oilDate) - DateTime.Parse(getTpjNyByYzmylGt0(jz))).TotalDays / 30;
             #endregion
 
             #region 投产比
+
             this.TCB = double.Parse(tpcyh.TCB) * (1 + cjzy / double.Parse(tpcyh.YHZY));
             #endregion
         }
