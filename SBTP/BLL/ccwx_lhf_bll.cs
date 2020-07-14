@@ -138,9 +138,6 @@ namespace SBTP.BLL
         /// <returns></returns>
         private double calculate_q()
         {
-            //if (string.IsNullOrEmpty(tpjing.csrq)) return 0;
-            //if (tpjing.IsCustomize)
-            //    tpjing.csrq = this.yjDate;
             DateTime time = Convert.ToDateTime(this.yjDate);
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * ");
@@ -164,7 +161,7 @@ namespace SBTP.BLL
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * ");
             sql.Append(" from oil_well_c ");
-            sql.Append(string.Format(" where jh='{0}' ", tpjing.jh));
+            sql.Append(string.Format(" where jh='{0}' and skqk<>''", tpjing.jh));
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
             List<ccwx_xcsj_model> list = new List<ccwx_xcsj_model>();
             for (int i = 0; i < dt.Rows.Count; i++)

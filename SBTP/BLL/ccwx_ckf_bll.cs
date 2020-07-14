@@ -80,7 +80,7 @@ namespace SBTP.BLL
             StringBuilder sql = new StringBuilder();
             sql.Append(" select * from oil_well_c ");
             sql.AppendFormat(" where jh = \"{0}\" ", tpjing.jh);
-            sql.Append(" and stl <> 0 and syds <> 0");
+            sql.Append(" and stl <> 0 and syds <> 0 and skqk<>''");
             sql.Append(" order by syds ");
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
 

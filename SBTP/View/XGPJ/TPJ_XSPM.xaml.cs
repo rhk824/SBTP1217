@@ -74,11 +74,11 @@ namespace SBTP.View.XGPJ
                 ObservableCollection<string> cshdatecollect = new ObservableCollection<string>();
                 foreach (DataRow row in csqTable.Rows)
                 {
-                    csqdatecollect.Add(DateTime.Parse(row[0].ToString()).ToShortDateString());
+                    csqdatecollect.Add(DateTime.Parse(row.ItemArray[0].ToString()).ToShortDateString());
                 }
                 foreach (DataRow row in cshTable.Rows)
                 {
-                    cshdatecollect.Add(DateTime.Parse(row[0].ToString()).ToShortDateString());
+                    cshdatecollect.Add(DateTime.Parse(row.ItemArray[0].ToString()).ToShortDateString());
                 }
                 csqWellcsrqs.Add(item.JH, csqdatecollect);
                 cshWellcsrqs.Add(item.JH, cshdatecollect);

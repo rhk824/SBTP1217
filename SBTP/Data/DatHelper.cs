@@ -146,9 +146,10 @@ namespace SBTP.Data
         private static void CheckRLS6()
         {
             string inputStr = "**XGPJ\r\n";
+            inputStr += "*SJ TIMESPAN\r\n";
             inputStr += "*SJPJ // 井号 调剖层名 措施时间 调前注水 调前吸水分数 调前压力 调前视吸水指数 调后注水 调后吸水分数 调后压力 调后吸水指数 差值注水 差值吸水分数 差值压力 差值吸水指数\r\n";
             inputStr += "/SJPJ\r\n";
-            //inputStr += "*YJPJ // 井号 月产液 月产油 化学剂浓度 综合含水 措施后月产液  月产油 化学剂浓度 综合含水 累积增油\r\n";
+            inputStr += "*YJ TIMESPAN\r\n";
             inputStr += "*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井\r\n";
             inputStr += "/YJPJ\r\n";
             using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
@@ -2046,42 +2047,48 @@ namespace SBTP.Data
         /// <param name="jh"></param>
         /// <param name="tpxgModel"></param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
-        public static void SaveTpjxgpj(List<TpxgModel> tpxgModel)
+        public static void SaveTpjxgpj(List<TpxgModel> tpxgModel,string Start,string End)
         {
             CheckRLS6();
             List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT"));
-            using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", false, Encoding.UTF8))
-            {
-                List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*SJPJ // 井号 调剖层名 措施时间 调前注水 调前吸水分数 调前压力 调前视吸水指数 调后注水 调后吸水分数 调后压力 调后吸水指数 差值注水 差值吸水分数 差值压力 差值吸水指数");
-                int endIndex = lines.IndexOf("/SJPJ");
-                lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
-                lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
-                List<string> newData = new List<string>();
+            using StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", false, Encoding.UTF8);
+            List<string> newLines = new List<string>();
+            int timeIndex = lines.IndexOf("*SJ TIMESPAN");
+            int startIndex = lines.IndexOf("*SJPJ // 井号 调剖层名 措施时间 调前注水 调前吸水分数 调前压力 调前视吸水指数 调后注水 调后吸水分数 调后压力 调后吸水指数 差值注水 差值吸水分数 差值压力 差值吸水指数");
+            int endIndex = lines.IndexOf("/SJPJ");
+            //移除列表内容
+            lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
+            //移除时间节点
+            lines.RemoveRange(timeIndex + 1, startIndex - timeIndex - 1);
+            lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
+            List<string> newData = new List<string>();
 
-                foreach (TpxgModel item in tpxgModel)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append($"{item.JH}\t");
-                    sb.Append($"{item.TPCM}\t");
-                    sb.Append($"{item.CSSJ}\t");
-                    sb.Append($"{item.TQZS}\t");
-                    sb.Append($"{item.TQXSFS}\t");
-                    sb.Append($"{item.TQYL}\t");
-                    sb.Append($"{item.TQXSZS}\t");
-                    sb.Append($"{item.THZS}\t");
-                    sb.Append($"{item.THXSFS}\t");
-                    sb.Append($"{item.THYL}\t");
-                    sb.Append($"{item.THXSZS}\t");
-                    sb.Append($"{item.CZZS}\t");
-                    sb.Append($"{item.CZXSFS}\t");
-                    sb.Append($"{item.CZYL}\t");
-                    sb.Append($"{item.CZXSZS}\r\n");
-                    newData.Add(sb.ToString());
-                }
-                newLines.InsertRange(startIndex + 1, newData);
-                sw.Write(string.Join("", newLines.ToArray()));
+            foreach (TpxgModel item in tpxgModel)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append($"{item.JH}\t");
+                sb.Append($"{item.TPCM}\t");
+                sb.Append($"{item.CSSJ}\t");
+                sb.Append($"{item.TQZS}\t");
+                sb.Append($"{item.TQXSFS}\t");
+                sb.Append($"{item.TQYL}\t");
+                sb.Append($"{item.TQXSZS}\t");
+                sb.Append($"{item.THZS}\t");
+                sb.Append($"{item.THXSFS}\t");
+                sb.Append($"{item.THYL}\t");
+                sb.Append($"{item.THXSZS}\t");
+                sb.Append($"{item.CZZS}\t");
+                sb.Append($"{item.CZXSFS}\t");
+                sb.Append($"{item.CZYL}\t");
+                sb.Append($"{item.CZXSZS}\r\n");
+                newData.Add(sb.ToString());
             }
+            startIndex = newLines.IndexOf("*SJPJ // 井号 调剖层名 措施时间 调前注水 调前吸水分数 调前压力 调前视吸水指数 调后注水 调后吸水分数 调后压力 调后吸水指数 差值注水 差值吸水分数 差值压力 差值吸水指数\r\n");
+            //插入内容
+            newLines.InsertRange(startIndex + 1, newData);
+            //插入时间
+            newLines.Insert(startIndex, Start + "-" + End + "\r\n");
+            sw.Write(string.Join("", newLines.ToArray()));
         }
 
 
@@ -2090,56 +2097,41 @@ namespace SBTP.Data
         /// </summary>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:指定 IFormatProvider", Justification = "<挂起>")]
-        public static List<TpxgModel> TpjpjRead()
+        public static List<TpxgModel> TpjpjRead(out string[] timespan)
         {
-
             CheckRLS6();
-            string fileStr = "";
-            string readStr = " ";
+            timespan = null;
             if (!File.Exists(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT")) { return null; }
-            using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
-            {
-                while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
-                {
-                    if (readStr.Contains("*SJPJ //"))
-                    {
-                        while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
-                        {
-                            if (readStr.Contains("/SJPJ"))
-                                break;
-                            else
-                                fileStr += readStr + ",";
-                        }
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(fileStr)) return null;
+            List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT"));           
+            int timeIndex = lines.IndexOf("*SJ TIMESPAN");
+            int startIndex = lines.IndexOf("*SJPJ // 井号 调剖层名 措施时间 调前注水 调前吸水分数 调前压力 调前视吸水指数 调后注水 调后吸水分数 调后压力 调后吸水指数 差值注水 差值吸水分数 差值压力 差值吸水指数");
+            int endIndex = lines.IndexOf("/SJPJ");
+
             List<TpxgModel> tpxgModels = new List<TpxgModel>();
-            List<string> dataArry = fileStr.Split(',').ToList();
-            dataArry.RemoveAt(dataArry.Count - 1);
-            foreach (var item in dataArry)
+            for (int i = startIndex + 1; i < endIndex; i++)
             {
                 TpxgModel tpxgModel = new TpxgModel()
                 {
-                    JH = item.Split('\t')[0],
-                    TPCM = item.Split('\t')[1],
-                    CSSJ = item.Split('\t')[2],
-                    TQZS = double.Parse(item.Split('\t')[3]),
-                    TQXSFS = double.Parse(item.Split('\t')[4]),
-                    TQYL = double.Parse(item.Split('\t')[5]),
-                    TQXSZS = double.Parse(item.Split('\t')[6]),
-                    THZS = double.Parse(item.Split('\t')[7]),
-                    THXSFS = double.Parse(item.Split('\t')[8]),
-                    THYL = double.Parse(item.Split('\t')[9]),
-                    THXSZS = double.Parse(item.Split('\t')[10]),
-                    CZZS = double.Parse(item.Split('\t')[11]),
-                    CZXSFS = double.Parse(item.Split('\t')[12]),
-                    CZYL = double.Parse(item.Split('\t')[13]),
-                    CZXSZS = double.Parse(item.Split('\t')[14])
+                    JH = lines[i].Split('\t')[0],
+                    TPCM = lines[i].Split('\t')[1],
+                    CSSJ = lines[i].Split('\t')[2],
+                    TQZS = double.Parse(lines[i].Split('\t')[3]),
+                    TQXSFS = double.Parse(lines[i].Split('\t')[4]),
+                    TQYL = double.Parse(lines[i].Split('\t')[5]),
+                    TQXSZS = double.Parse(lines[i].Split('\t')[6]),
+                    THZS = double.Parse(lines[i].Split('\t')[7]),
+                    THXSFS = double.Parse(lines[i].Split('\t')[8]),
+                    THYL = double.Parse(lines[i].Split('\t')[9]),
+                    THXSZS = double.Parse(lines[i].Split('\t')[10]),
+                    CZZS = double.Parse(lines[i].Split('\t')[11]),
+                    CZXSFS = double.Parse(lines[i].Split('\t')[12]),
+                    CZYL = double.Parse(lines[i].Split('\t')[13]),
+                    CZXSZS = double.Parse(lines[i].Split('\t')[14])
                 };
                 tpxgModels.Add(tpxgModel);
             }
+            if(timeIndex+1!= startIndex)
+                timespan = lines[timeIndex + 1].Split('-');
             return tpxgModels;
         }
 
@@ -2147,76 +2139,63 @@ namespace SBTP.Data
         /// 油井评价
         /// </summary>
         /// <param name="yjxgModel"></param>
-        public static void SaveYjxgpj(List<YjxgModel> yjxgModel)
+        public static void SaveYjxgpj(List<YjxgModel> yjxgModel,string date)
         {
             CheckRLS6();
             List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT"));
-            using (StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", false, Encoding.UTF8))
-            {
-                List<string> newLines = new List<string>();
-                int startIndex = lines.IndexOf("*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井");
-                int endIndex = lines.IndexOf("/YJPJ");
-                lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
-                lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
-                List<string> newData = new List<string>();
+            using StreamWriter sw = new StreamWriter(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", false, Encoding.UTF8);
+            List<string> newLines = new List<string>();
+            int timeIndex = lines.IndexOf("*YJ TIMESPAN");
+            int startIndex = lines.IndexOf("*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井");
+            int endIndex = lines.IndexOf("/YJPJ");
+            lines.RemoveRange(startIndex + 1, endIndex - startIndex - 1);
+            lines.RemoveRange(timeIndex + 1, startIndex - timeIndex - 1);
+            lines.ForEach(item => newLines.Add(string.Format("{0}{1}", item, "\r\n")));
+            List<string> newData = new List<string>();
 
-                foreach (YjxgModel item in yjxgModel)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append($"{item.JH}\t");
-                    sb.Append($"{item.CSSJ}\t");
-                    sb.Append($"{item.NHSSSL}\t");
-                    sb.Append($"{item.CSQYCY}\t");
-                    sb.Append($"{item.CSQYCYL}\t");
-                    sb.Append($"{item.CSQHXJ}\t");
-                    sb.Append($"{item.CSQZHHS}\t");
-                    sb.Append($"{item.CSHYCY}\t");
-                    sb.Append($"{item.CSHYCYL}\t");
-                    sb.Append($"{item.CSHHXJ}\t");
-                    sb.Append($"{item.CSHZHHS}\t");
-                    sb.Append($"{item.LJZY}\t");
-                    sb.Append($"{item.SSTPJ}\r\n");
-                    newData.Add(sb.ToString());
-                }
-                newLines.InsertRange(startIndex + 1, newData);
-                sw.Write(string.Join("", newLines.ToArray()));
+            foreach (YjxgModel item in yjxgModel)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append($"{item.JH}\t");
+                sb.Append($"{item.CSSJ}\t");
+                sb.Append($"{item.NHSSSL}\t");
+                sb.Append($"{item.CSQYCY}\t");
+                sb.Append($"{item.CSQYCYL}\t");
+                sb.Append($"{item.CSQHXJ}\t");
+                sb.Append($"{item.CSQZHHS}\t");
+                sb.Append($"{item.CSHYCY}\t");
+                sb.Append($"{item.CSHYCYL}\t");
+                sb.Append($"{item.CSHHXJ}\t");
+                sb.Append($"{item.CSHZHHS}\t");
+                sb.Append($"{item.LJZY}\t");
+                sb.Append($"{item.SSTPJ}\r\n");
+                newData.Add(sb.ToString());
             }
+            startIndex = newLines.IndexOf("*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井\r\n");
+            //插入内容
+            newLines.InsertRange(startIndex + 1, newData);
+            //插入时间
+            newLines.Insert(startIndex, date + "\r\n");
+            sw.Write(string.Join("", newLines.ToArray()));
         }
 
         /// <summary>
         /// 油井效果评价
         /// </summary>
         /// <returns></returns>
-        public static List<YjxgModel> YjjpjRead()
+        public static List<YjxgModel> YjjpjRead(out string date)
         {
             CheckRLS6();
-            string fileStr = "";
-            string readStr = " ";
-            if (!File.Exists(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT")) { return null; }
-            using (FileStream fs = new FileStream(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT", FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
-            {
-                while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
-                {
-                    if (readStr.Contains("*YJPJ //"))
-                    {
-                        while (!string.IsNullOrEmpty(readStr = sr.ReadLine()))
-                        {
-                            if (readStr.Contains("/YJPJ"))
-                                break;
-                            else
-                                fileStr += readStr + "*";
-                        }
-                    }
-                }
-            }
-            if (string.IsNullOrEmpty(fileStr)) return null;
+            date = string.Empty;
+            List<string> lines = new List<string>(File.ReadAllLines(string.Format(datPath, App.Project[0].PROJECT_LOCATION) + @"\RLS6.DAT"));            
+            int timeIndex = lines.IndexOf("*YJ TIMESPAN");
+            int startIndex = lines.IndexOf("*YJPJ // 井号 措施时间 年含水上升率 月产液 月产油 化学剂浓度 综合含水 措施后月产液 月产油 化学剂浓度 综合含水 累计增油 所属调剖井");
+            int endIndex = lines.IndexOf("/YJPJ");
+
             List<YjxgModel> yjxgModels = new List<YjxgModel>();
-            List<string> dataArry = fileStr.Split('*').ToList();
-            dataArry.RemoveAt(dataArry.Count - 1);
-            foreach (var item in dataArry)
+            for (int i = startIndex + 1; i < endIndex; i++)
             {
-                string[] resultArry = item.Split('\t');
+                string[] resultArry = lines[i].Split('\t');
                 YjxgModel yjxgModel = new YjxgModel()
                 {
                     JH = resultArry[0],
@@ -2235,6 +2214,8 @@ namespace SBTP.Data
                 };
                 yjxgModels.Add(yjxgModel);
             }
+            if (timeIndex + 1 != startIndex)
+                date = lines[timeIndex + 1].Trim();
             return yjxgModels;
         }
 

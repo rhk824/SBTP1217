@@ -207,7 +207,7 @@ namespace SBTP.View.TPJ
             //点数
             //int capacity = 30000;
             StringBuilder sqlStr = new StringBuilder();
-            sqlStr.Append("select STL,KXD from OIL_WELL_C");
+            sqlStr.Append("select STL,KXD from OIL_WELL_C where skqk<>'' ");
             DataTable points = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             //int ex = points.Rows.Count / capacity;
             List<Point> DataPoints = new List<Point>();

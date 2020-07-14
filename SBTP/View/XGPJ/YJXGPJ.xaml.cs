@@ -273,17 +273,16 @@ namespace SBTP.View.XGPJ
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1307:指定 StringComparison", Justification = "<挂起>")]
         private void ListInitialize(object sender, RoutedEventArgs e)
         {
-            //dataSource = new ObservableCollection<string>();
             Pj_Group = new Dictionary<string, string>();
             yjxgModels = new ObservableCollection<YjxgModel>();
 
-            sjpj = DatHelper.TpjpjRead();
-            var yjpj = DatHelper.YjjpjRead();
+            sjpj = DatHelper.TpjpjRead(out string[] timespan);
+            var yjpj = DatHelper.YjjpjRead(out string date);
             var zcjz = DatHelper.read_zcjz();
             List<string> yj = new List<string>();
-
+            dp_comment_time.Text = date;
             //列表
-            if(sjpj!=null)
+            if (sjpj!=null)
             {
                 sjpj.ForEach(x =>
                 {
@@ -511,7 +510,7 @@ namespace SBTP.View.XGPJ
         private void CreateChart(string jh, string start, string end)
         {
             MyToolKit.Series.Clear();
-            StringBuilder sqlStr = new StringBuilder("select * from OIL_WELL_MONTH where zt=1 and JH='" + jh + "' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 order by NY");
+            StringBuilder sqlStr = new StringBuilder("select * from OIL_WELL_MONTH where JH='" + jh + "' AND DateDiff('m',NY,'" + end + "')>=0 AND DateDiff('m','" + start + "',NY)>=0 order by NY");
             DataTable line_data = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
             Dictionary<string, double> points = new Dictionary<string, double>();
             double interval = 10;
@@ -551,7 +550,7 @@ namespace SBTP.View.XGPJ
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            DatHelper.SaveYjxgpj(yjxgModels.ToList());
+            DatHelper.SaveYjxgpj(yjxgModels.ToList(), dp_comment_time.Text);
             MessageBox.Show("保存成功！");
         }
 

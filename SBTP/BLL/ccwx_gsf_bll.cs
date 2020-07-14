@@ -106,7 +106,7 @@ namespace SBTP.BLL
             oc_xcsj.Clear();
 
             StringBuilder sql = new StringBuilder();
-            sql.AppendFormat("select * from oil_well_c where jh = \"{0}\"", tpjing.jh);
+            sql.AppendFormat("select * from oil_well_c where jh = \"{0}\" and skqk<>''", tpjing.jh);
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
 
             for (int i = 0; i < dt.Rows.Count; i++)

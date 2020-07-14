@@ -374,15 +374,20 @@ namespace SBTP.View.XGPJ
         {
             dataSource = new ObservableCollection<string>();
             tpxgModels = new ObservableCollection<TpxgModel>();
-            if (DatHelper.TpjpjRead() != null)
+            List<TpxgModel> tpjpj = DatHelper.TpjpjRead(out string[] timespan);
+            if (tpjpj.Count > 0)
             {
                 List<string> names = new List<string>();
-                Data.DatHelper.TpjpjRead().ForEach(x => { tpxgModels.Add(x); names.Add(x.JH); });
-                if (Data.DatHelper_RLS4.read_XGYC_ZRJ() != null)
-                    Data.DatHelper_RLS4.read_XGYC_ZRJ().ForEach(x => { if (!names.Contains(x.JH)) dataSource.Add(x.JH); });
+                this.comment_st = DateTime.Parse(timespan[0]);
+                this.comment_et = DateTime.Parse(timespan[1]);
+                run_comment_st.Text = timespan[0];
+                run_comment_et.Text = timespan[1];
+                tpjpj.ForEach(x => { tpxgModels.Add(x); names.Add(x.JH); });
+                if (DatHelper_RLS4.read_XGYC_ZRJ() != null)
+                    DatHelper_RLS4.read_XGYC_ZRJ().ForEach(x => { if (!names.Contains(x.JH)) dataSource.Add(x.JH); });
             }
             else
-                Data.DatHelper_RLS4.read_XGYC_ZRJ().ForEach(x => dataSource.Add(x.JH));
+                DatHelper_RLS4.read_XGYC_ZRJ().ForEach(x => dataSource.Add(x.JH));
             tpj_list.ItemsSource = dataSource;
         }
 
@@ -399,46 +404,6 @@ namespace SBTP.View.XGPJ
         {
             e.Row.Header = e.Row.GetIndex() + 1;
         }
-
-
-        /// <summary>
-        /// 提取
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:丢失范围之前释放对象", Justification = "<挂起>")]
-        //private void Extract_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if (tpxgModels.Count == 0) return;
-        //    double tqzs_sum = 0;
-        //    double tqyl_sum = 0;
-        //    double tqawi_sum = 0;
-        //    var tpj_data = Data.DatHelper.TPJDataRead();
-        //    foreach (var item in tpxgModels)
-        //    {
-        //        var query_dr = tpj_data.AsEnumerable().Where(dr => dr["jh"].Equals(item.JH)).First();
-        //        //视吸水指数
-        //        //double awi = double.Parse(Data.DatHelper.TPJDataRead().Select("JH='" + item.JH + "'")[0]["AWI"].ToString());
-        //        double awi = Unity.ToDouble(query_dr["awi"]);
-        //        //日注液量
-        //        double rzyl = 0;
-        //        if (Data.DatHelper.read_jcxx_tpcls().Count != 0)
-        //            rzyl = Data.DatHelper.read_jcxx_tpcls().Find(x => x.jh.Equals(item.JH)).dqrzl;
-        //        //压力
-        //        double tqyl = rzyl / awi;
-        //        item.TQXSZS = Math.Round(awi, 3);
-        //        item.TQZS = Math.Round(rzyl, 3);
-        //        item.TQYL = Math.Round(tqyl, 3);
-        //        tqzs_sum += item.TQZS;
-        //        tqyl_sum += item.TQYL;
-        //        tqawi_sum += item.TQXSZS * item.TQYL;
-        //    }
-        //    //tqyl_average.Content = tqyl_sum / tpxgModels.Count;
-        //    //tqzs_average.Content = tqzs_sum / tpxgModels.Count;
-        //    //tqawi_average.Content = Math.Round(tqawi_sum / tqyl_sum, 5);
-        //}
-
-
         /// <summary>
         /// 评价
         /// </summary>
@@ -449,8 +414,8 @@ namespace SBTP.View.XGPJ
         {
             new ChooseCommentDate(this).ShowDialog();
 
-            run_comment_st.Text = Unity.DateTimeToString(comment_st, "yyyy年MM月");
-            run_comment_et.Text = Unity.DateTimeToString(comment_et, "yyyy年MM月");
+            run_comment_st.Text = Unity.DateTimeToString(comment_st, "yyyy/MM");
+            run_comment_et.Text = Unity.DateTimeToString(comment_et, "yyyy/MM");
             string[] date = DatHelper.TPJParaRead();
 
             var query = DBContext.db_water_well_month__zt1()
@@ -479,7 +444,7 @@ namespace SBTP.View.XGPJ
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            Data.DatHelper.SaveTpjxgpj(tpxgModels.ToList());
+            DatHelper.SaveTpjxgpj(tpxgModels.ToList(), run_comment_st.Text, run_comment_et.Text);
             MessageBox.Show("保存成功！");
         }
 
@@ -512,16 +477,9 @@ namespace SBTP.View.XGPJ
                     newtpxg.TQXSZS = query.CSQ_SXSZS;                    
                 }
                 tpxgModels.Add(newtpxg);
-                //tpj_list.Items.Remove(select[i]);
                 dataSource.Remove(select[i].ToString());
             }
             tpxgModels = new ObservableCollection<TpxgModel>(tpxgModels.OrderBy(p => p.CSSJ));
-            //dataSource.Clear();
-            //for (int i = 0; i < source.Count; i++)
-            //{
-            //    dataSource.Add(source[i]);
-            //}
-
         }
 
         private void btn_left_Click(object sender, RoutedEventArgs e)

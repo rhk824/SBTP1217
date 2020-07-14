@@ -17,19 +17,19 @@
     </Page.Resources>
 
     <Grid>
-        <!--<Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <GroupBox Name="gb_left" Header="** 井 小层数据" >
-            <StackPanel Orientation="Vertical">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <CheckBox Name="isCal_K" Content="是否计算渗透率" VerticalAlignment="Center" HorizontalAlignment="Right" IsChecked="{Binding isCalculateStl,Mode=TwoWay}"/>
-                <DataGrid ItemsSource="{Binding oc_xcsj}" LayoutUpdated="Layout_Updated" x:Name="xc_grid">
+                <DataGrid ItemsSource="{Binding oc_xcsj}" Grid.Row="1" LayoutUpdated="Layout_Updated" x:Name="xc_grid">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="油层组" Binding="{Binding YCZ}"/>
                         <DataGridTextColumn Header="小层号" Binding="{Binding XCH}"/>
@@ -41,7 +41,8 @@
                         <DataGridCheckBoxColumn Header="增注段" Binding="{Binding zzd,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-            </StackPanel>
+            </Grid>
+
         </GroupBox>
 
         <GroupBox Name="gb_right" Grid.Column="1" Header="** 井 沉积柱状图">

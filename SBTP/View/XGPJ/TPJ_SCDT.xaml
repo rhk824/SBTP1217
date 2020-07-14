@@ -27,7 +27,7 @@
                 <ComboBox Name="Wells" Width="100"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,10,0">
-                <TextBlock VerticalAlignment="Center" Text="措施前时间段："/>
+                <TextBlock VerticalAlignment="Center" Text="措施时间段："/>
                 <DatePicker Name="StartTime" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>
                 <TextBlock VerticalAlignment="Center" Text="-"/>
                 <DatePicker Name="EndTime" VerticalAlignment="Center" HorizontalAlignment="Left" calender:DatePickerCalendar.IsMonthYear="True" calender:DatePickerDateFormat.DateFormat="yyyy/MM"/>

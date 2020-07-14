@@ -42,7 +42,7 @@ namespace SBTP.View.XGPJ
             MyToolKit.Series.Clear();
             var start_time = DateTime.Parse(start);
             var end_time = DateTime.Parse(end);
-            var query = DBContext.db_water_well_month__zt0()
+            var query = DBContext.db_water_well_month()
                 .Where(p =>p.JH == jh && p.NY >= start_time && p.NY <= end_time).OrderBy(p => p.NY).ToList();
 
             Dictionary<string, decimal> points_1 = new Dictionary<string, decimal>(); //日注液量（m3/d）
