@@ -129,13 +129,18 @@ namespace SBTP.View.CSSJ
                         int first_jq_index = cdModels.IndexOf(first_jq);
                         int index = 0;
                         if (first_jq_index > 0)
-                        {
+                        {                           
                             index = first_jq_index;
                             //计算注聚量
                             for (int i = index; i < cdModels.Count; i++)
                             {
                                 if (i == cdModels.Count - 1) continue;
-                                ljzj += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Pzcdh, cdModels[i].Date, cdModels[i + 1].Date, out double jqts);
+                                if(string.IsNullOrEmpty(cdModels[i].Pzcdh))
+                                {
+                                    MessageBox.Show("井号："+cdModels[i].Jh+" 的配注层段号为空");
+                                    return;
+                                }    
+                                ljzj += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Pzcdh, cdModels[i].Date, cdModels[i + 1].Date, cdModels[i].IsFz, out double jqts);
                                 Ljjqts += jqts;
                                 Ljjqns += (DateTime.Parse(cdModels[i + 1].Date) - DateTime.Parse(cdModels[i].Date)).TotalDays / 365;
                             }
@@ -145,7 +150,12 @@ namespace SBTP.View.CSSJ
                         //计算注水量
                         for (int i = 0; i < index; i++)
                         {
-                            ljzs += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Pzcdh, cdModels[i].Date, cdModels[i + 1].Date, out double zsts);
+                            if (string.IsNullOrEmpty(cdModels[i].Pzcdh))
+                            {
+                                MessageBox.Show("井号：" + cdModels[i].Jh + " 的配注层段号为空");
+                                return;
+                            }
+                            ljzs += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Pzcdh, cdModels[i].Date, cdModels[i + 1].Date, cdModels[i].IsFz, out double zsts);
                             Ljsqts += zsts;
                             Ljsqns += (DateTime.Parse(cdModels[i].Date) - DateTime.Parse(cdModels[0].Date)).TotalDays / 365;
                         }
@@ -153,8 +163,13 @@ namespace SBTP.View.CSSJ
                     else
                         for (int i = 0; i < cdModels.Count; i++)
                         {
+                            if (string.IsNullOrEmpty(cdModels[i].Pzcdh))
+                            {
+                                MessageBox.Show("井号：" + cdModels[i].Jh + " 的配注层段号为空");
+                                return;
+                            }
                             if (i == cdModels.Count - 1) continue;
-                            ljzj += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Pzcdh, cdModels[i].Date, cdModels[i + 1].Date, out double jqts);
+                            ljzj += getMonthData(cdModels[i].Qyfs, x, cdModels[i].Blxs, cdModels[i].Pzcdh, cdModels[i].Date, cdModels[i + 1].Date, cdModels[i].IsFz, out double jqts);
                             Ljjqts += jqts;
                             Ljjqns += (DateTime.Parse(cdModels[i + 1].Date) - DateTime.Parse(cdModels[i].Date)).TotalDays / 365;
                         }
@@ -181,7 +196,8 @@ namespace SBTP.View.CSSJ
             double ljzsl=0, ljzjl=0, ljts = 0, result = 0;
             string sql = $"select a.ny,a.jh,a.ts,a.yzsl,a.yzmyl,b.cdxh,b.cdyzsl,b.cdyzmyl " +
                 $"from water_well_month a left join fzj_month b on a.jh=b.jh and a.ny=b.ny " +
-                $"where a.ZT=0 and a.jh=\"{jh}\" and b.cdxh=\"{cdxh}\" and a.ny > #{Convert.ToDateTime(start).ToString("yyyy / MM")}# and a.ny<= #{Convert.ToDateTime(end).ToString("yyyy / MM")}# order by a.ny";
+                $"where a.ZT=0 and a.jh=\"{jh}\" and b.cdxh=\"{cdxh}\" and a.ny > #{Convert.ToDateTime(start):yyyy / MM}# and a.ny<= #{Convert.ToDateTime(end):yyyy / MM}# order by a.ny";
+
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
             if (dt.Rows.Count == 0)
             {
@@ -200,6 +216,45 @@ namespace SBTP.View.CSSJ
             }
             dt.Rows.OfType<DataRow>().ToList().ForEach(x => ljts += double.Parse(x["TS"].ToString()));
 
+            switch (qylx)
+            {
+                case "水驱": result = ljzsl; break;
+                case "聚驱": result = ljzjl; break;
+            }
+            ts = ljts;
+            return result;
+        }
+
+        private double getMonthData(string qylx, string jh, double bl, string cdxh, string start, string end,bool isFz, out double ts)
+        {
+            double ljzsl = 0, ljzjl = 0, ljts = 0, result = 0;
+            string sql = "";
+            string fzsql = $"select a.ny,a.jh,a.ts,a.yzsl,a.yzmyl,b.cdxh,b.cdyzsl,b.cdyzmyl " +
+                $"from water_well_month a left join fzj_month b on a.jh=b.jh and a.ny=b.ny " +
+                $"where a.ZT=0 and a.jh=\"{jh}\" and b.cdxh=\"{cdxh}\" and a.ny > #{Convert.ToDateTime(start):yyyy / MM}# and a.ny<= #{Convert.ToDateTime(end):yyyy / MM}# order by a.ny";
+            
+            string ybsql = $"select * from water_well_month where zt=0 and jh=\"{jh}\" and ny > #{Convert.ToDateTime(start):yyyy / MM}# and ny<= #{Convert.ToDateTime(end):yyyy / MM}# order by ny";
+            sql = ybsql;
+            if (isFz)
+                sql = fzsql;
+            DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
+            if (dt.Rows.Count == 0)
+            {
+                ts = 0;
+                return 0;
+            }
+            if (cdxh.Equals("0"))
+            {
+                ljzsl = double.Parse(dt.Compute("Sum(yzsl)", "").ToString()) * bl / 10000;
+                ljzjl = (double.Parse(dt.Compute("Sum(yzmyl)", "").ToString()) + double.Parse(dt.Compute("Sum(yzsl)", "").ToString())) * bl / 10000;
+            }
+            else
+            {
+                ljzsl = double.Parse(dt.Compute("Sum(cdyzsl)", "").ToString()) * bl / 10000;
+                ljzjl = (double.Parse(dt.Compute("Sum(cdyzmyl)", "").ToString()) + double.Parse(dt.Compute("Sum(cdyzsl)", "").ToString())) * bl / 10000;
+            }
+            dt.Rows.OfType<DataRow>().ToList().ForEach(x => ljts += double.Parse(x["TS"].ToString()));
+
 
             switch (qylx)
             {
@@ -214,7 +269,7 @@ namespace SBTP.View.CSSJ
         {
             double sum_yzsl = 0, ts = 0, sum_yzmyl = 0;
             string sql = $"select * from water_well_month " +
-                $"where ZT=0 and jh=\"{jh}\" and ny between #{Convert.ToDateTime(start).ToString("yyyy/MM")}# and  #{Convert.ToDateTime(end).ToString("yyyy/MM")}# " +
+                $"where ZT=0 and jh=\"{jh}\" and ny between #{Convert.ToDateTime(start).ToString("yyyy/MM")}# and  #{Convert.ToDateTime(end):yyyy/MM}# " +
                 $"order by ny";
             DataTable dt = DbHelperOleDb.Query(sql.ToString()).Tables[0];
             if (dt.Rows.Count == 0) return 0;
@@ -235,8 +290,9 @@ namespace SBTP.View.CSSJ
         private string jh;
         private string date;
         private string pzcdh;
-        private double blxs;
+        private double blxs = 0.8;
         private string qyfs;
+        private bool isFz = false;
         private bool iscustomized = false;
 
         public string Jh { get => jh; set { jh = value; NotifyPropertyChanged("Jh"); } }
@@ -252,5 +308,7 @@ namespace SBTP.View.CSSJ
         public double Blxs { get => blxs; set { blxs = value; NotifyPropertyChanged("Blxs"); } }
         public string Qyfs { get => qyfs; set { qyfs = value; NotifyPropertyChanged("Qyfs"); } }
         public bool Iscustomized { get => iscustomized; set { iscustomized = value; NotifyPropertyChanged("Iscustomized"); } }
+        //是否分注
+        public bool IsFz { get => isFz; set => isFz = value; }
     }
 }

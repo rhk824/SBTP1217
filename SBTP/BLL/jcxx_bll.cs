@@ -252,9 +252,54 @@ namespace SBTP.BLL
             return Unity.ToDouble(dt.Rows[0]["jg"]);
         }
 
+        /// <summary>
+        /// 查询目标井配注层段类型
+        /// </summary>
+        /// <param name="jh"></param>
+        /// <returns></returns>
+        public static DataTable DistinctPzcds(string jh)
+        {
+            StringBuilder sqlstr = new StringBuilder("select distinct pzcds from water_well_month where jh='" + jh + "'");
+            return DbHelperOleDb.Query(sqlstr.ToString()).Tables[0];
+        }
+
+        /// <summary>
+        /// 年月，配注层段数，月注母液量
+        /// </summary>
+        /// <param name="jh"></param>
+        /// <returns></returns>
+        public static Dictionary<string, KeyValuePair<string, double>> GeneratNode(string jh)
+        {
+            DataTable pzType = DistinctPzcds(jh);
+            if (pzType.Rows.Count == 0) return null;
+            Dictionary<string, KeyValuePair<string, double>> result = new Dictionary<string, KeyValuePair<string, double>>();
+            //查询水驱阶段方案节点
+            StringBuilder sqstr = new StringBuilder("select Min(NY) from water_well_month where jh='" + jh + "' and YZMYL=0 and zt=0 and pzcds='{0}'");
+            //查询聚驱阶段方案节点
+            StringBuilder jqstr = new StringBuilder("select Min(NY) from water_well_month where jh='" + jh + "' and YZMYL>0 and zt=0 and pzcds='{0}'");
+            foreach (DataRow item in pzType.Rows)
+            {
+                object sqny = DbHelperOleDb.GetSingle(string.Format(sqstr.ToString(), item.ItemArray[0].ToString()));
+                object jqny = DbHelperOleDb.GetSingle(string.Format(jqstr.ToString(), item.ItemArray[0].ToString()));
+                if (sqny != null)
+                {
+                    result.Add(sqny.ToString(), new KeyValuePair<string, double>(item.ItemArray[0].ToString(), 0));
+                }
+                if (jqny != null)
+                {
+                    result.Add(jqny.ToString(), new KeyValuePair<string, double>(item.ItemArray[0].ToString(), 1));
+                }
+            }
+            //获取井史最大时间
+            string nyMax = WaterWellMonth.getMaxDate(jh);
+            //加入井史截止日期
+            result.Add(nyMax, new KeyValuePair<string, double>("end", 2));
+            return result.OrderBy(x => DateTime.Parse(x.Key)).ToDictionary(x => x.Key, x => x.Value);
+        }
+
         #endregion
 
-        
+
 
     }
 }

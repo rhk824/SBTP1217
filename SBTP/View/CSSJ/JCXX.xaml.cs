@@ -84,28 +84,25 @@ namespace SBTP.View.CSSJ
             ObservableCollection<PZFAModel> pZFAModels = new ObservableCollection<PZFAModel>();
             source.ToList().ForEach(x =>
             {
-                string yzmy_minDate = WaterWellMonth.getMinYzmyDate(x.jh);
-                string fa_minDate = WaterWellMonth.getMinDate(x.jh);
-                if (!yzmy_minDate.Equals(fa_minDate))
+                Dictionary<string, KeyValuePair<string, double>> node = jcxx_bll.GeneratNode(x.jh);
+                foreach (var item in node)
                 {
-                    pZFAModels.Add(new PZFAModel()
+                    PZFAModel pZFAModel = new PZFAModel()
                     {
                         Jh = x.jh,
-                        Date = fa_minDate,
-                        Qyfs = "水驱"
-                    });
+                        Date = item.Key
+                    };
+                    if (item.Value.Value.Equals(0))
+                        pZFAModel.Qyfs = "水驱";
+                    else if (item.Value.Value.Equals(1))
+                        pZFAModel.Qyfs = "聚驱";
+                    //确定分注
+                    if (!item.Value.Key.Equals("1") && !item.Value.Key.Equals("end"))
+                        pZFAModel.IsFz = true;
+                    else
+                        pZFAModel.Pzcdh = "0";
+                    pZFAModels.Add(pZFAModel);
                 }
-                pZFAModels.Add(new PZFAModel()
-                {
-                    Jh = x.jh,
-                    Date = yzmy_minDate,
-                    Qyfs = "聚驱"
-                });
-                pZFAModels.Add(new PZFAModel()
-                {
-                    Jh = x.jh,
-                    Date = WaterWellMonth.getMaxDate(x.jh)
-                });
             });
             new PZFA(pZFAModels).ShowDialog();
         }

@@ -365,7 +365,7 @@ namespace SBTP.View.CSSJ
                 {
                     //调后增注段日吸水量
                     double Q_thzzxs = tpcls.dqrzl / (100 - tpcinfo.zrfs) * Math.Log(jz.AverageDistance / 2 / rw) / (Math.Log(double.Parse(i) / rw) / tpcinfo.zzrfs +
-                        Math.Log(jz.AverageDistance / 2 / double.Parse(i)) / tpcinfo.zrfs + Math.Log(jz.AverageDistance / 2 / rw) / (100 - tpcinfo.zzrfs));
+                        Math.Log(jz.AverageDistance / 2 / double.Parse(i)) / tpcinfo.zrfs + Math.Log(jz.AverageDistance / 2 / rw) / (100 - tpcinfo.zrfs));
                     tqxyls.Add(new Point(double.Parse(i), Q_thzzxs));
                     //吸液强度
                     double xyqd = Q_thzzxs / tpcinfo.zzhd * YXQ / 2;

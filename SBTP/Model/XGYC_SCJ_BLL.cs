@@ -82,7 +82,7 @@ namespace SBTP.BLL
             //层间增油 =(Q-Q2)*(100 - 年含水上升率 * 有效期 / 2）
             double cjzy = (Q - Q2) * (100 - x - NHSSSL * TPYXQ / 2) * TPYXQ * 365 / 100;
             //计算增油 = 调剖层增油 + 层间增油
-            this.ZY = ymd == 0 ? (tpczy + cjzy) * 1000 : (tpczy + cjzy) * 1000 / ymd;
+            this.ZY = ymd == 0 ? tpczy + cjzy : (tpczy + cjzy) / ymd;
             #endregion
 
             #region 见效时间

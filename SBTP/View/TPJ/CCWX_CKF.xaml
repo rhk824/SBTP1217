@@ -17,12 +17,16 @@
     </Page.Resources>
 
     <Grid>
+        <!--<Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Name="gb_left" Header="** 井 小层数据">
+        <GroupBox Name="gb_left" Header="** 井 小层数据" >
             <StackPanel Orientation="Vertical">
                 <CheckBox Name="isCal_K" Content="是否计算渗透率" VerticalAlignment="Center" HorizontalAlignment="Right" IsChecked="{Binding isCalculateStl,Mode=TwoWay}"/>
                 <DataGrid ItemsSource="{Binding oc_xcsj}" LayoutUpdated="Layout_Updated" x:Name="xc_grid">

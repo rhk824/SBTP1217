@@ -906,7 +906,7 @@ namespace SBTP.BLL
             }
 
             var oil_ny = oil_list.First().NY;
-            var water_list = waterList.Where(p => p.NY == oil_ny).OrderBy(p => p.NY).ToList();
+            var water_list = waterList.OrderBy(p => p.NY).ToList();
             if (!water_list.Any())
             {
                 message = "水井井史中未检测到相应的油井井史最早时间，检查时间字段";
@@ -928,11 +928,12 @@ namespace SBTP.BLL
             {
                 cy_message = "三次采油";
             }
-            var water_ny = water_list.Where(p => p.YZMYL > 0).First().NY;
+
+            var water_ny = water_list.Where(p => p.YZMYL > 0).First();
 
             update_tag("前言_油井井史最早时间", Unity.DateTimeToString(oil_ny, "yyyy年MM月"));
             update_tag("前言_采油次数", cy_message);
-            update_tag("前言_聚驱时间", Unity.DateTimeToString(water_ny, "yyyy年MM月"));
+            update_tag("前言_聚驱时间", Unity.DateTimeToString(water_ny.NY, "yyyy年MM月"));
 
             message = "操作成功";
             return true;
