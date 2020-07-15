@@ -209,7 +209,7 @@ namespace SBTP.View.CSSJ
         private void ListInitialize(object sender, RoutedEventArgs e)
         {
             dataSource = new ObservableCollection<string>();
-            jqxxyhModels = new ObservableCollection<JqxxyhModel>();
+            jqxxyhModels = Unity.ConvertToObList<JqxxyhModel>(Data.DatHelper.ReadSTCS());
             baseData = Data.DatHelper.read_jcxx_tpcxx();
             tpcHistory = Data.DatHelper.read_jcxx_tpcls();
             tpjInfo = Data.DatHelper.read_jcxx_tpjxx();
@@ -218,8 +218,9 @@ namespace SBTP.View.CSSJ
             tpjnd = Data.DatHelper.TPJND_Read();
             zcjzs = Data.DatHelper.read_zcjz();
 
+            var qury = from i in jqxxyhModels select i.JH;
             if (baseData != null)
-                baseData.ForEach(x => dataSource.Add(x.jh));
+                baseData.ForEach(x => { if (!qury.Contains(x.jh)) dataSource.Add(x.jh); });
         }
         private void jqxx_grid_LoadingRow(object sender, DataGridRowEventArgs e)
         {

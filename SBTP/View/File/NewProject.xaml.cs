@@ -122,17 +122,17 @@ namespace SBTP.View.File
             string fileName = System.Windows.Forms.Application.ExecutablePath;// 获取启动了应用程序的可执行文件的路径及文件名
             string startPath = System.Windows.Forms.Application.StartupPath;//获取启动了应用程序的可执行文件的路径
 
-            RegistryAccessRule rule = new RegistryAccessRule(new NTAccount(Environment.UserDomainName, "Administrator"),
-       RegistryRights.FullControl,
-       InheritanceFlags.ContainerInherit,
-       PropagationFlags.InheritOnly,
-       AccessControlType.Allow);
-            RegistrySecurity mSec = new RegistrySecurity();
-            mSec.AddAccessRule(rule);
+       //     RegistryAccessRule rule = new RegistryAccessRule(new NTAccount(Environment.UserDomainName, "Administrator"),
+       //RegistryRights.FullControl,
+       //InheritanceFlags.ContainerInherit,
+       //PropagationFlags.InheritOnly,
+       //AccessControlType.Allow);
+            //RegistrySecurity mSec = new RegistrySecurity();
+            //mSec.AddAccessRule(rule);
             try
             {
                 RegistryKey RegKey = Registry.ClassesRoot;
-                RegKey.SetAccessControl(mSec);
+                //RegKey.SetAccessControl(mSec);
 
                 //注册文件类型            　　　　　　　
                 RegKey.CreateSubKey(p_FileTypeName).SetValue("", strProject, RegistryValueKind.String);

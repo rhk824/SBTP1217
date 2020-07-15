@@ -204,14 +204,14 @@ namespace Common
                 return null;
         }
         /// <summary>
-        ///ObservableCollection转List
+        ///List转ObservableCollection
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ts"></param>
         /// <returns></returns>
-        public static List<T> ConvertToList<T>(ObservableCollection<T> ts)
+        public static ObservableCollection<T> ConvertToObList<T>(List<T> ts)
         {
-            List<T> newList = new List<T>();
+            ObservableCollection<T> newList = new ObservableCollection<T>();
             foreach (var item in ts)
             {
                 newList.Add(item);

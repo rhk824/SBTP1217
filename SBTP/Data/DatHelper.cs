@@ -20,31 +20,6 @@ namespace SBTP.Data
     {
         private static string datPath = @"{0}\RLS";
         private static string rls3 = "RLS3.DAT";
-        //private static string[] rls3_lines =
-        //{
-        //    // 基础信息
-        //    "**JCXX",
-        //    "*TPCJH // 井号",
-        //    "/TPCJH",
-        //    "*TPCXX // 井号 层号 有效厚度 含油饱和度 注入分数 增注厚度 增注分数 连通方向 封堵段渗透率 增注段渗透率 封堵段孔隙度 增注段孔隙度 封堵段孔喉半径 增注段孔喉半径",
-        //    "/TPCXX",
-        //    "*TPJXX // 井号 液体剂名称 液体剂浓度 颗粒剂名称 颗粒剂粒径 颗粒剂浓度 携带液浓度",
-        //    "/TPJXX",
-        //    "*TPCLS // 井号 井径 注采井距 日注液量 累计注入水量 累计注聚量 累计水驱天数 累计水驱年数 累计聚驱天数 累计聚驱年数",
-        //    "/TPCLS",
-        //    "*JGXX // 液体剂价格 固体剂价格 携带剂价格 原油价格 施工价格 其他费用",
-        //    "/JGXX",
-        //    "/JCXX",
-        //    // 调剖用量优化
-        //    "**STCS // 井号 优化半径 增油 投产比 调剖剂用量 调后增注段日吸水量",
-        //    "/STCS",
-        //    // 调剖段塞设计
-        //    "**TPDSSJ",
-        //    "*TQZRYND 15",
-        //    "*GXSJ 0",
-        //    "/GXSJ",
-        //    "/TPDSSJ"
-        //};
 
         /// <summary>
         /// RLS3检查
