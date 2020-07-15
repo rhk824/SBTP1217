@@ -1,5 +1,6 @@
 ﻿using Common;
 using Maticsoft.DBUtility;
+using Microsoft.Win32;
 using SBTP.BLL;
 using SBTP.Common;
 using SBTP.Data;
@@ -522,7 +523,22 @@ namespace SBTP.View.XGPJ
 
         private void Btn_img_export_Click(object sender, RoutedEventArgs e)
         {
-
+            var element = Container.Content as FrameworkElement;
+            FrameworkElement target = element.FindName("MyToolKit") as FrameworkElement;
+            SaveFileDialog save = new SaveFileDialog();
+            save.Filter = "BMP|*.bmp|PNG|*.png|JPG|*.jpg";
+            try
+            {
+                if (save.ShowDialog().Equals(true))
+                {
+                    Unity.SaveImg(save.FileName, target);
+                }
+                MessageBox.Show("保存成功!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("保存失败！原因：" + ex.Message);
+            }
         }
 
         private void Btn_return_Click(object sender, RoutedEventArgs e)

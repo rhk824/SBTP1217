@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,6 +15,7 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Common
 {
@@ -254,6 +256,25 @@ namespace Common
         public static string IntToString(int i)
         {
             return i.ToString();
+        }
+
+        public static void SaveImg(string path, FrameworkElement element)
+        {
+            try
+            {
+                FileStream fs = new FileStream(path, FileMode.Create);
+                RenderTargetBitmap bmp = new RenderTargetBitmap((int)element.ActualWidth,  //ic是控件的名字
+                (int)element.ActualHeight, 1 / 96, 1 / 96, PixelFormats.Pbgra32);
+                bmp.Render(element);
+                BitmapEncoder encoder = new TiffBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bmp));
+                encoder.Save(fs);
+                fs.Close();
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

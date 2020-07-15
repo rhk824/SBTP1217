@@ -112,7 +112,7 @@
                 <Button Content="绘制" Name="DrawLines" Click="DrawLines_Click"/>
             </StackPanel>
         </StackPanel>
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Name="MyToolKit">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

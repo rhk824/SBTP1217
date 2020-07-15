@@ -1,5 +1,6 @@
 ﻿using Common;
 using Maticsoft.DBUtility;
+using Microsoft.Win32;
 using SBTP.BLL;
 using SBTP.Data;
 using SBTP.Model;
@@ -282,18 +283,22 @@ namespace SBTP.View.XGPJ
             List<string> yj = new List<string>();
             dp_comment_time.Text = date;
             //列表
-            if (sjpj!=null)
+            if (sjpj != null)
             {
                 sjpj.ForEach(x =>
                 {
-                    var sj = zcjz.Find(p => p.JH.Equals(x.JH));
-                    if (sj != null)
+                    if (!string.IsNullOrEmpty(x.CSSJ))
                     {
-                        Pj_Group.Add(sj.JH, sj.oil_wells);
-                        sj.oil_wells.Split(',').ToList().ForEach(x => yj.Add(x));   //添加列表内容（临时）
+                        var sj = zcjz.Find(p => p.JH.Equals(x.JH));
+                        if (sj != null)
+                        {
+                            Pj_Group.Add(sj.JH, sj.oil_wells);
+                            sj.oil_wells.Split(',').ToList().ForEach(x => yj.Add(x));   //添加列表内容
+                        }
                     }
                 });
-                yj.OrderBy(p => p).Distinct().ToList().ForEach(x=> yj_list.Items.Add(x)) ;    //油井井号去重
+                if (yj.Count > 0)
+                    yj.OrderBy(p => p).Distinct().ToList().ForEach(x => yj_list.Items.Add(x));    //油井井号去重              
             }
 
             //表格
@@ -561,7 +566,20 @@ namespace SBTP.View.XGPJ
 
         private void Btn_img_export_Click(object sender, RoutedEventArgs e)
         {
-
+            SaveFileDialog save = new SaveFileDialog();
+            save.Filter = "BMP|*.bmp|PNG|*.png|JPG|*.jpg";
+            try
+            {
+                if (save.ShowDialog().Equals(true))
+                {
+                    Unity.SaveImg(save.FileName, MyToolKit);
+                }
+                MessageBox.Show("保存成功!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("保存失败！原因：" + ex.Message);
+            }
         }
 
         private void Btn_return_Click(object sender, RoutedEventArgs e)
