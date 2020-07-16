@@ -242,6 +242,7 @@ namespace SBTP.View.File
                     case "FZJ_MONTH": file_name = "DBA051"; break;
                     case "XSPM_MONTH": file_name = "DCB02"; break;
                 }
+                if (string.IsNullOrEmpty(file_name)) continue;
                 string sqlStr = "select * from " + item[0].ToString();
                 if (!item[0].ToString().Equals("WELL_STATUS") && !item[0].ToString().Equals("OIL_WELL_C"))
                 {
@@ -343,11 +344,7 @@ namespace SBTP.View.File
                 string item_node_name = item_node.Name;
                 tPJ_Table = new TPJ_table(TableName = item_node_name);
                 ContextMenu menu = new ContextMenu();
-                //MenuItem save_menuItem = new MenuItem
-                //{
-                //    Header = "保存数据"
-                //};
-                
+               
                 MenuItem delete_menuItem = new MenuItem
                 {
                     Header = "删除数据"
@@ -695,6 +692,12 @@ namespace SBTP.View.File
         /// <param name="e"></param>
         private void BatchDelete(object sender, RoutedEventArgs e)
         {
+            var node = treeView.SelectedItem as TreeViewItem;
+            string node_name = node.Name;
+            if(node_name.Equals("csq"))
+                App.Mycache.Set("cszt", 0, App.policy);
+            else if(node_name.Equals("csh"))
+                App.Mycache.Set("cszt", 1, App.policy);
             MessageBoxResult result = MessageBox.Show("确定要删除数据？", "提示", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.No) return;
             else

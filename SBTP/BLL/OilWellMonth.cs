@@ -38,10 +38,10 @@ namespace SBTP.BLL
                    new OleDbParameter("@JH",OleDbType.VarChar,255), 
                    new OleDbParameter("@NY",OleDbType.DBDate,255),
                    new OleDbParameter("@TS",OleDbType.VarChar,255),
-                   new OleDbParameter("@YCYL",OleDbType.VarChar,255),
-                   new OleDbParameter("@YCSL",OleDbType.VarChar,255),
-                   new OleDbParameter("@LY",OleDbType.VarChar,255),
-                   new OleDbParameter("@CCJHWND",OleDbType.VarChar,255),
+                   new OleDbParameter("@YCYL",OleDbType.Double,255),
+                   new OleDbParameter("@YCSL",OleDbType.Double,255),
+                   new OleDbParameter("@LY",OleDbType.Double,255),
+                   new OleDbParameter("@CCJHWND",OleDbType.Double,255),
                    new OleDbParameter("@ZT",OleDbType.Integer,255)
                                          };
                 parameters[0].Value = om.JH;
@@ -49,7 +49,7 @@ namespace SBTP.BLL
                 parameters[2].Value = om.TS;
                 parameters[3].Value = Unity.ToDouble(om.YCYL);
                 parameters[4].Value = Unity.ToDouble(om.YCSL);
-                parameters[5].Value = om.LY;
+                parameters[5].Value = Unity.ToDouble(om.LY);
                 parameters[6].Value = Unity.ToDouble(om.CCJHWND);
                 parameters[7].Value = (int)App.Mycache.Get("cszt");
 

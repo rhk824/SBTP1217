@@ -90,8 +90,8 @@ namespace SBTP.BLL
                 double kh = calculate_kh(k);
                 model.jh = tpjing.jh;
                 model.kh = kh;
-                model.k1 = kh / (tpjing.yxhd - tpjing.zzhd) * (tpjing.zrfs - tpjing.zzrfs);
-                model.k2 = kh / tpjing.zzhd * tpjing.zzrfs;
+                model.k1 = kh / (tpjing.yxhd - tpjing.zzhd) * (tpjing.zrfs - tpjing.zzrfs) / 100;
+                model.k2 = kh / tpjing.zzhd * tpjing.zzrfs / 100;
                 model.r1 = 0;
                 model.r2 = 0;
                 model.calculate_type = 1;

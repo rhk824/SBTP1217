@@ -439,6 +439,17 @@ namespace SBTP.View.XGPJ
                         item.CZYL = item.THYL - item.TQYL;
                         item.CZXSZS = item.THXSZS - item.TQXSZS;
                     }
+                    else
+                    {
+                        item.THZS = 0;
+                        item.THXSFS = 0;    //用户输入
+                        item.THYL = 0;
+                        item.THXSZS = 0;
+                        item.CZZS = 0;
+                        item.CZXSFS = 0;
+                        item.CZYL = 0;
+                        item.CZXSZS = 0;
+                    }
                 }
             }        
         }
