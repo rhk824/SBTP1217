@@ -140,5 +140,15 @@ namespace SBTP.BLL
             StringBuilder sqlStr = new StringBuilder("select * from FIELD_DICTIONARY where TABLE_NAME = '" + tablename + "'");
             return DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
         }
+
+        /// <summary>
+        /// 查询应用调剖剂名称
+        /// </summary>
+        /// <returns></returns>
+        public static DataTable getYyTpjNames()
+        {
+            StringBuilder sqlStr = new StringBuilder("select YMC,GMC,ZY from PC_XTPY_STATUS ");
+            return DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
+        }
     }
 }

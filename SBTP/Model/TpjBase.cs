@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SBTP.Model
 {
-    public class TpjBase
+    public class TpjBase: INotifyPropertyChanged
     {
         private string mc;
         private string dw;
@@ -20,17 +21,25 @@ namespace SBTP.Model
         private string bz;
         private int zt;
 
-        public string Mc { get => mc; set => mc = value; }
-        public string Dw { get => dw; set => dw = value; }
-        public string Tyrq { get => tyrq; set => tyrq = value; }
-        public double Nw { get => nw; set => nw = value; }
-        public double Ny { get => ny; set => ny = value; }
-        public double Nj { get => nj; set => nj = value; }
-        public string Xn { get => xn; set => xn = value; }
-        public string Sxq { get => sxq; set => sxq = value; }
-        public double Jg { get => jg; set => jg = value; }
-        public string Bz { get => bz; set => bz = value; }
-        public int Zt { get => zt; set => zt = value; }
+        public string Mc { get => mc; set { mc = value; Changed("Mc"); } }
+        public string Dw { get => dw; set { dw = value; Changed("Dw"); } }
+        public string Tyrq { get => tyrq; set { tyrq = value; Changed("Tyrq"); } }
+        public double Nw { get => nw; set { nw = value; Changed("Nw"); } }
+        public double Ny { get => ny; set { ny = value; Changed("Ny"); } }
+        public double Nj { get => nj; set { nj = value; Changed("Nj"); } }
+        public string Xn { get => xn; set { xn = value; Changed("Xn"); } }
+        public string Sxq { get => sxq; set { sxq = value; Changed("Sxq"); } }
+        public double Jg { get => jg; set { jg = value; Changed("Jg"); } }
+        public string Bz { get => bz; set { bz = value; Changed("Bz"); } }
+        public int Zt { get => zt; set { zt = value; Changed("Zt"); } }
+
+        #region 属性更改通知
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void Changed(string PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+        #endregion
     }
 
     public class Yttpj : TpjBase
@@ -39,14 +48,10 @@ namespace SBTP.Model
         string zn;
         string gjl;
 
-        public string Cn { get => cn; set => cn = value; }
-        public string Zn { get => zn; set => zn = value; }
-        public string Gjl { get => gjl; set => gjl = value; }
+        public string Cn { get => cn; set { cn = value; Changed("Cn"); } }
+        public string Zn { get => zn; set { zn = value; Changed("Zn"); } }
+        public string Gjl { get => gjl; set { gjl = value; Changed("Gjl"); } }
 
-        public override string ToString()
-        {
-            return cn.ToString() + " " + zn.ToString() + " " + gjl.ToString();
-        }
     }
     public class Kltpj : TpjBase
     {

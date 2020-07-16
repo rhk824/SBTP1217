@@ -3,6 +3,8 @@ using Maticsoft.DBUtility;
 using SBTP.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -14,17 +16,59 @@ using Word = Microsoft.Office.Interop.Word;
 
 namespace SBTP.View.TPJ
 {
+    public class YtjInfo: Yttpj
+    {
+        string sypc;
+        string yxl;
+        /// <summary>
+        /// 使用频次
+        /// </summary>
+        public string Sypc { get => sypc; set { sypc = value; Changed("Sypc"); } }
+        /// <summary>
+        /// 有效率
+        /// </summary>
+        public string Yxl { get => yxl; set { yxl = value; Changed("Yxl"); } }
+    }
+    public class GtjInfo : Kltpj
+    {
+        string sypc;
+        string yxl;
+        /// <summary>
+        /// 使用频次
+        /// </summary>
+        public string Sypc { get => sypc; set { sypc = value; Changed("Sypc"); } }
+        /// <summary>
+        /// 有效率
+        /// </summary>
+        public string Yxl { get => yxl; set { yxl = value; Changed("Yxl"); } }
+    }
     /// <summary>
     /// LXXZ.xaml 的交互逻辑
     /// </summary>
-    public partial class LXXZ : Page
+    public partial class LXXZ : Page, INotifyPropertyChanged
     {
         private DataTable y_table;
         private List<CheckBox> CheckBoxes = new List<CheckBox>();
         private qkcs param;
+        private ObservableCollection<TpjBase> gtjInfos;
+        private ObservableCollection<TpjBase> ytjInfos;
+
+        public ObservableCollection<TpjBase> GtjInfos { get => gtjInfos; set { gtjInfos = value; Changed("GtjInfos"); } }
+        public ObservableCollection<TpjBase> YtjInfos { get => ytjInfos; set { ytjInfos = value; Changed("GtjInfos"); } }
+
+        #region 属性更改通知
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Changed(string PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
+        #endregion
+
+        //private 
         public LXXZ()
         {
             InitializeComponent();
+            DataContext = this;
             param = Data.DatHelper.readQkcs();
             this.Loaded += new RoutedEventHandler(GetYtable);
             this.Loaded += LXXZ_Loaded;
@@ -40,44 +84,57 @@ namespace SBTP.View.TPJ
         private void Search()
         {
             StringBuilder sqlStr = new StringBuilder();
-            //sqlStr.Append("select * from PC_XTPK_STATUS where NW>=" + (Temprature.Text.Equals("") ? 0 : double.Parse(Temprature.Text)) + " and NY>=" + (TDS.Text.Equals("") ? 0 : double.Parse(TDS.Text)) + " and NJ>=" + (PH.Text.Equals("") ? 0 : double.Parse(PH.Text)));
             sqlStr.Append("select * from PC_XTPK_STATUS");
             DataTable k_dt = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
-            DataRow[] k_drs = k_dt.Select("NW>=" + (Temprature.Text.Equals("") ? 0 : double.Parse(Temprature.Text)) + " and NY>=" + (TDS.Text.Equals("") ? 0 : double.Parse(TDS.Text)) + " and NJ>=" + (PH.Text.Equals("") ? 0 : double.Parse(PH.Text)));
-            DataRow[] k_drs_ex = k_dt.Select().Except(k_drs).ToArray();
-            DataTable new_k_dt = k_dt.Clone();
-            k_drs.Union(k_drs_ex).ToList().ForEach(x => new_k_dt.ImportRow(x));
-            S_Grid.ItemsSource = new_k_dt.DefaultView;
+            GtjInfos = Unity.TpjMapper<TpjBase>(k_dt) as ObservableCollection<TpjBase>;
+
+
+
+
+
+
+            //DataRow[] k_drs = k_dt.Select("NW>=" + (Temprature.Text.Equals("") ? 0 : double.Parse(Temprature.Text)) + " and NY>=" + (TDS.Text.Equals("") ? 0 : double.Parse(TDS.Text)) + " and NJ>=" + (PH.Text.Equals("") ? 0 : double.Parse(PH.Text)));
+            //DataRow[] k_drs_ex = k_dt.Select().Except(k_drs).ToArray();
+            //DataTable new_k_dt = k_dt.Clone();
+            //k_drs.Union(k_drs_ex).ToList().ForEach(x => new_k_dt.ImportRow(x));
+            S_Grid.ItemsSource = GtjInfos;
 
             sqlStr.Clear();
-            //sqlStr.Append("select * from PC_XTPL_STATUS where NW>=" + (Temprature.Text.Equals("") ? 0 : double.Parse(Temprature.Text)) + " and NY>=" + (TDS.Text.Equals("") ? 0 : double.Parse(TDS.Text)) + " and NJ>=" + (PH.Text.Equals("") ? 0 : double.Parse(PH.Text)));
             sqlStr.Append("select * from PC_XTPL_STATUS");
             DataTable l_dt = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
-            DataRow[] l_drs = l_dt.Select("NW>=" + (Temprature.Text.Equals("") ? 0 : double.Parse(Temprature.Text)) + " and NY>=" + (TDS.Text.Equals("") ? 0 : double.Parse(TDS.Text)) + " and NJ>=" + (PH.Text.Equals("") ? 0 : double.Parse(PH.Text)));
-            DataRow[] l_drs_ex = l_dt.Select().Except(l_drs).ToArray();
-            DataTable new_l_dt = l_dt.Clone();
-            l_drs.Union(l_drs_ex).ToList().ForEach(x => new_l_dt.ImportRow(x));
-            L_Grid.ItemsSource = new_l_dt.DefaultView;
+            YtjInfos = Unity.TpjMapper<TpjBase>(l_dt) as ObservableCollection<TpjBase>;
+            
 
-            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() => {
-                if (k_drs_ex.Length != 0)
-                {
-                    for (int i = 1; i <= k_drs_ex.Length; i++)
-                    {
-                        DataGridRow row = S_Grid.ItemContainerGenerator.ContainerFromItem(S_Grid.Items[S_Grid.Items.Count - i]) as DataGridRow;
-                        row.Background = new SolidColorBrush(Colors.LightPink);
-                    }
-                }
-                if (l_drs_ex.Length != 0)
-                {
-                    for (int i = 1; i <= l_drs_ex.Length; i++)
-                    {
-                        DataGridRow row = L_Grid.ItemContainerGenerator.ContainerFromItem(L_Grid.Items[L_Grid.Items.Count - i]) as DataGridRow;
-                        row.Background = new SolidColorBrush(Colors.LightPink);
-                    }
-                }
-            }));
+
+
+
+            //DataRow[] l_drs = l_dt.Select("NW>=" + (Temprature.Text.Equals("") ? 0 : double.Parse(Temprature.Text)) + " and NY>=" + (TDS.Text.Equals("") ? 0 : double.Parse(TDS.Text)) + " and NJ>=" + (PH.Text.Equals("") ? 0 : double.Parse(PH.Text)));
+            //DataRow[] l_drs_ex = l_dt.Select().Except(l_drs).ToArray();
+            //DataTable new_l_dt = l_dt.Clone();
+            //l_drs.Union(l_drs_ex).ToList().ForEach(x => new_l_dt.ImportRow(x));
+            L_Grid.ItemsSource = YtjInfos;
+
+            //Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() => {
+            //    if (k_drs_ex.Length != 0)
+            //    {
+            //        for (int i = 1; i <= k_drs_ex.Length; i++)
+            //        {
+            //            DataGridRow row = S_Grid.ItemContainerGenerator.ContainerFromItem(S_Grid.Items[S_Grid.Items.Count - i]) as DataGridRow;
+            //            row.Background = new SolidColorBrush(Colors.LightPink);
+            //        }
+            //    }
+            //    if (l_drs_ex.Length != 0)
+            //    {
+            //        for (int i = 1; i <= l_drs_ex.Length; i++)
+            //        {
+            //            DataGridRow row = L_Grid.ItemContainerGenerator.ContainerFromItem(L_Grid.Items[L_Grid.Items.Count - i]) as DataGridRow;
+            //            row.Background = new SolidColorBrush(Colors.LightPink);
+            //        }
+            //    }
+            //}));
         }
+
+
 
         /// <summary>
         /// 将二进制保存为word

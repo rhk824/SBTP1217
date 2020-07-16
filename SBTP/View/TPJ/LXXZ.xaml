@@ -48,7 +48,7 @@
                 </Grid.RowDefinitions>
                 <GroupBox Grid.Row="0" Header="流体调剖剂匹配结果">
                     <ScrollViewer>
-                        <DataGrid Name="L_Grid" AutoGenerateColumns="False" DataContext="{Binding}" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Single" MouseLeftButtonDown="L_Grid_MouseLeftButtonDown" LayoutUpdated="Layout_Updated">
+                        <DataGrid Name="L_Grid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Single" MouseLeftButtonDown="L_Grid_MouseLeftButtonDown" LayoutUpdated="Layout_Updated">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="名称" Binding="{Binding MC}"/>
                                 <DataGridTextColumn Header="温度(℃)" Binding="{Binding NW}"/>
@@ -58,6 +58,8 @@
                                 <DataGridTextColumn Header="终粘1000/L(mPa.s)" Binding="{Binding ZN}"/>
                                 <DataGridTextColumn Header="成本1000/L(¥/t)" Binding="{Binding JG}"/>
                                 <DataGridTextColumn Header="有效期" Binding="{Binding SXQ}"/>
+                                <DataGridTextColumn Header="使用频次" Binding="{Binding Sypc}"/>
+                                <DataGridTextColumn Header="有效率" Binding="{Binding Yxl}"/>
                                 <DataGridTemplateColumn Header="实验室性能试验报告" CellTemplate="{StaticResource ButtonTemplate}" />
                                 <DataGridCheckBoxColumn Header="选择标识" ElementStyle="{StaticResource ResourceKey=dgCell}"/>
                             </DataGrid.Columns>
@@ -66,18 +68,20 @@
                 </GroupBox>
                 <GroupBox Grid.Row="1" Header="体膨颗粒调剖剂匹配结果">
                     <ScrollViewer>
-                        <DataGrid Name="S_Grid" AutoGenerateColumns="False" DataContext="{Binding}" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Single" MouseLeftButtonDown="S_Grid_MouseLeftButtonDown">
+                        <DataGrid Name="S_Grid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Single" MouseLeftButtonDown="S_Grid_MouseLeftButtonDown">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="名称" Binding="{Binding MC}"/>
                                 <DataGridTextColumn Header="温度(℃)" Binding="{Binding NW}"/>
                                 <DataGridTextColumn Header="矿化度(mg/L)" Binding="{Binding NY}"/>
                                 <DataGridTextColumn Header="PH" Binding="{Binding NJ}"/>
-                                <DataGridTextColumn Header="膨胀倍数" Binding="{Binding CPBS}"/>
-                                <DataGridTextColumn Header="终膨倍数" Binding="{Binding CPBS}"/>
+                                <DataGridTextColumn Header="终膨倍数" Binding="{Binding ZPBS}"/>
+                                <DataGridTextColumn Header="膨胀时间" Binding="{Binding PZSJ}"/>
                                 <DataGridTextColumn Header="抗压强度" Binding="{Binding KYQD}"/>
                                 <DataGridTextColumn Header="弹性模量" Binding="{Binding TXML}"/>
                                 <DataGridTextColumn Header="成本" Binding="{Binding JG}"/>
                                 <DataGridTextColumn Header="泊松比" Binding="{Binding BSB}"/>
+                                <DataGridTextColumn Header="使用频次" Binding="{Binding Sypc}"/>
+                                <DataGridTextColumn Header="有效率" Binding="{Binding Yxl}"/>
                                 <DataGridTemplateColumn Header="实验室性能试验报告"  CellTemplate="{StaticResource ButtonTemplate}"/>
                                 <DataGridCheckBoxColumn Header="选择标识" ElementStyle="{StaticResource ResourceKey=dgCell}" />
                             </DataGrid.Columns>

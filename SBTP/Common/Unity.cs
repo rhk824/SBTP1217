@@ -1,5 +1,8 @@
 ﻿using Maticsoft.DBUtility;
 using Newtonsoft.Json;
+using SBTP.BLL;
+using SBTP.Model;
+using SBTP.View.TPJ;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -275,6 +278,85 @@ namespace Common
             {
                 throw;
             }
+        }
+
+        public static object TpjMapper<T>(DataTable source) where T : TpjBase
+        {
+            //应用调剖剂信息
+            DataTable dataTable = Tpj_Insert_BLL.getYyTpjNames();
+            int yt_count = 0;
+            int zyGt0_count = 0;
+            ObservableCollection<TpjBase> collection = new ObservableCollection<TpjBase>();
+            if (typeof(YtjInfo).Equals(typeof(T)))
+            {                
+                foreach (DataRow item in source.Rows)
+                {
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        yt_count = dataTable.Rows.OfType<DataRow>().ToList().FindAll(x => x["YMC"].Equals(item["mc"])).Count;
+                        zyGt0_count = dataTable.Rows.OfType<DataRow>().ToList().FindAll(x => x["YMC"].Equals(item["mc"]) && double.Parse(x["ZY"].ToString()) > 0).Count;
+                    }
+                    TpjBase ytjInfo = new YtjInfo
+                    {
+                        Mc = item["mc"].ToString(),
+                        Nw = double.Parse(item["nw"].ToString()),
+                        Ny = double.Parse(item["ny"].ToString()),
+                        Nj = double.Parse(item["nj"].ToString()),
+                        Cn = item["cn"].ToString(),
+                        Zn = item["zn"].ToString(),
+                        Jg = double.Parse(item["jg"].ToString()),
+                        Sxq = item["sxq"].ToString(),
+                        Sypc = yt_count + "/" + dataTable.Rows.Count,
+                        Yxl = yt_count == 0 ? "0" : (zyGt0_count / yt_count).ToString()
+                    };
+                    collection.Add(ytjInfo);
+                }
+            }
+            else if (typeof(GtjInfo).Equals(typeof(T)))
+            {
+                foreach (DataRow item in source.Rows)
+                {
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        yt_count = dataTable.Rows.OfType<DataRow>().ToList().FindAll(x => x["YMC"].Equals(item["mc"])).Count;
+                        zyGt0_count = dataTable.Rows.OfType<DataRow>().ToList().FindAll(x => x["YMC"].Equals(item["mc"]) && double.Parse(x["ZY"].ToString()) > 0).Count;
+                    }
+                    TpjBase ytjInfo = new GtjInfo
+                    {
+                        Mc = item["mc"].ToString(),
+                        Nw = double.Parse(item["nw"].ToString()),
+                        Ny = double.Parse(item["ny"].ToString()),
+                        Nj = double.Parse(item["nj"].ToString()),
+                        Zpbs =double.Parse(item["zpbs"].ToString()),
+                        Pzsj =double.Parse(item["pzsj"].ToString()),
+                        Kyqd = double.Parse(item["kyqd"].ToString()),
+                        Txml =double.Parse(item["txml"].ToString()),
+                        Jg = double.Parse(item["jg"].ToString()),
+                        Bsb = double.Parse(item["bsb"].ToString()),
+                        Sxq = item["sxq"].ToString(),
+                        Sypc = yt_count + "/" + dataTable.Rows.Count,
+                        Yxl = yt_count == 0 ? "0" : (zyGt0_count / yt_count).ToString()
+                    };
+                    collection.Add(ytjInfo);
+                }
+            }
+                return collection;
+        }
+
+        /// <summary>
+        /// 将object对象转换为实体对象
+        /// </summary>
+        /// <typeparam name="T">实体对象类名</typeparam>
+        /// <param name="asObject">object对象</param>
+        /// <returns></returns>
+        public static T ConvertObject<T>(object asObject) where T : new()
+        {
+            var serializer = new JavaScriptSerializer();
+            //将object对象转换为json字符
+            var json = serializer.Serialize(asObject);
+            //将json字符转换为实体对象
+            var t = serializer.Deserialize<T>(json);
+            return t;
         }
     }
 }
