@@ -228,32 +228,26 @@ namespace SBTP.View.CSSJ
         }
 
         private void btn_right_Click(object sender, RoutedEventArgs e)
-        {
-            if (tpj_list.SelectedItem == null) return;
-            List<string> source = dataSource.ToList();
-            for (int i = 0; i < tpj_list.SelectedItems.Count; i++)
+        {           
+            if (tpj_list.SelectedItems == null) return;
+            List<string> select = tpj_list.SelectedItems.OfType<string>().ToList();
+            for (int i = 0; i < select.Count; i++)
             {
                 jqxxyhModels.Add(new JqxxyhModel()
                 {
                     JH = tpj_list.SelectedItems[i].ToString()
                 });
-                source.Remove(tpj_list.SelectedItems[i].ToString());
-            }
-            dataSource.Clear();
-            for (int i = 0; i < source.Count; i++)
-            {
-                dataSource.Add(source[i]);
+                dataSource.Remove(select[i]);
             }
         }
 
         private void btn_left_Click(object sender, RoutedEventArgs e)
         {
-            var select = jqxx_grid.SelectedItems;
+            List<JqxxyhModel> select = jqxx_grid.SelectedItems.OfType<JqxxyhModel>().ToList();
             for (int i = 0; i < select.Count; i++)
             {
-                JqxxyhModel jqxxyhModel = select[i] as JqxxyhModel;
-                dataSource.Add(jqxxyhModel.JH);
-                jqxxyhModels.Remove(jqxxyhModel);
+                dataSource.Add(select[i].JH);
+                jqxxyhModels.Remove(select[i]);
             }         
         }
 

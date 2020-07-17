@@ -426,7 +426,8 @@ namespace SBTP.View.XGPJ
             if (query.Any())
             {
                 foreach (var item in tpxgModels)
-                {                   
+                {
+                    if (string.IsNullOrEmpty(item.CSSJ)) continue;
                     var query_item = query.FindAll(p => p.JH.Equals(item.JH) && !p.YY.Equals(0) && !p.TS.Equals(0)&& !p.YZSL.Equals(0)).ToList();
                     if (query_item.Any())
                     {

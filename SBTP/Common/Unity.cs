@@ -280,13 +280,13 @@ namespace Common
             }
         }
 
-        public static object TpjMapper<T>(DataTable source) where T : TpjBase
+        public static ObservableCollection<T> TpjMapper<T>(DataTable source) where T : TpjBase
         {
             //应用调剖剂信息
             DataTable dataTable = Tpj_Insert_BLL.getYyTpjNames();
             int yt_count = 0;
             int zyGt0_count = 0;
-            ObservableCollection<TpjBase> collection = new ObservableCollection<TpjBase>();
+            ObservableCollection<T> collection = new ObservableCollection<T>();
             if (typeof(YtjInfo).Equals(typeof(T)))
             {                
                 foreach (DataRow item in source.Rows)
@@ -309,7 +309,7 @@ namespace Common
                         Sypc = yt_count + "/" + dataTable.Rows.Count,
                         Yxl = yt_count == 0 ? "0" : (zyGt0_count / yt_count).ToString()
                     };
-                    collection.Add(ytjInfo);
+                    collection.Add((T)ytjInfo);
                 }
             }
             else if (typeof(GtjInfo).Equals(typeof(T)))
@@ -318,8 +318,8 @@ namespace Common
                 {
                     if (dataTable.Rows.Count > 0)
                     {
-                        yt_count = dataTable.Rows.OfType<DataRow>().ToList().FindAll(x => x["YMC"].Equals(item["mc"])).Count;
-                        zyGt0_count = dataTable.Rows.OfType<DataRow>().ToList().FindAll(x => x["YMC"].Equals(item["mc"]) && double.Parse(x["ZY"].ToString()) > 0).Count;
+                        yt_count = dataTable.Rows.OfType<DataRow>().ToList().FindAll(x => x["GMC"].Equals(item["mc"])).Count;
+                        zyGt0_count = dataTable.Rows.OfType<DataRow>().ToList().FindAll(x => x["GMC"].Equals(item["mc"]) && double.Parse(x["ZY"].ToString()) > 0).Count;
                     }
                     TpjBase ytjInfo = new GtjInfo
                     {
@@ -337,7 +337,7 @@ namespace Common
                         Sypc = yt_count + "/" + dataTable.Rows.Count,
                         Yxl = yt_count == 0 ? "0" : (zyGt0_count / yt_count).ToString()
                     };
-                    collection.Add(ytjInfo);
+                    collection.Add(ytjInfo as T);
                 }
             }
                 return collection;

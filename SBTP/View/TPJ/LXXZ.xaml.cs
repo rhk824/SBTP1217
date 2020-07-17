@@ -50,11 +50,11 @@ namespace SBTP.View.TPJ
         private DataTable y_table;
         private List<CheckBox> CheckBoxes = new List<CheckBox>();
         private qkcs param;
-        private ObservableCollection<TpjBase> gtjInfos;
-        private ObservableCollection<TpjBase> ytjInfos;
+        private ObservableCollection<GtjInfo> gtjInfos;
+        private ObservableCollection<YtjInfo> ytjInfos;
 
-        public ObservableCollection<TpjBase> GtjInfos { get => gtjInfos; set { gtjInfos = value; Changed("GtjInfos"); } }
-        public ObservableCollection<TpjBase> YtjInfos { get => ytjInfos; set { ytjInfos = value; Changed("GtjInfos"); } }
+        public ObservableCollection<GtjInfo> GtjInfos { get => gtjInfos; set { gtjInfos = value; Changed("GtjInfos"); } }
+        public ObservableCollection<YtjInfo> YtjInfos { get => ytjInfos; set { ytjInfos = value; Changed("GtjInfos"); } }
 
         #region 属性更改通知
         public event PropertyChangedEventHandler PropertyChanged;
@@ -86,52 +86,51 @@ namespace SBTP.View.TPJ
             StringBuilder sqlStr = new StringBuilder();
             sqlStr.Append("select * from PC_XTPK_STATUS");
             DataTable k_dt = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
-            GtjInfos = Unity.TpjMapper<TpjBase>(k_dt) as ObservableCollection<TpjBase>;
+            var gt = Unity.TpjMapper<GtjInfo>(k_dt);
+            var gt_select = from i in gt
+                            where
+            i.Nw >= double.Parse(string.IsNullOrEmpty(Temprature.Text) ? "0" : Temprature.Text)
+            && i.Ny >= double.Parse(string.IsNullOrEmpty(TDS.Text) ? "0" : TDS.Text)
+            && i.Ny >= double.Parse(string.IsNullOrEmpty(PH.Text) ? "0" : PH.Text)
+                            select i;
+            var gt_ex = gt.Except(gt_select);
+            GtjInfos = Unity.ConvertToObList(gt_select.Union(gt_ex).ToList());
 
-
-
-
-
-
-            //DataRow[] k_drs = k_dt.Select("NW>=" + (Temprature.Text.Equals("") ? 0 : double.Parse(Temprature.Text)) + " and NY>=" + (TDS.Text.Equals("") ? 0 : double.Parse(TDS.Text)) + " and NJ>=" + (PH.Text.Equals("") ? 0 : double.Parse(PH.Text)));
-            //DataRow[] k_drs_ex = k_dt.Select().Except(k_drs).ToArray();
-            //DataTable new_k_dt = k_dt.Clone();
-            //k_drs.Union(k_drs_ex).ToList().ForEach(x => new_k_dt.ImportRow(x));
             S_Grid.ItemsSource = GtjInfos;
 
             sqlStr.Clear();
             sqlStr.Append("select * from PC_XTPL_STATUS");
             DataTable l_dt = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
-            YtjInfos = Unity.TpjMapper<TpjBase>(l_dt) as ObservableCollection<TpjBase>;
-            
+            var yt = Unity.TpjMapper<YtjInfo>(l_dt);
+            var yt_select = from i in yt where 
+                         i.Nw >= double.Parse(string.IsNullOrEmpty(Temprature.Text) ? "0" : Temprature.Text)
+                         && i.Ny>=double.Parse(string.IsNullOrEmpty(TDS.Text)?"0": TDS.Text)
+                         &&i.Ny>=double.Parse(string.IsNullOrEmpty(PH.Text)?"0": PH.Text)
+                         select i;
+            var yt_ex = yt.Except(yt_select);           
+            YtjInfos = Unity.ConvertToObList(yt_select.Union(yt_ex).ToList());
 
-
-
-
-            //DataRow[] l_drs = l_dt.Select("NW>=" + (Temprature.Text.Equals("") ? 0 : double.Parse(Temprature.Text)) + " and NY>=" + (TDS.Text.Equals("") ? 0 : double.Parse(TDS.Text)) + " and NJ>=" + (PH.Text.Equals("") ? 0 : double.Parse(PH.Text)));
-            //DataRow[] l_drs_ex = l_dt.Select().Except(l_drs).ToArray();
-            //DataTable new_l_dt = l_dt.Clone();
-            //l_drs.Union(l_drs_ex).ToList().ForEach(x => new_l_dt.ImportRow(x));
             L_Grid.ItemsSource = YtjInfos;
 
-            //Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() => {
-            //    if (k_drs_ex.Length != 0)
-            //    {
-            //        for (int i = 1; i <= k_drs_ex.Length; i++)
-            //        {
-            //            DataGridRow row = S_Grid.ItemContainerGenerator.ContainerFromItem(S_Grid.Items[S_Grid.Items.Count - i]) as DataGridRow;
-            //            row.Background = new SolidColorBrush(Colors.LightPink);
-            //        }
-            //    }
-            //    if (l_drs_ex.Length != 0)
-            //    {
-            //        for (int i = 1; i <= l_drs_ex.Length; i++)
-            //        {
-            //            DataGridRow row = L_Grid.ItemContainerGenerator.ContainerFromItem(L_Grid.Items[L_Grid.Items.Count - i]) as DataGridRow;
-            //            row.Background = new SolidColorBrush(Colors.LightPink);
-            //        }
-            //    }
-            //}));
+            Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, new Action(() =>
+            {
+                if (gt_ex.ToList().Count > 0)
+                {
+                    for (int i = 1; i <= gt_ex.ToList().Count; i++)
+                    {
+                        DataGridRow row = S_Grid.ItemContainerGenerator.ContainerFromItem(S_Grid.Items[S_Grid.Items.Count - i]) as DataGridRow;
+                        row.Background = new SolidColorBrush(Colors.LightPink);
+                    }
+                }
+                if (yt_ex.ToList().Count> 0)
+                {
+                    for (int i = 1; i <= yt_ex.ToList().Count; i++)
+                    {
+                        DataGridRow row = L_Grid.ItemContainerGenerator.ContainerFromItem(L_Grid.Items[L_Grid.Items.Count - i]) as DataGridRow;
+                        row.Background = new SolidColorBrush(Colors.LightPink);
+                    }
+                }
+            }));
         }
 
 
@@ -186,8 +185,8 @@ namespace SBTP.View.TPJ
                 {
                     if (x.IsChecked == true)
                     {
-                        DataRowView drv = x.DataContext as DataRowView;
-                        string tpj_name = drv.Row.ItemArray[1].ToString();
+                        YtjInfo drv = x.DataContext as YtjInfo;
+                        string tpj_name = drv.Mc;
                         tpj_names.Add(tpj_name);
                     }
                 });
@@ -195,8 +194,8 @@ namespace SBTP.View.TPJ
                 {
                     if (y.IsChecked == true)
                     {
-                        DataRowView drv = y.DataContext as DataRowView;
-                        string tpj_name = drv.Row.ItemArray[1].ToString();
+                        GtjInfo drv = y.DataContext as GtjInfo;
+                        string tpj_name = drv.Mc;
                         tpj_names.Add(tpj_name);
                     }
                 });
@@ -242,8 +241,8 @@ namespace SBTP.View.TPJ
         {
             Button currentButton = e.Source as Button;
             DataGrid parent = FindParent<DataGrid>(currentButton);
-            DataRowView selectedItem = parent.SelectedItem as DataRowView;
-            string name = selectedItem.Row.ItemArray[1].ToString();
+            TpjBase selectedItem = parent.SelectedItem as TpjBase;
+            string name = selectedItem.Mc.ToString();
             StringBuilder sqlStr = new StringBuilder();
             sqlStr.Append("select * from PC_XTPJ_REPORT where MC='" + name + "'");
             DataTable dt = DbHelperOleDb.Query(sqlStr.ToString()).Tables[0];
@@ -316,16 +315,15 @@ namespace SBTP.View.TPJ
 
         private void L_Grid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            DataRowView selectedItem = L_Grid.SelectedItem as DataRowView;
-            if (selectedItem == null) return;
-            string name = selectedItem.Row.ItemArray[1].ToString();
+            if (!(L_Grid.SelectedItem is YtjInfo selectedItem)) return;
+            string name = selectedItem.Mc;
             DataRow[] matched_data = y_table.Select("YMC='" + name + "'");
-            foreach (DataRowView item in S_Grid.Items)
+            foreach (GtjInfo item in S_Grid.Items)
             {
                 var row = S_Grid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
                 foreach (DataRow dr in matched_data)
                 {
-                    if (item.Row.ItemArray[1].Equals(dr["GMC"].ToString()))
+                    if (item.Mc.Equals(dr["GMC"].ToString()))
                     {
                         S_Grid.ScrollIntoView(item);
                         row.IsSelected = true;
@@ -336,16 +334,15 @@ namespace SBTP.View.TPJ
 
         private void S_Grid_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            DataRowView selectedItem = S_Grid.SelectedItem as DataRowView;
-            if (selectedItem == null) return;
-            string name = selectedItem.Row.ItemArray[1].ToString();
+            if (!(S_Grid.SelectedItem is GtjInfo selectedItem)) return;
+            string name = selectedItem.Mc;
             DataRow[] matched_data = y_table.Select("GMC='" + name + "'");
-            foreach (DataRowView item in L_Grid.Items)
+            foreach (YtjInfo item in L_Grid.Items)
             {
                 var row = L_Grid.ItemContainerGenerator.ContainerFromItem(item) as DataGridRow;
                 foreach (DataRow dr in matched_data)
                 {
-                    if (item.Row.ItemArray[1].Equals(dr["YMC"].ToString()))
+                    if (item.Mc.Equals(dr["YMC"].ToString()))
                     {
                         L_Grid.ScrollIntoView(item);
                         row.IsSelected = true;

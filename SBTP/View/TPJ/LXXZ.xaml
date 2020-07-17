@@ -50,14 +50,14 @@
                     <ScrollViewer>
                         <DataGrid Name="L_Grid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Single" MouseLeftButtonDown="L_Grid_MouseLeftButtonDown" LayoutUpdated="Layout_Updated">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="名称" Binding="{Binding MC}"/>
-                                <DataGridTextColumn Header="温度(℃)" Binding="{Binding NW}"/>
-                                <DataGridTextColumn Header="矿化度(mg/L)" Binding="{Binding NY}"/>
-                                <DataGridTextColumn Header="PH" Binding="{Binding NJ}"/>
-                                <DataGridTextColumn Header="初粘1000/L(mPa.s)" Binding="{Binding CN}"/>
-                                <DataGridTextColumn Header="终粘1000/L(mPa.s)" Binding="{Binding ZN}"/>
-                                <DataGridTextColumn Header="成本1000/L(¥/t)" Binding="{Binding JG}"/>
-                                <DataGridTextColumn Header="有效期" Binding="{Binding SXQ}"/>
+                                <DataGridTextColumn Header="名称" Binding="{Binding Mc}"/>
+                                <DataGridTextColumn Header="温度(℃)" Binding="{Binding Nw}"/>
+                                <DataGridTextColumn Header="矿化度(mg/L)" Binding="{Binding Ny}"/>
+                                <DataGridTextColumn Header="PH" Binding="{Binding Nj}"/>
+                                <DataGridTextColumn Header="初粘1000/L(mPa.s)" Binding="{Binding Cn}"/>
+                                <DataGridTextColumn Header="终粘1000/L(mPa.s)" Binding="{Binding Zn}"/>
+                                <DataGridTextColumn Header="成本1000/L(¥/t)" Binding="{Binding Jg}"/>
+                                <DataGridTextColumn Header="有效期" Binding="{Binding Sxq}"/>
                                 <DataGridTextColumn Header="使用频次" Binding="{Binding Sypc}"/>
                                 <DataGridTextColumn Header="有效率" Binding="{Binding Yxl}"/>
                                 <DataGridTemplateColumn Header="实验室性能试验报告" CellTemplate="{StaticResource ButtonTemplate}" />
@@ -70,16 +70,16 @@
                     <ScrollViewer>
                         <DataGrid Name="S_Grid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Single" MouseLeftButtonDown="S_Grid_MouseLeftButtonDown">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="名称" Binding="{Binding MC}"/>
-                                <DataGridTextColumn Header="温度(℃)" Binding="{Binding NW}"/>
-                                <DataGridTextColumn Header="矿化度(mg/L)" Binding="{Binding NY}"/>
-                                <DataGridTextColumn Header="PH" Binding="{Binding NJ}"/>
-                                <DataGridTextColumn Header="终膨倍数" Binding="{Binding ZPBS}"/>
-                                <DataGridTextColumn Header="膨胀时间" Binding="{Binding PZSJ}"/>
-                                <DataGridTextColumn Header="抗压强度" Binding="{Binding KYQD}"/>
-                                <DataGridTextColumn Header="弹性模量" Binding="{Binding TXML}"/>
-                                <DataGridTextColumn Header="成本" Binding="{Binding JG}"/>
-                                <DataGridTextColumn Header="泊松比" Binding="{Binding BSB}"/>
+                                <DataGridTextColumn Header="名称" Binding="{Binding Mc}"/>
+                                <DataGridTextColumn Header="温度(℃)" Binding="{Binding Nw}"/>
+                                <DataGridTextColumn Header="矿化度(mg/L)" Binding="{Binding Ny}"/>
+                                <DataGridTextColumn Header="PH" Binding="{Binding Nj}"/>
+                                <DataGridTextColumn Header="终膨倍数" Binding="{Binding Zpbs}"/>
+                                <DataGridTextColumn Header="膨胀时间" Binding="{Binding Pzsj}"/>
+                                <DataGridTextColumn Header="抗压强度" Binding="{Binding Kyqd}"/>
+                                <DataGridTextColumn Header="弹性模量" Binding="{Binding Txml}"/>
+                                <DataGridTextColumn Header="成本" Binding="{Binding Jg}"/>
+                                <DataGridTextColumn Header="泊松比" Binding="{Binding Bsb}"/>
                                 <DataGridTextColumn Header="使用频次" Binding="{Binding Sypc}"/>
                                 <DataGridTextColumn Header="有效率" Binding="{Binding Yxl}"/>
                                 <DataGridTemplateColumn Header="实验室性能试验报告"  CellTemplate="{StaticResource ButtonTemplate}"/>
