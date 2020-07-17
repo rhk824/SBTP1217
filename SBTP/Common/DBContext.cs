@@ -63,8 +63,7 @@ namespace SBTP.Common
                         STL = Unity.ToDecimal(dt.Rows[i]["STL"]),
                         SKQK = Unity.ToString(dt.Rows[i]["SKQK"]),
                         HYBHD = Unity.ToDecimal(dt.Rows[i]["HYBHD"]),
-                        KXD = Unity.ToDecimal(dt.Rows[i]["KXD"]),
-                        ZT = Unity.ToInt(dt.Rows[i]["ZT"])
+                        KXD = Unity.ToDecimal(dt.Rows[i]["KXD"])
                     });
                 }
             }
@@ -200,7 +199,6 @@ namespace SBTP.Common
                         TYRQ = Unity.ToDateTime(dt.Rows[i]["TYRQ"]),
                         CPSJ = Unity.ToDecimal(dt.Rows[i]["CPSJ"]),
                         CPBS = Unity.ToDecimal(dt.Rows[i]["CPBS"]),
-                        PZBS = Unity.ToDecimal(dt.Rows[i]["ZPBS"]),
                         PZSJ = Unity.ToDecimal(dt.Rows[i]["PZSJ"]),
                         KYQD = Unity.ToDecimal(dt.Rows[i]["KYQD"]),
                         NW = Unity.ToDecimal(dt.Rows[i]["NW"]),

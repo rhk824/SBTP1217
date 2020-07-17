@@ -1559,6 +1559,12 @@ namespace SBTP.BLL
 
             decimal stl1 = oc_033.Sum(p => p.YXHD * p.STL);
             decimal stl2 = oc_033.Sum(p => p.YXHD);
+            if (stl2 == 0)
+            {
+                oc_033.Clear();
+                message = "井组连通的有效厚度全部为零";
+                return false;
+            }
             decimal stl = stl1 / stl2;
 
             var query_yj = oc_033.Select(p => p.YJ).ToList();

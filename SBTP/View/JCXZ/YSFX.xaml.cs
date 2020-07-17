@@ -59,7 +59,7 @@ namespace SBTP.View.JCXZ
         private void loadData()
         {
             dtable = DatHelper.Read();
-            List<FenXiModel> datasource = DatHelper.ReadYsfx();
+            //List<FenXiModel> datasource = DatHelper.ReadYsfx();
             foreach (DataRow dr in dtable.Rows)
             {
                 ListBoxItem item = new ListBoxItem();
@@ -76,11 +76,11 @@ namespace SBTP.View.JCXZ
             temp = WaterWellMonth.getMaxDate();
             datePicker2.SelectedDate = DateTime.Parse(temp);
 
-            if (datasource.Count > 0)
-            {
-                list = datasource;
-                (from i in datasource select i.SJH).Distinct().ToList().ForEach(x => ListBox2.Items.Add(x));
-            }
+            //if (datasource.Count > 0)
+            //{
+            //    list = datasource;
+            //    (from i in datasource select i.SJH).Distinct().ToList().ForEach(x => ListBox2.Items.Add(x));
+            //}
 
         }
 

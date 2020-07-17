@@ -26,12 +26,16 @@ namespace SBTP.View.JCXZ
         {
             InitializeComponent();
             this.Loaded += JZWSD_Loaded;
-
         }
 
         private void JZWSD_Loaded(object sender, RoutedEventArgs e)
         {
             well_group = Data.DatHelper.Read();
+            if (well_group.Rows.Count == 0)
+            {
+                MessageBox.Show("加载失败！请先进行井组划分！");
+                return;
+            }
             water_well_collection = BLL.WellGroupBaseData.WaterWellCollection(getDataTable("WATER_WELL_MONTH"));
             oil_well_collection = BLL.WellGroupBaseData.OilWellCollection(getDataTable("OIL_WELL_MONTH"));
             Wsd_Group_Table_Loaded();
