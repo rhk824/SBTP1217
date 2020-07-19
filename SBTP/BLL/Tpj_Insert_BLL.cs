@@ -48,16 +48,16 @@ namespace SBTP.BLL
         {
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into PC_XTPK_STATUS (");
-            strSql.Append("MC,DW,TYRQ,CPSJ,CPBS,PZBS,PZSJ,KYQD,NW,NY,NJ,XN,BSB,TXML,SXQ,JG,BZ,ZT)");
+            strSql.Append("MC,DW,TYRQ,CPSJ,CPBS,ZPBS,PZSJ,KYQD,NW,NY,NJ,XN,BSB,TXML,SXQ,JG,BZ,ZT)");
             strSql.Append(" values(");
-            strSql.Append("@MC,@DW,@TYRQ,@CPSJ,@CPBS,@PZBS,@PZSJ,@KYQD,@NW,@NY,@NJ,@XN,@BSB,@TXML,@SXQ,@JG,@BZ,@ZT)");
+            strSql.Append("@MC,@DW,@TYRQ,@CPSJ,@CPBS,@ZPBS,@PZSJ,@KYQD,@NW,@NY,@NJ,@XN,@BSB,@TXML,@SXQ,@JG,@BZ,@ZT)");
             OleDbParameter[] parameters = {
                    new OleDbParameter("@MC",klmodel.Mc),
                    new OleDbParameter("@DW",klmodel.Dw),
                    new OleDbParameter("@TYRQ",DateTime.Parse(klmodel.Tyrq)),
                    new OleDbParameter("@CPSJ",klmodel.Cpsj),
                    new OleDbParameter("@CPBS",klmodel.Cpbs),
-                   new OleDbParameter("@PZBS",klmodel.Zpbs),
+                   new OleDbParameter("@ZPBS",klmodel.Zpbs),
                    new OleDbParameter("@PZSJ",klmodel.Pzsj),
                    new OleDbParameter("@KYQD",klmodel.Kyqd),
                    new OleDbParameter("@NW",klmodel.Nw),

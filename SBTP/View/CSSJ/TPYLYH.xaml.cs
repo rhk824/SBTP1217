@@ -235,7 +235,7 @@ namespace SBTP.View.CSSJ
             {
                 jqxxyhModels.Add(new JqxxyhModel()
                 {
-                    JH = tpj_list.SelectedItems[i].ToString()
+                    JH = select[i].ToString()
                 });
                 dataSource.Remove(select[i]);
             }
